@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Index from "./pages/Index";
-import Brochure from "./pages/Brochure";
+
 import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 import ScrollToHash from "@/components/ScrollToHash";
@@ -26,7 +26,7 @@ const App = () => (
           <ScrollToHash />
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/brochure" element={<Brochure />} />
+
             <Route path="/pricing" element={<Pricing />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
