@@ -123,8 +123,8 @@ const Careers = () => {
             Fresh graduate or career changer? We welcome diverse backgrounds.
           </p>
           <Button
-            variant="outline"
-            className="bw-button-outline"
+            variant="ghost"
+            className="bw-button-outline text-white hover:text-black"
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
           >
             Contact Us About Opportunities

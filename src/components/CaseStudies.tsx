@@ -44,8 +44,8 @@ const CaseStudies = () => {
             </p>
           </div>
           <Button
-            variant="outline"
-            className="bw-button-outline hidden md:flex"
+            variant="ghost"
+            className="bw-button-outline hidden md:flex text-white hover:text-black"
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
           >
             Start Your Project
@@ -121,8 +121,8 @@ const CaseStudies = () => {
 
         <div className="mt-12 text-center md:hidden">
           <Button
-            variant="outline"
-            className="bw-button-outline w-full"
+            variant="ghost"
+            className="bw-button-outline w-full text-white hover:text-black"
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
           >
             Start Your Project
