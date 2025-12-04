@@ -39,20 +39,20 @@ const About = () => {
 
           {/* Right Column: Visual/Stats */}
           <div className="relative">
-            <div className="bw-card p-8 md:p-12 space-y-8 relative z-10">
-              <div className="space-y-2">
-                <div className="text-6xl font-bold text-white">500+</div>
-                <div className="text-sm uppercase tracking-widest text-white/50">Active Agents Deployed</div>
-              </div>
-              <div className="h-px w-full bg-white/10"></div>
-              <div className="space-y-2">
-                <div className="text-6xl font-bold text-white">40%</div>
-                <div className="text-sm uppercase tracking-widest text-white/50">Avg. Cost Reduction</div>
-              </div>
-              <div className="h-px w-full bg-white/10"></div>
-              <div className="space-y-2">
-                <div className="text-6xl font-bold text-white">0.1s</div>
-                <div className="text-sm uppercase tracking-widest text-white/50">Response Latency</div>
+            <div className="bw-card p-8 md:p-12 relative z-10">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+                <div className="space-y-2">
+                  <div className="text-5xl md:text-6xl font-bold text-white">10+</div>
+                  <div className="text-xs md:text-sm uppercase tracking-widest text-white/50">Active Agents Deployed</div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-5xl md:text-6xl font-bold text-white">40%</div>
+                  <div className="text-xs md:text-sm uppercase tracking-widest text-white/50">Avg. Cost Reduction</div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-5xl md:text-6xl font-bold text-white">75+</div>
+                  <div className="text-xs md:text-sm uppercase tracking-widest text-white/50">AI Projects Done</div>
+                </div>
               </div>
             </div>
 

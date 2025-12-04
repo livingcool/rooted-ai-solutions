@@ -65,8 +65,8 @@ const Hero = () => {
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
-              variant="outline"
-              className="bw-button-outline text-lg px-8 py-6"
+              variant="ghost"
+              className="bw-button-outline text-lg px-8 py-6 text-white hover:text-black"
               onClick={() => document.getElementById("case-studies")?.scrollIntoView({ behavior: "smooth" })}
             >
               View Case Studies
