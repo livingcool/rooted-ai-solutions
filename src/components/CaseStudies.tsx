@@ -63,7 +63,7 @@ const CaseStudies = () => {
             {caseStudies.map((study, index) => (
               <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                 <div className="h-full">
-                  <div className="bw-card h-full p-8 flex flex-col justify-between group hover:bg-white/5 transition-colors duration-500">
+                  <div className="bw-card h-full p-6 md:p-8 flex flex-col justify-between group hover:bg-white/5 transition-colors duration-500">
 
                     <div className="space-y-6">
                       <div className="flex flex-wrap gap-2">

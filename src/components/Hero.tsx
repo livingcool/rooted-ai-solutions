@@ -44,7 +44,7 @@ const Hero = () => {
         <div className="max-w-5xl mx-auto text-center space-y-8">
 
           {/* Main Headline */}
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white min-h-[1.2em]">
+          <h1 className="text-4xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white min-h-[1.2em]">
             {text.slice(0, 6)}
             <span className="text-white/50">{text.slice(6)}</span>
             <span className="animate-pulse ml-1">|</span>

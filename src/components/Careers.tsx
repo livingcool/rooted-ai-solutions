@@ -64,7 +64,7 @@ const Careers = () => {
 
         {/* Join Our Team - General Call to Action */}
         <div className="mt-24 mb-24">
-          <div className="bw-card p-8 md:p-16 text-center border-white/10 bg-gradient-to-b from-white/5 to-transparent">
+          <div className="bw-card p-6 md:p-16 text-center border-white/10 bg-gradient-to-b from-white/5 to-transparent">
             <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
               Ready to Shape the Future?
             </h3>
