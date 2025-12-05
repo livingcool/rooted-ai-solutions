@@ -81,10 +81,10 @@ const Hero = () => {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-20 border-t border-white/10 mt-20">
             {[
-              { label: "Accuracy Rate", value: "99.9%" },
+              { label: "Accuracy Rate", value: ">95%" },
               { label: "Time Saved", value: "40h+" },
               { label: "ROI Increase", value: "3x" },
-              { label: "Active Agents", value: "500+" },
+              { label: "Active Agents", value: "10+" },
             ].map((stat, index) => (
               <div key={index} className="space-y-2">
                 <div className="text-3xl md:text-4xl font-bold text-white">{stat.value}</div>
