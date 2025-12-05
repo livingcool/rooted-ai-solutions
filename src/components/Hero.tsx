@@ -48,10 +48,7 @@ const Hero = () => {
           {/* Main Headline */}
           <h1 className="text-4xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white min-h-[1.2em]">
             <TextScramble text="ROOTEDAI" />
-            <span className="text-white/50">
-              <span className="hidden md:inline"> </span>
-              <TextScramble text="INTELLIGENCE" duration={2} />
-            </span>
+
           </h1>
 
           {/* Subheadline */}

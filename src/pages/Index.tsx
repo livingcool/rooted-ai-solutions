@@ -9,6 +9,7 @@ import Contact from "@/components/Contact";
 import Blog from "@/components/Blog";
 import Footer from "@/components/Footer";
 import GlobalBackground from "@/components/GlobalBackground";
+import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
 const Index = () => {
   useEffect(() => {
@@ -34,13 +35,27 @@ const Index = () => {
       <div className="relative z-10">
         <Navigation />
         <Hero />
-        <About />
-        <Services />
-        <CaseStudies />
-        <Careers />
-        <Contact />
-        <Blog />
-        <Footer />
+        <RevealOnScroll>
+          <About />
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <Services />
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <CaseStudies />
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <Careers />
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <Contact />
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <Blog />
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <Footer />
+        </RevealOnScroll>
       </div>
     </div>
   );
