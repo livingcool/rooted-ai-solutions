@@ -63,6 +63,61 @@ const Careers = () => {
           ))}
         </div>
 
+        {/* Job Openings */}
+        <div className="mb-24">
+          <h3 className="text-2xl font-bold text-white mb-8 border-l-4 border-white pl-4">
+            Open Positions
+          </h3>
+
+          <TiltCard className="bw-card p-8 group hover:bg-white/5 transition-all duration-300">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
+              <div>
+                <h4 className="text-xl font-bold text-white mb-2">AI Automation Engineer – Intern/Junior</h4>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 rounded-full bg-white/10 text-xs font-mono text-white/80">Remote / Hybrid</span>
+                  <span className="px-3 py-1 rounded-full bg-white/10 text-xs font-mono text-white/80">Full-time</span>
+                </div>
+              </div>
+              <Button
+                className="bw-button-outline text-sm px-6 py-2"
+                onClick={() => window.location.href = "mailto:rootedaiofficial@gmail.com?subject=Application: AI Automation Engineer"}
+              >
+                Apply Now
+              </Button>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 border-t border-white/10 pt-6">
+              <div>
+                <h5 className="text-sm font-bold text-white mb-3 uppercase tracking-wider">Tech Stack</h5>
+                <div className="flex flex-wrap gap-2">
+                  {["Python", "LangChain", "Groq", "PostgreSQL", "Pinecone", "Supabase"].map((tech) => (
+                    <span key={tech} className="text-xs text-white/60 border border-white/10 px-2 py-1 rounded">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h5 className="text-sm font-bold text-white mb-3 uppercase tracking-wider">Expectations</h5>
+                <ul className="space-y-2 text-sm text-white/60">
+                  <li className="flex items-start gap-2">
+                    <span className="text-white mt-1">•</span>
+                    Build and deploy AI agents using LangChain & LangGraph
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-white mt-1">•</span>
+                    Optimize RAG pipelines with Pinecone & Groq
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-white mt-1">•</span>
+                    Develop backend services with Python & Supabase
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </TiltCard>
+        </div>
+
         {/* Join Our Team - General Call to Action */}
         <div className="mt-24 mb-24">
           <TiltCard className="bw-card p-6 md:p-16 text-center border-white/10 bg-gradient-to-b from-white/5 to-transparent">

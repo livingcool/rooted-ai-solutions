@@ -87,8 +87,10 @@ const Hero = () => {
               { label: "Active Agents", value: "10+" },
             ].map((stat, index) => (
               <div key={index} className="space-y-2">
-                <div className="text-3xl md:text-4xl font-bold text-white">{stat.value}</div>
-                <div className="text-sm text-white/50 uppercase tracking-widest">{stat.label}</div>
+                <div className="text-3xl md:text-4xl font-bold text-white">
+                  <TextScramble text={stat.value} characterSet="0123456789%+" duration={1.0} />
+                </div>
+                <div className="text-sm text-white/50 uppercase tracking-wider">{stat.label}</div>
               </div>
             ))}
           </div>

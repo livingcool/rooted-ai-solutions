@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -8,8 +8,11 @@ import Careers from "@/components/Careers";
 import Contact from "@/components/Contact";
 import Blog from "@/components/Blog";
 import Footer from "@/components/Footer";
-import GlobalBackground from "@/components/GlobalBackground";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
+import TechStackMarquee from "@/components/TechStackMarquee";
+
+// Lazy load the heavy background component
+const GlobalBackground = lazy(() => import("@/components/GlobalBackground"));
 
 const Index = () => {
   useEffect(() => {
@@ -31,10 +34,18 @@ const Index = () => {
 
   return (
     <div className="min-h-screen relative">
-      <GlobalBackground />
+      <Suspense fallback={<div className="fixed inset-0 bg-black z-[-1]" />}>
+        <GlobalBackground />
+      </Suspense>
+
       <div className="relative z-10">
         <Navigation />
         <Hero />
+
+        <RevealOnScroll delay={0.2}>
+          <TechStackMarquee />
+        </RevealOnScroll>
+
         <RevealOnScroll>
           <About />
         </RevealOnScroll>
