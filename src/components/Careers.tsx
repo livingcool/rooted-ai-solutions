@@ -7,6 +7,7 @@ import {
   Clock,
   ArrowRight
 } from "lucide-react";
+import TiltCard from "@/components/ui/TiltCard";
 
 const Careers = () => {
 
@@ -64,7 +65,7 @@ const Careers = () => {
 
         {/* Join Our Team - General Call to Action */}
         <div className="mt-24 mb-24">
-          <div className="bw-card p-6 md:p-16 text-center border-white/10 bg-gradient-to-b from-white/5 to-transparent">
+          <TiltCard className="bw-card p-6 md:p-16 text-center border-white/10 bg-gradient-to-b from-white/5 to-transparent">
             <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
               Ready to Shape the Future?
             </h3>
@@ -86,7 +87,7 @@ const Careers = () => {
             <p className="text-sm text-white/40 mt-6">
               Email us at <span className="text-white">rootedaiofficial@gmail.com</span>
             </p>
-          </div>
+          </TiltCard>
         </div>
 
         {/* Culture Section */}

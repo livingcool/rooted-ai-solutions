@@ -1,4 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
+import TiltCard from "@/components/ui/TiltCard";
+import TextScramble from "@/components/ui/TextScramble";
 
 const About = () => {
   const features = [
@@ -18,8 +20,8 @@ const About = () => {
           {/* Left Column: Text Content */}
           <div className="space-y-8">
             <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
-              Engineering Intelligence. <br />
-              <span className="text-white/50">COMPLEXITY.SIMPLIFIED</span>
+              <TextScramble text="Engineering Intelligence." /> <br />
+              <span className="text-white/50"><TextScramble text="COMPLEXITY.SIMPLIFIED" duration={2} /></span>
             </h2>
             <p className="text-lg text-white/60 leading-relaxed font-light">
               RootedAI is a strategic automation partner for forward-thinking enterprises.
@@ -39,7 +41,7 @@ const About = () => {
 
           {/* Right Column: Visual/Stats */}
           <div className="relative">
-            <div className="bw-card p-6 md:p-12 relative z-10">
+            <TiltCard className="bw-card p-6 md:p-12 relative z-10">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
                 <div className="space-y-2">
                   <div className="text-5xl md:text-6xl font-bold text-white">10+</div>
@@ -54,7 +56,7 @@ const About = () => {
                   <div className="text-xs md:text-sm uppercase tracking-widest text-white/50">AI Projects Done</div>
                 </div>
               </div>
-            </div>
+            </TiltCard>
 
             {/* Decorative Background Element */}
             <div className="absolute -top-10 -right-10 w-full h-full border border-white/10 rounded-xl z-0 hidden md:block"></div>

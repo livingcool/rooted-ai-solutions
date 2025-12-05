@@ -1,5 +1,6 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Brain, Cpu, Globe, MessageSquare, Zap, Shield } from "lucide-react";
+import TiltCard from "@/components/ui/TiltCard";
 
 const services = [
   {
@@ -59,7 +60,7 @@ const Services = () => {
             {services.map((service, index) => (
               <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
                 <div className="p-1 h-full">
-                  <div className="bw-card h-full p-6 md:p-8 group hover:bg-white/5 transition-colors duration-500">
+                  <TiltCard className="bw-card h-full p-6 md:p-8 group hover:bg-white/5 transition-colors duration-500">
                     <div className="mb-6 inline-block p-3 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
                       <service.icon className="w-8 h-8 text-white" />
                     </div>
@@ -69,7 +70,7 @@ const Services = () => {
                     <p className="text-white/60 leading-relaxed text-sm">
                       {service.description}
                     </p>
-                  </div>
+                  </TiltCard>
                 </div>
               </CarouselItem>
             ))}

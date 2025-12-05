@@ -1,6 +1,8 @@
 import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import TextScramble from "@/components/ui/TextScramble";
+import MagneticButton from "@/components/ui/MagneticButton";
 
 
 const Hero = () => {
@@ -45,9 +47,11 @@ const Hero = () => {
 
           {/* Main Headline */}
           <h1 className="text-4xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white min-h-[1.2em]">
-            {text.slice(0, 6)}
-            <span className="text-white/50">{text.slice(6)}</span>
-            <span className="animate-pulse ml-1">|</span>
+            <TextScramble text="ROOTEDAI" />
+            <span className="text-white/50">
+              <span className="hidden md:inline"> </span>
+              <TextScramble text="INTELLIGENCE" duration={2} />
+            </span>
           </h1>
 
           {/* Subheadline */}
@@ -57,13 +61,15 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 animate-fade-up" style={{ animationDelay: "0.4s" }}>
-            <Button
-              className="bw-button text-lg px-8 py-6 group"
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            >
-              Start Automating
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <MagneticButton>
+              <Button
+                className="bw-button text-lg px-8 py-6 group"
+                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                Start Automating
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </MagneticButton>
             <Button
               variant="ghost"
               className="bw-button-outline text-lg px-8 py-6 text-white hover:text-black"
