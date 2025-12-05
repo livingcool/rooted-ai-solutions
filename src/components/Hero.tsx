@@ -47,8 +47,10 @@ const Hero = () => {
 
           {/* Main Headline */}
           <h1 className="text-4xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white min-h-[1.2em]">
-            <TextScramble text="ROOTEDAI" />
-
+            <TextScramble text="ROOTED" />
+            <span className="text-white/50">
+              <TextScramble text="AI" />
+            </span>
           </h1>
 
           {/* Subheadline */}
@@ -77,7 +79,7 @@ const Hero = () => {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-20 border-t border-white/10 mt-20 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-20 border-t border-white/10 mt-20">
             {[
               { label: "Accuracy Rate", value: "99.9%" },
               { label: "Time Saved", value: "40h+" },

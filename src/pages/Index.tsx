@@ -30,7 +30,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black relative">
+    <div className="min-h-screen relative">
       <GlobalBackground />
       <div className="relative z-10">
         <Navigation />
