@@ -144,7 +144,6 @@ const AdminHiringDashboard = () => {
         setEnhancing(true);
         console.log("Sending payload to AI:", { title: newJob.title, description: newJob.description });
         try {
-            // Using direct fetch to bypass potential SDK body issues
             const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/enhance-job-description', {
                 method: 'POST',
                 headers: {
@@ -196,14 +195,13 @@ const AdminHiringDashboard = () => {
     const [isGeneratingProjects, setIsGeneratingProjects] = useState(false);
     const [customFeedback, setCustomFeedback] = useState("");
 
-    // Check for existing standardized project when opening dialog
     useEffect(() => {
         if (isTechnicalInviteOpen && selectedApp) {
             const job = (selectedApp as any).jobs;
             if (job && job.technical_problem_statement) {
                 setProjectDescription(job.technical_problem_statement);
             } else {
-                setProjectDescription(""); // Reset if no standard project
+                setProjectDescription("");
             }
         }
     }, [isTechnicalInviteOpen, selectedApp]);
@@ -233,7 +231,7 @@ const AdminHiringDashboard = () => {
             });
             setIsInviteOpen(false);
             setDeadline("");
-            fetchData(); // Refresh data to show updated status
+            fetchData();
         } catch (error: any) {
             console.error("Error sending invitation:", error);
             toast({
@@ -329,14 +327,12 @@ const AdminHiringDashboard = () => {
     const handleSelectProject = async (project: any) => {
         if (!selectedApp) return;
 
-        // Use the pre-formatted email format from the backend
         const formattedDescription = project.email_format;
 
         setProjectDescription(formattedDescription);
-        setGeneratedProjects([]); // Clear suggestions
-        setCustomFeedback(""); // Clear feedback
+        setGeneratedProjects([]);
+        setCustomFeedback("");
 
-        // Save as standardized project for this job
         const job = (selectedApp as any).jobs;
         if (job) {
             const { error } = await supabase
@@ -407,7 +403,6 @@ const AdminHiringDashboard = () => {
 
             if (error) throw error;
 
-            // Send Rejection Email
             if (rejectionEmail.subject && rejectionEmail.body) {
                 const { error: emailError } = await supabase.functions.invoke('send-rejection-email', {
                     body: {
@@ -514,7 +509,6 @@ const AdminHiringDashboard = () => {
 
         setLoading(true);
         try {
-            // Manually delete related interviews first to avoid FK constraints if cascade isn't set
             await supabase.from('interviews' as any).delete().eq('application_id', appId);
 
             const { error } = await supabase
@@ -562,7 +556,6 @@ const AdminHiringDashboard = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            // Fetch Jobs
             const { data: jobsData, error: jobsError } = await supabase
                 .from('jobs' as any)
                 .select('*')
@@ -571,7 +564,6 @@ const AdminHiringDashboard = () => {
             if (jobsError) throw jobsError;
             setJobs(jobsData as unknown as Job[]);
 
-            // Fetch Applications
             const { data: appsData, error: appsError } = await supabase
                 .from('applications' as any)
                 .select('*, jobs(id, title, description, technical_problem_statement), interviews(*), technical_assessments(*)')
@@ -618,7 +610,6 @@ const AdminHiringDashboard = () => {
         let interviewCount = 0;
 
         try {
-            // Identify items to retry
             const unanalyzedApps = applications.filter(app => !app.ai_score && app.resume_url);
             const unanalyzedInterviews = applications.flatMap(app => app.interviews || []).filter((int: any) => !int.ai_score && int.audio_url);
 
@@ -627,7 +618,6 @@ const AdminHiringDashboard = () => {
                 description: `Found ${unanalyzedApps.length} applications and ${unanalyzedInterviews.length} interviews to process.`,
             });
 
-            // 1. Retry Applications
             for (const app of unanalyzedApps) {
                 try {
                     const { error } = await supabase.functions.invoke('analyze-application', {
@@ -640,7 +630,6 @@ const AdminHiringDashboard = () => {
                 }
             }
 
-            // 2. Retry Interviews
             for (const int of unanalyzedInterviews) {
                 try {
                     const { error } = await supabase.functions.invoke('analyze-interview', {
@@ -732,7 +721,7 @@ const AdminHiringDashboard = () => {
                             Post New Job
                         </Button>
                     </div>
-                </div >
+                </div>
 
                 <Tabs defaultValue="applications" className="w-full">
                     <TabsList className="bg-white/5 border-white/10">
@@ -914,7 +903,6 @@ const AdminHiringDashboard = () => {
                         {selectedApp && (
                             <div className="flex-1 overflow-y-auto pr-4 min-h-0">
                                 <div className="space-y-8 p-1">
-                                    {/* Header Section */}
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <h3 className="text-2xl font-bold">{selectedApp.full_name}</h3>
@@ -939,23 +927,35 @@ const AdminHiringDashboard = () => {
                                                 )}
                                             </div>
                                         </div>
+
+                                        {/* SIMPLIFIED ACTION BUTTONS */}
                                         <div className="flex flex-col items-end gap-3">
                                             <Badge className={`${getStatusColor(selectedApp.status)} border-0 px-3 py-1 text-sm`}>
                                                 {selectedApp.status}
                                             </Badge>
-                                            {/* Resume / Initial Stage */}
+
+                                            {/* RESUME STAGE - Applied or AI Assessed */}
                                             {(selectedApp.status === 'Applied' || selectedApp.status === 'AI Assessed') && (
-                                                <Button
-                                                    size="sm"
-                                                    className="bg-white text-black hover:bg-white/90"
-                                                    onClick={() => setIsInviteOpen(true)}
-                                                >
-                                                    Invite to Communication Assessment
-                                                </Button>
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        className="bg-white text-black hover:bg-white/90"
+                                                        onClick={() => setIsInviteOpen(true)}
+                                                    >
+                                                        Invite to Communication Assessment
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="destructive"
+                                                        className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                                        onClick={() => setIsRejectOpen(true)}
+                                                    >
+                                                        Reject
+                                                    </Button>
+                                                </div>
                                             )}
 
-
-                                            {/* Communication Round Completed (or Attempted) */}
+                                            {/* COMMUNICATION STAGE - Completed */}
                                             {(selectedApp.status === 'Communication Round Completed' || (selectedApp as any).interviews?.length > 0) && (
                                                 <div className="flex gap-2">
                                                     <Button
@@ -973,22 +973,18 @@ const AdminHiringDashboard = () => {
                                                     >
                                                         Invite to Technical Round
                                                     </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="destructive"
+                                                        className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                                        onClick={() => setIsRejectOpen(true)}
+                                                    >
+                                                        Reject
+                                                    </Button>
                                                 </div>
                                             )}
 
-                                            {/* Technical Round Invited */}
-                                            {selectedApp.status === 'Technical Round' && (selectedApp as any).technical_assessments?.length === 0 && (
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    className="border-white/20 hover:bg-white/10"
-                                                    onClick={() => setIsTechnicalInviteOpen(true)}
-                                                >
-                                                    Resend Technical Invite
-                                                </Button>
-                                            )}
-
-                                            {/* Technical Round Completed */}
+                                            {/* TECHNICAL STAGE - Completed */}
                                             {selectedApp.status === 'Technical Round' && (selectedApp as any).technical_assessments?.length > 0 && (
                                                 <div className="flex gap-2">
                                                     <Button
@@ -1006,9 +1002,19 @@ const AdminHiringDashboard = () => {
                                                     >
                                                         Select for Final Interview
                                                     </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="destructive"
+                                                        className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                                        onClick={() => setIsRejectOpen(true)}
+                                                    >
+                                                        Reject
+                                                    </Button>
                                                 </div>
                                             )}
-                                            {selectedApp.status === 'Rejected' ? (
+
+                                            {/* REJECTED - Restore option */}
+                                            {selectedApp.status === 'Rejected' && (
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
@@ -1027,16 +1033,8 @@ const AdminHiringDashboard = () => {
                                                 >
                                                     Restore to Applied
                                                 </Button>
-                                            ) : (
-                                                <Button
-                                                    size="sm"
-                                                    variant="destructive"
-                                                    className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
-                                                    onClick={() => setIsRejectOpen(true)}
-                                                >
-                                                    Reject
-                                                </Button>
                                             )}
+
                                             {(selectedApp as any).access_code && (
                                                 <div className="text-xs text-white/40 font-mono bg-white/5 px-2 py-1 rounded">
                                                     Access Code: {(selectedApp as any).access_code}
@@ -1047,7 +1045,6 @@ const AdminHiringDashboard = () => {
 
                                     {/* Metrics Grid */}
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        {/* Resume Match Score */}
                                         <Card className="bg-white/5 border-white/10">
                                             <CardHeader className="pb-2">
                                                 <CardTitle className="text-sm font-medium text-white/60">Resume Match</CardTitle>
@@ -1070,13 +1067,11 @@ const AdminHiringDashboard = () => {
                                             </CardContent>
                                         </Card>
 
-                                        {/* Communication Score (Average if multiple) */}
                                         <Card className="bg-white/5 border-white/10">
                                             <CardHeader className="pb-2">
                                                 <CardTitle className="text-sm font-medium text-white/60">Communication</CardTitle>
                                             </CardHeader>
                                             <CardContent>
-                                                {/* Calculate average score logic here if needed, for now taking first interview or 0 */}
                                                 {(() => {
                                                     const interviews = (selectedApp as any).interviews || [];
                                                     const score = interviews.length > 0 ? interviews[0].ai_score : 0;
@@ -1104,7 +1099,6 @@ const AdminHiringDashboard = () => {
                                             </CardContent>
                                         </Card>
 
-                                        {/* Status / Timeline */}
                                         <Card className="bg-white/5 border-white/10">
                                             <CardHeader className="pb-2">
                                                 <CardTitle className="text-sm font-medium text-white/60">Timeline</CardTitle>
@@ -1130,7 +1124,6 @@ const AdminHiringDashboard = () => {
 
                                     {/* Checkpoint Stepper */}
                                     <div className="flex justify-between items-center relative mb-8 px-4">
-                                        {/* Progress Line */}
                                         <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-white/10 -z-10" />
 
                                         {[
@@ -1158,13 +1151,12 @@ const AdminHiringDashboard = () => {
                                         ))}
                                     </div>
 
-                                    {/* Detailed Analysis Tabs (Hidden triggers, controlled by stepper) */}
                                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                                         <TabsList className="hidden">
-                                            <TabsTrigger value="resume" data-value="resume">Resume</TabsTrigger>
-                                            <TabsTrigger value="communication" data-value="communication">Communication</TabsTrigger>
-                                            <TabsTrigger value="technical" data-value="technical">Technical</TabsTrigger>
-                                            <TabsTrigger value="final" data-value="final">Final</TabsTrigger>
+                                            <TabsTrigger value="resume">Resume</TabsTrigger>
+                                            <TabsTrigger value="communication">Communication</TabsTrigger>
+                                            <TabsTrigger value="technical">Technical</TabsTrigger>
+                                            <TabsTrigger value="final">Final</TabsTrigger>
                                         </TabsList>
 
                                         <TabsContent value="resume" className="mt-4 space-y-4">
@@ -1236,7 +1228,6 @@ const AdminHiringDashboard = () => {
                                             {(selectedApp as any).technical_assessments && (selectedApp as any).technical_assessments.length > 0 ? (
                                                 (selectedApp as any).technical_assessments.map((tech: any) => (
                                                     <div key={tech.id} className="space-y-6">
-                                                        {/* AI Score Card */}
                                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                                             <Card className="bg-white/5 border-white/10 col-span-1">
                                                                 <CardHeader className="pb-2">
@@ -1259,7 +1250,6 @@ const AdminHiringDashboard = () => {
                                                             </Card>
                                                         </div>
 
-                                                        {/* Submission Details */}
                                                         <div className="bg-white/5 p-6 rounded-lg border border-white/10 space-y-6">
                                                             <div className="flex justify-between items-start">
                                                                 <h4 className="font-bold text-white text-lg">Submission Details</h4>
@@ -1325,20 +1315,12 @@ const AdminHiringDashboard = () => {
                                                 </div>
                                             )}
                                         </TabsContent>
-
-
-                                        <TabsContent value="cover_letter" className="mt-4">
-                                            <div className="bg-white/5 p-6 rounded-lg border border-white/10 text-white/80 whitespace-pre-wrap leading-relaxed">
-                                                {selectedApp.cover_letter || "No cover letter provided."}
-                                            </div>
-                                        </TabsContent>
                                     </Tabs>
                                 </div>
                             </div>
                         )}
                     </DialogContent>
                 </Dialog>
-
 
                 <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
                     <DialogContent className="bg-black border-white/10 text-white max-w-sm">
@@ -1466,7 +1448,6 @@ const AdminHiringDashboard = () => {
                                                     <Button size="sm" variant="secondary" onClick={() => handleSelectProject(project)}>Select & Standardize</Button>
                                                 </div>
 
-                                                {/* Startup Analysis Accordion-style display */}
                                                 <div className="space-y-3 text-sm text-white/80 bg-black/20 p-3 rounded">
                                                     <p className="font-semibold text-yellow-400">{project.startup_analysis.verdict}</p>
 
@@ -1658,8 +1639,8 @@ const AdminHiringDashboard = () => {
                         </form>
                     </DialogContent>
                 </Dialog>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 };
 
