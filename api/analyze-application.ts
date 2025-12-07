@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import pdf from "pdf-parse";
+const pdfParse = require("pdf-parse");
 
 // Using Node.js runtime for PDF parsing support
 export const config = {
@@ -61,7 +61,7 @@ export default async function handler(req: any, res: any) {
             try {
                 const arrayBuffer = await fileData.arrayBuffer();
                 const buffer = Buffer.from(arrayBuffer);
-                const data = await pdf(buffer);
+                const data = await pdfParse(buffer);
                 resumeText = data.text;
             } catch (e) {
                 console.error("PDF Parse Error:", e);
