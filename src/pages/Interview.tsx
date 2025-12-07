@@ -239,7 +239,7 @@ const Interview = () => {
                                 "{QUESTIONS[currentQuestionIndex]}"
                             </h2>
                             <p className="text-white/40 text-sm">
-                                Please record your answer. You have 2 minutes.
+                                Please record your answer. You have 60 seconds.
                             </p>
                         </div>
 
