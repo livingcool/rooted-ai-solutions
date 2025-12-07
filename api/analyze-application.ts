@@ -28,7 +28,7 @@ export default async function handler(req: any, res: any) {
 
         const supabaseAdmin = createClient(supabaseUrl, supabaseKey);
 
-        // 1. Get Application &amp; Job Details
+        // 1. Get Application & Job Details
         const { data: app, error: appError } = await supabaseAdmin
             .from('applications')
             .select('*, jobs(*)')
@@ -41,7 +41,6 @@ export default async function handler(req: any, res: any) {
         }
 
         // 2. Download Resume
-        // 2. Download Resume
         console.log(`Downloading resume from: ${app.resume_url}`);
 
         // Remove bucket name from path if it's included
@@ -52,11 +51,22 @@ export default async function handler(req: any, res: any) {
         const { data: fileData, error: fileError } = await supabaseAdmin
             .storage
             .from('resumes')
-            .download(resumePath);  // Use resumePath instead of app.resume_url
+            .download(resumePath);
 
         if (fileError) {
-            console.error("Error downloading resume:", fileError);
-            throw new Error('Failed to download resume');
+            // Get the full error details from the response
+            const errorDetails = fileError.originalError
+                ? await fileError.originalError.text().catch(() => "Could not read error response")
+                : "No error details available";
+
+            console.error("Error downloading resume:", {
+                error: fileError,
+                message: fileError.message,
+                details: errorDetails,
+                path: resumePath,
+                fullPath: app.resume_url
+            });
+            throw new Error(`Failed to download resume: ${errorDetails}`);
         }
 
         // 3. Extract Text from Resume
