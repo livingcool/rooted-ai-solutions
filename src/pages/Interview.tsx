@@ -161,7 +161,7 @@ const Interview = () => {
                     if ('context' in error && typeof (error as any).context.json === 'function') {
                         try {
                             const body = await (error as any).context.json();
-                            console.error("Function error details:", body);
+                            console.error("Function error details:", JSON.stringify(body, null, 2));
                         } catch (e) {
                             console.error("Could not parse error body:", e);
                         }
