@@ -7,6 +7,15 @@ const corsHeaders = {
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import pdf from "https://esm.sh/pdf-parse@1.1.1";
+
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
 serve(async (req) => {
     if (req.method === 'OPTIONS') {
         return new Response('ok', { headers: corsHeaders })
@@ -35,15 +44,36 @@ serve(async (req) => {
 
         // 2. Download Resume
         console.log(`Downloading resume from: ${app.resume_url}`);
-        const { data: fileData, error: fileError } = await supabaseAdmin
+
+        // Remove bucket name from path if it's included
+        let resumePath = app.resume_url.startsWith('resumes/')
+            ? app.resume_url.substring('resumes/'.length)
+            : app.resume_url;
+
+        if (resumePath.startsWith('/')) resumePath = resumePath.substring(1);
+
+        console.log(`Using path for signed URL: '${resumePath}'`);
+
+        // Use createSignedUrl + fetch to bypass potential storage.download issues
+        const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
             .storage
             .from('resumes')
-            .download(app.resume_url)
+            .createSignedUrl(resumePath, 60);
 
-        if (fileError) {
-            console.error("Error downloading resume:", fileError);
-            throw new Error('Failed to download resume')
+        if (signedUrlError || !signedUrlData) {
+            console.error("Error creating signed URL:", signedUrlError);
+            throw new Error('Failed to create signed URL for resume');
         }
+
+        console.log("Generated signed URL, fetching content...");
+
+        const resumeResponse = await fetch(signedUrlData.signedUrl);
+        if (!resumeResponse.ok) {
+            throw new Error(`Failed to fetch resume from signed URL: ${resumeResponse.status} ${resumeResponse.statusText}`);
+        }
+
+        const arrayBuffer = await resumeResponse.arrayBuffer();
+        const buffer = new Uint8Array(arrayBuffer);
 
         // 3. Extract Text from Resume
         let resumeText = "";
@@ -51,8 +81,6 @@ serve(async (req) => {
 
         if (fileExt === 'pdf') {
             try {
-                const arrayBuffer = await fileData.arrayBuffer();
-                const buffer = new Uint8Array(arrayBuffer);
                 const data = await pdf(buffer);
                 resumeText = data.text;
             } catch (e) {
@@ -60,11 +88,11 @@ serve(async (req) => {
                 resumeText = "Could not extract text from PDF.";
             }
         } else {
-            // Simple text fallback for other formats or if extraction fails
             resumeText = "Resume content extraction pending for non-PDF formats.";
         }
 
-        // Truncate if too long for context window (approx 6000 chars)
+        // Truncate if too long
+        console.log(`Extracted resume text length: ${resumeText.length} characters`);
         resumeText = resumeText.substring(0, 6000);
 
         // 4. Analyze with Groq
@@ -86,7 +114,7 @@ serve(async (req) => {
         Provide a JSON output with:
         - score: number (0-100) indicating suitability based on skills and experience match.
         - feedback: string (max 50 words) summarizing key strengths and missing skills.
-        `
+        `;
 
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
@@ -95,7 +123,7 @@ serve(async (req) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama3-8b-8192',
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
                     { role: 'user', content: prompt }
@@ -130,7 +158,7 @@ serve(async (req) => {
                 ai_feedback: aiResult.feedback,
                 status: 'AI Assessed'
             })
-            .eq('id', applicationId)
+            .eq('id', applicationId);
 
         if (updateError) throw updateError;
 

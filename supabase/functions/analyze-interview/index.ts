@@ -20,16 +20,34 @@ serve(async (req) => {
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
         )
 
-        // Download Audio
-        const { data: fileData, error: fileError } = await supabaseAdmin
+        // Download Audio using Signed URL workaround
+        console.log(`Downloading audio from: ${audioUrl}`);
+
+        // Remove bucket name from path if it's included
+        let audioPath = audioUrl.startsWith('interview-recordings/')
+            ? audioUrl.substring('interview-recordings/'.length)
+            : audioUrl;
+
+        if (audioPath.startsWith('/')) audioPath = audioPath.substring(1);
+
+        console.log(`Using path for signed URL: '${audioPath}'`);
+
+        const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
             .storage
             .from('interview-recordings')
-            .download(audioUrl)
+            .createSignedUrl(audioPath, 60);
 
-        if (fileError) {
-            console.error("Error downloading audio:", fileError);
-            throw new Error('Failed to download audio')
+        if (signedUrlError || !signedUrlData) {
+            console.error("Error creating signed URL:", signedUrlError);
+            throw new Error('Failed to create signed URL for audio');
         }
+
+        const audioResponse = await fetch(signedUrlData.signedUrl);
+        if (!audioResponse.ok) {
+            throw new Error(`Failed to fetch audio from signed URL: ${audioResponse.status} ${audioResponse.statusText}`);
+        }
+
+        const audioBlob = await audioResponse.blob();
 
         // Groq Setup
         const apiKey = Deno.env.get('GROQ_API_KEY');
@@ -40,7 +58,7 @@ serve(async (req) => {
         // 1. Transcribe
         console.log("Transcribing with Groq Whisper...");
         const formData = new FormData();
-        formData.append('file', fileData, 'audio.webm');
+        formData.append('file', audioBlob, 'audio.webm');
         formData.append('model', 'distil-whisper-large-v3-en');
         formData.append('response_format', 'json');
 
@@ -80,7 +98,7 @@ serve(async (req) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama3-8b-8192',
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
                     { role: 'user', content: prompt }

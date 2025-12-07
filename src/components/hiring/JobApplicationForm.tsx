@@ -90,10 +90,10 @@ export const JobApplicationForm = ({ jobId, jobTitle, onSuccess }: JobApplicatio
             if (onSuccess) onSuccess();
 
             // Trigger AI Analysis (Fire and forget)
-            fetch('/api/analyze-application', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ applicationId: data.applicationId })
+            supabase.functions.invoke('analyze-application', {
+                body: { applicationId: data.applicationId }
+            }).then(({ error }) => {
+                if (error) console.error('Error triggering AI analysis:', error);
             });
 
             // Reset form

@@ -496,30 +496,28 @@ const AdminHiringDashboard = () => {
             // 1. Retry Applications
             for (const app of unanalyzedApps) {
                 try {
-                    const res = await fetch('/api/analyze-application', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ applicationId: app.id })
+                    const { error } = await supabase.functions.invoke('analyze-application', {
+                        body: { applicationId: app.id }
                     });
-                    if (res.ok) appCount++;
+                    if (!error) appCount++;
+                    else console.error(`Failed to retry application ${app.id}`, error);
                 } catch (e) {
-                    console.error(`Failed to retry app ${app.id}`, e);
+                    console.error(`Failed to retry application ${app.id}`, e);
                 }
             }
 
             // 2. Retry Interviews
             for (const int of unanalyzedInterviews) {
                 try {
-                    const res = await fetch('/api/analyze-interview', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
+                    const { error } = await supabase.functions.invoke('analyze-interview', {
+                        body: {
                             interviewId: int.id,
                             audioUrl: int.audio_url,
                             question: int.question
-                        })
+                        }
                     });
-                    if (res.ok) interviewCount++;
+                    if (!error) interviewCount++;
+                    else console.error(`Failed to retry interview ${int.id}`, error);
                 } catch (e) {
                     console.error(`Failed to retry interview ${int.id}`, e);
                 }
@@ -569,7 +567,7 @@ const AdminHiringDashboard = () => {
                             Post New Job
                         </Button>
                     </div>
-                </div>
+                </div >
 
                 <Tabs defaultValue="applications" className="w-full">
                     <TabsList className="bg-white/5 border-white/10">
