@@ -1,19 +1,33 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
-import pdf from "https://esm.sh/pdf-parse@1.1.1";
+import * as pdfjsLib from 'npm:pdfjs-dist@4.0.379';
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
-import pdf from "https://esm.sh/pdf-parse@1.1.1";
+async function extractTextFromPdf(data: Uint8Array): Promise<string> {
+    try {
+        // Load the PDF document
+        const loadingTask = pdfjsLib.getDocument({
+            data: data,
+            useSystemFonts: true, // Avoid font loading issues
+        });
+        const pdfDocument = await loadingTask.promise;
+        let fullText = "";
 
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+        for (let i = 1; i <= pdfDocument.numPages; i++) {
+            const page = await pdfDocument.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map((item: any) => item.str).join(" ");
+            fullText += pageText + "\n";
+        }
+        return fullText;
+    } catch (error) {
+        console.error("Error extracting text from PDF:", error);
+        throw new Error("Failed to extract text from PDF");
+    }
 }
 
 serve(async (req) => {
@@ -30,7 +44,7 @@ serve(async (req) => {
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
         )
 
-        // 1. Get Application & Job Details
+        // 1. Fetch Application Data
         const { data: app, error: appError } = await supabaseAdmin
             .from('applications')
             .select('*, jobs(*)')
@@ -38,11 +52,14 @@ serve(async (req) => {
             .single()
 
         if (appError || !app) {
-            console.error("Error fetching application:", appError);
-            throw new Error('Application not found')
+            throw new Error(`Application not found: ${appError?.message}`)
         }
 
-        // 2. Download Resume
+        if (!app.resume_url) {
+            throw new Error('No resume URL found')
+        }
+
+        // 2. Download Resume using Signed URL workaround
         console.log(`Downloading resume from: ${app.resume_url}`);
 
         // Remove bucket name from path if it's included
@@ -54,7 +71,6 @@ serve(async (req) => {
 
         console.log(`Using path for signed URL: '${resumePath}'`);
 
-        // Use createSignedUrl + fetch to bypass potential storage.download issues
         const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
             .storage
             .from('resumes')
@@ -64,8 +80,6 @@ serve(async (req) => {
             console.error("Error creating signed URL:", signedUrlError);
             throw new Error('Failed to create signed URL for resume');
         }
-
-        console.log("Generated signed URL, fetching content...");
 
         const resumeResponse = await fetch(signedUrlData.signedUrl);
         if (!resumeResponse.ok) {
@@ -81,42 +95,36 @@ serve(async (req) => {
 
         if (fileExt === 'pdf') {
             try {
-                const data = await pdf(buffer);
-                resumeText = data.text;
+                resumeText = await extractTextFromPdf(buffer);
+                console.log(`Extracted ${resumeText.length} characters from PDF`);
             } catch (e) {
                 console.error("PDF Parse Error:", e);
-                resumeText = "Could not extract text from PDF.";
+                throw new Error("Failed to parse PDF content");
             }
         } else {
-            resumeText = "Resume content extraction pending for non-PDF formats.";
+            resumeText = new TextDecoder().decode(buffer);
         }
 
-        // Truncate if too long
-        console.log(`Extracted resume text length: ${resumeText.length} characters`);
-        resumeText = resumeText.substring(0, 6000);
-
         // 4. Analyze with Groq
-        console.log("Analyzing with Groq...");
         const apiKey = Deno.env.get('GROQ_API_KEY');
         if (!apiKey) {
-            throw new Error("GROQ_API_KEY is not set in environment variables.");
+            throw new Error("GROQ_API_KEY is not set");
         }
 
         const prompt = `
-        You are an expert HR AI Recruiter for "RootedAI". Analyze this resume for the role of "${app.jobs.title}" at RootedAI.
+        You are an expert HR recruiter. Analyze this job application for the role of "${app.jobs?.title || 'Candidate'}".
         
-        Job Description: ${app.jobs.description}
-        Requirements: ${app.jobs.requirements?.join(', ')}
-        
-        Resume Text:
-        ${resumeText}
+        Candidate Name: ${app.full_name}
+        Cover Letter: ${app.cover_letter || "N/A"}
+        Resume Content:
+        ${resumeText.substring(0, 15000)}
         
         Provide a JSON output with:
-        - score: number (0-100) indicating suitability based on skills and experience match.
-        - feedback: string (max 50 words) summarizing key strengths and missing skills.
+        - score: number (0-100) based on skills and experience match.
+        - feedback: string (max 100 words) detailed summary of strengths, weaknesses, and key qualifications. Be specific about what matches the role and what is missing.
         `;
 
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
@@ -132,38 +140,36 @@ serve(async (req) => {
             })
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Groq API Error:", errorText);
-            throw new Error(`Groq API Error: ${response.status} - ${errorText}`);
+        if (!aiResponse.ok) {
+            const errText = await aiResponse.text();
+            throw new Error(`Groq API Error: ${aiResponse.status} - ${errText}`);
         }
 
-        const data = await response.json();
-        const content = data.choices[0].message.content;
+        const aiData = await aiResponse.json();
+        const content = aiData.choices[0].message.content;
 
-        let aiResult;
+        let analysis;
         try {
-            aiResult = JSON.parse(content);
+            analysis = JSON.parse(content);
         } catch (e) {
             console.error("JSON Parse Error:", e);
-            aiResult = { score: 0, feedback: "AI Analysis failed to parse response." };
+            analysis = { score: 0, feedback: "Failed to parse AI response." };
         }
 
         // 5. Update Application
-        console.log("Updating application with score:", aiResult.score);
         const { error: updateError } = await supabaseAdmin
             .from('applications')
             .update({
-                ai_score: aiResult.score,
-                ai_feedback: aiResult.feedback,
+                ai_score: analysis.score,
+                ai_feedback: analysis.feedback,
                 status: 'AI Assessed'
             })
-            .eq('id', applicationId);
+            .eq('id', applicationId)
 
         if (updateError) throw updateError;
 
         return new Response(
-            JSON.stringify({ success: true, data: aiResult }),
+            JSON.stringify({ success: true }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
 
