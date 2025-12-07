@@ -48,54 +48,30 @@ export default async function handler(req: any, res: any) {
             ? app.resume_url.substring('resumes/'.length)
             : app.resume_url;
 
-        // Clean any leading slashes
         if (resumePath.startsWith('/')) resumePath = resumePath.substring(1);
 
-        console.log(`Cleaned resumePath: '${resumePath}'`);
+        console.log(`Using path for signed URL: '${resumePath}'`);
 
-        // Debug: List files in the bucket to verify existence
-        const pathParts = resumePath.split('/');
-        const folderPath = pathParts.length > 1 ? pathParts.slice(0, -1).join('/') : '';
-        const fileName = pathParts.pop();
-
-        console.log(`Listing files in folder: '${folderPath}'`);
-        const { data: listData, error: listError } = await supabaseAdmin
+        // Alternative: Use createSignedUrl + fetch to bypass potential storage.download issues
+        const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
             .storage
             .from('resumes')
-            .list(folderPath);
+            .createSignedUrl(resumePath, 60);
 
-        if (listError) {
-            console.error("Error listing files:", listError);
-        } else if (listData) {
-            console.log("Files found in folder:", listData.map(f => f.name));
-            const found = listData.find(f => f.name === fileName);
-            if (found) {
-                console.log("File FOUND in list!");
-            } else {
-                console.log(`File '${fileName}' NOT FOUND in list.`);
-            }
+        if (signedUrlError || !signedUrlData) {
+            console.error("Error creating signed URL:", signedUrlError);
+            throw new Error('Failed to create signed URL for resume');
         }
 
-        const { data: fileData, error: fileError } = await supabaseAdmin
-            .storage
-            .from('resumes')
-            .download(resumePath);
+        console.log("Generated signed URL, fetching content...");
 
-        if (fileError) {
-            // Get the full error details from the response
-            const errorDetails = fileError.originalError
-                ? await fileError.originalError.text().catch(() => "Could not read error response")
-                : "No error details available";
-
-            console.error("Error downloading resume:", {
-                error: fileError,
-                message: fileError.message,
-                details: errorDetails,
-                path: resumePath,
-                fullPath: app.resume_url
-            });
-            throw new Error(`Failed to download resume: ${errorDetails}`);
+        const resumeResponse = await fetch(signedUrlData.signedUrl);
+        if (!resumeResponse.ok) {
+            throw new Error(`Failed to fetch resume from signed URL: ${resumeResponse.status} ${resumeResponse.statusText}`);
         }
+
+        const arrayBuffer = await resumeResponse.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
 
         // 3. Extract Text from Resume
         let resumeText = "";
@@ -105,8 +81,6 @@ export default async function handler(req: any, res: any) {
             try {
                 // Dynamic import for pdf-parse (CommonJS module)
                 const pdfParse = (await import('pdf-parse')).default;
-                const arrayBuffer = await fileData.arrayBuffer();
-                const buffer = Buffer.from(arrayBuffer);
                 const data = await pdfParse(buffer);
                 resumeText = data.text;
             } catch (e) {
