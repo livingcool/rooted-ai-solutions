@@ -484,8 +484,16 @@ const AdminHiringDashboard = () => {
         let interviewCount = 0;
 
         try {
-            // 1. Retry Applications
+            // Identify items to retry
             const unanalyzedApps = applications.filter(app => !app.ai_score && app.resume_url);
+            const unanalyzedInterviews = applications.flatMap(app => app.interviews || []).filter((int: any) => !int.ai_score && int.audio_url);
+
+            toast({
+                title: "Starting Analysis Retry",
+                description: `Found ${unanalyzedApps.length} applications and ${unanalyzedInterviews.length} interviews to process.`,
+            });
+
+            // 1. Retry Applications
             for (const app of unanalyzedApps) {
                 try {
                     const res = await fetch('/api/analyze-application', {
@@ -500,7 +508,6 @@ const AdminHiringDashboard = () => {
             }
 
             // 2. Retry Interviews
-            const unanalyzedInterviews = applications.flatMap(app => app.interviews || []).filter((int: any) => !int.ai_score && int.audio_url);
             for (const int of unanalyzedInterviews) {
                 try {
                     const res = await fetch('/api/analyze-interview', {

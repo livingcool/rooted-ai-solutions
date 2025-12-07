@@ -138,8 +138,9 @@ export default async function handler(req: any, res: any) {
 
         return res.status(200).json({ success: true, data: aiResult });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error in analyze-application:", error);
-        return res.status(400).json({ error: error.message });
+        console.error("Request body:", req.body);
+        return res.status(400).json({ error: error.message, stack: error.stack });
     }
 }
