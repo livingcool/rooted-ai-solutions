@@ -44,7 +44,16 @@ serve(async (req) => {
         1. "title": Project Title.
         2. "startup_analysis": A detailed object containing the 11 points above. Be BRUTALLY HONEST. Point out lags and suggest improvements.
         3. "email_format": A clean, structured string (PLAIN TEXT, NO MARKDOWN) to send to the candidate. 
-           - Structure: PROJECT TITLE, DESCRIPTION, DELIVERABLES, EVALUATION CRITERIA.
+           - Structure: 
+             PROJECT TITLE
+             
+             PROBLEM STATEMENT (The "Why")
+             
+             IMPLEMENTATION DETAILS (The "What" & "How"): Be extremely specific. List exactly what features to build, what API endpoints to create, and what UI components are needed.
+             
+             DELIVERABLES
+             
+             EVALUATION CRITERIA
            - Explicitly mention: "Candidates are encouraged to use AI tools to accomplish this project."
            - The project scope for the candidate must be doable in 3-4 hours (a slice of the full startup idea).
 
@@ -53,21 +62,8 @@ serve(async (req) => {
             "projects": [
                 {
                     "title": "...",
-                    "startup_analysis": {
-                        "willingness_to_pay": "...",
-                        "market_demand": "...",
-                        "time_to_value": "...",
-                        "feasibility": "...",
-                        "moat": "...",
-                        "defensibility": "...",
-                        "monetization": "...",
-                        "retention": "...",
-                        "roi": "...",
-                        "why_ai": "...",
-                        "icp_pricing": "...",
-                        "verdict": "Brutally honest verdict: Will it work? (Great/Okay/Fail)"
-                    },
-                    "email_format": "PROJECT TITLE: ...\n\nDESCRIPTION: ...\n\nDELIVERABLES: ...\n\nEVALUATION CRITERIA: ..."
+                    "startup_analysis": { ... },
+                    "email_format": "PROJECT TITLE: ...\n\nPROBLEM STATEMENT: ...\n\nIMPLEMENTATION DETAILS: ...\n\nDELIVERABLES: ...\n\nEVALUATION CRITERIA: ..."
                 }
             ]
         }

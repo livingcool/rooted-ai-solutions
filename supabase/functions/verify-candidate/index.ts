@@ -53,7 +53,8 @@ const handler = async (req: Request): Promise<Response> => {
         return new Response(JSON.stringify({
             success: true,
             applicationId: app.id,
-            candidateName: app.full_name
+            candidateName: app.full_name,
+            status: app.status
         }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
             status: 200,

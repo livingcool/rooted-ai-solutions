@@ -36,7 +36,11 @@ const CandidateLogin = () => {
                 description: `Welcome, ${data.candidateName}!`,
             });
 
-            navigate('/assessment');
+            if (data.status === 'Technical Round') {
+                navigate('/technical-assessment');
+            } else {
+                navigate('/assessment');
+            }
 
         } catch (error: any) {
             console.error("Login error:", error);
