@@ -14,6 +14,18 @@ export interface Job {
     created_at: string;
 }
 
+export interface Interview {
+    id: string;
+    application_id: string;
+    question: string;
+    audio_url: string;
+    transcription?: string;
+    ai_score?: number;
+    ai_feedback?: string;
+    created_at: string;
+    audio_signed_url?: string; // For frontend display
+}
+
 export interface JobApplication {
     id: string;
     job_id: string;
@@ -27,4 +39,6 @@ export interface JobApplication {
     ai_score?: number;
     ai_feedback?: string;
     created_at: string;
+    interviews?: Interview[];
+    jobs?: { title: string }; // Joined property
 }

@@ -5,7 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { Job, JobApplication } from "@/types/hiring";
-import { Loader2, Plus, Briefcase, Users, Sparkles } from "lucide-react";
+import { Loader2, Plus, Briefcase, Users, Sparkles, RefreshCw } from "lucide-react";
+
 import { useToast } from "@/hooks/use-toast";
 import {
     Table,
@@ -476,6 +477,66 @@ const AdminHiringDashboard = () => {
         );
     }
 
+    const [isRetrying, setIsRetrying] = useState(false);
+
+    const handleRetryAnalysis = async () => {
+        setIsRetrying(true);
+        let appCount = 0;
+        let interviewCount = 0;
+
+        try {
+            // 1. Retry Applications
+            const unanalyzedApps = applications.filter(app => !app.ai_score && app.resume_url);
+            for (const app of unanalyzedApps) {
+                try {
+                    const res = await fetch('/api/analyze-application', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ applicationId: app.id })
+                    });
+                    if (res.ok) appCount++;
+                } catch (e) {
+                    console.error(`Failed to retry app ${app.id}`, e);
+                }
+            }
+
+            // 2. Retry Interviews
+            const unanalyzedInterviews = applications.flatMap(app => app.interviews || []).filter((int: any) => !int.ai_score && int.audio_url);
+            for (const int of unanalyzedInterviews) {
+                try {
+                    const res = await fetch('/api/analyze-interview', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            interviewId: int.id,
+                            audioUrl: int.audio_url,
+                            question: int.question
+                        })
+                    });
+                    if (res.ok) interviewCount++;
+                } catch (e) {
+                    console.error(`Failed to retry interview ${int.id}`, e);
+                }
+            }
+
+            toast({
+                title: "Retry Complete",
+                description: `Retried analysis for ${appCount} applications and ${interviewCount} interviews.`,
+            });
+            fetchData();
+
+        } catch (error) {
+            console.error("Error retrying analysis:", error);
+            toast({
+                title: "Error",
+                description: "Failed to retry analysis.",
+                variant: "destructive",
+            });
+        } finally {
+            setIsRetrying(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-black text-white p-8 pt-24">
             <div className="max-w-7xl mx-auto space-y-8">
@@ -487,6 +548,15 @@ const AdminHiringDashboard = () => {
                     <div className="flex gap-4">
                         <Button variant="outline" className="bg-transparent text-white border-white/20 hover:bg-white/10 hover:text-white" onClick={handleLogout}>
                             Logout
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="bg-transparent text-white border-white/20 hover:bg-white/10 hover:text-white"
+                            onClick={handleRetryAnalysis}
+                            disabled={isRetrying}
+                        >
+                            <RefreshCw className={`w-4 h-4 mr-2 ${isRetrying ? 'animate-spin' : ''}`} />
+                            {isRetrying ? 'Retrying...' : 'Retry AI Analysis'}
                         </Button>
                         <Button className="bg-white text-black hover:bg-white/90" onClick={() => setIsPostJobOpen(true)}>
                             <Plus className="w-4 h-4 mr-2" />
