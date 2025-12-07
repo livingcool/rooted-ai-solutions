@@ -144,18 +144,25 @@ const AdminHiringDashboard = () => {
         setEnhancing(true);
         console.log("Sending payload to AI:", { title: newJob.title, description: newJob.description });
         try {
-            const { data, error } = await supabase.functions.invoke('enhance-job-description', {
+            // Using direct fetch to bypass potential SDK body issues
+            const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/enhance-job-description', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
                     title: newJob.title,
                     description: newJob.description,
                     requirements: newJob.requirements
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                })
             });
 
-            if (error) throw error;
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to enhance description");
+            }
+
+            const data = await response.json();
 
             setNewJob(prev => ({
                 ...prev,
@@ -357,18 +364,24 @@ const AdminHiringDashboard = () => {
         if (!selectedApp) return;
         setGeneratingRejection(true);
         try {
-            const { data, error } = await supabase.functions.invoke('generate-rejection', {
+            const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/generate-rejection', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
                     candidateName: selectedApp.full_name,
                     jobTitle: (selectedApp as any).jobs?.title || "the role",
                     reason: rejectionReason
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                })
             });
 
-            if (error) throw error;
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to generate rejection email");
+            }
+
+            const data = await response.json();
 
             setRejectionEmail({ subject: data.subject, body: data.body });
         } catch (error: any) {

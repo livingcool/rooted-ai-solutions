@@ -12,23 +12,7 @@ serve(async (req) => {
 
     try {
         console.log(`Received request: ${req.method}`);
-
-        let body;
-        try {
-            const text = await req.text();
-            console.log("Raw body length:", text.length);
-            if (!text) {
-                throw new Error("Empty request body");
-            }
-            body = JSON.parse(text);
-        } catch (e) {
-            console.error("Failed to parse request body:", e);
-            return new Response(
-                JSON.stringify({ error: "Invalid or empty request body", details: e.message }),
-                { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-            )
-        }
-
+        const body = await req.json();
         const { title, description, requirements } = body;
 
         const prompt = `
