@@ -952,7 +952,8 @@ const AdminHiringDashboard = () => {
                                                 >
                                                     Invite to Communication Assessment
                                                 </Button>
-                                            )
+                                            )}
+
 
                                             {/* Communication Round Completed (or Attempted) */}
                                             {(selectedApp.status === 'Communication Round Completed' || (selectedApp as any).interviews?.length > 0) && (
