@@ -44,9 +44,37 @@ export default async function handler(req: any, res: any) {
         console.log(`Downloading resume from: ${app.resume_url}`);
 
         // Remove bucket name from path if it's included
-        const resumePath = app.resume_url.startsWith('resumes/')
+        let resumePath = app.resume_url.startsWith('resumes/')
             ? app.resume_url.substring('resumes/'.length)
             : app.resume_url;
+
+        // Clean any leading slashes
+        if (resumePath.startsWith('/')) resumePath = resumePath.substring(1);
+
+        console.log(`Cleaned resumePath: '${resumePath}'`);
+
+        // Debug: List files in the bucket to verify existence
+        const pathParts = resumePath.split('/');
+        const folderPath = pathParts.length > 1 ? pathParts.slice(0, -1).join('/') : '';
+        const fileName = pathParts.pop();
+
+        console.log(`Listing files in folder: '${folderPath}'`);
+        const { data: listData, error: listError } = await supabaseAdmin
+            .storage
+            .from('resumes')
+            .list(folderPath);
+
+        if (listError) {
+            console.error("Error listing files:", listError);
+        } else if (listData) {
+            console.log("Files found in folder:", listData.map(f => f.name));
+            const found = listData.find(f => f.name === fileName);
+            if (found) {
+                console.log("File FOUND in list!");
+            } else {
+                console.log(`File '${fileName}' NOT FOUND in list.`);
+            }
+        }
 
         const { data: fileData, error: fileError } = await supabaseAdmin
             .storage
