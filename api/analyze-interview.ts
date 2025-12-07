@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 export const config = {
-    runtime: 'edge',
+    maxDuration: 300, // 5 minutes for long audio processing
 };
 
 export default async function handler(req: Request) {
