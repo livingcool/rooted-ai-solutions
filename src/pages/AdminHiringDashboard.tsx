@@ -828,13 +828,23 @@ const AdminHiringDashboard = () => {
                                             <Badge className={`${getStatusColor(selectedApp.status)} border-0 px-3 py-1 text-sm`}>
                                                 {selectedApp.status}
                                             </Badge>
-                                            <Button
-                                                size="sm"
-                                                className="bg-white text-black hover:bg-white/90"
-                                                onClick={() => setIsInviteOpen(true)}
-                                            >
-                                                {selectedApp.status === 'Applied' || selectedApp.status === 'AI Assessed' ? 'Invite to Interview' : 'Resend Invite'}
-                                            </Button>
+                                            {selectedApp.status === 'Technical Round' ? (
+                                                <Button
+                                                    size="sm"
+                                                    className="bg-white text-black hover:bg-white/90"
+                                                    onClick={() => setIsTechnicalInviteOpen(true)}
+                                                >
+                                                    Resend Technical Invite
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    size="sm"
+                                                    className="bg-white text-black hover:bg-white/90"
+                                                    onClick={() => setIsInviteOpen(true)}
+                                                >
+                                                    {selectedApp.status === 'Applied' || selectedApp.status === 'AI Assessed' ? 'Invite to Interview' : 'Resend Interview Invite'}
+                                                </Button>
+                                            )}
                                             {selectedApp.status === 'Communication Round Completed' && (
                                                 <Button
                                                     size="sm"
