@@ -142,13 +142,16 @@ const AdminHiringDashboard = () => {
         }
 
         setEnhancing(true);
-        setEnhancing(true);
+        console.log("Sending payload to AI:", { title: newJob.title, description: newJob.description });
         try {
             const { data, error } = await supabase.functions.invoke('enhance-job-description', {
-                body: {
+                body: JSON.stringify({
                     title: newJob.title,
                     description: newJob.description,
                     requirements: newJob.requirements
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             });
 
@@ -355,10 +358,13 @@ const AdminHiringDashboard = () => {
         setGeneratingRejection(true);
         try {
             const { data, error } = await supabase.functions.invoke('generate-rejection', {
-                body: {
+                body: JSON.stringify({
                     candidateName: selectedApp.full_name,
                     jobTitle: (selectedApp as any).jobs?.title || "the role",
                     reason: rejectionReason
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             });
 

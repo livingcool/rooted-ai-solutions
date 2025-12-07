@@ -11,7 +11,25 @@ serve(async (req) => {
     }
 
     try {
-        const { title, description, requirements } = await req.json()
+        console.log(`Received request: ${req.method}`);
+
+        let body;
+        try {
+            const text = await req.text();
+            console.log("Raw body length:", text.length);
+            if (!text) {
+                throw new Error("Empty request body");
+            }
+            body = JSON.parse(text);
+        } catch (e) {
+            console.error("Failed to parse request body:", e);
+            return new Response(
+                JSON.stringify({ error: "Invalid or empty request body", details: e.message }),
+                { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+            )
+        }
+
+        const { title, description, requirements } = body;
 
         const prompt = `
         You are an expert HR Specialist and Tech Recruiter at "RootedAI". Enhance the following job description to be professional, engaging, and clear.
@@ -92,10 +110,11 @@ serve(async (req) => {
         )
 
     } catch (error: any) {
-        console.error("Error in enhance-job-description:", error);
+        console.error("CRITICAL ERROR in enhance-job-description:", error);
+        console.error("Error Stack:", error.stack);
+
         const errorMessage = error.message || "Unknown error";
         const errorDetails = JSON.stringify(error, Object.getOwnPropertyNames(error));
-        console.error("Error Details:", errorDetails);
 
         let status = 400;
         if (errorMessage.includes("GROQ_API_KEY")) status = 401;
