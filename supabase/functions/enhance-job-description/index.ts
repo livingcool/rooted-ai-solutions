@@ -42,7 +42,26 @@ serve(async (req) => {
         - tech_stack: string[] (List of specific technologies/software relevant to the role)
         `
 
-        const result = await model.generateContent(prompt)
+        console.log("Request received");
+        const apiKey = Deno.env.get('GEMINI_API_KEY');
+        if (!apiKey) {
+            console.error("GEMINI_API_KEY missing");
+            throw new Error("GEMINI_API_KEY is not set in environment variables.");
+        }
+        console.log("API Key found");
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
+
+        console.log("Generating content...");
+        const result = await model.generateContent({
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            safetySettings: [
+                { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+                { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+                { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+                { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+            ]
+        });
         const responseText = result.response.text()
 
         const jsonMatch = responseText.match(/\{[\s\S]*\}/);
@@ -71,8 +90,12 @@ serve(async (req) => {
 
     } catch (error: any) {
         console.error("Error in enhance-job-description:", error);
+        const errorMessage = error.message || "Unknown error";
+        const errorDetails = JSON.stringify(error, Object.getOwnPropertyNames(error));
+        console.error("Error Details:", errorDetails);
+
         return new Response(
-            JSON.stringify({ error: error.message }),
+            JSON.stringify({ error: errorMessage, details: errorDetails }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
         )
     }
