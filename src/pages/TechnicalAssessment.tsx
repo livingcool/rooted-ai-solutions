@@ -150,7 +150,7 @@ const TechnicalAssessment = () => {
                 <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
                     <CardHeader>
                         <CardTitle>Problem Statement</CardTitle>
-                        <CardDescription className="text-white/60">
+                        <CardDescription className="text-white/60 whitespace-pre-wrap text-base leading-relaxed">
                             {application.jobs?.technical_problem_statement || "No problem statement available."}
                         </CardDescription>
                     </CardHeader>
@@ -186,8 +186,13 @@ const TechnicalAssessment = () => {
                                     />
                                     <Upload className="mx-auto h-8 w-8 text-white/40 mb-2" />
                                     <p className="text-sm text-white/60">
-                                        {videoFile ? videoFile.name : "Click to upload demo video"}
+                                        {videoFile ? videoFile.name : "Click to upload 1-minute demo video (Max 50MB)"}
                                     </p>
+                                    {videoFile && (
+                                        <p className="text-xs text-yellow-400 mt-2">
+                                            Note: Large videos may take a few minutes to upload. Please be patient after clicking Submit.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
@@ -239,7 +244,14 @@ const TechnicalAssessment = () => {
                             </div>
 
                             <Button type="submit" className="w-full bg-white text-black hover:bg-white/90" disabled={submitting}>
-                                {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Submit Assessment"}
+                                {submitting ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                        {videoFile ? "Uploading Video & Submitting..." : "Submitting Assessment..."}
+                                    </>
+                                ) : (
+                                    "Submit Assessment"
+                                )}
                             </Button>
                         </form>
                     </CardContent>

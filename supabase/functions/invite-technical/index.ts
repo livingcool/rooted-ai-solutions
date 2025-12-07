@@ -3,80 +3,80 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import nodemailer from "npm:nodemailer@6.9.13";
 
 const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers":
-        "authorization, x-client-info, apikey, content-type",
-    "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
 };
 
 interface InviteRequest {
-    applicationId: string;
-    projectDescription: string;
-    deadline: string;
+  applicationId: string;
+  projectDescription: string;
+  deadline: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
-    if (req.method === "OPTIONS") {
-        return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { applicationId, projectDescription, deadline }: InviteRequest = await req.json();
+
+    // Init Supabase Admin
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
+    // 1. Get Application Details
+    const { data: app, error: appError } = await supabaseAdmin
+      .from('applications')
+      .select('*, jobs(title)')
+      .eq('id', applicationId)
+      .single();
+
+    if (appError || !app) {
+      throw new Error("Application not found");
     }
 
-    try {
-        const { applicationId, projectDescription, deadline }: InviteRequest = await req.json();
+    // 2. Create Technical Assessment Record
+    const { error: createError } = await supabaseAdmin
+      .from('technical_assessments')
+      .insert({
+        application_id: applicationId,
+        project_description: projectDescription,
+        deadline: deadline,
+        status: 'Pending'
+      });
 
-        // Init Supabase Admin
-        const supabaseAdmin = createClient(
-            Deno.env.get('SUPABASE_URL') ?? '',
-            Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-        );
+    if (createError) throw createError;
 
-        // 1. Get Application Details
-        const { data: app, error: appError } = await supabaseAdmin
-            .from('applications')
-            .select('*, jobs(title)')
-            .eq('id', applicationId)
-            .single();
+    // 3. Update Application Status
+    const { error: updateError } = await supabaseAdmin
+      .from('applications')
+      .update({ status: 'Technical Round' })
+      .eq('id', applicationId);
 
-        if (appError || !app) {
-            throw new Error("Application not found");
-        }
+    if (updateError) throw updateError;
 
-        // 2. Create Technical Assessment Record
-        const { error: createError } = await supabaseAdmin
-            .from('technical_assessments')
-            .insert({
-                application_id: applicationId,
-                project_description: projectDescription,
-                deadline: deadline,
-                status: 'Pending'
-            });
+    // 4. Send Email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: Deno.env.get("GMAIL_USER") || "rootedaiofficial@gmail.com",
+        pass: Deno.env.get("GMAIL_APP_PASSWORD"),
+      },
+    });
 
-        if (createError) throw createError;
+    const loginLink = `${req.headers.get('origin') || 'http://localhost:8080'}/candidate-login`;
+    const formattedDeadline = new Date(deadline).toLocaleString();
 
-        // 3. Update Application Status
-        const { error: updateError } = await supabaseAdmin
-            .from('applications')
-            .update({ status: 'Technical Round' })
-            .eq('id', applicationId);
-
-        if (updateError) throw updateError;
-
-        // 4. Send Email
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: Deno.env.get("GMAIL_USER") || "rootedaiofficial@gmail.com",
-                pass: Deno.env.get("GMAIL_APP_PASSWORD"),
-            },
-        });
-
-        const loginLink = `${req.headers.get('origin') || 'http://localhost:8080'}/candidate-login`;
-        const formattedDeadline = new Date(deadline).toLocaleString();
-
-        const mailOptions = {
-            from: `RootedAI Careers <${Deno.env.get("GMAIL_USER") || "rootedaiofficial@gmail.com"}>`,
-            to: app.email,
-            subject: `Technical Round: ${app.jobs.title} at RootedAI`,
-            html: `
+    const mailOptions = {
+      from: `RootedAI Careers <${Deno.env.get("GMAIL_USER") || "rootedaiofficial@gmail.com"}>`,
+      to: app.email,
+      subject: `Technical Round: ${app.jobs.title} at RootedAI`,
+      html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -120,7 +120,7 @@ const handler = async (req: Request): Promise<Response> => {
 
                     <p style="margin: 0 0 10px 0; font-size: 16px; font-weight: 600; color: #ffffff;">Submission Requirements:</p>
                     <ul style="color: #a0a0a0; font-size: 14px; line-height: 1.6; padding-left: 20px;">
-                        <li>A short video explaining your project and code.</li>
+                        <li>A short video (max 1 minute) explaining your project and code.</li>
                         <li>GitHub repository link.</li>
                         <li>Answers to reflection questions (Issues faced, Tech stack, etc.).</li>
                     </ul>
@@ -160,22 +160,22 @@ const handler = async (req: Request): Promise<Response> => {
       </body>
       </html>
       `,
-        };
+    };
 
-        await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
 
-        return new Response(JSON.stringify({ success: true }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-            status: 200,
-        });
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
+    });
 
-    } catch (error: any) {
-        console.error("Error sending invitation:", error);
-        return new Response(JSON.stringify({ error: error.message || "Internal server error" }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-            status: 500,
-        });
-    }
+  } catch (error: any) {
+    console.error("Error sending invitation:", error);
+    return new Response(JSON.stringify({ error: error.message || "Internal server error" }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
+  }
 };
 
 serve(handler);
