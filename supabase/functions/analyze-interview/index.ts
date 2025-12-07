@@ -32,22 +32,40 @@ serve(async (req) => {
 
         console.log(`Using path for signed URL: '${audioPath}'`);
 
-        const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
-            .storage
-            .from('interview-recordings')
-            .createSignedUrl(audioPath, 60);
+        let audioBlob: Blob;
 
-        if (signedUrlError || !signedUrlData) {
-            console.error("Error creating signed URL:", signedUrlError);
-            throw new Error('Failed to create signed URL for audio');
+        try {
+            const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
+                .storage
+                .from('interview-recordings')
+                .createSignedUrl(audioPath, 60);
+
+            if (signedUrlError || !signedUrlData) {
+                throw new Error(`Signed URL creation failed: ${signedUrlError?.message}`);
+            }
+
+            const audioResponse = await fetch(signedUrlData.signedUrl);
+            if (!audioResponse.ok) {
+                throw new Error(`Fetch from signed URL failed: ${audioResponse.status}`);
+            }
+
+            audioBlob = await audioResponse.blob();
+            console.log("Audio downloaded via Signed URL");
+
+        } catch (e) {
+            console.warn("Signed URL method failed, trying direct download...", e);
+            const { data, error } = await supabaseAdmin
+                .storage
+                .from('interview-recordings')
+                .download(audioPath);
+
+            if (error) {
+                console.error("Direct download also failed:", error);
+                throw new Error(`Failed to download audio: ${error.message}`);
+            }
+            audioBlob = data;
+            console.log("Audio downloaded via direct download");
         }
-
-        const audioResponse = await fetch(signedUrlData.signedUrl);
-        if (!audioResponse.ok) {
-            throw new Error(`Failed to fetch audio from signed URL: ${audioResponse.status} ${audioResponse.statusText}`);
-        }
-
-        const audioBlob = await audioResponse.blob();
 
         // Groq Setup
         const apiKey = Deno.env.get('GROQ_API_KEY');
