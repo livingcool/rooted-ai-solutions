@@ -189,6 +189,20 @@ const AdminHiringDashboard = () => {
     const [isTechnicalInviteOpen, setIsTechnicalInviteOpen] = useState(false);
     const [technicalDeadline, setTechnicalDeadline] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
+    const [generatedProjects, setGeneratedProjects] = useState<any[]>([]);
+    const [isGeneratingProjects, setIsGeneratingProjects] = useState(false);
+
+    // Check for existing standardized project when opening dialog
+    useEffect(() => {
+        if (isTechnicalInviteOpen && selectedApp) {
+            const job = (selectedApp as any).jobs;
+            if (job && job.technical_problem_statement) {
+                setProjectDescription(job.technical_problem_statement);
+            } else {
+                setProjectDescription(""); // Reset if no standard project
+            }
+        }
+    }, [isTechnicalInviteOpen, selectedApp]);
 
     const handleInvite = async () => {
         if (!selectedApp || !deadline) {
@@ -275,6 +289,80 @@ const AdminHiringDashboard = () => {
     const [rejectionReason, setRejectionReason] = useState("");
     const [rejectionEmail, setRejectionEmail] = useState({ subject: "", body: "" });
     const [generatingRejection, setGeneratingRejection] = useState(false);
+
+    const handleGenerateProjects = async () => {
+        if (!selectedApp) return;
+        setIsGeneratingProjects(true);
+        try {
+            const job = (selectedApp as any).jobs;
+            const response = await supabase.functions.invoke('generate-technical-projects', {
+                body: {
+                    jobTitle: job.title,
+                    jobDescription: job.description
+                }
+            });
+
+            if (response.error) throw response.error;
+
+            setGeneratedProjects(response.data.projects || []);
+            toast({
+                title: "Projects Generated",
+                description: "Select a project to standardize it for this role.",
+            });
+        } catch (error: any) {
+            console.error("Error generating projects:", error);
+            toast({
+                title: "Error",
+                description: "Failed to generate projects.",
+                variant: "destructive",
+            });
+        } finally {
+            setIsGeneratingProjects(false);
+        }
+    };
+
+    const handleSelectProject = async (project: any) => {
+        if (!selectedApp) return;
+
+        // Format the project description
+        const formattedDescription = `
+**${project.title}**
+
+${project.description}
+
+**Deliverables:**
+${project.deliverables}
+
+**Evaluation Criteria:**
+${project.evaluation_criteria}
+        `.trim();
+
+        setProjectDescription(formattedDescription);
+        setGeneratedProjects([]); // Clear suggestions
+
+        // Save as standardized project for this job
+        const job = (selectedApp as any).jobs;
+        if (job) {
+            const { error } = await supabase
+                .from('jobs' as any)
+                .update({ technical_problem_statement: formattedDescription })
+                .eq('id', job.id);
+
+            if (error) {
+                console.error("Error saving standardized project:", error);
+                toast({
+                    title: "Warning",
+                    description: "Project selected but failed to save as standard for the role.",
+                    variant: "destructive",
+                });
+            } else {
+                toast({
+                    title: "Project Standardized",
+                    description: "This project is now the default for this job role.",
+                });
+            }
+        }
+    };
 
     const handleGenerateRejection = async () => {
         if (!selectedApp) return;
@@ -834,7 +922,7 @@ const AdminHiringDashboard = () => {
                                                     className="bg-white text-black hover:bg-white/90"
                                                     onClick={() => setIsTechnicalInviteOpen(true)}
                                                 >
-                                                    Resend Technical Invite
+                                                    Invite to Technical Project Round
                                                 </Button>
                                             ) : (
                                                 <Button
@@ -1149,31 +1237,64 @@ const AdminHiringDashboard = () => {
                             </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4 py-4">
-                            <div className="space-y-2">
-                                <Label>Project Description</Label>
-                                <Textarea
-                                    className="min-h-[150px] bg-white/5 border-white/10"
-                                    placeholder="Describe the technical task..."
-                                    value={projectDescription}
-                                    onChange={(e) => setProjectDescription(e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Deadline</Label>
-                                <Input
-                                    type="datetime-local"
-                                    className="bg-white/5 border-white/10 [color-scheme:dark]"
-                                    value={technicalDeadline}
-                                    onChange={(e) => setTechnicalDeadline(e.target.value)}
-                                />
-                            </div>
-                            <Button
-                                className="w-full bg-white text-black hover:bg-white/90"
-                                onClick={handleTechnicalInvite}
-                                disabled={loading}
-                            >
-                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send Invitation"}
-                            </Button>
+                            {!projectDescription && generatedProjects.length === 0 && (
+                                <div className="text-center py-8 space-y-4">
+                                    <p className="text-white/60">No standardized project found for this role.</p>
+                                    <Button
+                                        variant="outline"
+                                        className="border-white/20 hover:bg-white/10 text-white"
+                                        onClick={handleGenerateProjects}
+                                        disabled={isGeneratingProjects}
+                                    >
+                                        {isGeneratingProjects ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2 text-yellow-400" />}
+                                        Generate Options with AI
+                                    </Button>
+                                </div>
+                            )}
+
+                            {generatedProjects.length > 0 && (
+                                <div className="space-y-4">
+                                    <Label>Select a Project to Standardize</Label>
+                                    <div className="grid gap-4 max-h-[300px] overflow-y-auto pr-2">
+                                        {generatedProjects.map((project, idx) => (
+                                            <div key={idx} className="bg-white/5 p-4 rounded border border-white/10 hover:border-white/30 cursor-pointer transition-colors" onClick={() => handleSelectProject(project)}>
+                                                <h4 className="font-bold text-white mb-2">{project.title}</h4>
+                                                <p className="text-sm text-white/60 line-clamp-2">{project.description}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {projectDescription && (
+                                <>
+                                    <div className="space-y-2">
+                                        <Label>Project Description</Label>
+                                        <Textarea
+                                            className="min-h-[150px] bg-white/5 border-white/10"
+                                            placeholder="Describe the technical task..."
+                                            value={projectDescription}
+                                            onChange={(e) => setProjectDescription(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Deadline</Label>
+                                        <Input
+                                            type="datetime-local"
+                                            className="bg-white/5 border-white/10 [color-scheme:dark]"
+                                            value={technicalDeadline}
+                                            onChange={(e) => setTechnicalDeadline(e.target.value)}
+                                        />
+                                    </div>
+                                    <Button
+                                        className="w-full bg-white text-black hover:bg-white/90"
+                                        onClick={handleTechnicalInvite}
+                                        disabled={loading}
+                                    >
+                                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send Invitation"}
+                                    </Button>
+                                </>
+                            )}
                         </div>
                     </DialogContent>
                 </Dialog>
