@@ -44,6 +44,13 @@ const TechnicalAssessment = () => {
                 .single();
 
             if (error) throw error;
+
+            // Check Status to prevent re-entry
+            if ((data as any).status !== 'Technical Round') {
+                navigate('/candidate-status');
+                return;
+            }
+
             setApplication(data);
         } catch (error) {
             console.error("Error fetching application:", error);

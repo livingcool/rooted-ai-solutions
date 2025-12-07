@@ -162,9 +162,13 @@ serve(async (req) => {
         )
 
     } catch (error: any) {
-        console.error("Error in analyze-technical-submission:", error);
+        console.error("CRITICAL ERROR in analyze-technical-submission:", error);
+        console.error("Error Stack:", error.stack);
         return new Response(
-            JSON.stringify({ error: error.message }),
+            JSON.stringify({
+                error: error.message,
+                details: "Check Supabase Edge Function Logs for full stack trace."
+            }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
         )
     }

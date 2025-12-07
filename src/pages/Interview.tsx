@@ -65,6 +65,13 @@ const Interview = () => {
                 .single();
 
             if (error) throw error;
+
+            // Check Status to prevent re-entry
+            if ((data as any).status !== 'Applied' && (data as any).status !== 'Interview Sent') {
+                navigate('/candidate-status');
+                return;
+            }
+
             setApplication(data);
         } catch (error) {
             console.error("Error fetching application:", error);
