@@ -955,7 +955,7 @@ const AdminHiringDashboard = () => {
                                             )}
 
                                             {/* Communication Round Invited */}
-                                            {(selectedApp.status === 'Invited to Interview' || selectedApp.status === 'Interview Sent') && (
+                                            {(selectedApp.status === 'Invited to Interview' || selectedApp.status === 'Interview Sent') && (!((selectedApp as any).interviews?.length > 0)) && (
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
@@ -966,8 +966,8 @@ const AdminHiringDashboard = () => {
                                                 </Button>
                                             )}
 
-                                            {/* Communication Round Completed */}
-                                            {selectedApp.status === 'Communication Round Completed' && (
+                                            {/* Communication Round Completed (or Attempted) */}
+                                            {(selectedApp.status === 'Communication Round Completed' || (selectedApp as any).interviews?.length > 0) && (
                                                 <div className="flex gap-2">
                                                     <Button
                                                         size="sm"
