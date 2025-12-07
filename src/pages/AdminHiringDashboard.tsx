@@ -137,15 +137,24 @@ const AdminHiringDashboard = () => {
 
         setEnhancing(true);
         try {
-            const { data, error } = await supabase.functions.invoke('enhance-job-description', {
-                body: {
+            const response = await fetch('/api/enhance-job-description', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                     title: newJob.title,
                     description: newJob.description,
                     requirements: newJob.requirements
-                }
+                })
             });
 
-            if (error) throw error;
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to enhance description");
+            }
+
+            const data = await response.json();
 
             setNewJob(prev => ({
                 ...prev,
@@ -219,15 +228,24 @@ const AdminHiringDashboard = () => {
         if (!selectedApp) return;
         setGeneratingRejection(true);
         try {
-            const { data, error } = await supabase.functions.invoke('generate-rejection', {
-                body: {
+            const response = await fetch('/api/generate-rejection', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                     candidateName: selectedApp.full_name,
                     jobTitle: (selectedApp as any).jobs?.title || "the role",
                     reason: rejectionReason
-                }
+                })
             });
 
-            if (error) throw error;
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Failed to generate rejection email");
+            }
+
+            const data = await response.json();
 
             setRejectionEmail({ subject: data.subject, body: data.body });
         } catch (error: any) {

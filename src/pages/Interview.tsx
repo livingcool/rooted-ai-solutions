@@ -147,12 +147,15 @@ const Interview = () => {
             if (dbError) throw dbError;
 
             // Trigger AI Analysis
-            supabase.functions.invoke('analyze-interview', {
-                body: {
+            // Trigger AI Analysis
+            fetch('/api/analyze-interview', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     interviewId: (data as any).id,
                     audioUrl: fileName,
                     question: QUESTIONS[currentQuestionIndex]
-                }
+                })
             });
 
             if (dbError) throw dbError;
