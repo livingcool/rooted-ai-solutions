@@ -137,8 +137,9 @@ export default async function handler(req: Request) {
 
     } catch (error: any) {
         console.error("Error in analyze-interview:", error);
+        console.error("Request body was:", await req.clone().text().catch(() => "Could not read body"));
         return new Response(
-            JSON.stringify({ error: error.message }),
+            JSON.stringify({ error: error.message, stack: error.stack }),
             {
                 status: 400,
                 headers: {
