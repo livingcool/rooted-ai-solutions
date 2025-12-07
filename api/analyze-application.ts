@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-const pdfParse = require("pdf-parse");
 
 // Using Node.js runtime for PDF parsing support
 export const config = {
@@ -29,7 +28,7 @@ export default async function handler(req: any, res: any) {
 
         const supabaseAdmin = createClient(supabaseUrl, supabaseKey);
 
-        // 1. Get Application & Job Details
+        // 1. Get Application &amp; Job Details
         const { data: app, error: appError } = await supabaseAdmin
             .from('applications')
             .select('*, jobs(*)')
@@ -59,6 +58,8 @@ export default async function handler(req: any, res: any) {
 
         if (fileExt === 'pdf') {
             try {
+                // Dynamic import for pdf-parse (CommonJS module)
+                const pdfParse = (await import('pdf-parse')).default;
                 const arrayBuffer = await fileData.arrayBuffer();
                 const buffer = Buffer.from(arrayBuffer);
                 const data = await pdfParse(buffer);
