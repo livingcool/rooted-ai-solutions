@@ -51,6 +51,7 @@ const AdminHiringDashboard = () => {
     const [isRetrying, setIsRetrying] = useState(false);
 
     const [editingJob, setEditingJob] = useState<Job | null>(null);
+    const [activeTab, setActiveTab] = useState("resume");
 
     const handleUpdateJob = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -672,6 +673,37 @@ const AdminHiringDashboard = () => {
         }
     };
 
+    const handleMoveToFinalRound = async (applicationId: string) => {
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from('applications' as any)
+                .update({ status: 'Final Interview' })
+                .eq('id', applicationId);
+
+            if (error) throw error;
+
+            toast({
+                title: "Success",
+                description: "Candidate moved to Final Interview round.",
+            });
+
+            if (selectedApp && selectedApp.id === applicationId) {
+                setSelectedApp({ ...selectedApp, status: 'Final Interview' });
+            }
+            fetchData();
+        } catch (error) {
+            console.error("Error updating status:", error);
+            toast({
+                title: "Error",
+                description: "Failed to update candidate status.",
+                variant: "destructive",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-black text-white p-8 pt-24">
             <div className="max-w-7xl mx-auto space-y-8">
@@ -910,13 +942,23 @@ const AdminHiringDashboard = () => {
                                                 {selectedApp.status}
                                             </Badge>
                                             {selectedApp.status === 'Technical Round' ? (
-                                                <Button
-                                                    size="sm"
-                                                    className="bg-white text-black hover:bg-white/90"
-                                                    onClick={() => setIsTechnicalInviteOpen(true)}
-                                                >
-                                                    Invite to Technical Project Round
-                                                </Button>
+                                                (selectedApp as any).technical_assessments?.length > 0 ? (
+                                                    <Button
+                                                        size="sm"
+                                                        className="bg-green-500 text-white hover:bg-green-600 border-0"
+                                                        onClick={() => handleMoveToFinalRound(selectedApp.id)}
+                                                    >
+                                                        Select for Final Interview
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        size="sm"
+                                                        className="bg-white text-black hover:bg-white/90"
+                                                        onClick={() => setIsTechnicalInviteOpen(true)}
+                                                    >
+                                                        Invite to Technical Project Round
+                                                    </Button>
+                                                )
                                             ) : (
                                                 <Button
                                                     size="sm"
@@ -1069,12 +1111,7 @@ const AdminHiringDashboard = () => {
                                             <div
                                                 key={step.id}
                                                 className={`flex flex-col items-center gap-2 cursor-pointer group`}
-                                                onClick={() => {
-                                                    // Simple tab switching logic based on step id
-                                                    const tabs = document.querySelectorAll('[role="tab"]');
-                                                    const targetTab = Array.from(tabs).find(t => t.getAttribute('data-value') === step.id) as HTMLElement;
-                                                    if (targetTab) targetTab.click();
-                                                }}
+                                                onClick={() => setActiveTab(step.id)}
                                             >
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${step.status === 'Completed' ? 'bg-green-500 border-green-500 text-black' :
                                                     step.status === 'In Progress' ? 'bg-yellow-500 border-yellow-500 text-black animate-pulse' :
@@ -1091,7 +1128,7 @@ const AdminHiringDashboard = () => {
                                     </div>
 
                                     {/* Detailed Analysis Tabs (Hidden triggers, controlled by stepper) */}
-                                    <Tabs defaultValue="resume" className="w-full">
+                                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                                         <TabsList className="hidden">
                                             <TabsTrigger value="resume" data-value="resume">Resume</TabsTrigger>
                                             <TabsTrigger value="communication" data-value="communication">Communication</TabsTrigger>
