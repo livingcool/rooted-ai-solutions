@@ -41,11 +41,18 @@ export default async function handler(req: any, res: any) {
         }
 
         // 2. Download Resume
+        // 2. Download Resume
         console.log(`Downloading resume from: ${app.resume_url}`);
+
+        // Remove bucket name from path if it's included
+        const resumePath = app.resume_url.startsWith('resumes/')
+            ? app.resume_url.substring('resumes/'.length)
+            : app.resume_url;
+
         const { data: fileData, error: fileError } = await supabaseAdmin
             .storage
             .from('resumes')
-            .download(app.resume_url);
+            .download(resumePath);  // Use resumePath instead of app.resume_url
 
         if (fileError) {
             console.error("Error downloading resume:", fileError);
