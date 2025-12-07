@@ -98,7 +98,7 @@ serve(async (req) => {
         console.log("Transcribing with Groq Whisper...");
         const formData = new FormData();
         formData.append('file', audioBlob, 'audio.webm');
-        formData.append('model', 'distil-whisper-large-v3-en');
+        formData.append('model', 'whisper-large-v3');
         formData.append('response_format', 'json');
 
         const transcriptionResponse = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
