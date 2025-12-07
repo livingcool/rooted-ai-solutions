@@ -18,24 +18,24 @@ serve(async (req) => {
 
         const prompt = `
         You are a Senior Technical Recruiter and Engineering Manager.
-        Generate 3 distinct, challenging, and relevant technical take-home project options for a candidate applying for the role of "${jobTitle}".
+        Generate 3 distinct, **intermediate-level** technical take-home project options for a candidate applying for the role of "${jobTitle}".
         
         Job Context: ${jobDescription || "Standard requirements for this role."}
         
-        Each project should be doable in 3-4 hours but deep enough to assess:
-        - Code quality and structure.
-        - Problem-solving skills.
-        - Technical proficiency relevant to the role.
+        **Requirements:**
+        1. Level: Intermediate. Not too basic, but not architecturally overwhelming.
+        2. AI Usage: Explicitly mention that **"Candidates are encouraged to use AI tools to accomplish this project."**
+        3. Format: **PLAIN TEXT ONLY**. Do NOT use Markdown (no bolding, no headers with #). Use UPPERCASE for section headers.
+        
+        Each project should be doable in 3-4 hours.
         
         Provide the output as a JSON array of objects with the following structure:
         {
             "title": "Project Title",
             "description": "Detailed problem statement...",
-            "deliverables": "List of expected artifacts (e.g., GitHub repo, video demo, deployed link)",
-            "evaluation_criteria": "What to look for (e.g., clean code, error handling, UI/UX)"
+            "deliverables": "List of expected artifacts",
+            "evaluation_criteria": "What to look for"
         }
-        
-        Ensure the projects are different in nature (e.g., one focused on API, one on UI, one on full-stack feature).
         `;
 
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {

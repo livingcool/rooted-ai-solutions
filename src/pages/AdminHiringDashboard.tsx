@@ -324,16 +324,17 @@ const AdminHiringDashboard = () => {
     const handleSelectProject = async (project: any) => {
         if (!selectedApp) return;
 
-        // Format the project description
+        // Format the project description (PLAIN TEXT, NO MARKDOWN)
         const formattedDescription = `
-**${project.title}**
+PROJECT TITLE: ${project.title}
 
+DESCRIPTION:
 ${project.description}
 
-**Deliverables:**
+DELIVERABLES:
 ${project.deliverables}
 
-**Evaluation Criteria:**
+EVALUATION CRITERIA:
 ${project.evaluation_criteria}
         `.trim();
 
@@ -1255,11 +1256,22 @@ ${project.evaluation_criteria}
                             {generatedProjects.length > 0 && (
                                 <div className="space-y-4">
                                     <Label>Select a Project to Standardize</Label>
-                                    <div className="grid gap-4 max-h-[300px] overflow-y-auto pr-2">
+                                    <div className="grid gap-4 max-h-[400px] overflow-y-auto pr-2">
                                         {generatedProjects.map((project, idx) => (
-                                            <div key={idx} className="bg-white/5 p-4 rounded border border-white/10 hover:border-white/30 cursor-pointer transition-colors" onClick={() => handleSelectProject(project)}>
-                                                <h4 className="font-bold text-white mb-2">{project.title}</h4>
-                                                <p className="text-sm text-white/60 line-clamp-2">{project.description}</p>
+                                            <div key={idx} className="bg-white/5 p-4 rounded border border-white/10 hover:border-white/30 transition-colors">
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <h4 className="font-bold text-white">{project.title}</h4>
+                                                    <Button size="sm" variant="secondary" onClick={() => handleSelectProject(project)}>Select</Button>
+                                                </div>
+                                                <div className="text-sm text-white/80 space-y-2">
+                                                    <p>{project.description}</p>
+                                                    <div>
+                                                        <span className="font-semibold text-white/60">Deliverables:</span> {project.deliverables}
+                                                    </div>
+                                                    <div>
+                                                        <span className="font-semibold text-white/60">Evaluation:</span> {project.evaluation_criteria}
+                                                    </div>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
