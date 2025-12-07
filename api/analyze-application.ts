@@ -3,7 +3,7 @@ import pdf from "pdf-parse";
 
 // Using Node.js runtime for PDF parsing support
 export const config = {
-    maxDuration: 60,
+    maxDuration: 300, // 5 minutes for PDF parsing + AI processing
 };
 
 export default async function handler(req: any, res: any) {
@@ -72,6 +72,7 @@ export default async function handler(req: any, res: any) {
         }
 
         // Truncate if too long
+        console.log(`Extracted resume text length: ${resumeText.length} characters`);
         resumeText = resumeText.substring(0, 6000);
 
         // 4. Analyze with Groq
