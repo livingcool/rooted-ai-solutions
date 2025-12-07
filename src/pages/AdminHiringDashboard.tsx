@@ -438,7 +438,7 @@ const AdminHiringDashboard = () => {
                         <p className="text-white/60">Manage jobs and applications</p>
                     </div>
                     <div className="flex gap-4">
-                        <Button variant="outline" className="text-white border-white/20 hover:bg-white/10 hover:text-white" onClick={handleLogout}>
+                        <Button variant="outline" className="bg-transparent text-white border-white/20 hover:bg-white/10 hover:text-white" onClick={handleLogout}>
                             Logout
                         </Button>
                         <Button className="bg-white text-black hover:bg-white/90" onClick={() => setIsPostJobOpen(true)}>
