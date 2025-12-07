@@ -326,6 +326,35 @@ const AdminHiringDashboard = () => {
         }
     };
 
+    const handleDeleteJob = async (jobId: string) => {
+        if (!confirm("Are you sure you want to delete this job? This action cannot be undone.")) return;
+
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from('jobs' as any)
+                .delete()
+                .eq('id', jobId);
+
+            if (error) throw error;
+
+            toast({
+                title: "Success",
+                description: "Job deleted successfully!",
+            });
+            fetchData();
+        } catch (error: any) {
+            console.error("Error deleting job:", error);
+            toast({
+                title: "Error",
+                description: "Failed to delete job.",
+                variant: "destructive",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleDeleteApplication = async (appId: string) => {
         if (!confirm("Are you sure you want to delete this application? This action cannot be undone.")) return;
 
@@ -657,46 +686,63 @@ const AdminHiringDashboard = () => {
                                             <Badge className={`${getStatusColor(selectedApp.status)} border-0 px-3 py-1 text-sm`}>
                                                 {selectedApp.status}
                                             </Badge>
-                                            {selectedApp.status !== 'Rejected' && (
-                                                <>
-                                                    <Button
-                                                        size="sm"
-                                                        className="bg-white text-black hover:bg-white/90"
-                                                        onClick={() => setIsInviteOpen(true)}
-                                                    >
-                                                        {selectedApp.status === 'Applied' || selectedApp.status === 'AI Assessed' ? 'Invite to Interview' : 'Resend Invite'}
-                                                    </Button>
-                                                    {selectedApp.status === 'Communication Round Completed' && (
-                                                        <Button
-                                                            size="sm"
-                                                            className="bg-green-500 text-white hover:bg-green-600 border-0"
-                                                            onClick={async () => {
-                                                                const { error } = await supabase
-                                                                    .from('applications' as any)
-                                                                    .update({ status: 'Technical Round' })
-                                                                    .eq('id', selectedApp.id);
+                                            <Button
+                                                size="sm"
+                                                className="bg-white text-black hover:bg-white/90"
+                                                onClick={() => setIsInviteOpen(true)}
+                                            >
+                                                {selectedApp.status === 'Applied' || selectedApp.status === 'AI Assessed' ? 'Invite to Interview' : 'Resend Invite'}
+                                            </Button>
+                                            {selectedApp.status === 'Communication Round Completed' && (
+                                                <Button
+                                                    size="sm"
+                                                    className="bg-green-500 text-white hover:bg-green-600 border-0"
+                                                    onClick={async () => {
+                                                        const { error } = await supabase
+                                                            .from('applications' as any)
+                                                            .update({ status: 'Technical Round' })
+                                                            .eq('id', selectedApp.id);
 
-                                                                if (error) {
-                                                                    toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
-                                                                } else {
-                                                                    toast({ title: "Success", description: "Candidate selected for Technical Round" });
-                                                                    setSelectedApp({ ...selectedApp, status: 'Technical Round' });
-                                                                    setApplications(apps => apps.map(a => a.id === selectedApp.id ? { ...a, status: 'Technical Round' } : a));
-                                                                }
-                                                            }}
-                                                        >
-                                                            Select for Next Round
-                                                        </Button>
-                                                    )}
-                                                    <Button
-                                                        size="sm"
-                                                        variant="destructive"
-                                                        className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
-                                                        onClick={() => setIsRejectOpen(true)}
-                                                    >
-                                                        Reject
-                                                    </Button>
-                                                </>
+                                                        if (error) {
+                                                            toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
+                                                        } else {
+                                                            toast({ title: "Success", description: "Candidate selected for Technical Round" });
+                                                            setSelectedApp({ ...selectedApp, status: 'Technical Round' });
+                                                            setApplications(apps => apps.map(a => a.id === selectedApp.id ? { ...a, status: 'Technical Round' } : a));
+                                                        }
+                                                    }}
+                                                >
+                                                    Select for Next Round
+                                                </Button>
+                                            )}
+                                            {selectedApp.status === 'Rejected' ? (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="border-white/20 hover:bg-white/10"
+                                                    onClick={async () => {
+                                                        const { error } = await supabase
+                                                            .from('applications' as any)
+                                                            .update({ status: 'Applied' })
+                                                            .eq('id', selectedApp.id);
+                                                        if (!error) {
+                                                            toast({ title: "Success", description: "Candidate restored to Applied status" });
+                                                            setSelectedApp({ ...selectedApp, status: 'Applied' });
+                                                            fetchData();
+                                                        }
+                                                    }}
+                                                >
+                                                    Restore to Applied
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    size="sm"
+                                                    variant="destructive"
+                                                    className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                                    onClick={() => setIsRejectOpen(true)}
+                                                >
+                                                    Reject
+                                                </Button>
                                             )}
                                             {(selectedApp as any).access_code && (
                                                 <div className="text-xs text-white/40 font-mono bg-white/5 px-2 py-1 rounded">

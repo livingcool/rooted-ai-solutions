@@ -23,7 +23,7 @@ export interface JobApplication {
     resume_url: string;
     cover_letter?: string;
     portfolio_url?: string;
-    status: 'Applied' | 'AI Assessed' | 'Communication Round' | 'Technical Round' | 'Hired' | 'Rejected';
+    status: 'Applied' | 'AI Assessed' | 'Communication Round' | 'Communication Round Completed' | 'Technical Round' | 'Hired' | 'Rejected';
     ai_score?: number;
     ai_feedback?: string;
     created_at: string;
