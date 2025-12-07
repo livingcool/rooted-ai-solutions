@@ -12,29 +12,64 @@ serve(async (req) => {
     }
 
     try {
-        const { jobTitle, jobDescription } = await req.json()
+        const { jobTitle, jobDescription, customFeedback } = await req.json()
 
         const apiKey = Deno.env.get('GROQ_API_KEY')!;
 
         const prompt = `
-        You are a Senior Technical Recruiter and Engineering Manager.
-        Generate 3 distinct, **intermediate-level** technical take-home project options for a candidate applying for the role of "${jobTitle}".
+        You are a Venture Capitalist, Product Manager, and Technical Recruiter.
+        Generate 3 distinct "End-to-End Startup Solution" technical project options for a candidate applying for the role of "${jobTitle}".
         
         Job Context: ${jobDescription || "Standard requirements for this role."}
+        ${customFeedback ? `Custom Requirements/Feedback: ${customFeedback}` : ""}
         
-        **Requirements:**
-        1. Level: Intermediate. Not too basic, but not architecturally overwhelming.
-        2. AI Usage: Explicitly mention that **"Candidates are encouraged to use AI tools to accomplish this project."**
-        3. Format: **PLAIN TEXT ONLY**. Do NOT use Markdown (no bolding, no headers with #). Use UPPERCASE for section headers.
+        **Goal:** The project should be a mini-startup MVP that solves a real problem.
         
-        Each project should be doable in 3-4 hours.
-        
-        Provide the output as a JSON array of objects with the following structure:
+        **Evaluation Criteria (The "Why?" & "Brutally Honest" Analysis):**
+        For EACH project, you must evaluate it against these 11 criteria:
+        1. Willingness to Pay: Who signs the check? Do they have budget?
+        2. Market Demand: Cyclic vs Niche? Avoid broad/shallow.
+        3. Time to Value (TAT): Can user get value < 1 day?
+        4. Feasibility: Is MVP buildable in 2 months? (Project scope for candidate is 3-4 hours, but the *idea* must be feasible).
+        5. The Moat (Data): Does it get smarter with use?
+        6. Defensibility: Can ChatGPT kill this? (If yes, value = $0).
+        7. Monetization Clarity: Subscription vs Transaction. No "figure it out later".
+        8. Retention Strategy: Why come back? Avoid "One-and-Done".
+        9. ROI for Customers: Hard $$ saved/earned, not just "feels better".
+        10. Addition of AI: Why AI? Is it doing more than a logical script?
+        11. ICP & Pricing: Creative ways to capitalize on Ideal Customer Profile.
+
+        **Output Format:**
+        Provide a JSON array of objects. Each object MUST have:
+        1. "title": Project Title.
+        2. "startup_analysis": A detailed object containing the 11 points above. Be BRUTALLY HONEST. Point out lags and suggest improvements.
+        3. "email_format": A clean, structured string (PLAIN TEXT, NO MARKDOWN) to send to the candidate. 
+           - Structure: PROJECT TITLE, DESCRIPTION, DELIVERABLES, EVALUATION CRITERIA.
+           - Explicitly mention: "Candidates are encouraged to use AI tools to accomplish this project."
+           - The project scope for the candidate must be doable in 3-4 hours (a slice of the full startup idea).
+
+        JSON Structure:
         {
-            "title": "Project Title",
-            "description": "Detailed problem statement...",
-            "deliverables": "List of expected artifacts",
-            "evaluation_criteria": "What to look for"
+            "projects": [
+                {
+                    "title": "...",
+                    "startup_analysis": {
+                        "willingness_to_pay": "...",
+                        "market_demand": "...",
+                        "time_to_value": "...",
+                        "feasibility": "...",
+                        "moat": "...",
+                        "defensibility": "...",
+                        "monetization": "...",
+                        "retention": "...",
+                        "roi": "...",
+                        "why_ai": "...",
+                        "icp_pricing": "...",
+                        "verdict": "Brutally honest verdict: Will it work? (Great/Okay/Fail)"
+                    },
+                    "email_format": "PROJECT TITLE: ...\n\nDESCRIPTION: ...\n\nDELIVERABLES: ...\n\nEVALUATION CRITERIA: ..."
+                }
+            ]
         }
         `;
 

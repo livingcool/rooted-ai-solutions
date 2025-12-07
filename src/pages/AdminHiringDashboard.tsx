@@ -191,6 +191,7 @@ const AdminHiringDashboard = () => {
     const [projectDescription, setProjectDescription] = useState("");
     const [generatedProjects, setGeneratedProjects] = useState<any[]>([]);
     const [isGeneratingProjects, setIsGeneratingProjects] = useState(false);
+    const [customFeedback, setCustomFeedback] = useState("");
 
     // Check for existing standardized project when opening dialog
     useEffect(() => {
@@ -298,7 +299,8 @@ const AdminHiringDashboard = () => {
             const response = await supabase.functions.invoke('generate-technical-projects', {
                 body: {
                     jobTitle: job.title,
-                    jobDescription: job.description
+                    jobDescription: job.description,
+                    customFeedback: customFeedback
                 }
             });
 
@@ -324,22 +326,12 @@ const AdminHiringDashboard = () => {
     const handleSelectProject = async (project: any) => {
         if (!selectedApp) return;
 
-        // Format the project description (PLAIN TEXT, NO MARKDOWN)
-        const formattedDescription = `
-PROJECT TITLE: ${project.title}
-
-DESCRIPTION:
-${project.description}
-
-DELIVERABLES:
-${project.deliverables}
-
-EVALUATION CRITERIA:
-${project.evaluation_criteria}
-        `.trim();
+        // Use the pre-formatted email format from the backend
+        const formattedDescription = project.email_format;
 
         setProjectDescription(formattedDescription);
         setGeneratedProjects([]); // Clear suggestions
+        setCustomFeedback(""); // Clear feedback
 
         // Save as standardized project for this job
         const job = (selectedApp as any).jobs;
@@ -1241,14 +1233,25 @@ ${project.evaluation_criteria}
                             {!projectDescription && generatedProjects.length === 0 && (
                                 <div className="text-center py-8 space-y-4">
                                     <p className="text-white/60">No standardized project found for this role.</p>
+
+                                    <div className="space-y-2 text-left">
+                                        <Label>Custom Requirements / Feedback (Optional)</Label>
+                                        <Textarea
+                                            placeholder="e.g., Focus on B2B SaaS, Make it a Fintech app..."
+                                            value={customFeedback}
+                                            onChange={(e) => setCustomFeedback(e.target.value)}
+                                            className="bg-white/5 border-white/10"
+                                        />
+                                    </div>
+
                                     <Button
                                         variant="outline"
-                                        className="border-white/20 hover:bg-white/10 text-white"
+                                        className="border-white/20 hover:bg-white/10 text-white w-full"
                                         onClick={handleGenerateProjects}
                                         disabled={isGeneratingProjects}
                                     >
                                         {isGeneratingProjects ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2 text-yellow-400" />}
-                                        Generate Options with AI
+                                        Generate Startup-Style Projects
                                     </Button>
                                 </div>
                             )}
@@ -1256,25 +1259,38 @@ ${project.evaluation_criteria}
                             {generatedProjects.length > 0 && (
                                 <div className="space-y-4">
                                     <Label>Select a Project to Standardize</Label>
-                                    <div className="grid gap-4 max-h-[400px] overflow-y-auto pr-2">
+                                    <div className="grid gap-4 max-h-[500px] overflow-y-auto pr-2">
                                         {generatedProjects.map((project, idx) => (
                                             <div key={idx} className="bg-white/5 p-4 rounded border border-white/10 hover:border-white/30 transition-colors">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <h4 className="font-bold text-white">{project.title}</h4>
-                                                    <Button size="sm" variant="secondary" onClick={() => handleSelectProject(project)}>Select</Button>
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <h4 className="font-bold text-white text-lg">{project.title}</h4>
+                                                    <Button size="sm" variant="secondary" onClick={() => handleSelectProject(project)}>Select & Standardize</Button>
                                                 </div>
-                                                <div className="text-sm text-white/80 space-y-2">
-                                                    <p>{project.description}</p>
-                                                    <div>
-                                                        <span className="font-semibold text-white/60">Deliverables:</span> {project.deliverables}
-                                                    </div>
-                                                    <div>
-                                                        <span className="font-semibold text-white/60">Evaluation:</span> {project.evaluation_criteria}
+
+                                                {/* Startup Analysis Accordion-style display */}
+                                                <div className="space-y-3 text-sm text-white/80 bg-black/20 p-3 rounded">
+                                                    <p className="font-semibold text-yellow-400">{project.startup_analysis.verdict}</p>
+
+                                                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                                                        <div><span className="text-white/50">Willingness to Pay:</span> <br />{project.startup_analysis.willingness_to_pay}</div>
+                                                        <div><span className="text-white/50">Market Demand:</span> <br />{project.startup_analysis.market_demand}</div>
+                                                        <div><span className="text-white/50">Time to Value:</span> <br />{project.startup_analysis.time_to_value}</div>
+                                                        <div><span className="text-white/50">Feasibility:</span> <br />{project.startup_analysis.feasibility}</div>
+                                                        <div><span className="text-white/50">Moat:</span> <br />{project.startup_analysis.moat}</div>
+                                                        <div><span className="text-white/50">Defensibility:</span> <br />{project.startup_analysis.defensibility}</div>
+                                                        <div><span className="text-white/50">Monetization:</span> <br />{project.startup_analysis.monetization}</div>
+                                                        <div><span className="text-white/50">Retention:</span> <br />{project.startup_analysis.retention}</div>
+                                                        <div><span className="text-white/50">ROI:</span> <br />{project.startup_analysis.roi}</div>
+                                                        <div><span className="text-white/50">Why AI?:</span> <br />{project.startup_analysis.why_ai}</div>
+                                                        <div className="col-span-2"><span className="text-white/50">ICP & Pricing:</span> <br />{project.startup_analysis.icp_pricing}</div>
                                                     </div>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
+                                    <Button variant="ghost" size="sm" onClick={() => setGeneratedProjects([])} className="w-full text-white/50 hover:text-white">
+                                        Discard & Try Again
+                                    </Button>
                                 </div>
                             )}
 
