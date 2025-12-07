@@ -1249,23 +1249,34 @@ const AdminHiringDashboard = () => {
                                                                 </div>
                                                             </div>
 
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                                <div>
-                                                                    <h5 className="text-sm font-semibold text-white/60 mb-2">Tech Stack</h5>
-                                                                    <p className="text-white/90 text-sm bg-black/40 p-3 rounded border border-white/5 whitespace-pre-wrap">{tech.tech_stack}</p>
+                                                            <div className="space-y-6">
+                                                                <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                                    <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                        <Code className="w-4 h-4" /> Tech Stack
+                                                                    </h5>
+                                                                    <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-black/20 p-3 rounded">{tech.tech_stack}</p>
                                                                 </div>
-                                                                <div>
-                                                                    <h5 className="text-sm font-semibold text-white/60 mb-2">Process Flow</h5>
-                                                                    <p className="text-white/90 text-sm bg-black/40 p-3 rounded border border-white/5 whitespace-pre-wrap">{tech.process_flow}</p>
+
+                                                                <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                                    <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                        <RefreshCw className="w-4 h-4" /> Process Flow
+                                                                    </h5>
+                                                                    <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-sans">{tech.process_flow}</p>
                                                                 </div>
-                                                                <div className="col-span-2">
-                                                                    <h5 className="text-sm font-semibold text-white/60 mb-2">Issues Faced</h5>
-                                                                    <p className="text-white/90 text-sm bg-black/40 p-3 rounded border border-white/5 whitespace-pre-wrap">{tech.issues_faced}</p>
+
+                                                                <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                                    <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                        <Sparkles className="w-4 h-4 text-yellow-400" /> Issues Faced & Solutions
+                                                                    </h5>
+                                                                    <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap">{tech.issues_faced}</p>
                                                                 </div>
+
                                                                 {(tech as any).transcription && (
-                                                                    <div className="col-span-2">
-                                                                        <h5 className="text-sm font-semibold text-white/60 mb-2">Video Transcription (AI Generated)</h5>
-                                                                        <div className="text-white/80 text-sm bg-black/40 p-4 rounded border border-white/5 max-h-40 overflow-y-auto italic">
+                                                                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                                        <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                            <Video className="w-4 h-4 text-blue-400" /> Video Transcription (AI Generated)
+                                                                        </h5>
+                                                                        <div className="text-white/80 text-sm bg-black/20 p-4 rounded border border-white/5 max-h-60 overflow-y-auto italic leading-relaxed">
                                                                             "{(tech as any).transcription}"
                                                                         </div>
                                                                     </div>
