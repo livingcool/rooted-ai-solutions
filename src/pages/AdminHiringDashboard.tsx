@@ -579,7 +579,7 @@ ${project.evaluation_criteria}
             // Fetch Applications
             const { data: appsData, error: appsError } = await supabase
                 .from('applications' as any)
-                .select('*, jobs(title), interviews(*)')
+                .select('*, jobs(id, title, description, technical_problem_statement), interviews(*)')
                 .order('created_at', { ascending: false });
 
             if (appsError) throw appsError;
