@@ -55,7 +55,24 @@ serve(async (req) => {
         - improvement_suggestions: string (max 50 words) specific advice.
         `;
 
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        // Retry logic for Rate Limiting
+        const fetchWithRetry = async (url: string, options: RequestInit, retries = 3, backoff = 2000) => {
+            for (let i = 0; i < retries; i++) {
+                const response = await fetch(url, options);
+
+                if (response.status === 429) {
+                    console.warn(`Rate limit hit. Retrying in ${backoff}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, backoff));
+                    backoff *= 2; // Exponential backoff
+                    continue;
+                }
+
+                return response;
+            }
+            throw new Error("Max retries exceeded for Groq API (Rate Limit)");
+        };
+
+        const response = await fetchWithRetry('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,

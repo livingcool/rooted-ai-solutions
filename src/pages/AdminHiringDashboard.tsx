@@ -26,6 +26,9 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const AdminHiringDashboard = () => {
     const { toast } = useToast();
@@ -183,6 +186,10 @@ const AdminHiringDashboard = () => {
     const [isInviteOpen, setIsInviteOpen] = useState(false);
     const [deadline, setDeadline] = useState("");
 
+    const [isTechnicalInviteOpen, setIsTechnicalInviteOpen] = useState(false);
+    const [technicalDeadline, setTechnicalDeadline] = useState("");
+    const [projectDescription, setProjectDescription] = useState("");
+
     const handleInvite = async () => {
         if (!selectedApp || !deadline) {
             toast({
@@ -211,6 +218,49 @@ const AdminHiringDashboard = () => {
             fetchData(); // Refresh data to show updated status
         } catch (error: any) {
             console.error("Error sending invitation:", error);
+            toast({
+                title: "Error",
+                description: error.message || "Failed to send invitation.",
+                variant: "destructive",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleTechnicalInvite = async () => {
+        if (!selectedApp || !technicalDeadline || !projectDescription) {
+            toast({
+                title: "Error",
+                description: "Please fill in all fields.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.functions.invoke('invite-technical', {
+                body: {
+                    applicationId: selectedApp.id,
+                    deadline: technicalDeadline,
+                    projectDescription: projectDescription
+                },
+            });
+
+            if (error) throw error;
+            if (data?.error) throw new Error(data.error);
+
+            toast({
+                title: "Success",
+                description: "Technical assessment invitation sent!",
+            });
+            setIsTechnicalInviteOpen(false);
+            setTechnicalDeadline("");
+            setProjectDescription("");
+            fetchData();
+        } catch (error: any) {
+            console.error("Error sending technical invitation:", error);
             toast({
                 title: "Error",
                 description: error.message || "Failed to send invitation.",
@@ -789,20 +839,7 @@ const AdminHiringDashboard = () => {
                                                 <Button
                                                     size="sm"
                                                     className="bg-green-500 text-white hover:bg-green-600 border-0"
-                                                    onClick={async () => {
-                                                        const { error } = await supabase
-                                                            .from('applications' as any)
-                                                            .update({ status: 'Technical Round' })
-                                                            .eq('id', selectedApp.id);
-
-                                                        if (error) {
-                                                            toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
-                                                        } else {
-                                                            toast({ title: "Success", description: "Candidate selected for Technical Round" });
-                                                            setSelectedApp({ ...selectedApp, status: 'Technical Round' });
-                                                            setApplications(apps => apps.map(a => a.id === selectedApp.id ? { ...a, status: 'Technical Round' } : a));
-                                                        }
-                                                    }}
+                                                    onClick={() => setIsTechnicalInviteOpen(true)}
                                                 >
                                                     Select for Next Round
                                                 </Button>
@@ -1089,6 +1126,44 @@ const AdminHiringDashboard = () => {
                                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm Rejection"}
                                 </Button>
                             </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
+                <Dialog open={isTechnicalInviteOpen} onOpenChange={setIsTechnicalInviteOpen}>
+                    <DialogContent className="bg-black border-white/10 text-white max-w-lg">
+                        <DialogHeader>
+                            <DialogTitle>Invite to Technical Round</DialogTitle>
+                            <DialogDescription className="text-white/60">
+                                Send the technical project brief and set a deadline.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                            <div className="space-y-2">
+                                <Label>Project Description</Label>
+                                <Textarea
+                                    className="min-h-[150px] bg-white/5 border-white/10"
+                                    placeholder="Describe the technical task..."
+                                    value={projectDescription}
+                                    onChange={(e) => setProjectDescription(e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Deadline</Label>
+                                <Input
+                                    type="datetime-local"
+                                    className="bg-white/5 border-white/10 [color-scheme:dark]"
+                                    value={technicalDeadline}
+                                    onChange={(e) => setTechnicalDeadline(e.target.value)}
+                                />
+                            </div>
+                            <Button
+                                className="w-full bg-white text-black hover:bg-white/90"
+                                onClick={handleTechnicalInvite}
+                                disabled={loading}
+                            >
+                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send Invitation"}
+                            </Button>
                         </div>
                     </DialogContent>
                 </Dialog>
