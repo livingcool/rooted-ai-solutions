@@ -45,6 +45,7 @@ const AdminHiringDashboard = () => {
         department: "Engineering"
     });
     const [enhancing, setEnhancing] = useState(false);
+    const [isRetrying, setIsRetrying] = useState(false);
 
     const [editingJob, setEditingJob] = useState<Job | null>(null);
 
@@ -476,8 +477,6 @@ const AdminHiringDashboard = () => {
             </div>
         );
     }
-
-    const [isRetrying, setIsRetrying] = useState(false);
 
     const handleRetryAnalysis = async () => {
         setIsRetrying(true);
