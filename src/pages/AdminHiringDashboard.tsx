@@ -943,8 +943,73 @@ const AdminHiringDashboard = () => {
                                             <Badge className={`${getStatusColor(selectedApp.status)} border-0 px-3 py-1 text-sm`}>
                                                 {selectedApp.status}
                                             </Badge>
-                                            {selectedApp.status === 'Technical Round' ? (
-                                                (selectedApp as any).technical_assessments?.length > 0 ? (
+                                            {/* Resume / Initial Stage */}
+                                            {(selectedApp.status === 'Applied' || selectedApp.status === 'AI Assessed') && (
+                                                <Button
+                                                    size="sm"
+                                                    className="bg-white text-black hover:bg-white/90"
+                                                    onClick={() => setIsInviteOpen(true)}
+                                                >
+                                                    Invite to Communication Assessment
+                                                </Button>
+                                            )}
+
+                                            {/* Communication Round Invited */}
+                                            {(selectedApp.status === 'Invited to Interview' || selectedApp.status === 'Interview Sent') && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="border-white/20 hover:bg-white/10"
+                                                    onClick={() => setIsInviteOpen(true)}
+                                                >
+                                                    Resend Communication Assessment
+                                                </Button>
+                                            )}
+
+                                            {/* Communication Round Completed */}
+                                            {selectedApp.status === 'Communication Round Completed' && (
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="border-white/20 hover:bg-white/10"
+                                                        onClick={() => setIsInviteOpen(true)}
+                                                    >
+                                                        Resend Communication
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        className="bg-green-500 text-white hover:bg-green-600 border-0"
+                                                        onClick={() => setIsTechnicalInviteOpen(true)}
+                                                    >
+                                                        Invite to Technical Round
+                                                    </Button>
+                                                </div>
+                                            )}
+
+                                            {/* Technical Round Invited */}
+                                            {selectedApp.status === 'Technical Round' && (selectedApp as any).technical_assessments?.length === 0 && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="border-white/20 hover:bg-white/10"
+                                                    onClick={() => setIsTechnicalInviteOpen(true)}
+                                                >
+                                                    Resend Technical Invite
+                                                </Button>
+                                            )}
+
+                                            {/* Technical Round Completed */}
+                                            {selectedApp.status === 'Technical Round' && (selectedApp as any).technical_assessments?.length > 0 && (
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="border-white/20 hover:bg-white/10"
+                                                        onClick={() => setIsTechnicalInviteOpen(true)}
+                                                    >
+                                                        Retake Technical
+                                                    </Button>
                                                     <Button
                                                         size="sm"
                                                         className="bg-green-500 text-white hover:bg-green-600 border-0"
@@ -952,32 +1017,7 @@ const AdminHiringDashboard = () => {
                                                     >
                                                         Select for Final Interview
                                                     </Button>
-                                                ) : (
-                                                    <Button
-                                                        size="sm"
-                                                        className="bg-white text-black hover:bg-white/90"
-                                                        onClick={() => setIsTechnicalInviteOpen(true)}
-                                                    >
-                                                        Invite to Technical Project Round
-                                                    </Button>
-                                                )
-                                            ) : (
-                                                <Button
-                                                    size="sm"
-                                                    className="bg-white text-black hover:bg-white/90"
-                                                    onClick={() => setIsInviteOpen(true)}
-                                                >
-                                                    {selectedApp.status === 'Applied' || selectedApp.status === 'AI Assessed' ? 'Invite to Interview' : 'Resend Interview Invite'}
-                                                </Button>
-                                            )}
-                                            {selectedApp.status === 'Communication Round Completed' && (
-                                                <Button
-                                                    size="sm"
-                                                    className="bg-green-500 text-white hover:bg-green-600 border-0"
-                                                    onClick={() => setIsTechnicalInviteOpen(true)}
-                                                >
-                                                    Select for Next Round
-                                                </Button>
+                                                </div>
                                             )}
                                             {selectedApp.status === 'Rejected' ? (
                                                 <Button
