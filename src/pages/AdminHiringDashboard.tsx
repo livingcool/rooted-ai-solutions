@@ -952,19 +952,7 @@ const AdminHiringDashboard = () => {
                                                 >
                                                     Invite to Communication Assessment
                                                 </Button>
-                                            )}
-
-                                            {/* Communication Round Invited */}
-                                            {(selectedApp.status === 'Invited to Interview' || selectedApp.status === 'Interview Sent') && (!((selectedApp as any).interviews?.length > 0)) && (
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    className="border-white/20 hover:bg-white/10"
-                                                    onClick={() => setIsInviteOpen(true)}
-                                                >
-                                                    Resend Communication Assessment
-                                                </Button>
-                                            )}
+                                            )
 
                                             {/* Communication Round Completed (or Attempted) */}
                                             {(selectedApp.status === 'Communication Round Completed' || (selectedApp as any).interviews?.length > 0) && (
