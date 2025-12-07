@@ -28,10 +28,52 @@ serve(async (req) => {
         if (fetchError || !assessment) throw new Error("Assessment not found");
 
         const problemStatement = assessment.applications?.jobs?.technical_problem_statement;
-
-        // Groq Analysis
         const apiKey = Deno.env.get('GROQ_API_KEY')!;
 
+        // --- 1. Transcribe Video (if available) ---
+        let transcription = "No video submitted or transcription failed.";
+
+        if (assessment.video_url) {
+            try {
+                console.log("Downloading video:", assessment.video_url);
+                const { data: videoData, error: downloadError } = await supabaseAdmin
+                    .storage
+                    .from('technical-submissions')
+                    .download(assessment.video_url);
+
+                if (downloadError) throw downloadError;
+
+                console.log("Transcribing video...");
+                const formData = new FormData();
+                formData.append('file', videoData, 'video.mp4'); // Groq requires a filename
+                formData.append('model', 'whisper-large-v3');
+                formData.append('response_format', 'json');
+
+                const transResponse = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                    },
+                    body: formData
+                });
+
+                if (!transResponse.ok) {
+                    const errText = await transResponse.text();
+                    console.error("Groq Transcription Error:", errText);
+                    throw new Error(`Groq Transcription Failed: ${errText}`);
+                }
+
+                const transResult = await transResponse.json();
+                transcription = transResult.text || "No speech detected.";
+                console.log("Transcription complete.");
+
+            } catch (err) {
+                console.error("Video processing error:", err);
+                transcription = `[Error processing video: ${err.message}]`;
+            }
+        }
+
+        // --- 2. Analyze Submission (Text + Transcription) ---
         const prompt = `
         You are a Senior Technical Interviewer. Evaluate this technical submission for the following problem:
         
@@ -44,14 +86,18 @@ serve(async (req) => {
         - Issues Faced: ${assessment.issues_faced}
         - Cost Analysis: ${assessment.cost_analysis}
         
+        Video Presentation Transcript:
+        "${transcription}"
+        
         Analyze the submission based on:
         1. Relevance to the problem.
-        2. Complexity and depth of the solution (based on description).
+        2. Complexity and depth of the solution.
         3. Problem-solving approach (issues faced).
+        4. Communication quality and clarity of the video presentation (based on transcript).
         
         Provide a JSON output with:
         - score: number (0-100)
-        - feedback: string (max 100 words) detailed feedback on strengths and weaknesses.
+        - feedback: string (max 100 words) detailed feedback on strengths, weaknesses, and the video presentation.
         - improvement_suggestions: string (max 50 words) specific advice.
         `;
 
@@ -103,6 +149,7 @@ serve(async (req) => {
                 ai_score: content.score,
                 ai_feedback: content.feedback,
                 improvement_suggestions: content.improvement_suggestions,
+                transcription: transcription, // Save transcription
                 status: 'Analyzed'
             })
             .eq('id', assessment.id);

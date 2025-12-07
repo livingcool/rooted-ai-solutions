@@ -1262,6 +1262,14 @@ const AdminHiringDashboard = () => {
                                                                     <h5 className="text-sm font-semibold text-white/60 mb-2">Issues Faced</h5>
                                                                     <p className="text-white/90 text-sm bg-black/40 p-3 rounded border border-white/5 whitespace-pre-wrap">{tech.issues_faced}</p>
                                                                 </div>
+                                                                {(tech as any).transcription && (
+                                                                    <div className="col-span-2">
+                                                                        <h5 className="text-sm font-semibold text-white/60 mb-2">Video Transcription (AI Generated)</h5>
+                                                                        <div className="text-white/80 text-sm bg-black/40 p-4 rounded border border-white/5 max-h-40 overflow-y-auto italic">
+                                                                            "{(tech as any).transcription}"
+                                                                        </div>
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     </div>
