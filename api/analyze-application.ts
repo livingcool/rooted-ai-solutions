@@ -6,7 +6,7 @@ export const config = {
     maxDuration: 60,
 };
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
     // CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'authorization, x-client-info, apikey, content-type');
@@ -97,7 +97,7 @@ export default async function handler(req, res) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama3-8b-8192',
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
                     { role: 'user', content: prompt }
