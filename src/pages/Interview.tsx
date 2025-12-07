@@ -67,7 +67,9 @@ const Interview = () => {
             if (error) throw error;
 
             // Check Status to prevent re-entry
-            if ((data as any).status !== 'Applied' && (data as any).status !== 'Interview Sent') {
+            // Allow 'Applied' (for testing) and 'Invited to Interview' (or 'Interview Sent')
+            const allowedStatuses = ['Applied', 'Interview Sent', 'Invited to Interview'];
+            if (!allowedStatuses.includes((data as any).status)) {
                 navigate('/candidate-status');
                 return;
             }

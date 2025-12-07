@@ -12,26 +12,49 @@ serve(async (req) => {
 
     try {
         console.log(`Received request: ${req.method}`);
-        const body = await req.json();
+
+        let body;
+        try {
+            const text = await req.text();
+            console.log("Raw body length:", text.length);
+            if (!text || text.trim() === "") {
+                throw new Error("Empty request body");
+            }
+            body = JSON.parse(text);
+        } catch (e) {
+            console.error("Failed to parse request body:", e);
+            return new Response(
+                JSON.stringify({ error: "Invalid or empty request body", details: e.message }),
+                { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+            )
+        }
+
         const { title, description, requirements } = body;
 
         const prompt = `
-        You are an expert HR Specialist and Tech Recruiter at "RootedAI". Enhance the following job description to be professional, engaging, and clear.
+        You are an expert HR Specialist and Tech Recruiter at "RootedAI". Create a comprehensive, professional, and well-structured job description based on the input below.
 
-        **CRITICAL RULES:**
-        1. **NO MARKDOWN**: Do not use bold (**), italics (*), headers (#), or any other markdown formatting. Use plain text only.
-        2. **NO HASHTAGS**: Do not use hashtags (#) anywhere.
-        3. **STRUCTURE**: Organize the description into clear sections using plain text labels like "About RootedAI:", "About the Role:", "Key Responsibilities:", and "What We Offer:".
-        4. **SKILLS ONLY**: Provide exactly 5 to 8 key requirements. Each requirement must be a specific technical skill or core competency (e.g., "React", "Node.js", "Project Management"). Do NOT use full sentences. Max 3-5 words per item.
+        **CRITICAL FORMATTING RULES:**
+        1. **STRUCTURE**: You MUST organize the content into these clear sections, separated by double newlines:
+           - **About RootedAI** (Create a compelling brief about an AI/ML innovation company)
+           - **About the Role** (Detailed overview of the position)
+           - **Key Responsibilities** (Use bullet points • for a detailed list)
+           - **What We Offer** (Perks, culture, growth opportunities)
+        2. **FORMATTING**: Use plain text only (no markdown like ** or ##). Use uppercase for section headers (e.g., "ABOUT THE ROLE").
+        3. **DETAIL**: The description should be detailed and descriptive, not brief. Expand on the points to make it engaging.
+        4. **LISTS**: Use standard bullet points (•) for lists to ensure readability in a text area.
+
+        **REQUIREMENTS GENERATION:**
+        - Provide exactly 5 to 8 key technical requirements.
+        - Each must be a specific skill (e.g., "React", "Python", "AWS").
+        - Max 3-5 words per item.
 
         Job Title: ${title}
         Current Description: ${description}
         Current Requirements: ${requirements}
         
-        Also, suggest a list of relevant tech stacks and software that would be needed for this role if not already mentioned.
-        
         Provide a JSON output with:
-        - enhanced_description: string (The improved job description in plain text, structured with labels)
+        - enhanced_description: string (The full, formatted job description with newlines \n and bullet points)
         - recommended_requirements: string[] (Array of 5-8 concise requirement strings)
         - tech_stack: string[] (List of specific technologies/software relevant to the role)
         `
@@ -42,7 +65,7 @@ serve(async (req) => {
             console.error("GROQ_API_KEY missing");
             throw new Error("GROQ_API_KEY is not set in environment variables.");
         }
-        console.log("API Key found");
+        console.log("API Key found: " + apiKey.substring(0, 10) + "...");
 
         console.log("Generating content with Groq...");
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -52,7 +75,7 @@ serve(async (req) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama3-8b-8192',
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
                     { role: 'user', content: prompt }
