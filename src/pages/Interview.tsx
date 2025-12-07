@@ -132,7 +132,7 @@ const Interview = () => {
             if (uploadError) throw uploadError;
 
             // Save to Database
-            const { error: dbError } = await supabase
+            const { data, error: dbError } = await supabase
                 .from('interviews' as any)
                 .insert({
                     application_id: applicationId,
