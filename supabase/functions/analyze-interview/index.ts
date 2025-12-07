@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
-import { GoogleGenerativeAI } from "npm:@google/generative-ai"
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -32,53 +31,81 @@ serve(async (req) => {
             throw new Error('Failed to download audio')
         }
 
-        // Gemini Setup
-        // Gemini Setup
-        const apiKey = Deno.env.get('GEMINI_API_KEY');
+        // Groq Setup
+        const apiKey = Deno.env.get('GROQ_API_KEY');
         if (!apiKey) {
-            throw new Error("GEMINI_API_KEY is not set in environment variables.");
+            throw new Error("GROQ_API_KEY is not set in environment variables.");
         }
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
 
-        const arrayBuffer = await fileData.arrayBuffer()
-        const base64Data = btoa(
-            new Uint8Array(arrayBuffer)
-                .reduce((data, byte) => data + String.fromCharCode(byte), '')
-        );
+        // 1. Transcribe
+        console.log("Transcribing with Groq Whisper...");
+        const formData = new FormData();
+        formData.append('file', fileData, 'audio.webm');
+        formData.append('model', 'distil-whisper-large-v3-en');
+        formData.append('response_format', 'json');
 
+        const transcriptionResponse = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+            },
+            body: formData
+        });
+
+        if (!transcriptionResponse.ok) {
+            const errorText = await transcriptionResponse.text();
+            console.error("Groq Whisper Error:", errorText);
+            throw new Error(`Groq Whisper Error: ${transcriptionResponse.status} - ${errorText}`);
+        }
+
+        const transcriptionData = await transcriptionResponse.json();
+        const transcription = transcriptionData.text;
+
+        // 2. Analyze
+        console.log("Analyzing with Groq Llama...");
         const prompt = `
         You are an expert interviewer for "RootedAI". Analyze this audio answer for the question: "${question}".
         
+        Transcription: "${transcription}"
+        
         Provide a JSON output with:
-        - transcription: string (The text transcription of the audio)
         - score: number (0-100) based on clarity, relevance, and confidence.
         - feedback: string (max 50 words) constructive feedback.
-        `
+        `;
 
-        const result = await model.generateContent({
-            contents: [{
-                role: 'user',
-                parts: [
-                    { text: prompt },
-                    { inlineData: { data: base64Data, mimeType: "audio/webm" } }
-                ]
-            }]
-        })
+        const analysisResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: 'llama3-8b-8192',
+                messages: [
+                    { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
+                    { role: 'user', content: prompt }
+                ],
+                response_format: { type: 'json_object' }
+            })
+        });
 
-        const responseText = result.response.text()
-        console.log("Gemini Response:", responseText);
+        if (!analysisResponse.ok) {
+            const errorText = await analysisResponse.text();
+            console.error("Groq Llama Error:", errorText);
+            throw new Error(`Groq Llama Error: ${analysisResponse.status} - ${errorText}`);
+        }
 
-        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-        const jsonStr = jsonMatch ? jsonMatch[0] : responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const analysisData = await analysisResponse.json();
+        const content = analysisData.choices[0].message.content;
 
         let aiResult;
         try {
-            aiResult = JSON.parse(jsonStr);
+            aiResult = JSON.parse(content);
+            aiResult.transcription = transcription;
         } catch (e) {
             console.error("JSON Parse Error:", e);
             aiResult = {
-                transcription: "Transcription failed.",
+                transcription: transcription,
                 score: 0,
                 feedback: "AI analysis failed to parse response."
             };
