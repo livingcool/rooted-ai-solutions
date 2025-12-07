@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { Job, JobApplication } from "@/types/hiring";
-import { Loader2, Plus, Briefcase, Users, Sparkles, RefreshCw } from "lucide-react";
+import { Loader2, Plus, Briefcase, Users, Sparkles, RefreshCw, Github, Video, Code } from "lucide-react";
 
 import { useToast } from "@/hooks/use-toast";
 import {
