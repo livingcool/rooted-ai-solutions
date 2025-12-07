@@ -53,14 +53,12 @@ serve(async (req) => {
              
              DELIVERABLES
              
-             DELIVERABLES
-             
-             EVALUATION CRITERIA (Technical & Functional):
+             EVALUATION CRITERIA (Technical & Functional ONLY):
              - Code Quality & Organization
              - Feature Completeness (Did they build the required features?)
              - UI/UX Design (Is it intuitive and "wow"?)
              - Technical Choices (Why this stack?)
-             - (Do NOT include the 11-point startup criteria here. This is for grading the code.)
+             - (CRITICAL: Do NOT include the 11-point startup criteria here. The candidate should NOT be judged on business metrics like "Willingness to Pay" or "Moat". Only judge the CODE and PRODUCT.)
 
            - Explicitly mention: "Candidates are encouraged to use AI tools to accomplish this project."
            - The project scope for the candidate must be doable in 3-4 hours (a slice of the full startup idea).

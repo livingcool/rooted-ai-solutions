@@ -113,7 +113,7 @@ const Careers = () => {
           <div className="space-y-12">
             {Object.entries(
               filteredJobs.reduce((acc, job) => {
-                const dept = (job as any).department || "Other";
+                const dept = job.department || "Other";
                 if (!acc[dept]) acc[dept] = [];
                 acc[dept].push(job);
                 return acc;

@@ -571,7 +571,7 @@ const AdminHiringDashboard = () => {
             // Fetch Applications
             const { data: appsData, error: appsError } = await supabase
                 .from('applications' as any)
-                .select('*, jobs(id, title, description, technical_problem_statement), interviews(*)')
+                .select('*, jobs(id, title, description, technical_problem_statement), interviews(*), technical_assessments(*)')
                 .order('created_at', { ascending: false });
 
             if (appsError) throw appsError;
@@ -1055,12 +1055,48 @@ const AdminHiringDashboard = () => {
                                         </Card>
                                     </div>
 
-                                    {/* Detailed Analysis Tabs */}
+                                    {/* Checkpoint Stepper */}
+                                    <div className="flex justify-between items-center relative mb-8 px-4">
+                                        {/* Progress Line */}
+                                        <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-white/10 -z-10" />
+
+                                        {[
+                                            { id: 'resume', label: 'Resume Screening', status: 'Completed' },
+                                            { id: 'communication', label: 'Communication', status: (selectedApp as any).interviews?.length > 0 ? 'Completed' : 'Pending' },
+                                            { id: 'technical', label: 'Technical Round', status: (selectedApp as any).technical_assessments?.length > 0 ? 'Completed' : (selectedApp.status === 'Technical Round' ? 'In Progress' : 'Pending') },
+                                            { id: 'final', label: 'Final Interview', status: 'Pending' }
+                                        ].map((step, idx) => (
+                                            <div
+                                                key={step.id}
+                                                className={`flex flex-col items-center gap-2 cursor-pointer group`}
+                                                onClick={() => {
+                                                    // Simple tab switching logic based on step id
+                                                    const tabs = document.querySelectorAll('[role="tab"]');
+                                                    const targetTab = Array.from(tabs).find(t => t.getAttribute('data-value') === step.id) as HTMLElement;
+                                                    if (targetTab) targetTab.click();
+                                                }}
+                                            >
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${step.status === 'Completed' ? 'bg-green-500 border-green-500 text-black' :
+                                                    step.status === 'In Progress' ? 'bg-yellow-500 border-yellow-500 text-black animate-pulse' :
+                                                        'bg-black border-white/20 text-white/40 group-hover:border-white/60'
+                                                    }`}>
+                                                    {step.status === 'Completed' ? '✓' : idx + 1}
+                                                </div>
+                                                <span className={`text-xs font-medium ${step.status === 'Completed' ? 'text-green-400' :
+                                                    step.status === 'In Progress' ? 'text-yellow-400' :
+                                                        'text-white/40'
+                                                    }`}>{step.label}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Detailed Analysis Tabs (Hidden triggers, controlled by stepper) */}
                                     <Tabs defaultValue="resume" className="w-full">
-                                        <TabsList className="bg-white/5 border-white/10 w-full justify-start">
-                                            <TabsTrigger value="resume" className="data-[state=active]:bg-white/10">Resume Analysis</TabsTrigger>
-                                            <TabsTrigger value="communication" className="data-[state=active]:bg-white/10">Communication Round</TabsTrigger>
-                                            <TabsTrigger value="cover_letter" className="data-[state=active]:bg-white/10">Cover Letter</TabsTrigger>
+                                        <TabsList className="hidden">
+                                            <TabsTrigger value="resume" data-value="resume">Resume</TabsTrigger>
+                                            <TabsTrigger value="communication" data-value="communication">Communication</TabsTrigger>
+                                            <TabsTrigger value="technical" data-value="technical">Technical</TabsTrigger>
+                                            <TabsTrigger value="final" data-value="final">Final</TabsTrigger>
                                         </TabsList>
 
                                         <TabsContent value="resume" className="mt-4 space-y-4">
@@ -1127,6 +1163,82 @@ const AdminHiringDashboard = () => {
                                                 </div>
                                             )}
                                         </TabsContent>
+
+                                        <TabsContent value="technical" className="mt-4 space-y-4">
+                                            {(selectedApp as any).technical_assessments && (selectedApp as any).technical_assessments.length > 0 ? (
+                                                (selectedApp as any).technical_assessments.map((tech: any) => (
+                                                    <div key={tech.id} className="space-y-6">
+                                                        {/* AI Score Card */}
+                                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                            <Card className="bg-white/5 border-white/10 col-span-1">
+                                                                <CardHeader className="pb-2">
+                                                                    <CardTitle className="text-sm font-medium text-white/60">Technical Score</CardTitle>
+                                                                </CardHeader>
+                                                                <CardContent>
+                                                                    <div className="flex items-end justify-between">
+                                                                        <div className="text-4xl font-bold text-orange-400">{tech.ai_score || 0}/100</div>
+                                                                        <div className="text-sm text-white/60 mb-1">AI Evaluated</div>
+                                                                    </div>
+                                                                </CardContent>
+                                                            </Card>
+                                                            <Card className="bg-white/5 border-white/10 col-span-2">
+                                                                <CardHeader className="pb-2">
+                                                                    <CardTitle className="text-sm font-medium text-white/60">AI Feedback</CardTitle>
+                                                                </CardHeader>
+                                                                <CardContent>
+                                                                    <p className="text-white/80 text-sm leading-relaxed">{tech.ai_feedback || "Pending Analysis..."}</p>
+                                                                </CardContent>
+                                                            </Card>
+                                                        </div>
+
+                                                        {/* Submission Details */}
+                                                        <div className="bg-white/5 p-6 rounded-lg border border-white/10 space-y-6">
+                                                            <div className="flex justify-between items-start">
+                                                                <h4 className="font-bold text-white text-lg">Submission Details</h4>
+                                                                <div className="flex gap-2">
+                                                                    {tech.github_url && (
+                                                                        <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => window.open(tech.github_url, '_blank')}>
+                                                                            <Github className="w-4 h-4 mr-2" /> GitHub Repo
+                                                                        </Button>
+                                                                    )}
+                                                                    {tech.video_url && (
+                                                                        <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {
+                                                                            const { data } = await supabase.storage.from('technical-submissions').createSignedUrl(tech.video_url, 60);
+                                                                            if (data?.signedUrl) window.open(data.signedUrl, '_blank');
+                                                                        }}>
+                                                                            <Video className="w-4 h-4 mr-2" /> Watch Demo
+                                                                        </Button>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                                <div>
+                                                                    <h5 className="text-sm font-semibold text-white/60 mb-2">Tech Stack</h5>
+                                                                    <p className="text-white/90 text-sm bg-black/40 p-3 rounded border border-white/5 whitespace-pre-wrap">{tech.tech_stack}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h5 className="text-sm font-semibold text-white/60 mb-2">Process Flow</h5>
+                                                                    <p className="text-white/90 text-sm bg-black/40 p-3 rounded border border-white/5 whitespace-pre-wrap">{tech.process_flow}</p>
+                                                                </div>
+                                                                <div className="col-span-2">
+                                                                    <h5 className="text-sm font-semibold text-white/60 mb-2">Issues Faced</h5>
+                                                                    <p className="text-white/90 text-sm bg-black/40 p-3 rounded border border-white/5 whitespace-pre-wrap">{tech.issues_faced}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="text-center py-12 space-y-4">
+                                                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto">
+                                                        <Code className="w-8 h-8 text-white/20" />
+                                                    </div>
+                                                    <p className="text-white/40">No technical assessment submitted yet.</p>
+                                                </div>
+                                            )}
+                                        </TabsContent>
+
 
                                         <TabsContent value="cover_letter" className="mt-4">
                                             <div className="bg-white/5 p-6 rounded-lg border border-white/10 text-white/80 whitespace-pre-wrap leading-relaxed">
@@ -1352,11 +1464,12 @@ const AdminHiringDashboard = () => {
                                             onChange={(e) => setNewJob({ ...newJob, department: e.target.value })}
                                         >
                                             <option value="Engineering">Engineering</option>
-                                            <option value="Marketing">Marketing</option>
-                                            <option value="Sales">Sales</option>
                                             <option value="Product">Product</option>
                                             <option value="Design">Design</option>
+                                            <option value="Marketing">Marketing</option>
+                                            <option value="Sales">Sales</option>
                                             <option value="Operations">Operations</option>
+                                            <option value="HR">HR</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">

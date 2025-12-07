@@ -103,9 +103,9 @@ const JobDetails = () => {
                                 <MapPin className="w-4 h-4" />
                                 <span>{job.location}</span>
                             </div>
-                            {(job as any).department && (
+                            {job.department && (
                                 <div className="flex items-center gap-2">
-                                    <Badge variant="outline" className="border-white/20 text-white/60">{(job as any).department}</Badge>
+                                    <Badge variant="outline" className="border-white/20 text-white/60">{job.department}</Badge>
                                 </div>
                             )}
                             {job.salary_range && (
