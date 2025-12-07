@@ -149,7 +149,7 @@ serve(async (req) => {
     } catch (error: any) {
         console.error("Error in analyze-interview:", error);
         return new Response(
-            JSON.stringify({ error: error.message }),
+            JSON.stringify({ error: error.message, stack: error.stack, details: error }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
         )
     }
