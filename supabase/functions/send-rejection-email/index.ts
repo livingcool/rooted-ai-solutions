@@ -5,25 +5,23 @@ const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers":
         "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
 };
 
-interface ContactRequest {
-    name: string;
+interface RejectionRequest {
     email: string;
-    message: string;
+    subject: string;
+    body: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
-    // Handle CORS preflight requests
     if (req.method === "OPTIONS") {
         return new Response(null, { headers: corsHeaders });
     }
 
     try {
-        const { name, email, message }: ContactRequest = await req.json();
+        const { email, subject, body }: RejectionRequest = await req.json();
 
-        // Create a transporter using Gmail SMTP
-        // User must set GMAIL_USER and GMAIL_APP_PASSWORD in Supabase secrets
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -33,16 +31,16 @@ const handler = async (req: Request): Promise<Response> => {
         });
 
         const mailOptions = {
-            from: `RootedAI <${Deno.env.get("GMAIL_USER") || "rootedaiofficial@gmail.com"}>`,
-            to: ["ganeshkhovalan2203@gmail.com"],
-            subject: `New Contact Form Submission from ${name}`,
+            from: `RootedAI Careers <${Deno.env.get("GMAIL_USER") || "rootedaiofficial@gmail.com"}>`,
+            to: email,
+            subject: subject,
             html: `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>New Contact Form Submission</title>
+        <title>${subject}</title>
       </head>
       <body style="margin: 0; padding: 0; background-color: #000000; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
         <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #000000; color: #ffffff;">
@@ -62,16 +60,8 @@ const handler = async (req: Request): Promise<Response> => {
                 <!-- Content -->
                 <tr>
                   <td style="padding: 40px 40px;">
-                    <h2 style="margin: 0 0 20px 0; font-size: 24px; font-weight: 700; color: #ffffff;">New Contact Submission</h2>
-                    
-                    <div style="background-color: #111111; padding: 20px; border: 1px solid #333333; margin: 30px 0;">
-                        <p style="margin: 5px 0; color: #a0a0a0;">Name: <strong style="color: #ffffff;">${name}</strong></p>
-                        <p style="margin: 5px 0; color: #a0a0a0;">Email: <strong style="color: #ffffff;">${email}</strong></p>
-                    </div>
-
-                    <div style="background-color: #111111; padding: 20px; border: 1px solid #333333; margin: 30px 0;">
-                        <h3 style="margin: 0 0 10px 0; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Message</h3>
-                        <p style="white-space: pre-wrap; color: #a0a0a0; font-size: 14px; line-height: 1.6;">${message}</p>
+                    <div style="font-size: 16px; line-height: 1.6; color: #a0a0a0; white-space: pre-wrap;">
+                      ${body.replace(/\n/g, '<br>')}
                     </div>
                   </td>
                 </tr>
@@ -91,7 +81,6 @@ const handler = async (req: Request): Promise<Response> => {
       </body>
       </html>
       `,
-            replyTo: email,
         };
 
         await transporter.sendMail(mailOptions);
@@ -100,9 +89,10 @@ const handler = async (req: Request): Promise<Response> => {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
             status: 200,
         });
+
     } catch (error: any) {
-        console.error("Error sending email:", error);
-        return new Response(JSON.stringify({ error: error.message }), {
+        console.error("Error sending rejection email:", error);
+        return new Response(JSON.stringify({ error: error.message || "Unknown error occurred" }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
             status: 500,
         });

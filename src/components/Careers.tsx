@@ -1,16 +1,46 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-
 import {
   Brain,
   Users,
   MapPin,
   Clock,
-  ArrowRight
+  ArrowRight,
+  Briefcase,
+  DollarSign
 } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
+import { supabase } from "@/integrations/supabase/client";
+import { Job } from "@/types/hiring";
+import { JobApplicationForm } from "@/components/hiring/JobApplicationForm";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const Careers = () => {
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const { data } = await supabase.from('jobs' as any).select('*').eq('is_active', true);
+      if (data) {
+        setJobs(data as unknown as Job[]);
+        setFilteredJobs(data as unknown as Job[]);
+      }
+    };
+    fetchJobs();
+  }, []);
+
+  useEffect(() => {
+    const lowerQuery = searchQuery.toLowerCase();
+    const filtered = jobs.filter(job =>
+      job.title.toLowerCase().includes(lowerQuery) ||
+      job.requirements.some(req => req.toLowerCase().includes(lowerQuery))
+    );
+    setFilteredJobs(filtered);
+  }, [searchQuery, jobs]);
 
   const benefits = [
     {
@@ -65,57 +95,77 @@ const Careers = () => {
 
         {/* Job Openings */}
         <div className="mb-24">
-          <h3 className="text-2xl font-bold text-white mb-8 border-l-4 border-white pl-4">
-            Open Positions
-          </h3>
-
-          <TiltCard className="bw-card p-8 group hover:bg-white/5 transition-all duration-300">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
-              <div>
-                <h4 className="text-xl font-bold text-white mb-2">AI Automation Engineer – Intern/Junior</h4>
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 rounded-full bg-white/10 text-xs font-mono text-white/80">Remote / Hybrid</span>
-                  <span className="px-3 py-1 rounded-full bg-white/10 text-xs font-mono text-white/80">Full-time</span>
-                </div>
-              </div>
-              <Button
-                className="bw-button-outline text-sm px-6 py-2"
-                onClick={() => window.location.href = "mailto:rootedaiofficial@gmail.com?subject=Application: AI Automation Engineer"}
-              >
-                Apply Now
-              </Button>
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <h3 className="text-2xl font-bold text-white border-l-4 border-white pl-4">
+              Open Positions
+            </h3>
+            <div className="relative w-full md:w-64">
+              <input
+                type="text"
+                placeholder="Search roles or skills..."
+                className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
+          </div>
 
-            <div className="grid md:grid-cols-2 gap-8 border-t border-white/10 pt-6">
-              <div>
-                <h5 className="text-sm font-bold text-white mb-3 uppercase tracking-wider">Tech Stack</h5>
-                <div className="flex flex-wrap gap-2">
-                  {["Python", "LangChain", "Groq", "PostgreSQL", "Pinecone", "Supabase"].map((tech) => (
-                    <span key={tech} className="text-xs text-white/60 border border-white/10 px-2 py-1 rounded">
-                      {tech}
-                    </span>
+          <div className="space-y-12">
+            {Object.entries(
+              filteredJobs.reduce((acc, job) => {
+                const dept = (job as any).department || "Other";
+                if (!acc[dept]) acc[dept] = [];
+                acc[dept].push(job);
+                return acc;
+              }, {} as Record<string, typeof jobs>)
+            ).map(([department, deptJobs]) => (
+              <div key={department} className="space-y-6">
+                <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-2">{department}</h3>
+                <div className="grid gap-4">
+                  {deptJobs.map((job) => (
+                    <div
+                      key={job.id}
+                      className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 transition-all hover:bg-white/10 hover:border-white/20"
+                    >
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                          <h4 className="text-xl font-bold text-white mb-2">{job.title}</h4>
+                          <div className="flex flex-wrap gap-2 text-sm text-white/60">
+                            <span className="flex items-center gap-1">
+                              <Briefcase className="w-3 h-3" />
+                              {job.type}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-3 h-3" />
+                              {job.location}
+                            </span>
+                            {job.salary_range && (
+                              <span className="flex items-center gap-1">
+                                <DollarSign className="w-3 h-3" />
+                                {job.salary_range}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <Button
+                          className="bg-white text-black hover:bg-white/90 font-medium px-6"
+                          onClick={() => window.open(`/jobs/${job.id}`, '_blank')}
+                        >
+                          View Details
+                        </Button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
-              <div>
-                <h5 className="text-sm font-bold text-white mb-3 uppercase tracking-wider">Expectations</h5>
-                <ul className="space-y-2 text-sm text-white/60">
-                  <li className="flex items-start gap-2">
-                    <span className="text-white mt-1">•</span>
-                    Build and deploy AI agents using LangChain & LangGraph
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-white mt-1">•</span>
-                    Optimize RAG pipelines with Pinecone & Groq
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-white mt-1">•</span>
-                    Develop backend services with Python & Supabase
-                  </li>
-                </ul>
+            ))}
+
+            {filteredJobs.length === 0 && (
+              <div className="text-center py-12 text-white/40">
+                No open positions found matching your criteria.
               </div>
-            </div>
-          </TiltCard>
+            )}
+          </div>
         </div>
 
         {/* Join Our Team - General Call to Action */}

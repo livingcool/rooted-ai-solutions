@@ -6,7 +6,7 @@ import Services from "@/components/Services";
 import CaseStudies from "@/components/CaseStudies";
 import Careers from "@/components/Careers";
 import Contact from "@/components/Contact";
-import Blog from "@/components/Blog";
+
 import Footer from "@/components/Footer";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import TechStackMarquee from "@/components/TechStackMarquee";
@@ -61,9 +61,7 @@ const Index = () => {
         <RevealOnScroll>
           <Contact />
         </RevealOnScroll>
-        <RevealOnScroll>
-          <Blog />
-        </RevealOnScroll>
+
         <RevealOnScroll>
           <Footer />
         </RevealOnScroll>
