@@ -1282,11 +1282,24 @@ const AdminHiringDashboard = () => {
                                                                                     const { error } = await supabase.functions.invoke('analyze-technical-submission', {
                                                                                         body: { applicationId: selectedApp.id }
                                                                                     });
-                                                                                    if (error) throw error;
+
+                                                                                    if (error) {
+                                                                                        console.error("Supabase Invoke Error:", error);
+                                                                                        // Extract custom error message from backend if available
+                                                                                        const backendError = (error as any).context?.error || (error as any).context?.message || error.message;
+                                                                                        throw new Error(backendError);
+                                                                                    }
+
                                                                                     toast({ title: "Success", description: "Analysis triggered. Refresh in a few seconds." });
                                                                                     fetchData();
                                                                                 } catch (e: any) {
-                                                                                    toast({ title: "Error", description: e.message || "Failed to trigger analysis", variant: "destructive" });
+                                                                                    console.error("Retry Logic Error:", e);
+                                                                                    toast({
+                                                                                        title: "Analysis Failed",
+                                                                                        description: e.message || "Failed to trigger analysis",
+                                                                                        variant: "destructive",
+                                                                                        duration: 5000
+                                                                                    });
                                                                                 }
                                                                             }}
                                                                         >

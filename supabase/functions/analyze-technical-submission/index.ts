@@ -19,46 +19,67 @@ serve(async (req) => {
     }
 
     try {
-        // Debug Logging: Read text first to see what exactly is being sent
+        console.log("Start: Reading Request Body");
         const bodyText = await req.text();
         console.log("Raw Request Body:", bodyText);
 
-        if (!bodyText) {
-            throw new Error("Request body is empty");
-        }
+        if (!bodyText) throw new Error("Request body is empty");
 
         const bodyJson = JSON.parse(bodyText);
         const { applicationId, frames: inputFrames } = bodyJson;
-        const frames = inputFrames || [];
+        // Ensure frames is an array
+        const frames = Array.isArray(inputFrames) ? inputFrames : [];
 
+        if (!applicationId) throw new Error("Missing applicationId in request body");
+
+        console.log("Step 1: Init Supabase Client");
         const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
         const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+        if (!supabaseUrl || !supabaseKey) throw new Error("Missing Supabase Environment Variables");
+
         const supabaseAdmin = createClient(supabaseUrl, supabaseKey);
 
+        console.log("Step 2: Fetching Assessment for App ID:", applicationId);
         // Fetch Assessment & Job Details
         const { data: assessment, error: fetchError } = await supabaseAdmin
             .from('technical_assessments')
             .select('*, applications(jobs(technical_problem_statement))')
             .eq('application_id', applicationId)
-            .single();
+            .order('created_at', { ascending: false }) // Get latest
+            .limit(1)
+            .maybeSingle();
 
-        if (fetchError || !assessment) throw new Error("Assessment not found");
+        if (fetchError) {
+            console.error("DB Fetch Error:", fetchError);
+            throw new Error(`DB Fetch Failed: ${fetchError.message}`);
+        }
+        if (!assessment) {
+            console.error("No assessment found for ID:", applicationId);
+            throw new Error("Assessment not found for this Application ID");
+        }
+        console.log("Assessment Found:", assessment.id);
 
         const problemStatement = assessment.applications?.jobs?.technical_problem_statement;
-        const apiKey = Deno.env.get('GROQ_API_KEY')!;
+        const apiKey = Deno.env.get('GROQ_API_KEY');
+        if (!apiKey) throw new Error("Missing GROQ_API_KEY");
 
         // --- 1. Transcribe Video (if available) ---
         let transcription = "No video submitted or transcription failed.";
 
         if (assessment.video_url) {
+            console.log("Step 3: Processing Video URL:", assessment.video_url);
             try {
-                console.log("Downloading video:", assessment.video_url);
+                console.log("Downloading video...");
                 const { data: videoData, error: downloadError } = await supabaseAdmin
                     .storage
                     .from('technical-submissions')
                     .download(assessment.video_url);
 
-                if (downloadError) throw downloadError;
+                if (downloadError) {
+                    console.error("Download Error:", downloadError);
+                    throw downloadError;
+                }
 
                 console.log("Transcribing video...");
                 const formData = new FormData();
