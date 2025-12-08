@@ -1254,6 +1254,38 @@ const AdminHiringDashboard = () => {
                                                             </div>
 
                                                             <div className="space-y-6">
+                                                                {(tech as any).score === null || !(tech as any).improvement_suggestions ? (
+                                                                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 flex items-center justify-between">
+                                                                        <div className="flex items-center gap-3">
+                                                                            <RefreshCw className="w-5 h-5 text-yellow-500" />
+                                                                            <div>
+                                                                                <p className="text-sm font-semibold text-yellow-500">Analysis Pending or Incomplete</p>
+                                                                                <p className="text-xs text-white/60">The AI feedback seems missing for this submission.</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <Button
+                                                                            size="sm"
+                                                                            variant="outline"
+                                                                            className="border-yellow-500/20 text-yellow-500 hover:bg-yellow-500/20"
+                                                                            onClick={async () => {
+                                                                                try {
+                                                                                    toast({ title: "Processing...", description: "Retrying AI analysis for this submission." });
+                                                                                    const { error } = await supabase.functions.invoke('analyze-technical-submission', {
+                                                                                        body: { applicationId: selectedApp.id }
+                                                                                    });
+                                                                                    if (error) throw error;
+                                                                                    toast({ title: "Success", description: "Analysis triggered. Refresh in a few seconds." });
+                                                                                    fetchData();
+                                                                                } catch (e: any) {
+                                                                                    toast({ title: "Error", description: e.message || "Failed to trigger analysis", variant: "destructive" });
+                                                                                }
+                                                                            }}
+                                                                        >
+                                                                            Retry AI Analysis
+                                                                        </Button>
+                                                                    </div>
+                                                                ) : null}
+
                                                                 <div className="bg-white/5 p-4 rounded-lg border border-white/10">
                                                                     <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
                                                                         <Code className="w-4 h-4" /> Tech Stack
