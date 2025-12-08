@@ -955,8 +955,8 @@ const AdminHiringDashboard = () => {
                                                 </div>
                                             )}
 
-                                            {/* COMMUNICATION STAGE - Completed */}
-                                            {(selectedApp.status === 'Communication Round Completed' || (selectedApp as any).interviews?.length > 0) && (
+                                            {/* COMMUNICATION STAGE - Completed (But NOT in Technical Round yet) */}
+                                            {(selectedApp.status === 'Communication Round Completed' || ((selectedApp as any).interviews?.length > 0 && selectedApp.status !== 'Technical Round' && selectedApp.status !== 'Technical Round Completed' && selectedApp.status !== 'Final Interview' && selectedApp.status !== 'Rejected')) && (
                                                 <div className="flex gap-2">
                                                     <Button
                                                         size="sm"
@@ -973,19 +973,11 @@ const AdminHiringDashboard = () => {
                                                     >
                                                         Invite to Technical Round
                                                     </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="destructive"
-                                                        className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
-                                                        onClick={() => setIsRejectOpen(true)}
-                                                    >
-                                                        Reject
-                                                    </Button>
                                                 </div>
                                             )}
 
                                             {/* TECHNICAL STAGE - Completed */}
-                                            {selectedApp.status === 'Technical Round' && (selectedApp as any).technical_assessments?.length > 0 && (
+                                            {(selectedApp.status === 'Technical Round Completed' || (selectedApp.status === 'Technical Round' && (selectedApp as any).technical_assessments?.length > 0)) && (
                                                 <div className="flex gap-2">
                                                     <Button
                                                         size="sm"
@@ -1001,16 +993,7 @@ const AdminHiringDashboard = () => {
                                                         onClick={() => handleMoveToFinalRound(selectedApp.id)}
                                                     >
                                                         Select for Final Interview
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="destructive"
-                                                        className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
-                                                        onClick={() => setIsRejectOpen(true)}
-                                                    >
-                                                        Reject
-                                                    </Button>
-                                                </div>
+                                                    </Button> </div>
                                             )}
 
                                             {/* REJECTED - Restore option */}
