@@ -64,20 +64,85 @@ const TechnicalAssessment = () => {
         }
     };
 
+    const [videoFrames, setVideoFrames] = useState<string[]>([]);
+
+    // Helper to extract 3 frames from video
+    const extractFrames = async (file: File): Promise<string[]> => {
+        return new Promise((resolve) => {
+            const video = document.createElement('video');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const frames: string[] = [];
+
+            // Create object URL
+            video.src = URL.createObjectURL(file);
+            video.muted = true;
+            video.playsInline = true;
+            video.crossOrigin = "anonymous";
+
+            video.onloadedmetadata = async () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const duration = video.duration;
+
+                const seekAndCapture = (time: number) => {
+                    return new Promise<void>((res) => {
+                        video.currentTime = time;
+                        video.onseeked = () => {
+                            if (ctx) {
+                                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                                frames.push(canvas.toDataURL('image/jpeg', 0.7)); // Compress to 70% quality
+                            }
+                            res();
+                        };
+                    });
+                };
+
+                // Capture at 20%, 50%, 80%
+                await seekAndCapture(duration * 0.2);
+                await seekAndCapture(duration * 0.5);
+                await seekAndCapture(duration * 0.8);
+
+                URL.revokeObjectURL(video.src); // Cleanup
+                resolve(frames);
+            };
+
+            video.onerror = () => {
+                console.error("Error loading video for frame extraction");
+                resolve([]); // Resolve empty on error to not block submission
+            }
+        });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitting(true);
 
         try {
             let videoUrl = "";
+            let capturedFrames: string[] = [];
 
             // Upload Video if present
             if (videoFile) {
+                // 1. Extract Frames immediately (Client-side)
+                if (videoFrames.length === 0) {
+                    toast({ title: "Processing Video...", description: "Analyzing video frames for AI review..." });
+                    capturedFrames = await extractFrames(videoFile);
+                    setVideoFrames(capturedFrames);
+                } else {
+                    capturedFrames = videoFrames;
+                }
+
+                // 2. Upload to Storage
                 const fileExt = videoFile.name.split('.').pop();
                 const fileName = `${applicationId}/technical_${Date.now()}.${fileExt}`;
                 const { error: uploadError } = await supabase.storage
                     .from('technical-submissions')
-                    .upload(fileName, videoFile);
+                    .upload({
+                        path: fileName,
+                        data: videoFile,
+                        upsert: true
+                    }); // FIX: correct upload signature
 
                 if (uploadError) throw uploadError;
                 videoUrl = fileName;
@@ -99,9 +164,9 @@ const TechnicalAssessment = () => {
 
             if (dbError) throw dbError;
 
-            // Trigger AI Analysis
+            // Trigger AI Analysis with Frames
             supabase.functions.invoke('analyze-technical-submission', {
-                body: { applicationId }
+                body: { applicationId, frames: capturedFrames }
             }).then(({ error }) => {
                 if (error) console.error("Error triggering AI analysis:", error);
             });
@@ -114,7 +179,7 @@ const TechnicalAssessment = () => {
                 description: "Your technical assessment has been submitted successfully.",
             });
 
-            navigate('/'); // Or success page
+            navigate('/candidate-status'); // Navigate to status page
 
         } catch (error: any) {
             console.error("Error submitting assessment:", error);

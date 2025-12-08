@@ -73,33 +73,82 @@ serve(async (req) => {
             }
         }
 
-        // --- 2. Analyze Submission (Text + Transcription) ---
-        const prompt = `
-        You are a Senior Technical Interviewer. Evaluate this technical submission for the following problem:
+        // --- 2. Analyze Submission (Text + Transcription + Vision) ---
+        const { frames } = await req.json().catch(() => ({ frames: [] })); // Get frames from body
+
+        // Check if we have frames for Vision Analysis
+        const hasFrames = frames && frames.length > 0;
+        const model = hasFrames ? 'llama-3.2-90b-vision-preview' : 'llama-3.3-70b-versatile';
+
+        console.log(`Analyzing with ${model}... (${hasFrames ? frames.length + ' frames' : 'Text/Audio only'})`);
+
+        const systemMessage = hasFrames ? `
+        You are a Senior Technical Interviewer evaluating a candidate's project submission.
         
-        Problem Statement: "${problemStatement}"
+        You will be provided with:
+        1.  **Project Details**: GitHub URL, Tech Stack, Process Flow, Issues Faced.
+        2.  **Video Transcript**: What the candidate said in their demo.
+        3.  **Video Frames**: Screenshots from their project demo video.
         
-        Candidate Submission:
-        - GitHub URL: ${assessment.github_url}
-        - Tech Stack: ${assessment.tech_stack}
-        - Process Flow: ${assessment.process_flow}
-        - Issues Faced: ${assessment.issues_faced}
-        - Cost Analysis: ${assessment.cost_analysis}
+        Your Goal:
+        Analyze the submission holistically. Look for:
+        -   **Code Quality & Depth** (from details & transcript).
+        -   **Visual Output & Functionality** (from video frames - do they show a working app? UI quality?).
+        -   **Communication**: How well they explain their solution (transcript).
         
-        Video Presentation Transcript:
-        "${transcription}"
+        Return a JSON object with:
+        -   score: number (0-100)
+        -   feedback: string (max 150 words) - Specific feedback on code, the demo/UI shown in frames, and their explanation.
+        -   improvement_suggestions: string (max 50 words) - Actionable advice.
+        ` : `
+        You are a Senior Technical Interviewer. Evaluate this technical submission.
         
+        You will be provided with:
+        1.  **Project Details**: GitHub URL, Tech Stack, Process Flow, Issues Faced.
+        2.  **Video Transcript**: What the candidate said in their demo.
+        
+        Your Goal:
         Analyze the submission based on:
-        1. Relevance to the problem.
-        2. Complexity and depth of the solution.
-        3. Problem-solving approach (issues faced).
-        4. Communication quality and clarity of the video presentation (based on transcript).
+        -   **Code Quality & Depth**
+        -   **Problem-solving approach**
+        -   **Communication** (transcript quality)
         
-        Provide a JSON output with:
-        - score: number (0-100)
-        - feedback: string (max 100 words) detailed feedback on strengths, weaknesses, and the video presentation.
-        - improvement_suggestions: string (max 50 words) specific advice.
+        Return a JSON object with:
+        -   score: number (0-100)
+        -   feedback: string (max 150 words) - Detailed feedback.
+        -   improvement_suggestions: string (max 50 words) - Specific advice.
         `;
+
+        const userContent: any[] = [
+            {
+                type: "text",
+                text: `
+                Problem Statement: "${problemStatement}"
+                
+                Candidate Submission:
+                - GitHub URL: ${assessment.github_url}
+                - Tech Stack: ${assessment.tech_stack}
+                - Process Flow: ${assessment.process_flow}
+                - Issues Faced: ${assessment.issues_faced}
+                - Cost Analysis: ${assessment.cost_analysis}
+                
+                Video Transcript:
+                "${transcription}"
+                `
+            }
+        ];
+
+        // Add frames to user content IF available
+        if (hasFrames) {
+            frames.forEach((frame: string) => {
+                userContent.push({
+                    type: "image_url",
+                    image_url: {
+                        url: frame // Already base64 data URI
+                    }
+                });
+            });
+        }
 
         // Retry logic for Rate Limiting
         const fetchWithRetry = async (url: string, options: RequestInit, retries = 3, backoff = 2000) => {
@@ -125,10 +174,10 @@ serve(async (req) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
+                model: model, // Dynamically selected model
                 messages: [
-                    { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
-                    { role: 'user', content: prompt }
+                    { role: 'system', content: systemMessage },
+                    { role: 'user', content: userContent }
                 ],
                 response_format: { type: 'json_object' }
             })
