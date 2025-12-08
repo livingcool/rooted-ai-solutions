@@ -993,7 +993,16 @@ const AdminHiringDashboard = () => {
                                                         onClick={() => handleMoveToFinalRound(selectedApp.id)}
                                                     >
                                                         Select for Final Interview
-                                                    </Button> </div>
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="destructive"
+                                                        className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                                        onClick={() => setIsRejectOpen(true)}
+                                                    >
+                                                        Reject
+                                                    </Button>
+                                                </div>
                                             )}
 
                                             {/* REJECTED - Restore option */}
