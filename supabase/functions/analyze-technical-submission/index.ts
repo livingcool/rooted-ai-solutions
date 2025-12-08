@@ -213,14 +213,41 @@ serve(async (req) => {
 
         if (content.score >= MIN_SCORE_TECH) {
             newStatus = 'Final Interview';
-            emailSubject = `Final Round Invitation: Interview with Founder/CTO`;
+
+            // 1. Create Final Interview Record
+            const { data: finalRound, error: createError } = await supabaseAdmin
+                .from('final_interviews')
+                .insert({
+                    application_id: applicationId,
+                    status: 'Scheduled',
+                    // Project Context for AI Agent
+                    project_questions: {
+                        context: `The candidate built a solution using ${assessment.tech_stack}.`,
+                        ai_notes: content.feedback
+                    }
+                })
+                .select('interview_token')
+                .single();
+
+            if (createError) {
+                console.error("Failed to create Final Interview:", createError);
+                // Fallback: Don't block the status update, but log error.
+            }
+
+            const token = finalRound?.interview_token;
+            const interviewLink = `https://rooted-ai.com/final-interview?token=${token}`;
+
+            emailSubject = `Final Round Invitation: AI Founder Interview`;
             emailBody = `
 Dear ${candidateName},
 
 We are impressed with your technical submission! Your solution demonstrated strong product thinking (Score: ${content.score}/100), aligning well with the **${jobTitle}** role.
 
-We would like to invite you to the **Final Interview**.
-Our team will reach out shortly to schedule a time.
+We would like to invite you to the **Final Interview**. This is a live video interview with our AI Founder Agent to discuss your project and role fit.
+
+**Schedule & Start Here**: [Click to Start Final Interview](${interviewLink})
+
+Please ensure you have a working camera and microphone.
 
 Best regards,
 RootedAI Recruiting Team

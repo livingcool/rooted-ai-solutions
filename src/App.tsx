@@ -15,6 +15,7 @@ import CandidateLogin from "./pages/CandidateLogin";
 import JobDetails from "./pages/JobDetails";
 import TechnicalAssessment from "./pages/TechnicalAssessment";
 import CandidateStatus from "./pages/CandidateStatus";
+import AIInterviewRoom from "./pages/AIInterviewRoom";
 import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/jobs/:id" element={<JobDetails />} />
             <Route path="/technical-assessment" element={<TechnicalAssessment />} />
             <Route path="/candidate-status" element={<CandidateStatus />} />
+            <Route path="/final-interview" element={<AIInterviewRoom />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
