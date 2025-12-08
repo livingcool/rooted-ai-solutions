@@ -1279,15 +1279,24 @@ const AdminHiringDashboard = () => {
                                                                             onClick={async () => {
                                                                                 try {
                                                                                     toast({ title: "Processing...", description: "Retrying AI analysis for this submission." });
-                                                                                    const { error } = await supabase.functions.invoke('analyze-technical-submission', {
-                                                                                        body: { applicationId: selectedApp.id }
+
+                                                                                    const { data: { session } } = await supabase.auth.getSession();
+                                                                                    if (!session) throw new Error("No active session");
+
+                                                                                    const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/analyze-technical-submission', {
+                                                                                        method: 'POST',
+                                                                                        headers: {
+                                                                                            'Content-Type': 'application/json',
+                                                                                            'Authorization': `Bearer ${session.access_token}`
+                                                                                        },
+                                                                                        body: JSON.stringify({ applicationId: selectedApp.id })
                                                                                     });
 
-                                                                                    if (error) {
-                                                                                        console.error("Supabase Invoke Error:", error);
-                                                                                        // Extract custom error message from backend if available
-                                                                                        const backendError = (error as any).context?.error || (error as any).context?.message || error.message;
-                                                                                        throw new Error(backendError);
+                                                                                    const result = await response.json();
+
+                                                                                    if (!response.ok) {
+                                                                                        console.error("Function Error:", result);
+                                                                                        throw new Error(result.error || result.details || JSON.stringify(result));
                                                                                     }
 
                                                                                     toast({ title: "Success", description: "Analysis triggered. Refresh in a few seconds." });
@@ -1296,9 +1305,9 @@ const AdminHiringDashboard = () => {
                                                                                     console.error("Retry Logic Error:", e);
                                                                                     toast({
                                                                                         title: "Analysis Failed",
-                                                                                        description: e.message || "Failed to trigger analysis",
+                                                                                        description: e.message,
                                                                                         variant: "destructive",
-                                                                                        duration: 5000
+                                                                                        duration: 7000
                                                                                     });
                                                                                 }
                                                                             }}
