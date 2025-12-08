@@ -156,15 +156,75 @@ serve(async (req) => {
             analysis = { score: 0, feedback: "Failed to parse AI response." };
         }
 
-        // 5. Update Application
+        // --- AUTOMATION LOGIC ---
+        // Threshold: 75/100
+        const MIN_SCORE_RESUME = 75;
+        let newStatus = 'AI Assessed'; // Default fallback
+        let emailSubject = "";
+        let emailBody = "";
+        let shouldSendEmail = false;
+
+        if (analysis.score >= MIN_SCORE_RESUME) {
+            newStatus = 'Communication Round';
+            emailSubject = `Update on your application for ${app.jobs?.title || 'Open Position'}`;
+            emailBody = `
+Dear ${app.full_name},
+
+Thank you for your patience. After reviewing your resume, we are impressed with your profile and score of ${analysis.score}/100.
+
+We would like to invite you to the **Communication Assessment** round. 
+Please log in to your candidate portal to complete this step.
+
+Best regards,
+RootedAI Recruiting Team
+            `;
+            shouldSendEmail = true;
+        } else {
+            newStatus = 'Rejected';
+            emailSubject = `Application Status: ${app.jobs?.title || 'Open Position'}`;
+            emailBody = `
+Dear ${app.full_name},
+
+Thank you for your interest in RootedAI. After careful review, we have decided not to proceed with your application at this time (Score: ${analysis.score}/100).
+
+We appreciate your effort and wish you the best in your job search.
+
+Best regards,
+RootedAI Recruiting Team
+            `;
+            shouldSendEmail = true;
+        }
+
+        console.log(`Automation Decision: Score=${analysis.score}, NewStatus=${newStatus}`);
+
+        // 5. Update Application Status & AI Data
         const { error: updateError } = await supabaseAdmin
             .from('applications')
             .update({
                 ai_score: analysis.score,
                 ai_feedback: analysis.feedback,
-                status: 'AI Assessed'
+                status: newStatus
             })
-            .eq('id', applicationId)
+            .eq('id', applicationId);
+
+        if (updateError) throw updateError;
+
+        // 6. Send Email Notification
+        if (shouldSendEmail && app.email) {
+            console.log(`Sending email to ${app.email}...`);
+            await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-rejection-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${supabaseKey}` // Use same key for internal call
+                },
+                body: JSON.stringify({
+                    email: app.email,
+                    subject: emailSubject,
+                    body: emailBody
+                })
+            });
+        }
 
         if (updateError) throw updateError;
 

@@ -44,7 +44,7 @@ serve(async (req) => {
         // Fetch Assessment & Job Details
         const { data: assessment, error: fetchError } = await supabaseAdmin
             .from('technical_assessments')
-            .select('*, applications(jobs(technical_problem_statement))')
+            .select('*, applications(full_name, email, jobs(title, description, technical_problem_statement))')
             .eq('application_id', applicationId)
             .order('created_at', { ascending: false }) // Get latest
             .limit(1)
@@ -60,7 +60,13 @@ serve(async (req) => {
         }
         console.log("Assessment Found:", assessment.id);
 
-        const problemStatement = assessment.applications?.jobs?.technical_problem_statement;
+        const appData = assessment.applications;
+        const jobData = appData?.jobs;
+        const problemStatement = jobData?.technical_problem_statement || "No Problem Statement";
+        const jobTitle = jobData?.title || "Technologist";
+        const jobDesc = jobData?.description || "";
+        const candidateName = appData?.full_name || "Candidate";
+        const candidateEmail = appData?.email;
         const apiKey = Deno.env.get('GROQ_API_KEY');
         if (!apiKey) throw new Error("Missing GROQ_API_KEY");
 
@@ -76,22 +82,17 @@ serve(async (req) => {
                     .from('technical-submissions')
                     .download(assessment.video_url);
 
-                if (downloadError) {
-                    console.error("Download Error:", downloadError);
-                    throw downloadError;
-                }
+                if (downloadError) throw downloadError;
 
                 console.log("Transcribing video...");
                 const formData = new FormData();
-                formData.append('file', videoData, 'video.mp4'); // Groq requires a filename
+                formData.append('file', videoData, 'video.mp4');
                 formData.append('model', 'whisper-large-v3');
                 formData.append('response_format', 'json');
 
                 const transResponse = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${apiKey}`,
-                    },
+                    headers: { 'Authorization': `Bearer ${apiKey}` },
                     body: formData
                 });
 
@@ -112,49 +113,29 @@ serve(async (req) => {
         }
 
         // --- 2. Analyze Submission (Text + Transcription + Vision) ---
-        // frames are already extracted from the initial body read
-
-        // Check if we have frames for Vision Analysis
         const hasFrames = frames && frames.length > 0;
         const model = hasFrames ? 'llama-3.2-90b-vision-preview' : 'llama-3.3-70b-versatile';
 
-        console.log(`Analyzing with ${model}... (${hasFrames ? frames.length + ' frames' : 'Text/Audio only'})`);
+        console.log(`Analyzing with ${model}...`);
 
-        const systemMessage = hasFrames ? `
-        You are a Senior Technical Interviewer evaluating a candidate's project submission.
+        const systemMessage = `
+        You are a Senior Lead Engineer. Evaluate this technical submission for the role of **${jobTitle}**.
         
-        You will be provided with:
-        1.  **Project Details**: GitHub URL, Tech Stack, Process Flow, Issues Faced.
-        2.  **Video Transcript**: What the candidate said in their demo.
-        3.  **Video Frames**: Screenshots from their project demo video.
+        Job Context:
+        "${jobDesc.substring(0, 500)}..."
         
         Your Goal:
-        Analyze the submission holistically. Look for:
-        -   **Code Quality & Depth** (from details & transcript).
-        -   **Visual Output & Functionality** (from video frames - do they show a working app? UI quality?).
-        -   **Communication**: How well they explain their solution (transcript).
+        Perform a **Strict Compliance Check** and **Product Analysis**.
+        1.  Does the solution solve the Problem Statement?
+        2.  Does the Tech Stack and approach match the Job Role requirements?
+        3.  Evaluate the **Product Thinking** (Issues faced, solutions, user focus).
         
+        Use the provided Project Details, Video Transcript${hasFrames ? ', and Video Frames' : ''}.
+
         Return a JSON object with:
-        -   score: number (0-100)
-        -   feedback: string (max 150 words) - Specific feedback on code, the demo/UI shown in frames, and their explanation.
-        -   improvement_suggestions: string (max 50 words) - Actionable advice.
-        ` : `
-        You are a Senior Technical Interviewer. Evaluate this technical submission.
-        
-        You will be provided with:
-        1.  **Project Details**: GitHub URL, Tech Stack, Process Flow, Issues Faced.
-        2.  **Video Transcript**: What the candidate said in their demo.
-        
-        Your Goal:
-        Analyze the submission based on:
-        -   **Code Quality & Depth**
-        -   **Problem-solving approach**
-        -   **Communication** (transcript quality)
-        
-        Return a JSON object with:
-        -   score: number (0-100)
-        -   feedback: string (max 150 words) - Detailed feedback.
-        -   improvement_suggestions: string (max 50 words) - Specific advice.
+        -   score: number (0-100). Be strict. <70 is a failure.
+        -   feedback: string (max 150 words) - Critical analysis of code quality, product thinking, and role fit.
+        -   improvement_suggestions: string (max 50 words) - Specific technical advice.
         `;
 
         const userContent: any[] = [
@@ -176,33 +157,27 @@ serve(async (req) => {
             }
         ];
 
-        // Add frames to user content IF available
         if (hasFrames) {
             frames.forEach((frame: string) => {
                 userContent.push({
                     type: "image_url",
-                    image_url: {
-                        url: frame // Already base64 data URI
-                    }
+                    image_url: { url: frame }
                 });
             });
         }
 
-        // Retry logic for Rate Limiting
+        // Retry logic
         const fetchWithRetry = async (url: string, options: RequestInit, retries = 3, backoff = 2000) => {
             for (let i = 0; i < retries; i++) {
                 const response = await fetch(url, options);
-
                 if (response.status === 429) {
-                    console.warn(`Rate limit hit. Retrying in ${backoff}ms...`);
                     await new Promise(resolve => setTimeout(resolve, backoff));
-                    backoff *= 2; // Exponential backoff
+                    backoff *= 2;
                     continue;
                 }
-
                 return response;
             }
-            throw new Error("Max retries exceeded for Groq API (Rate Limit)");
+            throw new Error("Max retries exceeded for Groq API");
         };
 
         const response = await fetchWithRetry('https://api.groq.com/openai/v1/chat/completions', {
@@ -212,7 +187,7 @@ serve(async (req) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: model, // Dynamically selected model
+                model: model,
                 messages: [
                     { role: 'system', content: systemMessage },
                     { role: 'user', content: userContent }
@@ -229,6 +204,44 @@ serve(async (req) => {
         const aiData = await response.json();
         const content = JSON.parse(aiData.choices[0].message.content);
 
+        // --- AUTOMATION LOGIC ---
+        const MIN_SCORE_TECH = 70;
+        let newStatus = 'Analyzed';
+        let emailSubject = "";
+        let emailBody = "";
+        let shouldSendEmail = false;
+
+        if (content.score >= MIN_SCORE_TECH) {
+            newStatus = 'Final Interview';
+            emailSubject = `Final Round Invitation: Interview with Founder/CTO`;
+            emailBody = `
+Dear ${candidateName},
+
+We are impressed with your technical submission! Your solution demonstrated strong product thinking (Score: ${content.score}/100), aligning well with the **${jobTitle}** role.
+
+We would like to invite you to the **Final Interview**.
+Our team will reach out shortly to schedule a time.
+
+Best regards,
+RootedAI Recruiting Team
+            `;
+            shouldSendEmail = true;
+        } else {
+            newStatus = 'Rejected';
+            emailSubject = `Update on your application for ${jobTitle}`;
+            emailBody = `
+Dear ${candidateName},
+
+Thank you for your technical submission. After a strict review of your code and product analysis, we have decided not to proceed further at this time (Score: ${content.score}/100).
+
+We appreciate your effort and wish you the best.
+
+Best regards,
+RootedAI Recruiting Team
+            `;
+            shouldSendEmail = true;
+        }
+
         // Update Assessment
         const { error: updateError } = await supabaseAdmin
             .from('technical_assessments')
@@ -236,12 +249,34 @@ serve(async (req) => {
                 ai_score: content.score,
                 ai_feedback: content.feedback,
                 improvement_suggestions: content.improvement_suggestions,
-                transcription: transcription, // Save transcription
+                transcription: transcription,
                 status: 'Analyzed'
             })
             .eq('id', assessment.id);
 
         if (updateError) throw updateError;
+
+        // Update Application Status
+        await supabaseAdmin
+            .from('applications')
+            .update({ status: newStatus })
+            .eq('id', applicationId);
+
+        // Send Email
+        if (shouldSendEmail && candidateEmail) {
+            await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-rejection-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${supabaseKey}`
+                },
+                body: JSON.stringify({
+                    email: candidateEmail,
+                    subject: emailSubject,
+                    body: emailBody
+                })
+            });
+        }
 
         return new Response(
             JSON.stringify({ success: true }),

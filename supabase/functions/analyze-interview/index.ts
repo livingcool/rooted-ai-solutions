@@ -87,51 +87,61 @@ serve(async (req) => {
         if (audioBlob.size === 0) {
             throw new Error("Downloaded audio file is empty");
         }
-
         // Groq Setup
         const apiKey = Deno.env.get('GROQ_API_KEY');
         if (!apiKey) {
             throw new Error("GROQ_API_KEY is not set in environment variables.");
         }
 
-        // 1. Transcribe
+        // 1. Fetch Job Description for Contextual Analysis
+        const { data: interviewData, error: interviewError } = await supabaseAdmin
+            .from('interviews')
+            .select('application_id, applications(full_name, email, jobs(title, description))')
+            .eq('id', interviewId)
+            .single();
+
+        if (interviewError || !interviewData) throw new Error("Failed to fetch interview context");
+
+        const jobTitle = interviewData.applications?.jobs?.title || "Generic Role";
+        const jobDesc = interviewData.applications?.jobs?.description || "";
+        const candidateName = interviewData.applications?.full_name || "Candidate";
+        const candidateEmail = interviewData.applications?.email;
+
+        // 2. Transcribe
         console.log("Transcribing with Groq Whisper...");
         const formData = new FormData();
         formData.append('file', audioBlob, 'audio.webm');
         formData.append('model', 'whisper-large-v3');
-        formData.append('response_format', 'json');
 
-        const transcriptionResponse = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+        const transResponse = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-            },
+            headers: { 'Authorization': `Bearer ${apiKey}` },
             body: formData
         });
 
-        if (!transcriptionResponse.ok) {
-            const errorText = await transcriptionResponse.text();
-            console.error("Groq Whisper Error:", errorText);
-            throw new Error(`Groq Whisper Error: ${transcriptionResponse.status} - ${errorText}`);
+        if (!transResponse.ok) {
+            throw new Error(`Groq Transcription Failed: ${transResponse.status}`);
         }
 
-        const transcriptionData = await transcriptionResponse.json();
-        const transcription = transcriptionData.text;
-        console.log("Transcription length:", transcription.length);
+        const transData = await transResponse.json();
+        const transcription = transData.text;
 
-        // 2. Analyze
-        console.log("Analyzing with Groq Llama...");
+        // 3. Analyze with Groq (Contextual)
         const prompt = `
-        You are an expert interviewer for "RootedAI". Analyze this audio answer for the question: "${question}".
+        You are an expert technical interviewer for the role of "${jobTitle}".
+        Job Description: "${jobDesc.substring(0, 1000)}..."
+
+        Evaluate the candidate's answer to the question: "${question}"
         
-        Transcription: "${transcription}"
+        Candidate's Answer (Transcribed):
+        "${transcription}"
         
         Provide a JSON output with:
-        - score: number (0-100) based on clarity, relevance, and confidence.
-        - feedback: string (max 50 words) constructive feedback.
+        - score: number (0-100) assessing relevance, clarity, and depth relative to the Job Role.
+        - feedback: string (max 100 words) summary of the answer quality.
         `;
 
-        const analysisResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
@@ -147,39 +157,84 @@ serve(async (req) => {
             })
         });
 
-        if (!analysisResponse.ok) {
-            const errorText = await analysisResponse.text();
-            console.error("Groq Llama Error:", errorText);
-            throw new Error(`Groq Llama Error: ${analysisResponse.status} - ${errorText}`);
+        if (!aiResponse.ok) throw new Error(`Groq Analysis Failed: ${aiResponse.status}`);
+
+        const aiData = await aiResponse.json();
+        const content = JSON.parse(aiData.choices[0].message.content);
+
+        // --- AUTOMATION LOGIC ---
+        // Threshold: 65/100
+        const MIN_SCORE_COMM = 65;
+        let newStatus = 'Interviewed';
+        let emailSubject = "";
+        let emailBody = "";
+        let shouldSendEmail = false;
+
+        if (content.score > MIN_SCORE_COMM) {
+            newStatus = 'Technical Round';
+            emailSubject = `Congratulations! You've moved to the Technical Round`;
+            emailBody = `
+Dear ${candidateName},
+
+Great job on your communication assessment! You scored ${content.score}/100.
+
+We are excited to invite you to the **Technical Assessment Round**.
+Please log in to your dashboard to view the technical problem statement and submit your solution.
+
+Best,
+RootedAI Recruiting Team
+            `;
+            shouldSendEmail = true;
+        } else {
+            newStatus = 'Rejected';
+            emailSubject = `Update on your application for ${jobTitle}`;
+            emailBody = `
+Dear ${candidateName},
+
+Thank you for completing the communication assessment. Unfortunately, your score (${content.score}/100) did not meet our threshold for this specific role.
+
+We appreciate your time and wish you success in your future endeavors.
+
+Best,
+RootedAI Recruiting Team
+            `;
+            shouldSendEmail = true;
         }
 
-        const analysisData = await analysisResponse.json();
-        const content = analysisData.choices[0].message.content;
-
-        let aiResult;
-        try {
-            aiResult = JSON.parse(content);
-            aiResult.transcription = transcription;
-        } catch (e) {
-            console.error("JSON Parse Error:", e);
-            aiResult = {
-                transcription: transcription,
-                score: 0,
-                feedback: "AI analysis failed to parse response."
-            };
-        }
-
-        // Update Interview
+        // 4. Update Interview & Application
         const { error: updateError } = await supabaseAdmin
             .from('interviews')
             .update({
-                transcription: aiResult.transcription,
-                ai_score: aiResult.score,
-                ai_feedback: aiResult.feedback
+                transcript: transcription,
+                ai_score: content.score,
+                ai_feedback: content.feedback,
+                status: 'Analyzed'
             })
-            .eq('id', interviewId)
+            .eq('id', interviewId);
 
         if (updateError) throw updateError;
+
+        // Update Application Status
+        await supabaseAdmin
+            .from('applications')
+            .update({ status: newStatus })
+            .eq('id', interviewData.application_id);
+
+        // 5. Send Email
+        if (shouldSendEmail && candidateEmail) {
+            await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-rejection-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${supabaseKey}`
+                },
+                body: JSON.stringify({
+                    email: candidateEmail,
+                    subject: emailSubject,
+                    body: emailBody
+                })
+            });
+        }
 
         return new Response(
             JSON.stringify({ success: true }),
