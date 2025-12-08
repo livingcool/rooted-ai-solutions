@@ -1218,140 +1218,143 @@ const AdminHiringDashboard = () => {
 
                                         <TabsContent value="technical" className="mt-4 space-y-4">
                                             {(selectedApp as any).technical_assessments && (selectedApp as any).technical_assessments.length > 0 ? (
-                                                (selectedApp as any).technical_assessments.map((tech: any) => (
-                                                    <div key={tech.id} className="space-y-6">
-                                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                            <Card className="bg-white/5 border-white/10 col-span-1">
-                                                                <CardHeader className="pb-2">
-                                                                    <CardTitle className="text-sm font-medium text-white/60">Technical Score</CardTitle>
-                                                                </CardHeader>
-                                                                <CardContent>
-                                                                    <div className="flex items-end justify-between">
-                                                                        <div className="text-4xl font-bold text-orange-400">{tech.ai_score || 0}/100</div>
-                                                                        <div className="text-sm text-white/60 mb-1">AI Evaluated</div>
-                                                                    </div>
-                                                                </CardContent>
-                                                            </Card>
-                                                            <Card className="bg-white/5 border-white/10 col-span-2">
-                                                                <CardHeader className="pb-2">
-                                                                    <CardTitle className="text-sm font-medium text-white/60">AI Feedback</CardTitle>
-                                                                </CardHeader>
-                                                                <CardContent>
-                                                                    <p className="text-white/80 text-sm leading-relaxed">{tech.ai_feedback || "Pending Analysis..."}</p>
-                                                                </CardContent>
-                                                            </Card>
-                                                        </div>
-
-                                                        <div className="bg-white/5 p-6 rounded-lg border border-white/10 space-y-6">
-                                                            <div className="flex justify-between items-start">
-                                                                <h4 className="font-bold text-white text-lg">Submission Details</h4>
-                                                                <div className="flex gap-2">
-                                                                    {tech.github_url && (
-                                                                        <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => window.open(tech.github_url, '_blank')}>
-                                                                            <Github className="w-4 h-4 mr-2" /> GitHub Repo
-                                                                        </Button>
-                                                                    )}
-                                                                    {tech.video_url && (
-                                                                        <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {
-                                                                            const { data } = await supabase.storage.from('technical-submissions').createSignedUrl(tech.video_url, 60);
-                                                                            if (data?.signedUrl) window.open(data.signedUrl, '_blank');
-                                                                        }}>
-                                                                            <Video className="w-4 h-4 mr-2" /> Watch Demo
-                                                                        </Button>
-                                                                    )}
-                                                                </div>
+                                                (selectedApp as any).technical_assessments
+                                                    .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) // Sort by latest
+                                                    .slice(0, 1) // Take only the most recent one
+                                                    .map((tech: any) => (
+                                                        <div key={tech.id} className="space-y-6">
+                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                                <Card className="bg-white/5 border-white/10 col-span-1">
+                                                                    <CardHeader className="pb-2">
+                                                                        <CardTitle className="text-sm font-medium text-white/60">Technical Score</CardTitle>
+                                                                    </CardHeader>
+                                                                    <CardContent>
+                                                                        <div className="flex items-end justify-between">
+                                                                            <div className="text-4xl font-bold text-orange-400">{tech.ai_score || 0}/100</div>
+                                                                            <div className="text-sm text-white/60 mb-1">AI Evaluated</div>
+                                                                        </div>
+                                                                    </CardContent>
+                                                                </Card>
+                                                                <Card className="bg-white/5 border-white/10 col-span-2">
+                                                                    <CardHeader className="pb-2">
+                                                                        <CardTitle className="text-sm font-medium text-white/60">AI Feedback</CardTitle>
+                                                                    </CardHeader>
+                                                                    <CardContent>
+                                                                        <p className="text-white/80 text-sm leading-relaxed">{tech.ai_feedback || "Pending Analysis..."}</p>
+                                                                    </CardContent>
+                                                                </Card>
                                                             </div>
 
-                                                            <div className="space-y-6">
-                                                                {(tech as any).score === null || !(tech as any).improvement_suggestions ? (
-                                                                    <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 flex items-center justify-between">
-                                                                        <div className="flex items-center gap-3">
-                                                                            <RefreshCw className="w-5 h-5 text-yellow-500" />
-                                                                            <div>
-                                                                                <p className="text-sm font-semibold text-yellow-500">Analysis Pending or Incomplete</p>
-                                                                                <p className="text-xs text-white/60">The AI feedback seems missing for this submission.</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <Button
-                                                                            size="sm"
-                                                                            variant="outline"
-                                                                            className="border-yellow-500/20 text-yellow-500 hover:bg-yellow-500/20"
-                                                                            onClick={async () => {
-                                                                                try {
-                                                                                    toast({ title: "Processing...", description: "Retrying AI analysis for this submission." });
-
-                                                                                    const { data: { session } } = await supabase.auth.getSession();
-                                                                                    if (!session) throw new Error("No active session");
-
-                                                                                    const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/analyze-technical-submission', {
-                                                                                        method: 'POST',
-                                                                                        headers: {
-                                                                                            'Content-Type': 'application/json',
-                                                                                            'Authorization': `Bearer ${session.access_token}`
-                                                                                        },
-                                                                                        body: JSON.stringify({ applicationId: selectedApp.id })
-                                                                                    });
-
-                                                                                    const result = await response.json();
-
-                                                                                    if (!response.ok) {
-                                                                                        console.error("Function Error:", result);
-                                                                                        throw new Error(result.error || result.details || JSON.stringify(result));
-                                                                                    }
-
-                                                                                    toast({ title: "Success", description: "Analysis triggered. Refresh in a few seconds." });
-                                                                                    fetchData();
-                                                                                } catch (e: any) {
-                                                                                    console.error("Retry Logic Error:", e);
-                                                                                    toast({
-                                                                                        title: "Analysis Failed",
-                                                                                        description: e.message,
-                                                                                        variant: "destructive",
-                                                                                        duration: 7000
-                                                                                    });
-                                                                                }
-                                                                            }}
-                                                                        >
-                                                                            Retry AI Analysis
-                                                                        </Button>
+                                                            <div className="bg-white/5 p-6 rounded-lg border border-white/10 space-y-6">
+                                                                <div className="flex justify-between items-start">
+                                                                    <h4 className="font-bold text-white text-lg">Submission Details</h4>
+                                                                    <div className="flex gap-2">
+                                                                        {tech.github_url && (
+                                                                            <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => window.open(tech.github_url, '_blank')}>
+                                                                                <Github className="w-4 h-4 mr-2" /> GitHub Repo
+                                                                            </Button>
+                                                                        )}
+                                                                        {tech.video_url && (
+                                                                            <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {
+                                                                                const { data } = await supabase.storage.from('technical-submissions').createSignedUrl(tech.video_url, 60);
+                                                                                if (data?.signedUrl) window.open(data.signedUrl, '_blank');
+                                                                            }}>
+                                                                                <Video className="w-4 h-4 mr-2" /> Watch Demo
+                                                                            </Button>
+                                                                        )}
                                                                     </div>
-                                                                ) : null}
-
-                                                                <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                                                                    <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
-                                                                        <Code className="w-4 h-4" /> Tech Stack
-                                                                    </h5>
-                                                                    <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-black/20 p-3 rounded">{tech.tech_stack}</p>
                                                                 </div>
 
-                                                                <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                                                                    <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
-                                                                        <RefreshCw className="w-4 h-4" /> Process Flow
-                                                                    </h5>
-                                                                    <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-sans">{tech.process_flow}</p>
-                                                                </div>
+                                                                <div className="space-y-6">
+                                                                    {(tech as any).score === null || !(tech as any).improvement_suggestions ? (
+                                                                        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 flex items-center justify-between">
+                                                                            <div className="flex items-center gap-3">
+                                                                                <RefreshCw className="w-5 h-5 text-yellow-500" />
+                                                                                <div>
+                                                                                    <p className="text-sm font-semibold text-yellow-500">Analysis Pending or Incomplete</p>
+                                                                                    <p className="text-xs text-white/60">The AI feedback seems missing for this submission.</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <Button
+                                                                                size="sm"
+                                                                                variant="outline"
+                                                                                className="border-yellow-500/20 text-yellow-500 hover:bg-yellow-500/20"
+                                                                                onClick={async () => {
+                                                                                    try {
+                                                                                        toast({ title: "Processing...", description: "Retrying AI analysis for this submission." });
 
-                                                                <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                                                                    <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
-                                                                        <Sparkles className="w-4 h-4 text-yellow-400" /> Issues Faced & Solutions
-                                                                    </h5>
-                                                                    <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap">{tech.issues_faced}</p>
-                                                                </div>
+                                                                                        const { data: { session } } = await supabase.auth.getSession();
+                                                                                        if (!session) throw new Error("No active session");
 
-                                                                {(tech as any).transcription && (
+                                                                                        const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/analyze-technical-submission', {
+                                                                                            method: 'POST',
+                                                                                            headers: {
+                                                                                                'Content-Type': 'application/json',
+                                                                                                'Authorization': `Bearer ${session.access_token}`
+                                                                                            },
+                                                                                            body: JSON.stringify({ applicationId: selectedApp.id })
+                                                                                        });
+
+                                                                                        const result = await response.json();
+
+                                                                                        if (!response.ok) {
+                                                                                            console.error("Function Error:", result);
+                                                                                            throw new Error(result.error || result.details || JSON.stringify(result));
+                                                                                        }
+
+                                                                                        toast({ title: "Success", description: "Analysis triggered. Refresh in a few seconds." });
+                                                                                        fetchData();
+                                                                                    } catch (e: any) {
+                                                                                        console.error("Retry Logic Error:", e);
+                                                                                        toast({
+                                                                                            title: "Analysis Failed",
+                                                                                            description: e.message,
+                                                                                            variant: "destructive",
+                                                                                            duration: 7000
+                                                                                        });
+                                                                                    }
+                                                                                }}
+                                                                            >
+                                                                                Retry AI Analysis
+                                                                            </Button>
+                                                                        </div>
+                                                                    ) : null}
+
                                                                     <div className="bg-white/5 p-4 rounded-lg border border-white/10">
                                                                         <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
-                                                                            <Video className="w-4 h-4 text-blue-400" /> Video Transcription (AI Generated)
+                                                                            <Code className="w-4 h-4" /> Tech Stack
                                                                         </h5>
-                                                                        <div className="text-white/80 text-sm bg-black/20 p-4 rounded border border-white/5 max-h-60 overflow-y-auto italic leading-relaxed">
-                                                                            "{(tech as any).transcription}"
-                                                                        </div>
+                                                                        <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-black/20 p-3 rounded">{tech.tech_stack}</p>
                                                                     </div>
-                                                                )}
+
+                                                                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                                        <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                            <RefreshCw className="w-4 h-4" /> Process Flow
+                                                                        </h5>
+                                                                        <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-sans">{tech.process_flow}</p>
+                                                                    </div>
+
+                                                                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                                        <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                            <Sparkles className="w-4 h-4 text-yellow-400" /> Issues Faced & Solutions
+                                                                        </h5>
+                                                                        <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap">{tech.issues_faced}</p>
+                                                                    </div>
+
+                                                                    {(tech as any).transcription && (
+                                                                        <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                                            <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                                <Video className="w-4 h-4 text-blue-400" /> Video Transcription (AI Generated)
+                                                                            </h5>
+                                                                            <div className="text-white/80 text-sm bg-black/20 p-4 rounded border border-white/5 max-h-60 overflow-y-auto italic leading-relaxed">
+                                                                                "{(tech as any).transcription}"
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                ))
+                                                    ))
                                             ) : (
                                                 <div className="text-center py-12 space-y-4">
                                                     <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto">
