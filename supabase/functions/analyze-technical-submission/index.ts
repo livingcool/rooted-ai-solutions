@@ -11,8 +11,25 @@ serve(async (req) => {
         return new Response('ok', { headers: corsHeaders })
     }
 
+    // Handle GET requests (Browser checks)
+    if (req.method === 'GET') {
+        return new Response(JSON.stringify({ message: "Service is active. Please use POST with body: { applicationId }." }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+    }
+
     try {
-        const { applicationId } = await req.json()
+        // Debug Logging: Read text first to see what exactly is being sent
+        const bodyText = await req.text();
+        console.log("Raw Request Body:", bodyText);
+
+        if (!bodyText) {
+            throw new Error("Request body is empty");
+        }
+
+        const bodyJson = JSON.parse(bodyText);
+        const { applicationId, frames: inputFrames } = bodyJson;
+        const frames = inputFrames || [];
 
         const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
         const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -74,7 +91,7 @@ serve(async (req) => {
         }
 
         // --- 2. Analyze Submission (Text + Transcription + Vision) ---
-        const { frames } = await req.json().catch(() => ({ frames: [] })); // Get frames from body
+        // frames are already extracted from the initial body read
 
         // Check if we have frames for Vision Analysis
         const hasFrames = frames && frames.length > 0;
