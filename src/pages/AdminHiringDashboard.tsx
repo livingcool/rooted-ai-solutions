@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ReactMarkdown from 'react-markdown';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,9 @@ const AdminHiringDashboard = () => {
     });
     const [enhancing, setEnhancing] = useState(false);
     const [isRetrying, setIsRetrying] = useState(false);
+    const [isReportOpen, setIsReportOpen] = useState(false);
+    const [hiringReport, setHiringReport] = useState("");
+    const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
     const [editingJob, setEditingJob] = useState<Job | null>(null);
     const [activeTab, setActiveTab] = useState("resume");
@@ -353,6 +357,27 @@ const AdminHiringDashboard = () => {
                     description: "This project is now the default for this job role.",
                 });
             }
+        }
+    };
+
+    const handleGenerateReport = async () => {
+        setIsGeneratingReport(true);
+        setIsReportOpen(true);
+        setHiringReport(""); // Clear previous
+        try {
+            const { data, error } = await supabase.functions.invoke('generate-hiring-report');
+            if (error) throw error;
+            setHiringReport(data.report);
+        } catch (error: any) {
+            console.error("Error generating report:", error);
+            setHiringReport("**Error generating report.** Please try again.");
+            toast({
+                title: "Error",
+                description: error.message || "Failed to generate report.",
+                variant: "destructive",
+            });
+        } finally {
+            setIsGeneratingReport(false);
         }
     };
 
@@ -933,470 +958,482 @@ const AdminHiringDashboard = () => {
                                             <Badge className={`${getStatusColor(selectedApp.status)} border-0 px-3 py-1 text-sm`}>
                                                 {selectedApp.status}
                                             </Badge>
-
-                                            {/* RESUME STAGE - Applied or AI Assessed */}
-                                            {(selectedApp.status === 'Applied' || selectedApp.status === 'AI Assessed') && (
-                                                <div className="flex gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        className="bg-white text-black hover:bg-white/90"
-                                                        onClick={() => setIsInviteOpen(true)}
+                                            variant="destructive"
+                                            className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                            onClick={() => setIsRejectOpen(true)}
                                                     >
-                                                        Invite to Communication Assessment
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="destructive"
-                                                        className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
-                                                        onClick={() => setIsRejectOpen(true)}
-                                                    >
-                                                        Reject
-                                                    </Button>
-                                                </div>
-                                            )}
-
-                                            {/* COMMUNICATION STAGE - Completed (But NOT in Technical Round yet) */}
-                                            {(selectedApp.status === 'Communication Round Completed' || ((selectedApp as any).interviews?.length > 0 && selectedApp.status !== 'Technical Round' && selectedApp.status !== 'Technical Round Completed' && selectedApp.status !== 'Final Interview' && selectedApp.status !== 'Rejected')) && (
-                                                <div className="flex gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="border-white/20 hover:bg-white/10"
-                                                        onClick={() => setIsInviteOpen(true)}
-                                                    >
-                                                        Resend Communication
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        className="bg-green-500 text-white hover:bg-green-600 border-0"
-                                                        onClick={() => setIsTechnicalInviteOpen(true)}
-                                                    >
-                                                        Invite to Technical Round
-                                                    </Button>
-                                                </div>
-                                            )}
-
-                                            {/* TECHNICAL STAGE - Completed */}
-                                            {(selectedApp.status === 'Technical Round Completed' || (selectedApp.status === 'Technical Round' && (selectedApp as any).technical_assessments?.length > 0)) && (
-                                                <div className="flex gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="border-white/20 hover:bg-white/10"
-                                                        onClick={() => setIsTechnicalInviteOpen(true)}
-                                                    >
-                                                        Retake Technical
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        className="bg-green-500 text-white hover:bg-green-600 border-0"
-                                                        onClick={() => handleMoveToFinalRound(selectedApp.id)}
-                                                    >
-                                                        Select for Final Interview
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="destructive"
-                                                        className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
-                                                        onClick={() => setIsRejectOpen(true)}
-                                                    >
-                                                        Reject
-                                                    </Button>
-                                                </div>
-                                            )}
-
-                                            {/* REJECTED - Restore option */}
-                                            {selectedApp.status === 'Rejected' && (
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    className="border-white/20 hover:bg-white/10"
-                                                    onClick={async () => {
-                                                        const { error } = await supabase
-                                                            .from('applications' as any)
-                                                            .update({ status: 'Applied' })
-                                                            .eq('id', selectedApp.id);
-                                                        if (!error) {
-                                                            toast({ title: "Success", description: "Candidate restored to Applied status" });
-                                                            setSelectedApp({ ...selectedApp, status: 'Applied' });
-                                                            fetchData();
-                                                        }
-                                                    }}
-                                                >
-                                                    Restore to Applied
-                                                </Button>
-                                            )}
-
-                                            {(selectedApp as any).access_code && (
-                                                <div className="text-xs text-white/40 font-mono bg-white/5 px-2 py-1 rounded">
-                                                    Access Code: {(selectedApp as any).access_code}
-                                                </div>
-                                            )}
-                                        </div>
+                                            Reject
+                                        </Button>
                                     </div>
+                                            )}
+
+                                    {/* COMMUNICATION STAGE - Completed (But NOT in Technical Round yet) */}
+                                    {(selectedApp.status === 'Communication Round Completed' || ((selectedApp as any).interviews?.length > 0 && selectedApp.status !== 'Technical Round' && selectedApp.status !== 'Technical Round Completed' && selectedApp.status !== 'Final Interview' && selectedApp.status !== 'Rejected')) && (
+                                        <div className="flex gap-2">
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="border-white/20 hover:bg-white/10"
+                                                onClick={() => setIsInviteOpen(true)}
+                                            >
+                                                Resend Communication
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                className="bg-green-500 text-white hover:bg-green-600 border-0"
+                                                onClick={() => setIsTechnicalInviteOpen(true)}
+                                            >
+                                                Invite to Technical Round
+                                            </Button>
+                                        </div>
+                                    )}
+
+                                    {/* TECHNICAL STAGE - Completed */}
+                                    {(selectedApp.status === 'Technical Round Completed' || (selectedApp.status === 'Technical Round' && (selectedApp as any).technical_assessments?.length > 0)) && (
+                                        <div className="flex gap-2">
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="border-white/20 hover:bg-white/10"
+                                                onClick={() => setIsTechnicalInviteOpen(true)}
+                                            >
+                                                Retake Technical
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                className="bg-green-500 text-white hover:bg-green-600 border-0"
+                                                onClick={() => handleMoveToFinalRound(selectedApp.id)}
+                                            >
+                                                Select for Final Interview
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="destructive"
+                                                className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                                onClick={() => setIsRejectOpen(true)}
+                                            >
+                                                Reject
+                                            </Button>
+                                        </div>
+                                    )}
+
+                                    {/* REJECTED - Restore option */}
+                                    {selectedApp.status === 'Rejected' && (
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            className="border-white/20 hover:bg-white/10"
+                                            onClick={async () => {
+                                                const { error } = await supabase
+                                                    .from('applications' as any)
+                                                    .update({ status: 'Applied' })
+                                                    .eq('id', selectedApp.id);
+                                                if (!error) {
+                                                    toast({ title: "Success", description: "Candidate restored to Applied status" });
+                                                    setSelectedApp({ ...selectedApp, status: 'Applied' });
+                                                    fetchData();
+                                                }
+                                            }}
+                                        >
+                                            Restore to Applied
+                                        </Button>
+                                    )}
+
+                                    {(selectedApp as any).access_code && (
+                                        <div className="text-xs text-white/40 font-mono bg-white/5 px-2 py-1 rounded">
+                                            Access Code: {(selectedApp as any).access_code}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
 
                                     {/* Metrics Grid */}
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <Card className="bg-white/5 border-white/10">
-                                            <CardHeader className="pb-2">
-                                                <CardTitle className="text-sm font-medium text-white/60">Resume Match</CardTitle>
-                                            </CardHeader>
-                                            <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <Card className="bg-white/5 border-white/10">
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-sm font-medium text-white/60">Resume Match</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex items-end justify-between">
+                                        <div className="text-3xl font-bold">
+                                            {selectedApp.ai_score || 0}%
+                                        </div>
+                                        <div className={`text-sm mb-1 ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>
+                                            {selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'Excellent' : 'Good'}
+                                        </div>
+                                    </div>
+                                    <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
+                                        <div
+                                            className={`h-full rounded-full ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'bg-green-500' : 'bg-yellow-500'}`}
+                                            style={{ width: `${selectedApp.ai_score || 0}%` }}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card className="bg-white/5 border-white/10">
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-sm font-medium text-white/60">Communication</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    {(() => {
+                                        const interviews = (selectedApp as any).interviews || [];
+                                        const score = interviews.length > 0 ? interviews[0].ai_score : 0;
+                                        return (
+                                            <>
                                                 <div className="flex items-end justify-between">
                                                     <div className="text-3xl font-bold">
-                                                        {selectedApp.ai_score || 0}%
+                                                        {score > 0 ? `${score}%` : 'N/A'}
                                                     </div>
-                                                    <div className={`text-sm mb-1 ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>
-                                                        {selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'Excellent' : 'Good'}
-                                                    </div>
-                                                </div>
-                                                <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
-                                                    <div
-                                                        className={`h-full rounded-full ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'bg-green-500' : 'bg-yellow-500'}`}
-                                                        style={{ width: `${selectedApp.ai_score || 0}%` }}
-                                                    />
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-
-                                        <Card className="bg-white/5 border-white/10">
-                                            <CardHeader className="pb-2">
-                                                <CardTitle className="text-sm font-medium text-white/60">Communication</CardTitle>
-                                            </CardHeader>
-                                            <CardContent>
-                                                {(() => {
-                                                    const interviews = (selectedApp as any).interviews || [];
-                                                    const score = interviews.length > 0 ? interviews[0].ai_score : 0;
-                                                    return (
-                                                        <>
-                                                            <div className="flex items-end justify-between">
-                                                                <div className="text-3xl font-bold">
-                                                                    {score > 0 ? `${score}%` : 'N/A'}
-                                                                </div>
-                                                                {score > 0 && (
-                                                                    <div className={`text-sm mb-1 ${score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>
-                                                                        {score >= 80 ? 'Excellent' : 'Average'}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
-                                                                <div
-                                                                    className={`h-full rounded-full ${score >= 80 ? 'bg-white' : 'bg-white/40'}`}
-                                                                    style={{ width: `${score}%` }}
-                                                                />
-                                                            </div>
-                                                        </>
-                                                    );
-                                                })()}
-                                            </CardContent>
-                                        </Card>
-
-                                        <Card className="bg-white/5 border-white/10">
-                                            <CardHeader className="pb-2">
-                                                <CardTitle className="text-sm font-medium text-white/60">Timeline</CardTitle>
-                                            </CardHeader>
-                                            <CardContent>
-                                                <div className="space-y-2 text-sm">
-                                                    <div className="flex justify-between">
-                                                        <span className="text-white/60">Applied</span>
-                                                        <span>{new Date(selectedApp.created_at).toLocaleDateString()}</span>
-                                                    </div>
-                                                    {(selectedApp as any).communication_deadline && (
-                                                        <div className="flex justify-between">
-                                                            <span className="text-white/60">Deadline</span>
-                                                            <span className={new Date((selectedApp as any).communication_deadline) < new Date() ? 'text-red-400' : ''}>
-                                                                {new Date((selectedApp as any).communication_deadline).toLocaleDateString()}
-                                                            </span>
+                                                    {score > 0 && (
+                                                        <div className={`text-sm mb-1 ${score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>
+                                                            {score >= 80 ? 'Excellent' : 'Average'}
                                                         </div>
                                                     )}
                                                 </div>
-                                            </CardContent>
-                                        </Card>
-                                    </div>
-
-                                    {/* Checkpoint Stepper */}
-                                    <div className="flex justify-between items-center relative mb-8 px-4">
-                                        <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-white/10 -z-10" />
-
-                                        {[
-                                            { id: 'resume', label: 'Resume Screening', status: 'Completed' },
-                                            { id: 'communication', label: 'Communication', status: (selectedApp as any).interviews?.length > 0 ? 'Completed' : 'Pending' },
-                                            { id: 'technical', label: 'Technical Round', status: (selectedApp as any).technical_assessments?.length > 0 ? 'Completed' : (selectedApp.status === 'Technical Round' ? 'In Progress' : 'Pending') },
-                                            { id: 'final', label: 'Final Interview', status: 'Pending' }
-                                        ].map((step, idx) => (
-                                            <div
-                                                key={step.id}
-                                                className={`flex flex-col items-center gap-2 cursor-pointer group`}
-                                                onClick={() => setActiveTab(step.id)}
-                                            >
-                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${step.status === 'Completed' ? 'bg-green-500 border-green-500 text-black' :
-                                                    step.status === 'In Progress' ? 'bg-yellow-500 border-yellow-500 text-black animate-pulse' :
-                                                        'bg-black border-white/20 text-white/40 group-hover:border-white/60'
-                                                    }`}>
-                                                    {step.status === 'Completed' ? '✓' : idx + 1}
+                                                <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
+                                                    <div
+                                                        className={`h-full rounded-full ${score >= 80 ? 'bg-white' : 'bg-white/40'}`}
+                                                        style={{ width: `${score}%` }}
+                                                    />
                                                 </div>
-                                                <span className={`text-xs font-medium ${step.status === 'Completed' ? 'text-green-400' :
-                                                    step.status === 'In Progress' ? 'text-yellow-400' :
-                                                        'text-white/40'
-                                                    }`}>{step.label}</span>
+                                            </>
+                                        );
+                                    })()}
+                                </CardContent>
+                            </Card>
+
+                            <Card className="bg-white/5 border-white/10">
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-sm font-medium text-white/60">Timeline</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-2 text-sm">
+                                        <div className="flex justify-between">
+                                            <span className="text-white/60">Applied</span>
+                                            <span>{new Date(selectedApp.created_at).toLocaleDateString()}</span>
+                                        </div>
+                                        {(selectedApp as any).communication_deadline && (
+                                            <div className="flex justify-between">
+                                                <span className="text-white/60">Deadline</span>
+                                                <span className={new Date((selectedApp as any).communication_deadline) < new Date() ? 'text-red-400' : ''}>
+                                                    {new Date((selectedApp as any).communication_deadline).toLocaleDateString()}
+                                                </span>
                                             </div>
-                                        ))}
+                                        )}
                                     </div>
+                                </CardContent>
+                            </Card>
+                        </div>
 
-                                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                                        <TabsList className="hidden">
-                                            <TabsTrigger value="resume">Resume</TabsTrigger>
-                                            <TabsTrigger value="communication">Communication</TabsTrigger>
-                                            <TabsTrigger value="technical">Technical</TabsTrigger>
-                                            <TabsTrigger value="final">Final</TabsTrigger>
-                                        </TabsList>
+                        {/* Checkpoint Stepper */}
+                        <div className="flex justify-between items-center relative mb-8 px-4">
+                            <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-white/10 -z-10" />
 
-                                        <TabsContent value="resume" className="mt-4 space-y-4">
-                                            <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                                                <h4 className="font-semibold mb-2 text-white">AI Feedback</h4>
-                                                <p className="text-white/80 leading-relaxed">
-                                                    {selectedApp.ai_feedback || "No feedback available."}
-                                                </p>
-                                            </div>
-                                        </TabsContent>
-
-                                        <TabsContent value="communication" className="mt-4 space-y-4">
-                                            {(selectedApp as any).interviews && (selectedApp as any).interviews.length > 0 ? (
-                                                (selectedApp as any).interviews
-                                                    .sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-                                                    .map((interview: any, index: number) => (
-                                                        <div key={interview.id} className="bg-white/5 p-6 rounded-lg border border-white/10 space-y-6">
-                                                            <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-4">
-                                                                <h4 className="font-bold text-white text-lg">Attempt {index + 1}</h4>
-                                                                <span className="text-xs text-white/40">{new Date(interview.created_at).toLocaleString()}</span>
-                                                            </div>
-                                                            <div className="flex justify-between items-start">
-                                                                <div>
-                                                                    <h4 className="font-semibold text-lg mb-1">Question</h4>
-                                                                    <p className="text-white/80 italic">"{interview.question}"</p>
-                                                                </div>
-                                                                <div className="text-right">
-                                                                    <div className="text-2xl font-bold text-blue-400">{interview.ai_score}/100</div>
-                                                                    <div className="text-xs text-white/40">AI Score</div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="bg-black/40 p-3 rounded border border-white/5">
-                                                                <audio controls className="w-full h-10" src={interview.audio_signed_url} />
-                                                            </div>
-
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                                <div>
-                                                                    <h5 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-2">Transcription</h5>
-                                                                    <div className="bg-black/20 p-3 rounded text-sm text-white/70 max-h-40 overflow-y-auto">
-                                                                        "{interview.transcription}"
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <h5 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-2">AI Analysis</h5>
-                                                                    <div className="bg-black/20 p-3 rounded text-sm text-white/70">
-                                                                        {interview.ai_feedback || (
-                                                                            <div className="flex items-center gap-2 text-yellow-400/80">
-                                                                                <Loader2 className="w-4 h-4 animate-spin" />
-                                                                                <span>Analysis in progress...</span>
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                            ) : (
-                                                <div className="text-center py-12 bg-white/5 rounded-lg border border-white/10 border-dashed">
-                                                    <div className="text-white/40">No communication assessment data available yet.</div>
-                                                    <Button variant="link" className="text-white underline mt-2" onClick={() => setIsInviteOpen(true)}>
-                                                        Send Invitation
-                                                    </Button>
-                                                </div>
-                                            )}
-                                        </TabsContent>
-
-                                        <TabsContent value="technical" className="mt-4 space-y-4">
-                                            {(selectedApp as any).technical_assessments && (selectedApp as any).technical_assessments.length > 0 ? (
-                                                (selectedApp as any).technical_assessments
-                                                    .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) // Sort by latest
-                                                    .slice(0, 1) // Take only the most recent one
-                                                    .map((tech: any) => (
-                                                        <div key={tech.id} className="space-y-6">
-                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                                <Card className="bg-white/5 border-white/10 col-span-1">
-                                                                    <CardHeader className="pb-2">
-                                                                        <CardTitle className="text-sm font-medium text-white/60">Technical Score</CardTitle>
-                                                                    </CardHeader>
-                                                                    <CardContent>
-                                                                        <div className="flex items-end justify-between">
-                                                                            <div className="text-4xl font-bold text-orange-400">{tech.ai_score || 0}/100</div>
-                                                                            <div className="text-sm text-white/60 mb-1">AI Evaluated</div>
-                                                                        </div>
-                                                                    </CardContent>
-                                                                </Card>
-                                                                <Card className="bg-white/5 border-white/10 col-span-2">
-                                                                    <CardHeader className="pb-2">
-                                                                        <CardTitle className="text-sm font-medium text-white/60">AI Feedback</CardTitle>
-                                                                    </CardHeader>
-                                                                    <CardContent>
-                                                                        <p className="text-white/80 text-sm leading-relaxed">{tech.ai_feedback || "Pending Analysis..."}</p>
-                                                                    </CardContent>
-                                                                </Card>
-                                                            </div>
-
-                                                            <div className="bg-white/5 p-6 rounded-lg border border-white/10 space-y-6">
-                                                                <div className="flex justify-between items-start">
-                                                                    <h4 className="font-bold text-white text-lg">Submission Details</h4>
-                                                                    <div className="flex gap-2">
-                                                                        {tech.github_url && (
-                                                                            <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => window.open(tech.github_url, '_blank')}>
-                                                                                <Github className="w-4 h-4 mr-2" /> GitHub Repo
-                                                                            </Button>
-                                                                        )}
-                                                                        {tech.video_url && (
-                                                                            <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {
-                                                                                const { data } = await supabase.storage.from('technical-submissions').createSignedUrl(tech.video_url, 60);
-                                                                                if (data?.signedUrl) window.open(data.signedUrl, '_blank');
-                                                                            }}>
-                                                                                <Video className="w-4 h-4 mr-2" /> Watch Demo
-                                                                            </Button>
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-
-                                                                <div className="space-y-6">
-                                                                    {(tech as any).score === null || !(tech as any).improvement_suggestions ? (
-                                                                        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 flex items-center justify-between">
-                                                                            <div className="flex items-center gap-3">
-                                                                                <RefreshCw className="w-5 h-5 text-yellow-500" />
-                                                                                <div>
-                                                                                    <p className="text-sm font-semibold text-yellow-500">Analysis Pending or Incomplete</p>
-                                                                                    <p className="text-xs text-white/60">The AI feedback seems missing for this submission.</p>
-                                                                                </div>
-                                                                            </div>
-                                                                            <Button
-                                                                                size="sm"
-                                                                                variant="outline"
-                                                                                className="border-yellow-500/20 text-yellow-500 hover:bg-yellow-500/20"
-                                                                                onClick={async () => {
-                                                                                    try {
-                                                                                        toast({ title: "Processing...", description: "Retrying AI analysis for this submission." });
-
-                                                                                        const { data: { session } } = await supabase.auth.getSession();
-                                                                                        if (!session) throw new Error("No active session");
-
-                                                                                        const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/analyze-technical-submission', {
-                                                                                            method: 'POST',
-                                                                                            headers: {
-                                                                                                'Content-Type': 'application/json',
-                                                                                                'Authorization': `Bearer ${session.access_token}`
-                                                                                            },
-                                                                                            body: JSON.stringify({ applicationId: selectedApp.id })
-                                                                                        });
-
-                                                                                        const result = await response.json();
-
-                                                                                        if (!response.ok) {
-                                                                                            console.error("Function Error:", result);
-                                                                                            throw new Error(result.error || result.details || JSON.stringify(result));
-                                                                                        }
-
-                                                                                        toast({ title: "Success", description: "Analysis triggered. Refresh in a few seconds." });
-                                                                                        fetchData();
-                                                                                    } catch (e: any) {
-                                                                                        console.error("Retry Logic Error:", e);
-                                                                                        toast({
-                                                                                            title: "Analysis Failed",
-                                                                                            description: e.message,
-                                                                                            variant: "destructive",
-                                                                                            duration: 7000
-                                                                                        });
-                                                                                    }
-                                                                                }}
-                                                                            >
-                                                                                Retry AI Analysis
-                                                                            </Button>
-                                                                        </div>
-                                                                    ) : null}
-
-                                                                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                                                                        <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
-                                                                            <Code className="w-4 h-4" /> Tech Stack
-                                                                        </h5>
-                                                                        <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-black/20 p-3 rounded">{tech.tech_stack}</p>
-                                                                    </div>
-
-                                                                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                                                                        <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
-                                                                            <RefreshCw className="w-4 h-4" /> Process Flow
-                                                                        </h5>
-                                                                        <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-sans">{tech.process_flow}</p>
-                                                                    </div>
-
-                                                                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                                                                        <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
-                                                                            <Sparkles className="w-4 h-4 text-yellow-400" /> Issues Faced & Solutions
-                                                                        </h5>
-                                                                        <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap">{tech.issues_faced}</p>
-                                                                    </div>
-
-                                                                    {(tech as any).transcription && (
-                                                                        <div className="bg-white/5 p-4 rounded-lg border border-white/10">
-                                                                            <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
-                                                                                <Video className="w-4 h-4 text-blue-400" /> Video Transcription (AI Generated)
-                                                                            </h5>
-                                                                            <div className="text-white/80 text-sm bg-black/20 p-4 rounded border border-white/5 max-h-60 overflow-y-auto italic leading-relaxed">
-                                                                                "{(tech as any).transcription}"
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                            ) : (
-                                                <div className="text-center py-12 space-y-4">
-                                                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto">
-                                                        <Code className="w-8 h-8 text-white/20" />
-                                                    </div>
-                                                    <p className="text-white/40">No technical assessment submitted yet.</p>
-                                                </div>
-                                            )}
-                                        </TabsContent>
-                                    </Tabs>
+                            {[
+                                { id: 'resume', label: 'Resume Screening', status: 'Completed' },
+                                { id: 'communication', label: 'Communication', status: (selectedApp as any).interviews?.length > 0 ? 'Completed' : 'Pending' },
+                                { id: 'technical', label: 'Technical Round', status: (selectedApp as any).technical_assessments?.length > 0 ? 'Completed' : (selectedApp.status === 'Technical Round' ? 'In Progress' : 'Pending') },
+                                { id: 'final', label: 'Final Interview', status: 'Pending' }
+                            ].map((step, idx) => (
+                                <div
+                                    key={step.id}
+                                    className={`flex flex-col items-center gap-2 cursor-pointer group`}
+                                    onClick={() => setActiveTab(step.id)}
+                                >
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${step.status === 'Completed' ? 'bg-green-500 border-green-500 text-black' :
+                                        step.status === 'In Progress' ? 'bg-yellow-500 border-yellow-500 text-black animate-pulse' :
+                                            'bg-black border-white/20 text-white/40 group-hover:border-white/60'
+                                        }`}>
+                                        {step.status === 'Completed' ? '✓' : idx + 1}
+                                    </div>
+                                    <span className={`text-xs font-medium ${step.status === 'Completed' ? 'text-green-400' :
+                                        step.status === 'In Progress' ? 'text-yellow-400' :
+                                            'text-white/40'
+                                        }`}>{step.label}</span>
                                 </div>
-                            </div>
-                        )}
-                    </DialogContent>
-                </Dialog>
+                            ))}
+                        </div>
 
-                <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
-                    <DialogContent className="bg-black border-white/10 text-white max-w-sm">
+                        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                            <TabsList className="hidden">
+                                <TabsTrigger value="resume">Resume</TabsTrigger>
+                                <TabsTrigger value="communication">Communication</TabsTrigger>
+                                <TabsTrigger value="technical">Technical</TabsTrigger>
+                                <TabsTrigger value="final">Final</TabsTrigger>
+                            </TabsList>
+
+                            <TabsContent value="resume" className="mt-4 space-y-4">
+                                <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                    <h4 className="font-semibold mb-2 text-white">AI Feedback</h4>
+                                    <p className="text-white/80 leading-relaxed">
+                                        {selectedApp.ai_feedback || "No feedback available."}
+                                    </p>
+                                </div>
+                            </TabsContent>
+
+                            <TabsContent value="communication" className="mt-4 space-y-4">
+                                {(selectedApp as any).interviews && (selectedApp as any).interviews.length > 0 ? (
+                                    (selectedApp as any).interviews
+                                        .sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+                                        .map((interview: any, index: number) => (
+                                            <div key={interview.id} className="bg-white/5 p-6 rounded-lg border border-white/10 space-y-6">
+                                                <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-4">
+                                                    <h4 className="font-bold text-white text-lg">Attempt {index + 1}</h4>
+                                                    <span className="text-xs text-white/40">{new Date(interview.created_at).toLocaleString()}</span>
+                                                </div>
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 className="font-semibold text-lg mb-1">Question</h4>
+                                                        <p className="text-white/80 italic">"{interview.question}"</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className="text-2xl font-bold text-blue-400">{interview.ai_score}/100</div>
+                                                        <div className="text-xs text-white/40">AI Score</div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="bg-black/40 p-3 rounded border border-white/5">
+                                                    <audio controls className="w-full h-10" src={interview.audio_signed_url} />
+                                                </div>
+
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    <div>
+                                                        <h5 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-2">Transcription</h5>
+                                                        <div className="bg-black/20 p-3 rounded text-sm text-white/70 max-h-40 overflow-y-auto">
+                                                            "{interview.transcription}"
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h5 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-2">AI Analysis</h5>
+                                                        <div className="bg-black/20 p-3 rounded text-sm text-white/70">
+                                                            {interview.ai_feedback || (
+                                                                <div className="flex items-center gap-2 text-yellow-400/80">
+                                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                                    <span>Analysis in progress...</span>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                ) : (
+                                    <div className="text-center py-12 bg-white/5 rounded-lg border border-white/10 border-dashed">
+                                        <div className="text-white/40">No communication assessment data available yet.</div>
+                                        <Button variant="link" className="text-white underline mt-2" onClick={() => setIsInviteOpen(true)}>
+                                            Send Invitation
+                                        </Button>
+                                    </div>
+                                )}
+                            </TabsContent>
+
+                            <TabsContent value="technical" className="mt-4 space-y-4">
+                                {(selectedApp as any).technical_assessments && (selectedApp as any).technical_assessments.length > 0 ? (
+                                    (selectedApp as any).technical_assessments
+                                        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) // Sort by latest
+                                        .slice(0, 1) // Take only the most recent one
+                                        .map((tech: any) => (
+                                            <div key={tech.id} className="space-y-6">
+                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                    <Card className="bg-white/5 border-white/10 col-span-1">
+                                                        <CardHeader className="pb-2">
+                                                            <CardTitle className="text-sm font-medium text-white/60">Technical Score</CardTitle>
+                                                        </CardHeader>
+                                                        <CardContent>
+                                                            <div className="flex items-end justify-between">
+                                                                <div className="text-4xl font-bold text-orange-400">{tech.ai_score || 0}/100</div>
+                                                                <div className="text-sm text-white/60 mb-1">AI Evaluated</div>
+                                                            </div>
+                                                        </CardContent>
+                                                    </Card>
+                                                    <Card className="bg-white/5 border-white/10 col-span-2">
+                                                        <CardHeader className="pb-2">
+                                                            <CardTitle className="text-sm font-medium text-white/60">AI Feedback</CardTitle>
+                                                        </CardHeader>
+                                                        <CardContent>
+                                                            <p className="text-white/80 text-sm leading-relaxed">{tech.ai_feedback || "Pending Analysis..."}</p>
+                                                        </CardContent>
+                                                    </Card>
+                                                </div>
+
+                                                <div className="bg-white/5 p-6 rounded-lg border border-white/10 space-y-6">
+                                                    <div className="flex justify-between items-start">
+                                                        <h4 className="font-bold text-white text-lg">Submission Details</h4>
+                                                        <div className="flex gap-2">
+                                                            {tech.github_url && (
+                                                                <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => window.open(tech.github_url, '_blank')}>
+                                                                    <Github className="w-4 h-4 mr-2" /> GitHub Repo
+                                                                </Button>
+                                                            )}
+                                                            {tech.video_url && (
+                                                                <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {
+                                                                    const { data } = await supabase.storage.from('technical-submissions').createSignedUrl(tech.video_url, 60);
+                                                                    if (data?.signedUrl) window.open(data.signedUrl, '_blank');
+                                                                }}>
+                                                                    <Video className="w-4 h-4 mr-2" /> Watch Demo
+                                                                </Button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-6">
+                                                        {(tech as any).score === null || !(tech as any).improvement_suggestions ? (
+                                                            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 flex items-center justify-between">
+                                                                <div className="flex items-center gap-3">
+                                                                    <RefreshCw className="w-5 h-5 text-yellow-500" />
+                                                                    <div>
+                                                                        <p className="text-sm font-semibold text-yellow-500">Analysis Pending or Incomplete</p>
+                                                                        <p className="text-xs text-white/60">The AI feedback seems missing for this submission.</p>
+                                                                    </div>
+                                                                </div>
+                                                                <Button
+                                                                    size="sm"
+                                                                    variant="outline"
+                                                                    className="border-yellow-500/20 text-yellow-500 hover:bg-yellow-500/20"
+                                                                    onClick={async () => {
+                                                                        try {
+                                                                            toast({ title: "Processing...", description: "Retrying AI analysis for this submission." });
+
+                                                                            const { data: { session } } = await supabase.auth.getSession();
+                                                                            if (!session) throw new Error("No active session");
+
+                                                                            const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/analyze-technical-submission', {
+                                                                                method: 'POST',
+                                                                                headers: {
+                                                                                    'Content-Type': 'application/json',
+                                                                                    'Authorization': `Bearer ${session.access_token}`
+                                                                                },
+                                                                                body: JSON.stringify({ applicationId: selectedApp.id })
+                                                                            });
+
+                                                                            const result = await response.json();
+
+                                                                            if (!response.ok) {
+                                                                                console.error("Function Error:", result);
+                                                                                throw new Error(result.error || result.details || JSON.stringify(result));
+                                                                            }
+
+                                                                            toast({ title: "Success", description: "Analysis triggered. Refresh in a few seconds." });
+                                                                            fetchData();
+                                                                        } catch (e: any) {
+                                                                            console.error("Retry Logic Error:", e);
+                                                                            toast({
+                                                                                title: "Analysis Failed",
+                                                                                description: e.message,
+                                                                                variant: "destructive",
+                                                                                duration: 7000
+                                                                            });
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    Retry AI Analysis
+                                                                </Button>
+                                                            </div>
+                                                        ) : null}
+
+                                                        <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                            <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                <Code className="w-4 h-4" /> Tech Stack
+                                                            </h5>
+                                                            <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-mono bg-black/20 p-3 rounded">{tech.tech_stack}</p>
+                                                        </div>
+
+                                                        <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                            <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                <RefreshCw className="w-4 h-4" /> Process Flow
+                                                            </h5>
+                                                            <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap font-sans">{tech.process_flow}</p>
+                                                        </div>
+
+                                                        <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                            <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                <Sparkles className="w-4 h-4 text-yellow-400" /> Issues Faced & Solutions
+                                                            </h5>
+                                                            <p className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap">{tech.issues_faced}</p>
+                                                        </div>
+
+                                                        {(tech as any).transcription && (
+                                                            <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                                                                <h5 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
+                                                                    <Video className="w-4 h-4 text-blue-400" /> Video Transcription (AI Generated)
+                                                                </h5>
+                                                                <div className="text-white/80 text-sm bg-black/20 p-4 rounded border border-white/5 max-h-60 overflow-y-auto italic leading-relaxed">
+                                                                    "{(tech as any).transcription}"
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                ) : (
+                                    <div className="text-center py-12 space-y-4">
+                                        <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto">
+                                            <Code className="w-8 h-8 text-white/20" />
+                                        </div>
+                                        <p className="text-white/40">No technical assessment submitted yet.</p>
+                                    </div>
+                                )}
+                            </TabsContent>
+                        </Tabs>
+                    </div>
+            </div>
+                        )}
+        </DialogContent>
+                </Dialog >
+
+    <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
+        <DialogContent className="bg-black border-white/10 text-white max-w-sm">
+            <DialogHeader>
+                <DialogTitle>Invite to Interview</DialogTitle>
+                <DialogDescription className="text-white/60">
+                    Set a deadline for the communication assessment.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                    <label className="text-sm font-medium">Deadline</label>
+                    <input
+                        type="datetime-local"
+                        className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 [color-scheme:dark]"
+                        value={deadline}
+                        onChange={(e) => setDeadline(e.target.value)}
+                    />
+                </div>
+                <Button
+                    className="w-full bg-white text-black hover:bg-white/90"
+                    onClick={handleInvite}
+                    disabled={loading}
+                >
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm & Send Invitation"}
+                </Button>
+                </div>
+            </DialogContent>
+        </Dialog>
+
+                <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
+                    <DialogContent className="bg-black border-white/10 text-white max-w-4xl h-[80vh] flex flex-col">
                         <DialogHeader>
-                            <DialogTitle>Invite to Interview</DialogTitle>
+                            <DialogTitle className="flex items-center gap-2">
+                                <Sparkles className="text-blue-400" /> AI Hiring Report
+                            </DialogTitle>
                             <DialogDescription className="text-white/60">
-                                Set a deadline for the communication assessment.
+                                Executive Summary & Candidate Ranking generated by Llama 3.3.
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="space-y-4 py-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Deadline</label>
-                                <input
-                                    type="datetime-local"
-                                    className="flex h-10 w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 [color-scheme:dark]"
-                                    value={deadline}
-                                    onChange={(e) => setDeadline(e.target.value)}
-                                />
-                            </div>
-                            <Button
-                                className="w-full bg-white text-black hover:bg-white/90"
-                                onClick={handleInvite}
-                                disabled={loading}
-                            >
-                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm & Send Invitation"}
-                            </Button>
-                        </div>
+                        <ScrollArea className="flex-1 bg-white/5 p-6 rounded-lg border border-white/10">
+                            {hiringReport ? (
+                                <div className="prose prose-invert max-w-none">
+                                    <ReactMarkdown>{hiringReport}</ReactMarkdown>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center h-40 text-white/50">
+                                    <Loader2 className="w-8 h-8 animate-spin mb-4 text-blue-400" />
+                                    Analyzing candidates...
+                                </div>
+                            )}
+                        </ScrollArea>
                     </DialogContent>
                 </Dialog>
 
@@ -1688,8 +1725,8 @@ const AdminHiringDashboard = () => {
                         </form>
                     </DialogContent>
                 </Dialog>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
