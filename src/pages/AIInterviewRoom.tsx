@@ -93,9 +93,9 @@ const AIInterviewRoom = () => {
                 setStatus("Your turn.");
             }
 
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            setStatus("Error interacting with AI. Please try again.");
+            setStatus(`Error: ${error.message || "Unknown error"}`);
         } finally {
             setAiThinking(false);
         }
