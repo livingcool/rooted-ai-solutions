@@ -193,18 +193,19 @@ export const TokenUsageStats = () => {
                                 </div>
                             ))}
                             {filteredLogs.length === 0 && (
-                                No logs found. Run some AI actions to see data here.
-                        </div>
+                                <div className="text-center py-10 text-muted-foreground">
+                                    No logs found. Run some AI actions to see data here.
+                                </div>
                             )}
-                        {errorMsg && (
-                            <div className="text-center py-10 text-red-400">
-                                Error loading data: {errorMsg}
-                            </div>
-                        )}
-                    </div>
-                </ScrollArea>
-            </CardContent>
-        </Card>
+                            {errorMsg && (
+                                <div className="text-center py-10 text-red-400">
+                                    Error loading data: {errorMsg}
+                                </div>
+                            )}
+                        </div>
+                    </ScrollArea>
+                </CardContent>
+            </Card>
         </div >
     );
 };
