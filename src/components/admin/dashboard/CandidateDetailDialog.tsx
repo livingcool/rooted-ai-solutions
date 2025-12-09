@@ -232,6 +232,12 @@ export const CandidateDetailDialog = ({
         }
     }
 
+    const getResumeUrl = (path: string) => {
+        if (!path) return "";
+        if (path.startsWith('http')) return path;
+        return supabase.storage.from('resumes').getPublicUrl(path).data.publicUrl;
+    };
+
 
     if (!selectedApp) return null;
 
@@ -390,7 +396,7 @@ export const CandidateDetailDialog = ({
                                 <TabsContent value="resume" className="mt-4">
                                     <div className="bg-white/5 p-4 rounded-lg border border-white/10 h-[600px]">
                                         {selectedApp.resume_url ? (
-                                            <iframe src={selectedApp.resume_url} className="w-full h-full rounded" />
+                                            <iframe src={getResumeUrl(selectedApp.resume_url)} className="w-full h-full rounded" />
                                         ) : (
                                             <div className="flex items-center justify-center h-full text-white/40 flex-col gap-2">
                                                 <FileText className="w-8 h-8" />
