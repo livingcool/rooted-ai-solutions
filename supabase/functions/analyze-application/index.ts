@@ -105,61 +105,62 @@ serve(async (req) => {
         }
         const job = app.jobs;
 
-        const promptText = `
-        Role: ${job.title}
-        Desc: ${job.description}
-        Reqs: ${JSON.stringify(job.requirements)}
-        
-        Resume Content:
-        ${resumeText.substring(0, 15000)}
-        
-        Analyze match and return JSON.
-        Output Format: { "score": 0-100, "feedback": "Detailed feedback string" }
-        `;
+        const jobTitle = job.title;
+        const jobDescription = job.description;
+        const text = resumeText.substring(0, 15000); // Limit resume text length
 
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
+        // --- 5. AI Analysis with Groq (Llama 3.3) ---
+        console.log("Analyzing with Groq (Llama 3.3)...");
 
-        const chatResp = await fetch(geminiUrl, {
-            method: 'POST',
+        const chatResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                "Authorization": `Bearer ${Deno.env.get("GROQ_API_KEY")}`,
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: "You are an expert technical recruiter. " + promptText }]
-                }],
-                generationConfig: {
-                    response_mime_type: "application/json"
-                }
+                model: "llama-3.3-70b-versatile",
+                messages: [
+                    {
+                        role: "system",
+                        content: "You are an expert HR AI assistant. Analyze the candidate's application against the job description. Provide a JSON response with: 'match_score' (0-100), 'key_strengths' (array of strings), 'weaknesses' (array of strings), 'culture_fit_score' (0-100), and 'summary'. Output ONLY valid JSON."
+                    },
+                    {
+                        role: "user",
+                        content: `Job Title: ${jobTitle}\n\nJob Description: ${jobDescription}\n\nCandidate Resume: ${text}`
+                    }
+                ],
+                temperature: 0.3,
+                max_completion_tokens: 2000,
+                response_format: { type: "json_object" }
             })
         });
 
-        if (!chatResp.ok) {
-            const errTxt = await chatResp.text();
-            console.error("Gemini API Error:", errTxt);
-            throw new Error("AI Service Failed (Gemini): " + errTxt);
+        const chatJson = await chatResponse.json();
+
+        if (chatJson.error) {
+            console.error("Groq API Error:", chatJson.error);
+            throw new Error(`Groq API Error: ${chatJson.error.message}`);
         }
 
-        const chatJson = await chatResp.json();
-        let content;
+        const aiContent = chatJson.choices[0].message.content;
+        let analysisData;
         try {
-            const rawText = chatJson.candidates[0].content.parts[0].text;
-            content = JSON.parse(rawText);
+            analysisData = JSON.parse(aiContent);
         } catch (e) {
-            console.error("JSON Parsing failed for AI response", chatJson);
-            throw new Error("Invalid AI Response from Gemini");
+            console.error("JSON Parse Error:", aiContent);
+            throw new Error("Failed to parse AI response as JSON");
         }
-        console.log("AI Success, Score:", content.score);
+        console.log("AI Success, Match Score:", analysisData.match_score);
 
-        // --- Log Token Usage ---
-        const usage = chatJson.usageMetadata;
-        if (usage) {
+        // Extract usage metadata from Groq API response
+        if (chatJson.usage) {
             await supabaseAdmin.from('ai_usage_logs').insert({
-                provider: 'google',
-                model: 'gemini-2.5-flash',
-                input_tokens: usage.promptTokenCount || 0,
-                output_tokens: usage.candidatesTokenCount || 0,
-                total_tokens: usage.totalTokenCount || 0,
+                provider: 'groq',
+                model: 'llama-3.3-70b-versatile',
+                input_tokens: chatJson.usage.prompt_tokens,
+                output_tokens: chatJson.usage.completion_tokens,
+                total_tokens: chatJson.usage.total_tokens,
                 function_name: 'analyze-application',
                 status: 'success'
             });
@@ -169,13 +170,13 @@ serve(async (req) => {
         await supabaseAdmin
             .from('applications')
             .update({
-                ai_score: content.score,
-                ai_feedback: content.feedback,
-                status: content.score > 70 ? 'Screening' : 'Rejected'
+                ai_score: analysisData.match_score,
+                ai_feedback: analysisData.summary, // Using summary as feedback
+                status: analysisData.match_score > 70 ? 'Screening' : 'Rejected'
             })
             .eq('id', applicationId);
 
-        return new Response(JSON.stringify(content), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        return new Response(JSON.stringify(analysisData), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
     } catch (error: any) {
         console.error("Function Handler Error:", error);

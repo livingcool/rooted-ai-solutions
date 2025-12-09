@@ -306,18 +306,28 @@ export const CandidateDetailDialog = ({
 
                                 <div className="flex flex-col items-end gap-2">
                                     {/* Action Buttons */}
-                                    {(selectedApp.status === 'Communication Round Completed' || ((selectedApp as any).interviews?.length > 0 && selectedApp.status !== 'Technical Round' && selectedApp.status !== 'Technical Round Completed' && selectedApp.status !== 'Final Interview' && selectedApp.status !== 'Rejected')) && (
+                                    {/* Action Buttons */}
+                                    {(['Applied', 'Screening', 'Rejected'].includes(selectedApp.status) || (selectedApp.status === 'Communication Round Completed' && selectedApp.status !== 'Technical Round')) && (
+                                        <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => setIsInviteOpen(true)}>
+                                            Invite to Communication
+                                        </Button>
+                                    )}
+
+                                    {(selectedApp.status === 'Communication Round Completed' || ['Screening', 'Rejected'].includes(selectedApp.status) || ((selectedApp as any).interviews?.length > 0 && selectedApp.status !== 'Technical Round' && selectedApp.status !== 'Technical Round Completed' && selectedApp.status !== 'Final Interview')) && (
                                         <div className="flex gap-2">
-                                            <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => setIsInviteOpen(true)}>
-                                                Resend Communication
-                                            </Button>
+                                            {selectedApp.status === 'Communication Round Completed' && (
+                                                <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => setIsInviteOpen(true)}>
+                                                    Resend Communication
+                                                </Button>
+                                            )}
                                             <Button size="sm" className="bg-green-500 text-white hover:bg-green-600 border-0" onClick={() => setIsTechnicalInviteOpen(true)}>
                                                 Invite to Technical Round
                                             </Button>
                                         </div>
                                     )}
 
-                                    {(selectedApp.status === 'Technical Round Completed' || (selectedApp.status === 'Technical Round' && (selectedApp as any).technical_assessments?.length > 0)) && (
+                                    {/* Action Buttons for Technical -> Final */}
+                                    {((['Technical Round Completed', 'Rejected'].includes(selectedApp.status) || selectedApp.status === 'Technical Round') && (selectedApp as any).technical_assessments?.length > 0) && (
                                         <div className="flex gap-2">
                                             <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => setIsTechnicalInviteOpen(true)}>
                                                 Retake Technical
