@@ -69,7 +69,10 @@ const AIInterviewRoom = () => {
                 body: formData
             });
 
-            if (!response.ok) throw new Error("AI Processing Failed");
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "AI Processing Failed");
+            }
 
             const data = await response.json();
 

@@ -26,13 +26,21 @@ serve(async (req) => {
         const groqKey = Deno.env.get('GROQ_API_KEY')!;
 
         // 1. Verify Session & Get Context
-        const { data: session, error: sessionError } = await supabase
-            .from('final_interviews')
-            .select('*, applications(resume_text, jobs(title))')
-            .eq('interview_token', interviewToken)
-            .single();
+        let session;
+        try {
+            const { data, error } = await supabase
+                .from('final_interviews')
+                .select('*, applications(resume_text, jobs(title))')
+                .eq('interview_token', interviewToken)
+                .single();
 
-        if (sessionError || !session) throw new Error("Invalid Session");
+            if (error) throw new Error(error.message);
+            if (!data) throw new Error("No session found");
+            session = data;
+        } catch (err: any) {
+            console.error("Session Verification Failed:", err);
+            throw new Error(`Session Verification Failed: ${err.message}`);
+        }
 
         const application = session.applications;
         const jobTitle = application?.jobs?.title || "Junior AI Engineer";
