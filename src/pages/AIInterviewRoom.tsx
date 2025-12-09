@@ -13,6 +13,7 @@ const AIInterviewRoom = () => {
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const webcamRef = useRef<Webcam>(null);
     const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+    const [isInterviewComplete, setIsInterviewComplete] = useState(false);
 
     useEffect(() => {
         if (!token) {
@@ -89,8 +90,14 @@ const AIInterviewRoom = () => {
 
             if (data.is_interview_complete) {
                 setStatus("Interview Complete. Thank you!");
+                setIsInterviewComplete(true);
             } else {
                 setStatus("Your turn.");
+            }
+
+            if (data.is_face_detected === false) {
+                alert("⚠️ Warning: No face detected. Please ensure you are visible on camera.");
+                setStatus("⚠️ Warning: Face not detected. Adjust camera.");
             }
 
         } catch (error: any) {
@@ -127,20 +134,32 @@ const AIInterviewRoom = () => {
                         <div className="text-slate-400 text-sm mb-4">Listening & Observing...</div>
 
                         <div className="flex justify-center gap-4">
-                            {!isRecording ? (
-                                <button
-                                    onClick={startRecording}
-                                    disabled={aiThinking}
-                                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-full font-medium transition-all disabled:opacity-50"
-                                >
-                                    <Mic size={20} /> Start Answer
-                                </button>
+                            {!isInterviewComplete ? (
+                                !isRecording ? (
+                                    <button
+                                        onClick={startRecording}
+                                        disabled={aiThinking}
+                                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-full font-medium transition-all disabled:opacity-50"
+                                    >
+                                        <Mic size={20} /> Start Answer
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={stopRecording}
+                                        className="flex items-center gap-2 bg-red-600 hover:bg-red-500 px-6 py-3 rounded-full font-medium animate-pulse transition-all"
+                                    >
+                                        <MicOff size={20} /> Stop & Send
+                                    </button>
+                                )
                             ) : (
                                 <button
-                                    onClick={stopRecording}
-                                    className="flex items-center gap-2 bg-red-600 hover:bg-red-500 px-6 py-3 rounded-full font-medium animate-pulse transition-all"
+                                    onClick={() => {
+                                        alert("Interview Submitted! We will be in touch.");
+                                        window.location.href = '/';
+                                    }}
+                                    className="flex items-center gap-2 bg-green-600 hover:bg-green-500 px-6 py-3 rounded-full font-medium transition-all animate-bounce"
                                 >
-                                    <MicOff size={20} /> Stop & Send
+                                    <Send size={20} /> Submit Interview
                                 </button>
                             )}
                         </div>

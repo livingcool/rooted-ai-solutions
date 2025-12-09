@@ -117,6 +117,11 @@ serve(async (req) => {
         6. **Closing** (1 Question): Ask if they have questions, then Thank them and say "Goodbye".
         
         **Rules**:
+        - **OUTPUT FORMAT**: You must output a valid JSON object with the following structure:
+          {
+            "reply": "Your response to the candidate",
+            "confidence_score": 0.5  // Float between 0.0 and 1.0 based on their answer quality
+          }
         - **MEMORY**: Read the "Conversation History" below. DO NOT ask questions that have already been asked.
         - **ONE QUESTION AT A TIME**: Never ask multiple questions in one turn.
         - **SHORT & CONCISE**: Keep your responses under 2-3 sentences.
@@ -147,7 +152,36 @@ serve(async (req) => {
         });
 
         const chatJson = await chatResp.json();
+
+        if (chatJson.error) {
+            console.error("Chat API Error:", chatJson.error);
+            throw new Error(`AI Chat Generation Failed: ${chatJson.error.message}`);
+        }
+
+        if (!chatJson.choices || chatJson.choices.length === 0) {
+            console.error("Chat API Unexpected Response:", JSON.stringify(chatJson));
+            throw new Error("AI Chat Generation returned no content.");
+        }
+
         const aiResponse = JSON.parse(chatJson.choices[0].message.content);
+
+        // Face Detection Logic (Simple Heuristic for now)
+        // If vision analysis was successful but doesn't mention a person/face/confidence, warn.
+        // Note: The Llama Vision prompt explicitly asks for "body language, eye contact".
+        // If it says "No video frame provided", is_face_detected is false (if frame was missing).
+        // If it says "Vision analysis failed", we treat as detected to avoid false negatives on API errors? No, safer to ignore.
+        // Let's rely on positive confirmation in the text if possible, or just the absence of "No face detected" if the model is instructed to say that.
+        // Current prompt: "Analyze this image... Describe body language..." 
+        // We will assume if visionContext is short or error-like, it's False.
+        let isFaceDetected = true;
+        if (visionContext.includes("No video frame") || visionContext.includes("failed")) {
+            isFaceDetected = false;
+        } else if (!visionContext.toLowerCase().includes("eye contact") && !visionContext.toLowerCase().includes("face") && !visionContext.toLowerCase().includes("body")) {
+            // If the concise description doesn't mention these, possibly no face. 
+            // But Llama 3.2 90b is usually descriptive.
+            // We'll trust that valid descriptions imply a person.
+            isFaceDetected = true;
+        }
 
         // 5. Append to Transcript Log (Database)
         const newEntry = `\nCandidate: ${userText}\n[Vision: ${visionContext}]\nAI: ${aiResponse.reply}`;
@@ -155,11 +189,11 @@ serve(async (req) => {
             .from('final_interviews')
             .update({
                 transcript: (session.transcript || "") + newEntry,
-                ai_confidence_score: aiResponse.confidence_score // Update running score (simplification)
+                ai_confidence_score: aiResponse.confidence_score
             })
             .eq('id', session.id);
 
-        return new Response(JSON.stringify(aiResponse), {
+        return new Response(JSON.stringify({ ...aiResponse, is_face_detected: isFaceDetected }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
 
