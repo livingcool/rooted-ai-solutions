@@ -20,8 +20,10 @@ serve(async (req) => {
         const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
         const supabaseAdmin = createClient(supabaseUrl, supabaseKey)
 
+        // Generate Secure Access Code (8 chars alphanumeric)
+        const accessPasscode = Math.random().toString(36).slice(2, 10).toUpperCase();
+
         // 1. Conflict Check (One Person Per Slot)
-        // Detect if ANY interview is scheduled within 45 mins of this time
         const requestedTime = new Date(scheduledAt);
         const bufferTimeStart = new Date(requestedTime.getTime() - 45 * 60000).toISOString();
         const bufferTimeEnd = new Date(requestedTime.getTime() + 45 * 60000).toISOString();
@@ -31,7 +33,6 @@ serve(async (req) => {
             .select('id, scheduled_at')
             .gte('scheduled_at', bufferTimeStart)
             .lte('scheduled_at', bufferTimeEnd)
-            // Exclude current app if rescheduling
             .neq('application_id', applicationId);
 
         if (conflictError) throw conflictError;
@@ -48,11 +49,9 @@ serve(async (req) => {
 
         if (appError || !app) throw new Error("Application not found")
 
-        // 3. Create Interview Record with Expiry
-        // Expires 90 mins after scheduled start
+        // 3. Create Interview Record with Credentials
         const expiresAt = new Date(requestedTime.getTime() + 90 * 60000).toISOString();
 
-        // Check for existing to upsert
         const { data: existingInterview } = await supabaseAdmin
             .from('final_interviews')
             .select('id, interview_token')
@@ -61,12 +60,12 @@ serve(async (req) => {
 
         let token;
         if (existingInterview) {
-            // Update scheduling
             const { data: updated, error: updateError } = await supabaseAdmin
                 .from('final_interviews')
                 .update({
                     scheduled_at: scheduledAt,
                     expires_at: expiresAt,
+                    access_passcode: accessPasscode, // Update passcode
                     status: 'Scheduled'
                 })
                 .eq('id', existingInterview.id)
@@ -76,7 +75,6 @@ serve(async (req) => {
             if (updateError) throw updateError;
             token = updated.interview_token;
         } else {
-            // Insert new
             const { data: newInterview, error: createError } = await supabaseAdmin
                 .from('final_interviews')
                 .insert({
@@ -84,9 +82,10 @@ serve(async (req) => {
                     status: 'Scheduled',
                     scheduled_at: scheduledAt,
                     expires_at: expiresAt,
+                    access_passcode: accessPasscode,
                     project_questions: {
                         context: `Scheduled invite for ${app.jobs?.title}.`,
-                        ai_notes: "Automated Setup."
+                        ai_notes: "Automated Setup with Credentials."
                     }
                 })
                 .select('interview_token')
@@ -102,35 +101,39 @@ serve(async (req) => {
             .update({ status: 'Final Interview' })
             .eq('id', applicationId)
 
-        // 5. Send Invite Email
+        // 5. Send Invite Email with Credentials
         const frontendUrl = Deno.env.get('FRONTEND_URL') || 'https://rooted-ai-solutions.vercel.app';
-        const interviewLink = `${frontendUrl}/final-interview?token=${token}`
+        const loginLink = `${frontendUrl}/final-login`; // Changed to Login Page
 
-        // Format Date for Email
         const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' };
         const formattedDate = new Date(scheduledAt).toLocaleString('en-US', dateOptions);
 
-        const emailSubject = `Final Interview Invitation: ${formattedDate}`
+        const emailSubject = `Final Interview Credentials: ${formattedDate}`
         const emailBody = `
 Dear ${app.full_name},
 
 You have been selected for the Final Interview for the **${app.jobs?.title}** position.
 
-**Your Slot:** ${formattedDate}
-**Duration:** Approx. 30 Minutes
-**Platform:** RootedAI Virtual Interview Room
+**Interview Details**
+📅 **Date/Time:** ${formattedDate}
+⏳ **Duration:** Approx. 30 Minutes
 
-**IMPORTANT:**
-This is a strict time slot. The link below will **only be valid** for your scheduled time.
+**Login Credentials**
+To access the secure interview room, use the following credentials:
+--------------------------------------------------
+🔗 **Login Page:** ${loginLink}
+📧 **Login ID:** ${app.email}
+🔑 **Passcode:** ${accessPasscode}
+--------------------------------------------------
 
-[Start Interview](${interviewLink})
-
-Or copy: ${interviewLink}
+**Important:**
+- This passcode is unique to you.
+- The system will only allow access during your scheduled slot (within 90 minutes).
 
 Please check your camera and microphone beforehand.
 
 Best regards,
-RootedAI Recruiting
+RootedAI Recruiting Team
 `
 
         if (app.email) {
@@ -149,7 +152,7 @@ RootedAI Recruiting
         }
 
         return new Response(
-            JSON.stringify({ success: true, message: "Invitation sent with slot booking." }),
+            JSON.stringify({ success: true, message: "Invitation sent with credentials." }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
 

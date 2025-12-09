@@ -36,6 +36,16 @@ const AIInterviewRoom = () => {
         };
 
         document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        // Preload Voices
+        const loadVoices = () => {
+            window.speechSynthesis.getVoices();
+        };
+        loadVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
         return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
     }, []);
 
@@ -126,8 +136,25 @@ const AIInterviewRoom = () => {
 
             setTurnCount(prev => Math.min(prev + 1, TOTAL_STAGES_ESTIMATE));
 
-            // TTS (Browser Native)
+            // TTS (Browser Native) - Feminine Voice
             const utterance = new SpeechSynthesisUtterance(data.reply);
+
+            // Voice Selection Logic
+            const voices = window.speechSynthesis.getVoices();
+            const feminineVoice = voices.find(v =>
+                v.name.includes("Zira") ||
+                v.name.includes("Google US English") ||
+                v.name.includes("Samantha") ||
+                v.name.toLowerCase().includes("female")
+            );
+
+            if (feminineVoice) {
+                utterance.voice = feminineVoice;
+                // Optional: Adjust pitch/rate for more natural feminine tone if needed
+                utterance.pitch = 1.0;
+                utterance.rate = 1.0;
+            }
+
             window.speechSynthesis.speak(utterance);
 
             if (data.is_interview_complete) {
@@ -263,8 +290,8 @@ const AIInterviewRoom = () => {
                                     {msg.role === 'user' ? 'You' : 'AI Agent'}
                                 </span>
                                 <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                        ? 'bg-blue-600/20 text-blue-100 border border-blue-500/30 rounded-br-none'
-                                        : 'bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-bl-none'
+                                    ? 'bg-blue-600/20 text-blue-100 border border-blue-500/30 rounded-br-none'
+                                    : 'bg-zinc-800 text-zinc-300 border border-zinc-700 rounded-bl-none'
                                     }`}>
                                     {msg.text}
                                 </div>
