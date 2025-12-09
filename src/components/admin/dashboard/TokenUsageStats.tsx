@@ -26,9 +26,9 @@ export const TokenUsageStats = () => {
     const [filterProvider, setFilterProvider] = useState<string>("all");
     const [totalCost, setTotalCost] = useState(0);
 
-    // Hardcoded pricing for estimation (updated as per current rates ~ Dec 2025 or late 2024 knowledge)
-    // Groq Llama 3 70B: ~$0.59 / 1M input, $0.79 / 1M output (Example)
-    // Gemini 1.5 Flash: Free tier or low cost. using approx $0.075/1M input, $0.3/1M output
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+    // Hardcoded pricing for estimation
     const PRICING = {
         'groq': { input: 0.59 / 1000000, output: 0.79 / 1000000 },
         'google': { input: 0.075 / 1000000, output: 0.30 / 1000000 }
@@ -36,6 +36,7 @@ export const TokenUsageStats = () => {
 
     const fetchLogs = async () => {
         setLoading(true);
+        setErrorMsg(null);
         const { data, error } = await supabase
             .from('ai_usage_logs')
             .select('*')
@@ -44,6 +45,7 @@ export const TokenUsageStats = () => {
 
         if (error) {
             console.error("Error fetching logs:", error);
+            setErrorMsg(error.message);
         } else {
             setLogs(data || []);
             calculateCost(data || []);
@@ -191,14 +193,18 @@ export const TokenUsageStats = () => {
                                 </div>
                             ))}
                             {filteredLogs.length === 0 && (
-                                <div className="text-center py-10 text-muted-foreground">
-                                    No logs found. Run some AI actions to see data here.
-                                </div>
-                            )}
+                                No logs found. Run some AI actions to see data here.
                         </div>
-                    </ScrollArea>
-                </CardContent>
-            </Card>
-        </div>
+                            )}
+                        {errorMsg && (
+                            <div className="text-center py-10 text-red-400">
+                                Error loading data: {errorMsg}
+                            </div>
+                        )}
+                    </div>
+                </ScrollArea>
+            </CardContent>
+        </Card>
+        </div >
     );
 };
