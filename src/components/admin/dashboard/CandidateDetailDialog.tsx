@@ -312,6 +312,28 @@ export const CandidateDetailDialog = ({
                                         </div>
                                     )}
 
+                                    {selectedApp.status === 'Final Interview' && (
+                                        <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {
+                                            setLoading(true);
+                                            try {
+                                                const { data, error } = await supabase.functions.invoke('invite-final-interview', {
+                                                    body: { applicationId: selectedApp.id }
+                                                });
+                                                if (error) throw error;
+                                                if (data?.error) throw new Error(data.error);
+                                                toast({ title: "Invitation Resent", description: "The final interview link has been resent to the candidate." });
+                                            } catch (error: any) {
+                                                console.error("Error resending invite:", error);
+                                                toast({ title: "Error", description: "Failed to resend invitation.", variant: "destructive" });
+                                            } finally {
+                                                setLoading(false);
+                                            }
+                                        }}>
+                                            <Send className="w-4 h-4 mr-2" />
+                                            Resend Interview Link
+                                        </Button>
+                                    )}
+
                                     {selectedApp.status === 'Rejected' && (
                                         <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {
                                             const { error } = await supabase.from('applications' as any).update({ status: 'Applied' }).eq('id', selectedApp.id);

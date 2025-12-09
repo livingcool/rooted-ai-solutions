@@ -69,7 +69,8 @@ serve(async (req) => {
             .eq('id', applicationId)
 
         // 4. Send Email
-        const interviewLink = `https://rooted-ai.com/final-interview?token=${token}`
+        const frontendUrl = Deno.env.get('FRONTEND_URL') || 'https://rooted-ai-solutions.vercel.app';
+        const interviewLink = `${frontendUrl}/final-interview?token=${token}`
         const emailSubject = `Final Round Invitation: AI Founder Interview`
         const emailBody = `
 Dear ${app.full_name},
