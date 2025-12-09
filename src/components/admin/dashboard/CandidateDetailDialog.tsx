@@ -792,6 +792,29 @@ export const CandidateDetailDialog = ({
                                 </TabsContent>
 
                                 <TabsContent value="technical" className="mt-4 space-y-4">
+                                    {/* Admin Controls for Technical Round */}
+                                    {selectedApp.status === 'Technical Round' && ((selectedApp as any).technical_assessments || []).length > 0 && (
+                                        <Card className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20">
+                                            <CardContent className="p-4">
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <div className="text-sm font-medium text-white mb-1">Technical Round Complete</div>
+                                                        <div className="text-xs text-white/60">Review the submission and decide next action</div>
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                        <Button size="sm" onClick={handleApproveFinalInterview} disabled={loading} className="bg-green-600 hover:bg-green-700">
+                                                            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+                                                            Approve for Final Interview
+                                                        </Button>
+                                                        <Button size="sm" onClick={handleRejectAfterTechnical} disabled={loading} variant="destructive">
+                                                            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <XCircle className="w-4 h-4 mr-2" />}
+                                                            Reject
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    )}
                                     {((selectedApp as any).technical_assessments || []).length === 0 && (
                                         <div className="text-center py-12 text-white/40 bg-white/5 rounded-lg border border-white/10">
                                             <Code className="w-8 h-8 mx-auto mb-2 opacity-50" />
@@ -897,6 +920,29 @@ export const CandidateDetailDialog = ({
                                 </TabsContent>
 
                                 <TabsContent value="final" className="mt-4 space-y-4">
+                                    {/* Admin Controls for Final Interview */}
+                                    {selectedApp.status === 'Final Interview' && ((selectedApp as any).final_interviews || []).some((int: any) => int.status === 'Analyzed') && (
+                                        <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
+                                            <CardContent className="p-4">
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <div className="text-sm font-medium text-white mb-1">Final Interview Complete</div>
+                                                        <div className="text-xs text-white/60">Make hiring decision</div>
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                        <Button size="sm" onClick={handleMakeOffer} disabled={loading} className="bg-green-600 hover:bg-green-700">
+                                                            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+                                                            Make Job Offer
+                                                        </Button>
+                                                        <Button size="sm" onClick={handleRejectAfterFinal} disabled={loading} variant="destructive">
+                                                            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <XCircle className="w-4 h-4 mr-2" />}
+                                                            Reject
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    )}
                                     {((selectedApp as any).final_interviews || []).length === 0 ? (
                                         <div className="text-center py-12 text-white/40 bg-white/5 rounded-lg border border-white/10">
                                             <Brain className="w-8 h-8 mx-auto mb-2 opacity-50" />
