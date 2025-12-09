@@ -22,7 +22,7 @@ import { CandidateDetailDialog } from "@/components/admin/dashboard/CandidateDet
 import { JobApplicationsTable } from "@/components/admin/dashboard/JobApplicationsTable";
 import { JobPostingsList } from "@/components/admin/dashboard/JobPostingsList";
 import { JobPostingDialog } from "@/components/admin/dashboard/JobPostingDialog";
-import { TokenUsageStats } from "@/components/admin/dashboard/TokenUsageStats";
+import { EnhancedTokenUsageStats } from "@/components/admin/dashboard/EnhancedTokenUsageStats";
 
 const AdminHiringDashboard = () => {
     const { toast } = useToast();
@@ -376,7 +376,7 @@ const AdminHiringDashboard = () => {
                     </TabsContent>
 
                     <TabsContent value="usage" className="mt-6">
-                        <TokenUsageStats />
+                        <EnhancedTokenUsageStats />
                     </TabsContent>
                 </Tabs>
             </div>
