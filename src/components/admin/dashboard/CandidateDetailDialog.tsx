@@ -660,7 +660,11 @@ export const CandidateDetailDialog = ({
                                                             setLoading(true);
                                                             try {
                                                                 const { error } = await supabase.functions.invoke('analyze-interview', {
-                                                                    body: { interviewId: int.id }
+                                                                    body: {
+                                                                        interviewId: int.id,
+                                                                        audioUrl: int.audio_url,
+                                                                        question: int.question
+                                                                    }
                                                                 });
                                                                 if (error) throw error;
                                                                 toast({ title: "Analysis Queued", description: "Refreshed result." });
