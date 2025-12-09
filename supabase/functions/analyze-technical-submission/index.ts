@@ -114,7 +114,7 @@ serve(async (req) => {
 
         // --- 2. Analyze Submission (Text + Transcription + Vision) ---
         const hasFrames = frames && frames.length > 0;
-        const model = hasFrames ? 'llama-3.2-90b-vision-preview' : 'llama-3.3-70b-versatile';
+        const model = hasFrames ? 'llama-3.2-90b-vision-preview' : 'qwen/qwen3-32b';
 
         console.log(`Analyzing with ${model}...`);
 

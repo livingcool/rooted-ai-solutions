@@ -171,7 +171,7 @@ Candidate Input: "${userText}" ${forceEnd ? "(User clicked 'Submit / End Intervi
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
+                model: 'qwen/qwen3-32b',
                 messages: [
                     { role: "system", content: systemPrompt },
                     { role: "user", content: `(Candidate just said): "${userText || "..."}" \n(Vision analysis): ${visionContext}` }
@@ -186,7 +186,7 @@ Candidate Input: "${userText}" ${forceEnd ? "(User clicked 'Submit / End Intervi
         if (chatJson.usage) {
             await supabase.from('ai_usage_logs').insert({
                 provider: 'groq',
-                model: 'llama-3.3-70b-versatile',
+                model: 'qwen/qwen3-32b',
                 input_tokens: chatJson.usage.prompt_tokens || 0,
                 output_tokens: chatJson.usage.completion_tokens || 0,
                 total_tokens: chatJson.usage.total_tokens || 0,

@@ -119,7 +119,7 @@ serve(async (req) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                model: "llama-3.3-70b-versatile",
+                model: "qwen/qwen3-32b",
                 messages: [
                     {
                         role: "system",
@@ -157,7 +157,7 @@ serve(async (req) => {
         if (chatJson.usage) {
             await supabaseAdmin.from('ai_usage_logs').insert({
                 provider: 'groq',
-                model: 'llama-3.3-70b-versatile',
+                model: 'qwen-2.5-32b',
                 input_tokens: chatJson.usage.prompt_tokens,
                 output_tokens: chatJson.usage.completion_tokens,
                 total_tokens: chatJson.usage.total_tokens,

@@ -19,6 +19,19 @@ interface UsageLog {
     status: string;
 }
 
+const GROQ_LIMITS = {
+    'qwen/qwen3-32b': {
+        limit: 500000,
+        label: 'Qwen 3 32B (Tokens/Day)',
+        unit: 'tokens'
+    },
+    'whisper-large-v3-turbo': {
+        limit: 28800,
+        label: 'Whisper V3 Turbo (Seconds/Day)',
+        unit: 'seconds'
+    }
+};
+
 export const TokenUsageStats = () => {
     const [logs, setLogs] = useState<UsageLog[]>([]);
     const [loading, setLoading] = useState(true);

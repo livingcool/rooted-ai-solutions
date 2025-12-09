@@ -41,7 +41,7 @@ serve(async (req) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
+                model: 'qwen/qwen3-32b',
                 messages: [
                     { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
                     { role: 'user', content: prompt }
@@ -66,7 +66,7 @@ serve(async (req) => {
             )
             await supabaseAdmin.from('ai_usage_logs').insert({
                 provider: 'groq',
-                model: 'llama-3.3-70b-versatile',
+                model: 'qwen/qwen3-32b',
                 input_tokens: data.usage.prompt_tokens || 0,
                 output_tokens: data.usage.completion_tokens || 0,
                 total_tokens: data.usage.total_tokens || 0,
