@@ -351,7 +351,7 @@ export const CandidateDetailDialog = ({
                                                     <label className="text-sm">Interview Date & Time</label>
                                                     <input
                                                         type="datetime-local"
-                                                        className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white"
+                                                        className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white [color-scheme:dark]"
                                                         value={finalScheduledAt}
                                                         onChange={(e) => setFinalScheduledAt(e.target.value)}
                                                     />
