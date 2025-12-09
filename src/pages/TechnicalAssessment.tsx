@@ -16,6 +16,7 @@ const TechnicalAssessment = () => {
     const [submitting, setSubmitting] = useState(false);
     const [application, setApplication] = useState<any>(null);
     const [videoFile, setVideoFile] = useState<File | null>(null);
+    const [documentationFile, setDocumentationFile] = useState<File | null>(null);
     const [formData, setFormData] = useState({
         githubUrl: "",
         issuesFaced: "",
@@ -120,6 +121,7 @@ const TechnicalAssessment = () => {
 
         try {
             let videoUrl = "";
+            let documentationUrl = "";
             let capturedFrames: string[] = [];
 
             // Upload Video if present
@@ -148,12 +150,31 @@ const TechnicalAssessment = () => {
                 videoUrl = fileName;
             }
 
+            // Upload Documentation if present
+            if (documentationFile) {
+                const fileExt = documentationFile.name.split('.').pop()?.toLowerCase();
+                const allowedExts = ['pdf', 'doc', 'docx', 'ppt', 'pptx'];
+
+                if (!allowedExts.includes(fileExt || '')) {
+                    throw new Error('Invalid documentation format. Please upload PDF, DOC, or PPT files only.');
+                }
+
+                const docFileName = `${applicationId}/documentation_${Date.now()}.${fileExt}`;
+                const { error: docUploadError } = await supabase.storage
+                    .from('technical-documentation')
+                    .upload(docFileName, documentationFile, { upsert: true });
+
+                if (docUploadError) throw docUploadError;
+                documentationUrl = docFileName;
+            }
+
             // Save to Database
             const { error: dbError } = await supabase
                 .from('technical_assessments')
                 .insert({
                     application_id: applicationId,
                     video_url: videoUrl,
+                    documentation_url: documentationUrl,
                     github_url: formData.githubUrl,
                     issues_faced: formData.issuesFaced,
                     tech_stack: formData.techStack,
@@ -265,6 +286,27 @@ const TechnicalAssessment = () => {
                                             Note: Large videos may take a few minutes to upload. Please be patient after clicking Submit.
                                         </p>
                                     )}
+                                </div>
+                            </div>
+
+                            {/* Documentation Upload */}
+                            <div className="space-y-2">
+                                <Label htmlFor="documentation">Project Documentation (Optional)</Label>
+                                <div className="border-2 border-dashed border-white/10 rounded-lg p-6 text-center hover:bg-white/5 transition-colors cursor-pointer relative">
+                                    <input
+                                        type="file"
+                                        id="documentation"
+                                        accept=".pdf,.doc,.docx,.ppt,.pptx"
+                                        className="absolute inset-0 opacity-0 cursor-pointer"
+                                        onChange={(e) => setDocumentationFile(e.target.files?.[0] || null)}
+                                    />
+                                    <Upload className="mx-auto h-8 w-8 text-white/40 mb-2" />
+                                    <p className="text-sm text-white/60">
+                                        {documentationFile ? documentationFile.name : "Upload documentation (PDF, DOC, PPT)"}
+                                    </p>
+                                    <p className="text-xs text-white/40 mt-1">
+                                        Accepted formats: PDF, DOC, DOCX, PPT, PPTX
+                                    </p>
                                 </div>
                             </div>
 

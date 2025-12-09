@@ -623,10 +623,28 @@ export const CandidateDetailDialog = ({
                                                 </div>
                                             </CardHeader>
                                             <CardContent>
-                                                <div className="flex gap-4 mb-4">
+                                                <div className="flex flex-wrap gap-4 mb-4">
                                                     {tech.github_url && <a href={tech.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors bg-blue-500/10 px-3 py-1.5 rounded-md"><Github className="w-4 h-4" /> GitHub Repo</a>}
                                                     {tech.deployed_url && <a href={tech.deployed_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors bg-green-500/10 px-3 py-1.5 rounded-md"><Globe className="w-4 h-4" /> Live Demo</a>}
                                                     {tech.loom_video_url && <a href={tech.loom_video_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors bg-purple-500/10 px-3 py-1.5 rounded-md"><Video className="w-4 h-4" /> Demo Video</a>}
+                                                    {tech.documentation_url && (
+                                                        <button
+                                                            onClick={async () => {
+                                                                try {
+                                                                    const { data, error } = await supabase.storage
+                                                                        .from('technical-documentation')
+                                                                        .createSignedUrl(tech.documentation_url, 3600);
+                                                                    if (error) throw error;
+                                                                    if (data?.signedUrl) window.open(data.signedUrl, '_blank');
+                                                                } catch (err: any) {
+                                                                    toast({ title: "Error", description: "Failed to load documentation", variant: "destructive" });
+                                                                }
+                                                            }}
+                                                            className="flex items-center gap-2 text-orange-400 hover:text-orange-300 transition-colors bg-orange-500/10 px-3 py-1.5 rounded-md"
+                                                        >
+                                                            <FileText className="w-4 h-4" /> Documentation
+                                                        </button>
+                                                    )}
                                                 </div>
                                                 <div className="space-y-4">
                                                     {tech.ai_score ? (

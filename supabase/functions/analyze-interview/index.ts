@@ -1,270 +1,327 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+// analyze-interview-communication.ts
+/**
+ * Analyze interview (communication-focused)
+ * - Same robust infra as before (retries, signed URL TTL 300s, idempotency, outbox)
+ * - Prompt and JSON output tailored to communication assessment (non-technical)
+ */
 
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+function envOrThrow(k: string): string {
+    const v = Deno.env.get(k);
+    if (!v) throw new Error(`Missing env var: ${k}`);
+    return v;
+}
+function sleep(ms: number) {
+    return new Promise((res) => setTimeout(res, ms));
+}
+async function retry<T>(fn: () => Promise<T>, tries = 3, baseDelay = 300, onRetry?: (err: unknown, attempt: number) => void): Promise<T> {
+    let attempt = 0;
+    let lastErr: unknown;
+    while (attempt < tries) {
+        try {
+            return await fn();
+        } catch (e) {
+            lastErr = e;
+            attempt++;
+            if (onRetry) onRetry(e, attempt);
+            const jitter = Math.random() * 100;
+            await sleep(baseDelay * 2 ** (attempt - 1) + jitter);
+        }
+    }
+    throw lastErr;
 }
 
-serve(async (req) => {
-    if (req.method === 'OPTIONS') {
-        return new Response('ok', { headers: corsHeaders })
-    }
+function buildEmailTemplates(candidateName: string, jobTitle: string, score: number | null) {
+    const successSubject = `Congratulations! You've moved to the Technical Round`;
+    const successBody = `Dear ${candidateName},
 
-    if (req.method !== 'POST') {
-        return new Response('Method Not Allowed', { headers: corsHeaders, status: 405 })
-    }
-
-    try {
-        const { interviewId, audioUrl, question } = await req.json()
-        console.log(`Analyzing interview: ${interviewId}`);
-
-        if (!interviewId || !audioUrl || !question) {
-            throw new Error(`Missing required fields: interviewId=${interviewId}, audioUrl=${audioUrl}, question=${!!question}`);
-        }
-
-        const supabaseUrl = Deno.env.get('SUPABASE_URL');
-        const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-
-        if (!supabaseUrl || !supabaseKey) {
-            throw new Error("Missing Supabase environment variables (SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY)");
-        }
-
-        const supabaseAdmin = createClient(supabaseUrl, supabaseKey);
-
-        // Download Audio using Signed URL workaround
-        console.log(`Downloading audio from: ${audioUrl}`);
-
-        // Remove bucket name from path if it's included
-        let audioPath = audioUrl.startsWith('interview-recordings/')
-            ? audioUrl.substring('interview-recordings/'.length)
-            : audioUrl;
-
-        if (audioPath.startsWith('/')) audioPath = audioPath.substring(1);
-
-        console.log(`Using path for signed URL: '${audioPath}'`);
-
-        let audioBlob: Blob;
-
-        try {
-            const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
-                .storage
-                .from('interview-recordings')
-                .createSignedUrl(audioPath, 60);
-
-            if (signedUrlError || !signedUrlData) {
-                throw new Error(`Signed URL creation failed: ${signedUrlError?.message}`);
-            }
-
-            const audioResponse = await fetch(signedUrlData.signedUrl);
-            if (!audioResponse.ok) {
-                throw new Error(`Fetch from signed URL failed: ${audioResponse.status}`);
-            }
-
-            audioBlob = await audioResponse.blob();
-            console.log("Audio downloaded via Signed URL");
-
-        } catch (e) {
-            console.warn("Signed URL method failed, trying direct download...", e);
-            const { data, error } = await supabaseAdmin
-                .storage
-                .from('interview-recordings')
-                .download(audioPath);
-
-            if (error) {
-                console.error("Direct download also failed:", error);
-                throw new Error(`Failed to download audio: ${error.message}`);
-            }
-            if (!data) {
-                throw new Error("Download returned no data");
-            }
-            audioBlob = data;
-            console.log("Audio downloaded via direct download");
-        }
-
-        console.log(`Audio Blob: Size=${audioBlob.size}, Type=${audioBlob.type}`);
-
-        if (audioBlob.size === 0) {
-            throw new Error("Downloaded audio file is empty");
-        }
-        // Groq Setup
-        const apiKey = Deno.env.get('GROQ_API_KEY');
-        if (!apiKey) {
-            throw new Error("GROQ_API_KEY is not set in environment variables.");
-        }
-
-        // 1. Fetch Job Description for Contextual Analysis
-        const { data: interviewData, error: interviewError } = await supabaseAdmin
-            .from('interviews')
-            .select('application_id, applications(full_name, email, jobs(title, description))')
-            .eq('id', interviewId)
-            .single();
-
-        if (interviewError || !interviewData) throw new Error("Failed to fetch interview context");
-
-        const jobTitle = interviewData.applications?.jobs?.title || "Generic Role";
-        const jobDesc = interviewData.applications?.jobs?.description || "";
-        const candidateName = interviewData.applications?.full_name || "Candidate";
-        const candidateEmail = interviewData.applications?.email;
-
-        // 2. Transcribe
-        console.log("Transcribing with Groq Whisper...");
-        const formData = new FormData();
-        formData.append('file', audioBlob, 'audio.webm');
-        formData.append('model', 'whisper-large-v3');
-
-        const transResponse = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${apiKey}` },
-            body: formData
-        });
-
-        if (!transResponse.ok) {
-            throw new Error(`Groq Transcription Failed: ${transResponse.status}`);
-        }
-
-        const transData = await transResponse.json();
-        const transcription = transData.text;
-
-        // 3. Analyze with Groq (Contextual)
-        const prompt = `
-        You are an expert technical interviewer for the role of "${jobTitle}".
-        Job Description: "${jobDesc.substring(0, 1000)}..."
-
-        Evaluate the candidate's answer to the question: "${question}"
-        
-        Candidate's Answer (Transcribed):
-        "${transcription}"
-        
-        Provide a JSON output with:
-        - score: number (0-100) assessing relevance, clarity, and depth relative to the Job Role.
-        - feedback: string (max 100 words) summary of the answer quality.
-        `;
-
-        const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: 'qwen/qwen3-32b',
-                messages: [
-                    { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
-                    { role: 'user', content: prompt }
-                ],
-                response_format: { type: 'json_object' }
-            })
-        });
-
-        if (!aiResponse.ok) throw new Error(`Groq Analysis Failed: ${aiResponse.status}`);
-
-        const aiData = await aiResponse.json();
-
-        // --- Log Token Usage ---
-        if (aiData.usage) {
-            // Create client if not exists, or reuse
-            const supabaseAdmin = createClient(
-                Deno.env.get('SUPABASE_URL') ?? '',
-                Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-            );
-            await supabaseAdmin.from('ai_usage_logs').insert({
-                provider: 'groq',
-                model: 'qwen/qwen3-32b',
-                input_tokens: aiData.usage.prompt_tokens || 0,
-                output_tokens: aiData.usage.completion_tokens || 0,
-                total_tokens: aiData.usage.total_tokens || 0,
-                function_name: 'analyze-interview',
-                status: 'success'
-            });
-        }
-
-        const content = JSON.parse(aiData.choices[0].message.content);
-
-        // --- AUTOMATION LOGIC ---
-        // Threshold: 65/100
-        const MIN_SCORE_COMM = 65;
-        let newStatus = 'Interviewed';
-        let emailSubject = "";
-        let emailBody = "";
-        let shouldSendEmail = false;
-
-        if (content.score > MIN_SCORE_COMM) {
-            newStatus = 'Technical Round';
-            emailSubject = `Congratulations! You've moved to the Technical Round`;
-            emailBody = `
-Dear ${candidateName},
-
-Great job on your communication assessment! You scored ${content.score}/100.
+Great job on your communication assessment! You scored ${score}/100.
 
 We are excited to invite you to the **Technical Assessment Round**.
 Please log in to your dashboard to view the technical problem statement and submit your solution.
 
 Best,
-RootedAI Recruiting Team
-            `;
-            shouldSendEmail = true;
-        } else {
-            newStatus = 'Rejected';
-            emailSubject = `Update on your application for ${jobTitle}`;
-            emailBody = `
-Dear ${candidateName},
+RootedAI Recruiting Team`;
 
-Thank you for completing the communication assessment. Unfortunately, your score (${content.score}/100) did not meet our threshold for this specific role.
+    const rejectSubject = `Update on your application for ${jobTitle}`;
+    const rejectBody = `Dear ${candidateName},
+
+Thank you for completing the communication assessment. Unfortunately, your score (${score}/100) did not meet our threshold for this specific role.
 
 We appreciate your time and wish you success in your future endeavors.
 
 Best,
-RootedAI Recruiting Team
-            `;
-            shouldSendEmail = true;
+RootedAI Recruiting Team`;
+
+    return { successSubject, successBody, rejectSubject, rejectBody };
+}
+
+serve(async (req) => {
+    if (req.method === "OPTIONS") return new Response("ok", { headers: CORS_HEADERS });
+    if (req.method !== "POST") return new Response("Method Not Allowed", { headers: CORS_HEADERS, status: 405 });
+
+    let supabaseUrl: string;
+    let supabaseKey: string;
+    let groqKey: string;
+    try {
+        supabaseUrl = envOrThrow("SUPABASE_URL");
+        supabaseKey = envOrThrow("SUPABASE_SERVICE_ROLE_KEY");
+        groqKey = envOrThrow("GROQ_API_KEY");
+    } catch (e) {
+        return new Response(JSON.stringify({ error: e.message }), { headers: { ...CORS_HEADERS, "Content-Type": "application/json" }, status: 500 });
+    }
+
+    const supabaseAdmin: SupabaseClient = createClient(supabaseUrl, supabaseKey);
+
+    try {
+        const body = await req.json();
+        const { interviewId, audioUrl, question } = body ?? {};
+
+        if (!interviewId || !audioUrl || !question) {
+            return new Response(JSON.stringify({ error: "Missing required fields: interviewId, audioUrl, question" }), { headers: { ...CORS_HEADERS, "Content-Type": "application/json" }, status: 400 });
         }
 
-        // 4. Update Interview & Application
+        // Fetch interview context & idempotency
+        const { data: interviewData, error: interviewError } = await supabaseAdmin
+            .from("interviews")
+            .select("id, status, application_id, applications(full_name, email, jobs(title, description))")
+            .eq("id", interviewId)
+            .single();
+
+        if (interviewError || !interviewData) throw new Error("Failed to fetch interview context");
+        if (["Analyzed", "Requires Review"].includes(interviewData.status)) {
+            return new Response(JSON.stringify({ success: true, note: `Already processed (status=${interviewData.status})` }), { headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
+        }
+
+        const jobTitle = interviewData.applications?.jobs?.title ?? "Generic Role";
+        const jobDesc = String(interviewData.applications?.jobs?.description ?? "").slice(0, 800);
+        const candidateName = interviewData.applications?.full_name ?? "Candidate";
+        const candidateEmail = interviewData.applications?.email ?? null;
+
+        // Normalize audioPath
+        let audioPath = String(audioUrl);
+        if (audioPath.startsWith("interview-recordings/")) audioPath = audioPath.slice("interview-recordings/".length);
+        if (audioPath.startsWith("/")) audioPath = audioPath.slice(1);
+
+        // Download audio (signed URL TTL 300s with retry, fallback to direct download)
+        let audioBlob: Blob | undefined;
+        try {
+            audioBlob = await retry(async () => {
+                const TTL = 300;
+                const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
+                    .storage
+                    .from("interview-recordings")
+                    .createSignedUrl(audioPath, TTL);
+
+                if (signedUrlError || !signedUrlData?.signedUrl) throw signedUrlError ?? new Error("Signed URL creation failed");
+                const res = await fetch(signedUrlData.signedUrl);
+                if (!res.ok) throw new Error(`Signed URL fetch failed: ${res.status}`);
+                const blob = await res.blob();
+                if (!blob || blob.size === 0) throw new Error("Signed URL returned empty blob");
+                return blob;
+            }, 3, 400, (err, attempt) => console.warn(`Signed URL attempt ${attempt} failed:`, err));
+        } catch (e) {
+            const { data, error } = await supabaseAdmin.storage.from("interview-recordings").download(audioPath);
+            if (error || !data) throw new Error(`Audio download fallback failed: ${error?.message ?? "no data"}`);
+            audioBlob = data;
+        }
+
+        if (!audioBlob || audioBlob.size === 0) throw new Error("Downloaded audio is empty");
+
+        // Transcribe (Groq Whisper) with retry
+        const transcription = await retry(async () => {
+            const form = new FormData();
+            form.append("file", audioBlob as Blob, "audio.webm");
+            form.append("model", "whisper-large-v3");
+
+            const res = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${groqKey}` },
+                body: form,
+            });
+            if (!res.ok) {
+                const txt = await res.text().catch(() => "");
+                throw new Error(`Transcription failed: ${res.status} ${txt}`);
+            }
+            const json = await res.json();
+            const txt = String(json.text ?? "").trim();
+            if (!txt) throw new Error("Transcription empty");
+            return txt;
+        }, 3, 500, (err, attempt) => console.warn(`Transcription attempt ${attempt} failed:`, err));
+
+        // COMMUNICATION-Focused Prompt (concise, token-efficient)
+        // Ask for JSON only including: score (0-100), communication_score (0-100), strengths[], weaknesses[], feedback (<=100 words)
+        const promptParts = [
+            `You are an expert COMMUNICATION assessor. Score the candidate's spoken answer on: clarity, structure, relevance, brevity, grammar/readability, confidence, comprehension.`,
+            `Job context (for role-fit only): "${jobTitle}" - "${jobDesc}..."`,
+            `Question asked: "${String(question).slice(0, 200)}"`,
+            `Candidate's transcribed answer: "${transcription.slice(0, 2000)}"`,
+            `Output ONLY valid JSON with keys:`,
+            `  "score": 0-100,             // overall match to communication expectations`,
+            `  "communication_score": 0-100, // communication-specific score (clarity, structure, grammar, confidence)`,
+            `  "strengths": ["short strings"],`,
+            `  "weaknesses": ["short strings"],`,
+            `  "feedback": "short summary under 100 words"`,
+            `Return JSON only.`,
+        ];
+        const prompt = promptParts.join("\n");
+
+        // Call Groq chat (deterministic, low creativity)
+        const aiData = await retry(async () => {
+            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${groqKey}`, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    model: "qwen/qwen3-32b",
+                    messages: [
+                        { role: "system", content: "You are a concise assistant that MUST output JSON only." },
+                        { role: "user", content: prompt },
+                    ],
+                    temperature: 0.05,
+                    max_tokens: 500,
+                    response_format: { type: "json_object" },
+                }),
+            });
+            if (!res.ok) {
+                const txt = await res.text().catch(() => "");
+                throw new Error(`Groq analysis failed: ${res.status} ${txt}`);
+            }
+            return await res.json();
+        }, 3, 500, (err, attempt) => console.warn(`Groq attempt ${attempt} failed:`, err));
+
+        // log usage if present (best-effort)
+        if (aiData.usage) {
+            try {
+                const u = aiData.usage;
+                await supabaseAdmin.from("ai_usage_logs").insert({
+                    provider: "groq",
+                    model: "qwen/qwen3-32b",
+                    input_tokens: u.prompt_tokens ?? 0,
+                    output_tokens: u.completion_tokens ?? 0,
+                    total_tokens: u.total_tokens ?? 0,
+                    function_name: "analyze-interview-comm",
+                    status: "success",
+                });
+            } catch (e) {
+                console.warn("AI usage log failed:", e);
+            }
+        }
+
+        // Parse returned JSON robustly
+        let content: any = {};
+        try {
+            const raw = aiData.choices?.[0]?.message?.content;
+            content = typeof raw === "string" ? JSON.parse(raw) : raw ?? {};
+        } catch (e) {
+            console.warn("Failed to parse AI JSON:", e);
+            content = {};
+        }
+
+        // Normalize fields
+        const overallScore = Number.isFinite(Number(content.score)) ? Number(content.score) : -1;
+        const commScore = Number.isFinite(Number(content.communication_score)) ? Number(content.communication_score) : -1;
+        const strengths = Array.isArray(content.strengths) ? content.strengths.slice(0, 10).map(String) : [];
+        const weaknesses = Array.isArray(content.weaknesses) ? content.weaknesses.slice(0, 10).map(String) : [];
+        const feedback = String(content.feedback ?? "").slice(0, 1000);
+
+        // Decide status
+        const MIN_SCORE_COMM = 65;
+        let newStatus = "Analyzed";
+        let shouldQueueEmail = false;
+        let emailSubject = "";
+        let emailBody = "";
+
+        if (!Number.isFinite(overallScore) || overallScore < 0) {
+            newStatus = "Requires Review";
+        } else if (overallScore >= MIN_SCORE_COMM) {
+            newStatus = "Technical Round";
+            shouldQueueEmail = true;
+            const t = buildEmailTemplates(candidateName, jobTitle, overallScore);
+            emailSubject = t.successSubject;
+            emailBody = t.successBody;
+        } else {
+            newStatus = "Rejected";
+            shouldQueueEmail = true;
+            const t = buildEmailTemplates(candidateName, jobTitle, overallScore);
+            emailSubject = t.rejectSubject;
+            emailBody = t.rejectBody;
+        }
+
+        // Update interview record
         const { error: updateError } = await supabaseAdmin
-            .from('interviews')
+            .from("interviews")
             .update({
                 transcript: transcription,
-                ai_score: content.score,
-                ai_feedback: content.feedback,
-                status: 'Analyzed'
+                ai_score: Number.isFinite(overallScore) && overallScore >= 0 ? overallScore : null,
+                ai_feedback: feedback || null,
+                ai_strengths: strengths.length ? strengths : null,
+                ai_weaknesses: weaknesses.length ? weaknesses : null,
+                communication_score: Number.isFinite(commScore) && commScore >= 0 ? commScore : null,
+                status: newStatus,
             })
-            .eq('id', interviewId);
+            .eq("id", interviewId);
 
         if (updateError) throw updateError;
 
-        // Update Application Status
-        await supabaseAdmin
-            .from('applications')
-            .update({ status: newStatus })
-            .eq('id', interviewData.application_id);
-
-        // 5. Send Email
-        if (shouldSendEmail && candidateEmail) {
-            await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-rejection-email`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${supabaseKey}`
-                },
-                body: JSON.stringify({
-                    email: candidateEmail,
-                    subject: emailSubject,
-                    body: emailBody
-                })
-            });
+        // Update applications table status if present
+        if (interviewData.application_id) {
+            try {
+                await supabaseAdmin.from("applications").update({ status: newStatus }).eq("id", interviewData.application_id);
+            } catch (e) {
+                console.warn("Failed to update application:", e);
+            }
         }
 
-        return new Response(
-            JSON.stringify({ success: true }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        // Queue email (outbox) and attempt fire-and-forget immediate send
+        if (shouldQueueEmail && candidateEmail) {
+            try {
+                await supabaseAdmin.from("outbox").insert({
+                    to_email: candidateEmail,
+                    subject: emailSubject,
+                    body: emailBody,
+                    metadata: { interview_id: interviewId, score: overallScore },
+                    status: "queued",
+                    created_at: new Date().toISOString(),
+                });
+            } catch (e) {
+                console.warn("Failed to enqueue email:", e);
+            }
 
-    } catch (error: any) {
-        console.error("Error in analyze-interview:", error);
-        return new Response(
-            JSON.stringify({ error: error.message, stack: error.stack, details: error }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-        )
+            (async () => {
+                try {
+                    await fetch(`${supabaseUrl}/functions/v1/send-rejection-email`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${supabaseKey}`,
+                        },
+                        body: JSON.stringify({ email: candidateEmail, subject: emailSubject, body: emailBody }),
+                    });
+                } catch (e) {
+                    console.warn("Immediate send failed; relying on outbox worker:", e);
+                }
+            })();
+        }
+
+        return new Response(JSON.stringify({
+            success: true,
+            interviewId,
+            score: Number.isFinite(overallScore) && overallScore >= 0 ? overallScore : null,
+            communication_score: Number.isFinite(commScore) && commScore >= 0 ? commScore : null,
+            strengths,
+            weaknesses,
+            feedback
+        }), { headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
+
+    } catch (error) {
+        console.error("analyze-interview-comm error:", error);
+        return new Response(JSON.stringify({ error: String(error?.message ?? error) }), { headers: { ...CORS_HEADERS, "Content-Type": "application/json" }, status: 400 });
     }
-})
+});
