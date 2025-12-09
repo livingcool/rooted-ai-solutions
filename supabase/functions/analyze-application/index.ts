@@ -203,6 +203,7 @@ RootedAI Recruiting Team
             .update({
                 ai_score: analysis.score,
                 ai_feedback: analysis.feedback,
+                resume_text: resumeText, // Save Extracted Text
                 status: newStatus
             })
             .eq('id', applicationId);

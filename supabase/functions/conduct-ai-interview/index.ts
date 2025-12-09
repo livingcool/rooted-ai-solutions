@@ -28,11 +28,17 @@ serve(async (req) => {
         // 1. Verify Session & Get Context
         const { data: session, error: sessionError } = await supabase
             .from('final_interviews')
-            .select('*')
+            .select('*, applications(resume_text, jobs(title))')
             .eq('interview_token', interviewToken)
             .single();
 
         if (sessionError || !session) throw new Error("Invalid Session");
+
+        const application = session.applications;
+        const jobTitle = application?.jobs?.title || "Junior AI Engineer";
+        const resumeText = application?.resume_text || "No resume context available.";
+        // Fallback or use project context if resume is short/missing
+        const extendedContext = (resumeText.length > 50) ? resumeText.substring(0, 3000) : (session.project_questions?.context || "");
 
         // 2. Transcribe Audio (Whisper)
         let userText = "";
@@ -60,7 +66,7 @@ serve(async (req) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: 'llama-3.2-11b-vision-preview',
+                    model: 'llama-3.2-90b-vision-preview',
                     messages: [{
                         role: "user",
                         content: [
@@ -71,28 +77,49 @@ serve(async (req) => {
                 })
             });
             const visionJson = await visionResp.json();
-            visionContext = visionJson.choices?.[0]?.message?.content || "Vision analysis failed";
+            console.log("Vision API Response:", JSON.stringify(visionJson)); // DEBUG LOG
+
+            if (visionJson.error) {
+                console.error("Vision API Error:", visionJson.error);
+                visionContext = `Vision analysis failed: ${visionJson.error.message}`;
+            } else {
+                visionContext = visionJson.choices?.[0]?.message?.content || "Vision analysis failed (No content)";
+            }
         }
 
         // 4. Generate AI Response (Behavioral + Project Context)
         const projectContext = session.project_questions?.context || "";
+        const transcriptHistory = session.transcript || "";
+
         const systemPrompt = `
-        You are the "AI Founder" of RootedAI. You are interviewing a candidate.
+        You are the "AI Founder" of RootedAI. You are conducting a structured video interview with a candidate for the role of **${jobTitle}**.
         
-        Context: ${projectContext}
-        Current Vision Analysis of Candidate: ${visionContext}
+        **Your Goal**: Conduct a professional, engaging interview following these 7 Stages. DO NOT skip stages.
+        **Current Context**:
+        - Role: ${jobTitle}
+        - Resume/Project Context: ${extendedContext}
+        - Current Visual Behavior: ${visionContext}
         
-        Your Goal:
-        1. Respond to what the candidate just said ("${userText}").
-        2. Ask a follow-up question digging into their project choices or culture fit.
-        3. Rate their confidence based on the Vision Analysis key terms (maintained eye contact vs looking away).
+        **Interview Stages (Strictly Follow One by One)**:
+        1. **Introduction & Rapport** (1 Question): Welcome them to the **${jobTitle}** interview. Ask a light warm-up like "How was your day?".
+        2. **Experience Check** (1-2 Questions): Ask about their recent project or role. Verify their resume details.
+        3. **Technical Deep Dive** (2 Questions): Ask 2 distinct technical questions relevant to **${jobTitle}** and their projects (e.g., specific choices, challenges, complex decisions).
+        4. **Behavioral** (1 Question): Use STAR method. Ask about a conflict, a mistake, or a difficult decision.
+        5. **Culture Fit** (1 Question): Ask about their work style, motivation, or why RootedAI.
+        6. **Closing** (1 Question): Ask if they have questions, then Thank them and say "Goodbye".
         
-        Return JSON:
-        {
-            "reply": "Text response to speak back",
-            "confidence_score": 0-100,
-            "is_interview_complete": boolean
-        }
+        **Rules**:
+        - **MEMORY**: Read the "Conversation History" below. DO NOT ask questions that have already been asked.
+        - **ONE QUESTION AT A TIME**: Never ask multiple questions in one turn.
+        - **SHORT & CONCISE**: Keep your responses under 2-3 sentences.
+        - **STAY ON TRACK**: If the candidate goes off-topic, politely bring them back to the current stage.
+        - **ENGLISH ONLY**: Speak only in English.
+        - **TOTAL LIMIT**: Aim to complete the interview in about 7-8 turns total.
+        
+        **Conversation History**:
+        ${transcriptHistory}
+        
+        **Candidate's Latest Audio**: "${userText}"
         `;
 
         const chatResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -105,7 +132,7 @@ serve(async (req) => {
                 model: 'llama-3.3-70b-versatile',
                 messages: [
                     { role: "system", content: systemPrompt },
-                    { role: "user", content: userText || "(Silence)" }
+                    { role: "user", content: `(Candidate just said): "${userText || "..."}" \n(Vision analysis): ${visionContext}` }
                 ],
                 response_format: { type: "json_object" }
             })
