@@ -302,6 +302,105 @@ export const CandidateDetailDialog = ({
         }
     };
 
+    // Technical Round - Admin Approval Handler
+    const handleApproveFinalInterview = async () => {
+        if (!selectedApp) return;
+        if (!confirm("Approve candidate for Final Interview?")) return;
+        setLoading(true);
+        try {
+            const candidateName = selectedApp.full_name || "Candidate";
+            const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
+            const frontendUrl = import.meta.env.VITE_FRONTEND_URL || window.location.origin;
+
+            await supabase.from('applications').update({ status: 'Final Interview' }).eq('id', selectedApp.id);
+
+            const emailSubject = `🎉 Final Interview Invitation - ${jobTitle}`;
+            const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.button{display:inline-block;padding:15px 30px;background:#667eea;color:white;text-decoration:none;border-radius:5px;margin:20px 0;font-weight:bold}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎉 Excellent Work!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Congratulations! Your technical assessment was impressive, and we would love to invite you to the <strong>Final Interview</strong> for the <strong>${jobTitle}</strong> position.</p><p>This is the last step in our hiring process. We're excited to meet you!</p><p style="text-align:center;"><a href="${frontendUrl}/final-interview-login" class="button">Schedule Your Interview</a></p><p><strong>Next Steps:</strong></p><ul><li>Click the button above to access the scheduling portal</li><li>Choose a convenient time slot</li><li>Complete the final interview</li></ul><p>Looking forward to speaking with you!</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
+
+            await supabase.functions.invoke('send-rejection-email', { body: { email: selectedApp.email, subject: emailSubject, body: emailBody } });
+
+            toast({ title: "Success", description: "Candidate approved for final interview!" });
+            fetchData();
+        } catch (err: any) {
+            toast({ title: "Error", description: err.message, variant: "destructive" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRejectAfterTechnical = async () => {
+        if (!selectedApp) return;
+        if (!confirm("Reject candidate after technical round?")) return;
+        setLoading(true);
+        try {
+            const candidateName = selectedApp.full_name || "Candidate";
+            const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
+
+            await supabase.from('applications').update({ status: 'Rejected' }).eq('id', selectedApp.id);
+
+            const emailSubject = `Update on Your Application - ${jobTitle}`;
+            const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:#4a5568;color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>Application Update</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Thank you for completing the technical assessment for the <strong>${jobTitle}</strong> position at RootedAI.</p><p>After careful review of your submission, we have decided to move forward with other candidates whose experience more closely aligns with our current needs.</p><p>We appreciate the time and effort you invested in this process and encourage you to apply for future opportunities that match your skills.</p><p>We wish you the very best in your career.</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
+
+            await supabase.functions.invoke('send-rejection-email', { body: { email: selectedApp.email, subject: emailSubject, body: emailBody } });
+
+            toast({ title: "Success", description: "Candidate rejected and email sent!" });
+            fetchData();
+        } catch (err: any) {
+            toast({ title: "Error", description: err.message, variant: "destructive" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Final Interview - Admin Approval Handler
+    const handleMakeOffer = async () => {
+        if (!selectedApp) return;
+        if (!confirm("Make job offer to this candidate?")) return;
+        setLoading(true);
+        try {
+            const candidateName = selectedApp.full_name || "Candidate";
+            const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
+
+            await supabase.from('applications').update({ status: 'Offered' }).eq('id', selectedApp.id);
+
+            const emailSubject = `🎊 Job Offer - ${jobTitle} at RootedAI`;
+            const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.highlight{background:#d1fae5;padding:20px;border-left:4px solid #10b981;margin:20px 0}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎊 Congratulations!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>We are thrilled to extend an offer for the <strong>${jobTitle}</strong> position at RootedAI Solutions!</p><div class="highlight"><p><strong>What's Next:</strong></p><ul><li>Our HR team will contact you within 24 hours with offer details</li><li>You'll receive the formal offer letter via email</li><li>We'll discuss compensation, benefits, and start date</li></ul></div><p>Your performance throughout the hiring process has been outstanding, and we're excited to have you join our team!</p><p>Welcome to RootedAI! 🚀</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
+
+            await supabase.functions.invoke('send-rejection-email', { body: { email: selectedApp.email, subject: emailSubject, body: emailBody } });
+
+            toast({ title: "Success", description: "Job offer sent!" });
+            fetchData();
+        } catch (err: any) {
+            toast({ title: "Error", description: err.message, variant: "destructive" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRejectAfterFinal = async () => {
+        if (!selectedApp) return;
+        if (!confirm("Reject candidate after final interview?")) return;
+        setLoading(true);
+        try {
+            const candidateName = selectedApp.full_name || "Candidate";
+            const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
+
+            await supabase.from('applications').update({ status: 'Rejected' }).eq('id', selectedApp.id);
+
+            const emailSubject = `Update on Your Application - ${jobTitle}`;
+            const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:#4a5568;color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>Application Update</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Thank you for taking the time to complete the final interview for the <strong>${jobTitle}</strong> position at RootedAI.</p><p>After thorough consideration, we have decided to proceed with another candidate for this role.</p><p>We were impressed by your skills and experience, and we encourage you to apply for future positions that align with your background.</p><p>Thank you again for your interest in RootedAI, and we wish you continued success.</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
+
+            await supabase.functions.invoke('send-rejection-email', { body: { email: selectedApp.email, subject: emailSubject, body: emailBody } });
+
+            toast({ title: "Success", description: "Candidate rejected!" });
+            fetchData();
+        } catch (err: any) {
+            toast({ title: "Error", description: err.message, variant: "destructive" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const [resumeUrl, setResumeUrl] = useState("");
 
     useEffect(() => {
