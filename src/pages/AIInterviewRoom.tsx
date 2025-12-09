@@ -96,7 +96,8 @@ const AIInterviewRoom = () => {
             }
 
             if (data.is_face_detected === false) {
-                alert("⚠️ Warning: No face detected. Please ensure you are visible on camera.");
+                // Enhanced Debug Warning
+                alert(`⚠️ Warning: No face detected.\n\nVision Info: ${data.vision_analysis || "No info"}`);
                 setStatus("⚠️ Warning: Face not detected. Adjust camera.");
             }
 
