@@ -45,9 +45,9 @@ serve(async (req) => {
         4. **LISTS**: Use standard bullet points (•) for lists to ensure readability in a text area.
 
         **REQUIREMENTS GENERATION:**
-        - Provide exactly 5 to 8 key technical requirements.
-        - Each must be a specific skill (e.g., "React", "Python", "AWS").
-        - Max 3-5 words per item.
+        - Generate a comma-separated list of 10-15 specific technical skills.
+        - Include both BASIC and INTERMEDIATE skills relevant to the role.
+        - Example: "Python, JavaScript, React, Git, SQL, Communication, Problem Solving, AWS, Docker, REST APIs"
 
         Job Title: ${title}
         Current Description: ${description}
@@ -55,7 +55,7 @@ serve(async (req) => {
         
         Provide a JSON output with:
         - enhanced_description: string (The full, formatted job description with newlines \n and bullet points)
-        - recommended_requirements: string[] (Array of 5-8 concise requirement strings)
+        - recommended_requirements: string (A single string containing a comma-separated list of 10-15 basic to intermediate skills)
         - tech_stack: string[] (List of specific technologies/software relevant to the role)
         `
 
