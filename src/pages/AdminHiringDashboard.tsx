@@ -190,22 +190,17 @@ const AdminHiringDashboard = () => {
 
         setEnhancing(true);
         try {
-            const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/enhance-job-description', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+            const { data, error } = await supabase.functions.invoke('enhance-job-description', {
+                body: {
                     title: newJob.title,
                     description: newJob.description,
                     requirements: newJob.requirements
-                })
+                }
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Failed to enhance description");
-            }
+            if (error) throw error;
+            if (data?.error) throw new Error(data.error);
 
-            const data = await response.json();
             setNewJob(prev => ({
                 ...prev,
                 description: data.enhanced_description,

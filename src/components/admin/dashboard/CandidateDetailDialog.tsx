@@ -498,6 +498,7 @@ export const CandidateDetailDialog = ({
                                                         size="xs"
                                                         variant="outline"
                                                         className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
+                                                        disabled={loading}
                                                         onClick={async () => {
                                                             if (!confirm("Re-run AI Analysis for Resume?")) return;
                                                             setLoading(true);
@@ -515,7 +516,7 @@ export const CandidateDetailDialog = ({
                                                             }
                                                         }}
                                                     >
-                                                        <Sparkles className="w-3 h-3 mr-1" /> Retry
+                                                        {loading ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />} Retry
                                                     </Button>
                                                 </div>
                                                 {selectedApp.ai_score && (
@@ -551,6 +552,7 @@ export const CandidateDetailDialog = ({
                                                     size="xs"
                                                     variant="outline"
                                                     className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
+                                                    disabled={loading}
                                                     onClick={async () => {
                                                         if (!confirm("Re-run AI Analysis for this Interview?")) return;
                                                         setLoading(true);
@@ -568,7 +570,7 @@ export const CandidateDetailDialog = ({
                                                         }
                                                     }}
                                                 >
-                                                    <Sparkles className="w-3 h-3 mr-1" /> Retry AI
+                                                    {loading ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />} Retry AI
                                                 </Button>
                                             </CardHeader>
                                             <CardContent>
@@ -597,6 +599,7 @@ export const CandidateDetailDialog = ({
                                                         size="xs"
                                                         variant="outline"
                                                         className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
+                                                        disabled={loading}
                                                         onClick={async () => {
                                                             if (!confirm("Re-run AI Analysis for this Technical Submission?")) return;
                                                             setLoading(true);
@@ -614,7 +617,7 @@ export const CandidateDetailDialog = ({
                                                             }
                                                         }}
                                                     >
-                                                        <Sparkles className="w-3 h-3 mr-1" /> Retry AI
+                                                        {loading ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />} Retry AI
                                                     </Button>
                                                     <div className="text-sm text-white/40">{new Date(tech.created_at || tech.updated_at).toLocaleString()}</div>
                                                 </div>
@@ -682,6 +685,7 @@ export const CandidateDetailDialog = ({
                                                             size="xs"
                                                             variant="outline"
                                                             className="text-white/60 hover:text-white border-white/10 bg-transparent text-xs h-7"
+                                                            disabled={loading}
                                                             onClick={async (e) => {
                                                                 e.stopPropagation();
                                                                 if (!confirm("Re-run AI Analysis for this Final Interview?")) return;
@@ -700,7 +704,7 @@ export const CandidateDetailDialog = ({
                                                                 }
                                                             }}
                                                         >
-                                                            <Sparkles className="w-3 h-3 mr-1" /> Retry AI
+                                                            {loading ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />} Retry AI
                                                         </Button>
                                                         <Badge variant="outline" className={`${getStatusColor(interview.status)}`}>{interview.status}</Badge>
                                                     </div>
