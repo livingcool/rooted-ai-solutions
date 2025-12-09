@@ -413,13 +413,34 @@ export const CandidateDetailDialog = ({
                                 </TabsList>
 
                                 <TabsContent value="resume" className="mt-4">
-                                    <div className="bg-white/5 p-4 rounded-lg border border-white/10 h-[600px]">
-                                        {resumeUrl ? (
-                                            <iframe src={resumeUrl} className="w-full h-full rounded" />
-                                        ) : (
-                                            <div className="flex items-center justify-center h-full text-white/40 flex-col gap-2">
-                                                <FileText className="w-8 h-8" />
-                                                <span>No Resume Uploaded</span>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="bg-white/5 p-4 rounded-lg border border-white/10 h-[500px]">
+                                            {resumeUrl ? (
+                                                <iframe src={resumeUrl} className="w-full h-full rounded" />
+                                            ) : (
+                                                <div className="flex items-center justify-center h-full text-white/40 flex-col gap-2">
+                                                    <FileText className="w-8 h-8" />
+                                                    <span>No Resume Uploaded</span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {(selectedApp.ai_score || selectedApp.ai_feedback) && (
+                                            <div className="bg-white/5 p-4 rounded-lg border border-white/10 space-y-2">
+                                                <h4 className="font-semibold text-white">AI Resume Analysis</h4>
+                                                {selectedApp.ai_score && (
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <div className="text-sm text-white/60">Match Score:</div>
+                                                        <div className={`font-bold ${selectedApp.ai_score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>{selectedApp.ai_score}/100</div>
+                                                    </div>
+                                                )}
+                                                {selectedApp.ai_feedback ? (
+                                                    <div className="bg-black/20 p-4 rounded text-sm text-white/80 whitespace-pre-wrap">
+                                                        {selectedApp.ai_feedback}
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-white/40 italic">No feedback text generated.</div>
+                                                )}
                                             </div>
                                         )}
                                     </div>
@@ -456,7 +477,7 @@ export const CandidateDetailDialog = ({
                                         <Card key={i} className="bg-white/5 border-white/10">
                                             <CardHeader className="flex flex-row items-center justify-between">
                                                 <CardTitle>Submission {i + 1}</CardTitle>
-                                                <div className="text-sm text-white/40">{new Date(tech.submitted_at).toLocaleString()}</div>
+                                                <div className="text-sm text-white/40">{new Date(tech.created_at || tech.updated_at).toLocaleString()}</div>
                                             </CardHeader>
                                             <CardContent>
                                                 <div className="flex gap-4 mb-4">
@@ -464,22 +485,111 @@ export const CandidateDetailDialog = ({
                                                     {tech.deployed_url && <a href={tech.deployed_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors bg-green-500/10 px-3 py-1.5 rounded-md"><Globe className="w-4 h-4" /> Live Demo</a>}
                                                     {tech.loom_video_url && <a href={tech.loom_video_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors bg-purple-500/10 px-3 py-1.5 rounded-md"><Video className="w-4 h-4" /> Demo Video</a>}
                                                 </div>
-                                                <div className="space-y-2">
-                                                    <h4 className="text-sm font-medium text-white/60">AI Analysis</h4>
-                                                    <div className="bg-black/20 p-4 rounded text-sm text-white/80 whitespace-pre-wrap max-h-[300px] overflow-y-auto">
-                                                        {tech.ai_analysis ? JSON.stringify(tech.ai_analysis, null, 2) : "Analysis Pending..."}
-                                                    </div>
+                                                <div className="space-y-4">
+                                                    {tech.ai_score ? (
+                                                        <>
+                                                            <div className="bg-white/5 p-4 rounded border border-white/10">
+                                                                <div className="flex justify-between items-center mb-2">
+                                                                    <div className="font-semibold text-white">AI Analysis Score</div>
+                                                                    <div className={`text-xl font-bold ${tech.ai_score >= 80 ? 'text-green-400' : tech.ai_score >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>{tech.ai_score}/100</div>
+                                                                </div>
+                                                                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                                                                    <div className={`h-full ${tech.ai_score >= 80 ? 'bg-green-500' : tech.ai_score >= 60 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${tech.ai_score}%` }}></div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div>
+                                                                <h4 className="text-sm font-medium text-white/60 mb-2">Feedback</h4>
+                                                                <div className="bg-black/20 p-4 rounded text-sm text-white/80 whitespace-pre-wrap">
+                                                                    {tech.ai_feedback}
+                                                                </div>
+                                                            </div>
+
+                                                            {tech.improvement_suggestions && (
+                                                                <div>
+                                                                    <h4 className="text-sm font-medium text-white/60 mb-2">Improvement Suggestions</h4>
+                                                                    <div className="bg-black/20 p-4 rounded text-sm text-white/80 whitespace-pre-wrap">
+                                                                        {tech.improvement_suggestions}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </>
+                                                    ) : (
+                                                        <div className="text-center py-6 text-white/40 bg-white/5 rounded border border-white/10">
+                                                            <Brain className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                                                            AI Analysis Pending...
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </CardContent>
                                         </Card>
                                     ))}
                                 </TabsContent>
 
-                                <TabsContent value="final" className="mt-4">
-                                    <div className="text-center py-12 text-white/40 bg-white/5 rounded-lg border border-white/10">
-                                        <Brain className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                                        Final Interview details and scheduling.
-                                    </div>
+                                <TabsContent value="final" className="mt-4 space-y-4">
+                                    {((selectedApp as any).final_interviews || []).length === 0 ? (
+                                        <div className="text-center py-12 text-white/40 bg-white/5 rounded-lg border border-white/10">
+                                            <Brain className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                            No final interview scheduled yet.
+                                        </div>
+                                    ) : (
+                                        ((selectedApp as any).final_interviews || []).map((interview: any, i: number) => (
+                                            <Card key={i} className="bg-white/5 border-white/10">
+                                                <CardHeader className="flex flex-row items-center justify-between">
+                                                    <CardTitle>Interview Session</CardTitle>
+                                                    <Badge variant="outline" className={`${getStatusColor(interview.status)}`}>{interview.status}</Badge>
+                                                </CardHeader>
+                                                <CardContent className="space-y-6">
+                                                    {interview.status === 'Analyzed' || interview.status === 'Offer' || interview.status === 'Rejected' ? (
+                                                        <>
+                                                            {/* Scores Grid */}
+                                                            <div className="grid grid-cols-2 gap-4">
+                                                                <div className="bg-black/20 p-4 rounded border border-white/5 text-center">
+                                                                    <div className="text-sm text-white/60 mb-1">Confidence Score</div>
+                                                                    <div className="text-3xl font-bold text-blue-400">{interview.ai_confidence_score || 0}%</div>
+                                                                </div>
+                                                                <div className="bg-black/20 p-4 rounded border border-white/5 text-center">
+                                                                    <div className="text-sm text-white/60 mb-1">Role Fit</div>
+                                                                    <div className="text-3xl font-bold text-purple-400">{interview.ai_role_fit_score || 0}%</div>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Recommendation */}
+                                                            <div className="flex items-center justify-between bg-white/5 p-4 rounded border border-white/10">
+                                                                <span className="font-semibold">AI Recommendation</span>
+                                                                <Badge className={`${interview.ai_recommendation === 'Strong Hire' || interview.ai_recommendation === 'Hire' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'} border-0 text-lg py-1 px-4`}>
+                                                                    {interview.ai_recommendation || 'N/A'}
+                                                                </Badge>
+                                                            </div>
+
+                                                            {/* Feedback */}
+                                                            <div className="space-y-2">
+                                                                <h4 className="text-sm font-medium text-white/60">AI Feedback</h4>
+                                                                <div className="bg-black/20 p-4 rounded text-sm text-white/80 whitespace-pre-wrap">
+                                                                    {interview.ai_feedback}
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Transcript */}
+                                                            {interview.transcript && (
+                                                                <div className="space-y-2">
+                                                                    <h4 className="text-sm font-medium text-white/60">Transcript</h4>
+                                                                    <div className="bg-black/20 p-4 rounded text-xs text-white/60 font-mono h-[200px] overflow-y-auto whitespace-pre-wrap">
+                                                                        {interview.transcript}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </>
+                                                    ) : (
+                                                        <div className="text-center py-8 text-white/40">
+                                                            <Loader2 className="w-6 h-6 mx-auto mb-2 animate-spin text-blue-400" />
+                                                            Interview is {interview.status}... Waiting for completion and analysis.
+                                                        </div>
+                                                    )}
+                                                </CardContent>
+                                            </Card>
+                                        ))
+                                    )}
                                 </TabsContent>
                             </Tabs>
                         </div>
