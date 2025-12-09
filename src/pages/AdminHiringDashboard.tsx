@@ -84,7 +84,7 @@ const AdminHiringDashboard = () => {
 
             const { data: appsData, error: appsError } = await supabase
                 .from('applications' as any)
-                .select('*, jobs(id, title, description, technical_problem_statement), interviews(*), technical_assessments(*)')
+                .select('*, jobs(id, title, description, technical_problem_statement), interviews(*), technical_assessments(*), final_interviews(*)')
                 .order('created_at', { ascending: false });
 
             if (appsError) throw appsError;
@@ -101,6 +101,19 @@ const AdminHiringDashboard = () => {
             setLoading(false);
         }
     };
+
+    // Sync selectedApp when applications list updates
+    useEffect(() => {
+        if (selectedApp) {
+            const updatedApp = applications.find(app => app.id === selectedApp.id);
+            if (updatedApp) {
+                // Only update if data has actually changed to avoid render loops (simple check)
+                if (JSON.stringify(updatedApp) !== JSON.stringify(selectedApp)) {
+                    setSelectedApp(updatedApp);
+                }
+            }
+        }
+    }, [applications]);
 
     // --- Job Handlers ---
 
