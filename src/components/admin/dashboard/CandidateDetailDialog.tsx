@@ -646,10 +646,7 @@ export const CandidateDetailDialog = ({
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     {int.communication_score && (
-                                                        <Badge variant="outline" className={`${int.communication_score >= 80 ? 'border-green-500 text-green-400' :
-                                                            int.communication_score >= 60 ? 'border-yellow-500 text-yellow-400' :
-                                                                'border-red-500 text-red-400'
-                                                            }`}>
+                                                        <Badge variant="outline" className={int.communication_score >= 80 ? 'border-green-500 text-green-400' : int.communication_score >= 60 ? 'border-yellow-500 text-yellow-400' : 'border-red-500 text-red-400'}>
                                                             {int.communication_score}/100
                                                         </Badge>
                                                     )}
@@ -677,6 +674,7 @@ export const CandidateDetailDialog = ({
                                                     >
                                                         {loading ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />} Retry AI
                                                     </Button>
+                                                </div>
                                             </CardHeader>
                                             <CardContent>
                                                 {int.audio_url && <audio controls src={int.audio_url} className="w-full mb-4" />}
