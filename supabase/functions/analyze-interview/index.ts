@@ -160,6 +160,25 @@ serve(async (req) => {
         if (!aiResponse.ok) throw new Error(`Groq Analysis Failed: ${aiResponse.status}`);
 
         const aiData = await aiResponse.json();
+
+        // --- Log Token Usage ---
+        if (aiData.usage) {
+            // Create client if not exists, or reuse
+            const supabaseAdmin = createClient(
+                Deno.env.get('SUPABASE_URL') ?? '',
+                Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+            );
+            await supabaseAdmin.from('ai_usage_logs').insert({
+                provider: 'groq',
+                model: 'llama-3.3-70b-versatile',
+                input_tokens: aiData.usage.prompt_tokens || 0,
+                output_tokens: aiData.usage.completion_tokens || 0,
+                total_tokens: aiData.usage.total_tokens || 0,
+                function_name: 'analyze-interview',
+                status: 'success'
+            });
+        }
+
         const content = JSON.parse(aiData.choices[0].message.content);
 
         // --- AUTOMATION LOGIC ---

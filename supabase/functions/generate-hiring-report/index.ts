@@ -94,6 +94,20 @@ serve(async (req) => {
         }
 
         const json = await response.json();
+
+        // --- Log Token Usage ---
+        if (json.usage) {
+            await supabase.from('ai_usage_logs').insert({
+                provider: 'groq',
+                model: 'llama-3.3-70b-versatile',
+                input_tokens: json.usage.prompt_tokens || 0,
+                output_tokens: json.usage.completion_tokens || 0,
+                total_tokens: json.usage.total_tokens || 0,
+                function_name: 'generate-hiring-report',
+                status: 'success'
+            });
+        }
+
         const report = json.choices[0].message.content;
 
         return new Response(JSON.stringify({ report }), {

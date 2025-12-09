@@ -109,6 +109,20 @@ serve(async (req) => {
         }
 
         const analysisData = await analysisResponse.json();
+
+        // --- Log Token Usage ---
+        if (analysisData.usage) {
+            await supabaseAdmin.from('ai_usage_logs').insert({
+                provider: 'groq',
+                model: 'llama3-8b-8192',
+                input_tokens: analysisData.usage.prompt_tokens || 0,
+                output_tokens: analysisData.usage.completion_tokens || 0,
+                total_tokens: analysisData.usage.total_tokens || 0,
+                function_name: 'assess-interview',
+                status: 'success'
+            });
+        }
+
         const content = analysisData.choices[0].message.content;
 
         let aiResult;

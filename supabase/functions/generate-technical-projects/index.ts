@@ -97,6 +97,24 @@ serve(async (req) => {
         }
 
         const aiData = await response.json();
+
+        // --- Log Token Usage ---
+        if (aiData.usage) {
+            const supabaseAdmin = createClient(
+                Deno.env.get('SUPABASE_URL') ?? '',
+                Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+            );
+            await supabaseAdmin.from('ai_usage_logs').insert({
+                provider: 'groq',
+                model: 'llama-3.3-70b-versatile',
+                input_tokens: aiData.usage.prompt_tokens || 0,
+                output_tokens: aiData.usage.completion_tokens || 0,
+                total_tokens: aiData.usage.total_tokens || 0,
+                function_name: 'generate-technical-projects',
+                status: 'success'
+            });
+        }
+
         const content = JSON.parse(aiData.choices[0].message.content);
 
         // Handle case where LLM might wrap the array in a key like "projects"

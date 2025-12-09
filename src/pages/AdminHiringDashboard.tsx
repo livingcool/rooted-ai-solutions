@@ -22,6 +22,7 @@ import { CandidateDetailDialog } from "@/components/admin/dashboard/CandidateDet
 import { JobApplicationsTable } from "@/components/admin/dashboard/JobApplicationsTable";
 import { JobPostingsList } from "@/components/admin/dashboard/JobPostingsList";
 import { JobPostingDialog } from "@/components/admin/dashboard/JobPostingDialog";
+import { TokenUsageStats } from "@/components/admin/dashboard/TokenUsageStats";
 
 const AdminHiringDashboard = () => {
     const { toast } = useToast();
@@ -338,6 +339,10 @@ const AdminHiringDashboard = () => {
                             <Briefcase className="w-4 h-4 mr-2" />
                             Jobs
                         </TabsTrigger>
+                        <TabsTrigger value="usage" className="data-[state=active]:bg-white/10">
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Token Usage
+                        </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="applications" className="mt-6">
@@ -373,6 +378,10 @@ const AdminHiringDashboard = () => {
                                 />
                             </CardContent>
                         </Card>
+                    </TabsContent>
+
+                    <TabsContent value="usage" className="mt-6">
+                        <TokenUsageStats />
                     </TabsContent>
                 </Tabs>
             </div>

@@ -91,6 +91,24 @@ serve(async (req) => {
         }
 
         const data = await response.json();
+
+        // --- Log Token Usage ---
+        if (data.usage) {
+            const supabaseAdmin = createClient(
+                Deno.env.get('SUPABASE_URL') ?? '',
+                Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+            )
+            await supabaseAdmin.from('ai_usage_logs').insert({
+                provider: 'groq',
+                model: 'llama-3.3-70b-versatile',
+                input_tokens: data.usage.prompt_tokens || 0,
+                output_tokens: data.usage.completion_tokens || 0,
+                total_tokens: data.usage.total_tokens || 0,
+                function_name: 'enhance-job-description',
+                status: 'success'
+            });
+        }
+
         const content = data.choices[0].message.content;
         console.log("Groq Response:", content);
 

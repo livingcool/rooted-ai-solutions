@@ -12,9 +12,20 @@ serve(async (req) => {
     }
 
     try {
-        const { interviewId } = await req.json();
+        const reqText = await req.text();
+        console.log("Raw Request Body:", reqText);
 
-        if (!interviewId) throw new Error("Missing interviewId");
+        let body;
+        try {
+            body = JSON.parse(reqText);
+        } catch (e) {
+            throw new Error("Invalid JSON in request body");
+        }
+
+        const { interviewId } = body;
+
+        if (!interviewId) throw new Error("Missing interviewId in request body");
+        console.log(`Analyzing Interview ID: ${interviewId}`);
 
         // Init Supabase
         const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -29,8 +40,22 @@ serve(async (req) => {
             .eq('id', interviewId)
             .single();
 
-        if (error) throw new Error(error.message);
-        if (!session) throw new Error("No session found");
+        if (error) {
+            console.error("Supabase Error:", error);
+            throw new Error("DB Error: " + error.message);
+        }
+        if (!session) throw new Error("No session found for ID: " + interviewId);
+
+        console.log("Session Found:", session.id);
+        const transcriptLength = session.transcript ? session.transcript.length : 0;
+        console.log("Transcript Length:", transcriptLength);
+
+        if (!session.transcript) {
+            console.warn("No transcript found to analyze.");
+            return new Response(JSON.stringify({ message: "No transcript to analyze." }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
 
         const application = session.applications;
         const jobTitle = application?.jobs?.title || "Junior AI Engineer";
@@ -43,12 +68,6 @@ serve(async (req) => {
 
         const projectContext = session.project_questions?.context || "";
         const fullTranscript = session.transcript || "";
-
-        if (!fullTranscript) {
-            return new Response(JSON.stringify({ message: "No transcript to analyze." }), {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-            });
-        }
 
         // Limit transcript for token safety, but try to keep as much as possible for evaluation
         const transcriptHistory = fullTranscript.length > 10000 ?
@@ -83,7 +102,7 @@ OUTPUT FORMAT (JSON ONLY):
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
+                model: 'llama-3.1-70b-versatile',
                 messages: [
                     { role: "system", content: systemPrompt },
                     { role: "user", content: "Generate Evaluation now." }
@@ -92,14 +111,86 @@ OUTPUT FORMAT (JSON ONLY):
             })
         });
 
-        const chatJson = await chatResp.json();
+        if (!chatResp.ok) {
+            const errText = await chatResp.text();
+            console.error("Groq API Error Status:", chatResp.status, errText);
 
-        if (chatJson.error) {
-            console.error("Chat API Error:", chatJson.error);
-            throw new Error(`AI Chat Generation Failed: ${chatJson.error.message}`);
+            let detailedMsg = errText;
+            try {
+                const errJson = JSON.parse(errText);
+                if (errJson.error && errJson.error.message) {
+                    detailedMsg = errJson.error.message;
+                }
+            } catch (e) { /* ignore parse error */ }
+
+            if (chatResp.status === 429) {
+                throw new Error(`Groq Rate Limit Exceeded: ${detailedMsg}. Please wait a moment and try again.`);
+            }
+            throw new Error(`Groq API Error (${chatResp.status}): ${detailedMsg}`);
         }
 
-        const aiResponse = JSON.parse(chatJson.choices[0].message.content);
+        const rawContent = await chatResp.text();
+        console.log("Raw LLM Response:", rawContent);
+
+        let apiResponse;
+        try {
+            apiResponse = JSON.parse(rawContent);
+        } catch (e) {
+            console.error("Failed to parse API response:", e);
+            throw new Error("Invalid JSON from Groq API.");
+        }
+
+        // --- Log Token Usage ---
+        if (apiResponse.usage) {
+            const { prompt_tokens, completion_tokens, total_tokens } = apiResponse.usage;
+            await supabase.from('ai_usage_logs').insert({
+                provider: 'groq',
+                model: 'llama-3.1-70b-versatile',
+                input_tokens: prompt_tokens || 0,
+                output_tokens: completion_tokens || 0,
+                total_tokens: total_tokens || 0,
+                function_name: 'analyze-final-interview',
+                status: 'success'
+            });
+        }
+
+        if (apiResponse.error) {
+            throw new Error("Groq API Error: " + apiResponse.error.message);
+        }
+
+        let aiResponse;
+        try {
+            const contentString = apiResponse.choices?.[0]?.message?.content;
+            if (!contentString) throw new Error("No content in AI response choices");
+
+            // Clean markdown if present
+            const cleanContent = contentString.replace(/```json/g, '').replace(/```/g, '');
+            aiResponse = JSON.parse(cleanContent);
+
+        } catch (e) {
+            console.error("Failed to parse inner content JSON:", e);
+            // Fallback
+            aiResponse = {
+                evaluation: {
+                    technical_score: 5,
+                    communication_score: 5,
+                    behaviour_score: 5,
+                    culture_fit_score: 5,
+                    recommendation: "Hold",
+                    reasoning_summary: ["AI Output Parsing Failed"]
+                }
+            };
+        }
+
+        if (!aiResponse || !aiResponse.evaluation) {
+            // Fallback attempt if top level
+            if (aiResponse && aiResponse.technical_score) {
+                aiResponse = { evaluation: aiResponse };
+            } else {
+                console.error("Invalid Structure:", aiResponse);
+                throw new Error("AI response missing 'evaluation' key");
+            }
+        }
 
         // Update DB
         const updatePayload: any = {

@@ -97,6 +97,19 @@ serve(async (req) => {
             });
             const visionJson = await visionResp.json();
 
+            // --- Log Token Usage ---
+            if (visionJson.usage) {
+                await supabase.from('ai_usage_logs').insert({
+                    provider: 'groq',
+                    model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+                    input_tokens: visionJson.usage.prompt_tokens || 0,
+                    output_tokens: visionJson.usage.completion_tokens || 0,
+                    total_tokens: visionJson.usage.total_tokens || 0,
+                    function_name: 'conduct-ai-interview',
+                    status: 'success'
+                });
+            }
+
             if (visionJson.error) {
                 console.error("Vision API Error:", visionJson.error);
                 visionContext = `Error: ${visionJson.error.message}`;
@@ -168,6 +181,19 @@ Candidate Input: "${userText}" ${forceEnd ? "(User clicked 'Submit / End Intervi
         });
 
         const chatJson = await chatResp.json();
+
+        // --- Log Token Usage ---
+        if (chatJson.usage) {
+            await supabase.from('ai_usage_logs').insert({
+                provider: 'groq',
+                model: 'llama-3.3-70b-versatile',
+                input_tokens: chatJson.usage.prompt_tokens || 0,
+                output_tokens: chatJson.usage.completion_tokens || 0,
+                total_tokens: chatJson.usage.total_tokens || 0,
+                function_name: 'conduct-ai-interview-chat',
+                status: 'success'
+            });
+        }
 
         if (chatJson.error) {
             console.error("Chat API Error:", chatJson.error);

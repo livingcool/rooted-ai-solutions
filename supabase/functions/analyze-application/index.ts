@@ -9,10 +9,9 @@ const corsHeaders = {
 
 async function extractTextFromPdf(data: Uint8Array): Promise<string> {
     try {
-        // Load the PDF document
         const loadingTask = pdfjsLib.getDocument({
             data: data,
-            useSystemFonts: true, // Avoid font loading issues
+            useSystemFonts: true,
         });
         const pdfDocument = await loadingTask.promise;
         let fullText = "";
@@ -52,193 +51,137 @@ serve(async (req) => {
             .single()
 
         if (appError || !app) {
-            throw new Error(`Application not found: ${appError?.message}`)
+            console.error("Fetch App Error:", appError);
+            throw new Error("Application not found");
         }
+        console.log("App Found:", app.id);
 
-        if (!app.resume_url) {
-            throw new Error('No resume URL found')
-        }
+        // 2. Fetch Resume URL
+        const resumePath = app.resume_url;
+        if (!resumePath) throw new Error("No resume uploaded");
 
-        // 2. Download Resume using Signed URL workaround
-        console.log(`Downloading resume from: ${app.resume_url}`);
+        console.log("Downloading Resume:", resumePath);
 
-        // Remove bucket name from path if it's included
-        let resumePath = app.resume_url.startsWith('resumes/')
-            ? app.resume_url.substring('resumes/'.length)
-            : app.resume_url;
-
-        if (resumePath.startsWith('/')) resumePath = resumePath.substring(1);
-
-        console.log(`Using path for signed URL: '${resumePath}'`);
-
-        const { data: signedUrlData, error: signedUrlError } = await supabaseAdmin
-            .storage
-            .from('resumes')
-            .createSignedUrl(resumePath, 60);
-
-        if (signedUrlError || !signedUrlData) {
-            console.error("Error creating signed URL:", signedUrlError);
-            throw new Error('Failed to create signed URL for resume');
-        }
-
-        const resumeResponse = await fetch(signedUrlData.signedUrl);
-        if (!resumeResponse.ok) {
-            throw new Error(`Failed to fetch resume from signed URL: ${resumeResponse.status} ${resumeResponse.statusText}`);
-        }
-
-        const arrayBuffer = await resumeResponse.arrayBuffer();
-        const buffer = new Uint8Array(arrayBuffer);
-
-        // 3. Extract Text from Resume
-        let resumeText = "";
-        const fileExt = app.resume_url.split('.').pop()?.toLowerCase();
-
-        if (fileExt === 'pdf') {
-            try {
-                resumeText = await extractTextFromPdf(buffer);
-                console.log(`Extracted ${resumeText.length} characters from PDF`);
-            } catch (e) {
-                console.error("PDF Parse Error:", e);
-                throw new Error("Failed to parse PDF content");
-            }
+        // Handle signed url if needed
+        let downloadPath = resumePath;
+        if (resumePath.startsWith('http')) {
+            // If full URL, we might need to fetch it differently or extract path
+            // For now assume path or handle download
+            console.log("Resume is full URL, trying fetch...");
+            const resp = await fetch(resumePath);
+            if (!resp.ok) throw new Error("Failed to fetch resume URL");
+            var arrayBuffer = await resp.arrayBuffer();
         } else {
-            resumeText = new TextDecoder().decode(buffer);
+            // Storage download
+            const { data: resumeData, error: resumeError } = await supabaseAdmin
+                .storage
+                .from('resumes')
+                .download(resumePath);
+
+            if (resumeError || !resumeData) {
+                console.error("Resume Download Error:", resumeError);
+                throw new Error("Failed to download resume");
+            }
+            var arrayBuffer = await resumeData.arrayBuffer();
         }
 
-        // 4. Analyze with Groq
-        const apiKey = Deno.env.get('GROQ_API_KEY');
-        if (!apiKey) {
-            throw new Error("GROQ_API_KEY is not set");
-        }
+        // 3. Extract Text (PDF)
+        console.log("Extracting Text...");
+        const resumeText = await extractTextFromPdf(new Uint8Array(arrayBuffer));
+        console.log("Resume Text Extracted, Length:", resumeText.length);
 
-        const prompt = `
-        You are an expert HR recruiter. Analyze this job application for the role of "${app.jobs?.title || 'Candidate'}".
+        // 4. Update Resume Text in DB
+        await supabaseAdmin
+            .from('applications')
+            .update({ resume_text: resumeText })
+            .eq('id', applicationId);
+
+        // 5. AI Analysis
+        console.log("Sending to AI...");
+        const geminiKey = Deno.env.get('GEMINI_API_KEY');
+        if (!geminiKey) {
+            console.error("GEMINI_API_KEY missing");
+            throw new Error("GEMINI_API_KEY is not set");
+        }
+        const job = app.jobs;
+
+        const promptText = `
+        Role: ${job.title}
+        Desc: ${job.description}
+        Reqs: ${JSON.stringify(job.requirements)}
         
-        Candidate Name: ${app.full_name}
-        Cover Letter: ${app.cover_letter || "N/A"}
         Resume Content:
         ${resumeText.substring(0, 15000)}
         
-        Provide a JSON output with:
-        - score: number (0-100) based on skills and experience match.
-        - feedback: string (max 100 words) detailed summary of strengths, weaknesses, and key qualifications. Be specific about what matches the role and what is missing.
+        Analyze match and return JSON.
+        Output Format: { "score": 0-100, "feedback": "Detailed feedback string" }
         `;
 
-        const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
+
+        const chatResp = await fetch(geminiUrl, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
-                messages: [
-                    { role: 'system', content: 'You are a helpful assistant that outputs JSON.' },
-                    { role: 'user', content: prompt }
-                ],
-                response_format: { type: 'json_object' }
+                contents: [{
+                    parts: [{ text: "You are an expert technical recruiter. " + promptText }]
+                }],
+                generationConfig: {
+                    response_mime_type: "application/json"
+                }
             })
         });
 
-        if (!aiResponse.ok) {
-            const errText = await aiResponse.text();
-            throw new Error(`Groq API Error: ${aiResponse.status} - ${errText}`);
+        if (!chatResp.ok) {
+            const errTxt = await chatResp.text();
+            console.error("Gemini API Error:", errTxt);
+            throw new Error("AI Service Failed (Gemini): " + errTxt);
         }
 
-        const aiData = await aiResponse.json();
-        const content = aiData.choices[0].message.content;
-
-        let analysis;
+        const chatJson = await chatResp.json();
+        let content;
         try {
-            analysis = JSON.parse(content);
+            const rawText = chatJson.candidates[0].content.parts[0].text;
+            content = JSON.parse(rawText);
         } catch (e) {
-            console.error("JSON Parse Error:", e);
-            analysis = { score: 0, feedback: "Failed to parse AI response." };
+            console.error("JSON Parsing failed for AI response", chatJson);
+            throw new Error("Invalid AI Response from Gemini");
         }
+        console.log("AI Success, Score:", content.score);
 
-        // --- AUTOMATION LOGIC ---
-        // Threshold: 75/100
-        const MIN_SCORE_RESUME = 75;
-        let newStatus = 'AI Assessed'; // Default fallback
-        let emailSubject = "";
-        let emailBody = "";
-        let shouldSendEmail = false;
-
-        if (analysis.score >= MIN_SCORE_RESUME) {
-            newStatus = 'Communication Round';
-            emailSubject = `Update on your application for ${app.jobs?.title || 'Open Position'}`;
-            emailBody = `
-Dear ${app.full_name},
-
-Thank you for your patience. After reviewing your resume, we are impressed with your profile and score of ${analysis.score}/100.
-
-We would like to invite you to the **Communication Assessment** round. 
-Please log in to your candidate portal to complete this step.
-
-Best regards,
-RootedAI Recruiting Team
-            `;
-            shouldSendEmail = true;
-        } else {
-            newStatus = 'Rejected';
-            emailSubject = `Application Status: ${app.jobs?.title || 'Open Position'}`;
-            emailBody = `
-Dear ${app.full_name},
-
-Thank you for your interest in RootedAI. After careful review, we have decided not to proceed with your application at this time (Score: ${analysis.score}/100).
-
-We appreciate your effort and wish you the best in your job search.
-
-Best regards,
-RootedAI Recruiting Team
-            `;
-            shouldSendEmail = true;
-        }
-
-        console.log(`Automation Decision: Score=${analysis.score}, NewStatus=${newStatus}`);
-
-        // 5. Update Application Status & AI Data
-        const { error: updateError } = await supabaseAdmin
-            .from('applications')
-            .update({
-                ai_score: analysis.score,
-                ai_feedback: analysis.feedback,
-                resume_text: resumeText, // Save Extracted Text
-                status: newStatus
-            })
-            .eq('id', applicationId);
-
-        if (updateError) throw updateError;
-
-        // 6. Send Email Notification
-        if (shouldSendEmail && app.email) {
-            console.log(`Sending email to ${app.email}...`);
-            await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-rejection-email`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${supabaseKey}` // Use same key for internal call
-                },
-                body: JSON.stringify({
-                    email: app.email,
-                    subject: emailSubject,
-                    body: emailBody
-                })
+        // --- Log Token Usage ---
+        const usage = chatJson.usageMetadata;
+        if (usage) {
+            await supabaseAdmin.from('ai_usage_logs').insert({
+                provider: 'google',
+                model: 'gemini-2.5-flash',
+                input_tokens: usage.promptTokenCount || 0,
+                output_tokens: usage.candidatesTokenCount || 0,
+                total_tokens: usage.totalTokenCount || 0,
+                function_name: 'analyze-application',
+                status: 'success'
             });
         }
 
-        if (updateError) throw updateError;
+        // 6. Save Results
+        await supabaseAdmin
+            .from('applications')
+            .update({
+                ai_score: content.score,
+                ai_feedback: content.feedback,
+                status: content.score > 70 ? 'Screening' : 'Rejected'
+            })
+            .eq('id', applicationId);
 
-        return new Response(
-            JSON.stringify({ success: true }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return new Response(JSON.stringify(content), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
     } catch (error: any) {
-        console.error("Error in analyze-application:", error);
-        return new Response(
-            JSON.stringify({ error: error.message }),
-            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-        )
+        console.error("Function Handler Error:", error);
+        return new Response(JSON.stringify({ error: error.message }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: 400
+        });
     }
-})
+});
