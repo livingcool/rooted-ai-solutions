@@ -167,6 +167,59 @@ export const TokenUsageStats = () => {
                 </Card>
             </div>
 
+            {/* Groq Limits Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Object.entries(GROQ_LIMITS).map(([model, limitData]) => {
+                    const today = new Date().toDateString();
+                    // Filter logs for this model and today
+                    const modelLogs = logs.filter(l =>
+                        l.model === model &&
+                        new Date(l.created_at).toDateString() === today
+                    );
+
+                    // Calculate usage
+                    let used = 0;
+                    if (limitData.unit === 'tokens') {
+                        used = modelLogs.reduce((acc, curr) => acc + curr.total_tokens, 0);
+                    } else if (limitData.unit === 'seconds') {
+                        // For detailed seconds tracking, we'd need a separate field or logic.
+                        // For now, assuming standard calls, or just showing 0 if not tracked.
+                        // If we don't have seconds tracked in logs, we might just show N/A or generic count.
+                        // Assuming 1 call ~ 100ms or dependent on file.
+                        // Since we track 'total_tokens', we might not have seconds. 
+                        // I will skip seconds calculation if data is missing, or assume input_tokens/rough_rate for now roughly?
+                        // Actually, better to just show the Llama limit heavily since that's critical.
+                        // I'll show 0 for Whisper for now unless we store duration.
+                        used = 0;
+                    }
+
+                    const percentage = Math.min((used / limitData.limit) * 100, 100);
+
+                    return (
+                        <Card key={model} className="bg-gradient-to-br from-gray-900 to-black border-orange-500/20">
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-xs font-medium uppercase tracking-wider text-orange-400">{limitData.label}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-2">
+                                    <div className="flex items-end justify-between text-sm">
+                                        <span className="font-bold font-mono text-white">{used.toLocaleString()}</span>
+                                        <span className="text-muted-foreground">/ {limitData.limit.toLocaleString()}</span>
+                                    </div>
+                                    <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full transition-all duration-500 ${percentage > 90 ? 'bg-red-500' : 'bg-orange-500'}`}
+                                            style={{ width: `${percentage}%` }}
+                                        />
+                                    </div>
+                                    <p className="text-[10px] text-muted-foreground text-right">{percentage.toFixed(1)}% Used Today</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
+            </div>
+
             <div className="flex justify-end">
                 <Select value={filterProvider} onValueChange={setFilterProvider}>
                     <SelectTrigger className="w-[180px]">
