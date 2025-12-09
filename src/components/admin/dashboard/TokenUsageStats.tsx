@@ -54,7 +54,48 @@ export const TokenUsageStats = () => {
         setLoading(false);
     };
 
-    // ... (rest of code)
+    const calculateCost = (data: UsageLog[]) => {
+        let sum = 0;
+        data.forEach(log => {
+            const rates = PRICING[log.provider as keyof typeof PRICING] || { input: 0, output: 0 };
+            sum += (log.input_tokens * rates.input) + (log.output_tokens * rates.output);
+        });
+        setTotalCost(sum);
+    };
+
+    useEffect(() => {
+        fetchLogs();
+
+        const channel = supabase
+            .channel('schema-db-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'ai_usage_logs'
+                },
+                (payload) => {
+                    const newLog = payload.new as UsageLog;
+                    setLogs((prevLogs) => {
+                        const updated = [newLog, ...prevLogs];
+                        calculateCost(updated);
+                        return updated;
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, []);
+
+    const filteredLogs = filterProvider === "all"
+        ? logs
+        : logs.filter(l => l.provider === filterProvider);
+
+    const totalTokens = filteredLogs.reduce((acc, curr) => acc + curr.total_tokens, 0);
 
     return (
         <div className="space-y-6">
