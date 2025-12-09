@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { JobApplication } from "@/types/hiring";
-import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send, Sparkles } from "lucide-react";
+import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send, Sparkles, CheckCircle, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getStatusColor } from "@/utils/adminUtils";
 import { InterviewInviteDialog } from "./InterviewInviteDialog";
@@ -250,6 +250,57 @@ export const CandidateDetailDialog = ({
             default: return 'Pending';
         }
     }
+
+
+    // Communication Round - Admin Approval Handler
+    const handleApproveTechnicalRound = async () => {
+        if (!selectedApp) return;
+        if (!confirm("Approve candidate for Technical Round?")) return;
+        setLoading(true);
+        try {
+            const candidateName = selectedApp.full_name || "Candidate";
+            const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
+            const frontendUrl = import.meta.env.VITE_FRONTEND_URL || window.location.origin;
+
+            await supabase.from('applications').update({ status: 'Technical Round' }).eq('id', selectedApp.id);
+
+            const emailSubject = `🎉 Technical Round Invitation - ${jobTitle}`;
+            const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.button{display:inline-block;padding:15px 30px;background:#667eea;color:white;text-decoration:none;border-radius:5px;margin:20px 0;font-weight:bold}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎉 Congratulations!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Great news! After carefully reviewing your communication assessment, we're impressed with your responses and would like to invite you to the <strong>Technical Round</strong> for the <strong>${jobTitle}</strong> position.</p><p>Your communication skills and personal growth mindset stood out, and we're excited to see your technical capabilities!</p><p style="text-align:center;"><a href="${frontendUrl}/candidate-status" class="button">Access Your Dashboard</a></p><p><strong>Next Steps:</strong></p><ul><li>Click the button above to access your candidate dashboard</li><li>Review the technical problem statement</li><li>Submit your solution via GitHub</li></ul><p>Best of luck with your technical assessment!</p><p>Warm regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
+
+            await supabase.functions.invoke('send-rejection-email', { body: { email: selectedApp.email, subject: emailSubject, body: emailBody } });
+
+            toast({ title: "Success", description: "Candidate approved and email sent!" });
+            fetchData();
+        } catch (err: any) {
+            toast({ title: "Error", description: err.message, variant: "destructive" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRejectAfterCommunication = async () => {
+        if (!selectedApp) return;
+        if (!confirm("Reject candidate after communication round?")) return;
+        setLoading(true);
+        try {
+            const candidateName = selectedApp.full_name || "Candidate";
+            const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
+
+            await supabase.from('applications').update({ status: 'Rejected' }).eq('id', selectedApp.id);
+
+            const emailSubject = `Update on Your Application - ${jobTitle}`;
+            const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:#4a5568;color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>Application Update</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Thank you for taking the time to complete the communication assessment for the <strong>${jobTitle}</strong> position at RootedAI.</p><p>After careful consideration of all candidates, we have decided to move forward with other applicants whose qualifications more closely match our current needs.</p><p>We genuinely appreciate your interest in RootedAI and the effort you put into your application. We encourage you to apply for future opportunities that match your skills and experience.</p><p>We wish you all the best in your job search and future endeavors.</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
+
+            await supabase.functions.invoke('send-rejection-email', { body: { email: selectedApp.email, subject: emailSubject, body: emailBody } });
+
+            toast({ title: "Success", description: "Candidate rejected and email sent!" });
+            fetchData();
+        } catch (err: any) {
+            toast({ title: "Error", description: err.message, variant: "destructive" });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const [resumeUrl, setResumeUrl] = useState("");
 
@@ -538,6 +589,48 @@ export const CandidateDetailDialog = ({
                                 </TabsContent>
 
                                 <TabsContent value="communication" className="mt-4 space-y-4">
+                                    {/* Average Score Display */}
+                                    {(selectedApp as any).communication_average_score && (
+                                        <Card className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-purple-500/20">
+                                            <CardContent className="p-6">
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <div className="text-sm text-white/60 mb-1">Average Communication Score</div>
+                                                        <div className="text-3xl font-bold text-white">
+                                                            {(selectedApp as any).communication_average_score}/100
+                                                        </div>
+                                                        <div className="text-xs text-white/40 mt-1">
+                                                            Calculated across {((selectedApp as any).interviews || []).length} interview responses
+                                                        </div>
+                                                    </div>
+                                                    {selectedApp.status === 'Communication Round' && (
+                                                        <div className="flex gap-2">
+                                                            <Button
+                                                                size="sm"
+                                                                onClick={handleApproveTechnicalRound}
+                                                                disabled={loading}
+                                                                className="bg-green-600 hover:bg-green-700"
+                                                            >
+                                                                {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+                                                                Approve for Technical
+                                                            </Button>
+                                                            <Button
+                                                                size="sm"
+                                                                onClick={handleRejectAfterCommunication}
+                                                                disabled={loading}
+                                                                variant="destructive"
+                                                            >
+                                                                {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <XCircle className="w-4 h-4 mr-2" />}
+                                                                Reject
+                                                            </Button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    )}
+
+                                    {/* Interview Responses */}
                                     {((selectedApp as any).interviews || []).length === 0 && (
                                         <div className="text-center py-12 text-white/40 bg-white/5 rounded-lg border border-white/10">
                                             <Mic className="w-8 h-8 mx-auto mb-2 opacity-50" />
@@ -547,31 +640,43 @@ export const CandidateDetailDialog = ({
                                     {((selectedApp as any).interviews || []).map((int: any, i: number) => (
                                         <Card key={i} className="bg-white/5 border-white/10">
                                             <CardHeader className="flex flex-row items-center justify-between">
-                                                <CardTitle>Attempt {i + 1}</CardTitle>
-                                                <Button
-                                                    size="xs"
-                                                    variant="outline"
-                                                    className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
-                                                    disabled={loading}
-                                                    onClick={async () => {
-                                                        if (!confirm("Re-run AI Analysis for this Interview?")) return;
-                                                        setLoading(true);
-                                                        try {
-                                                            const { error } = await supabase.functions.invoke('analyze-interview', {
-                                                                body: { interviewId: int.id }
-                                                            });
-                                                            if (error) throw error;
-                                                            toast({ title: "Analysis Queued", description: "Refreshed result." });
-                                                            fetchData();
-                                                        } catch (err: any) {
-                                                            toast({ title: "Error", description: err.message, variant: "destructive" });
-                                                        } finally {
-                                                            setLoading(false);
-                                                        }
-                                                    }}
-                                                >
-                                                    {loading ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />} Retry AI
-                                                </Button>
+                                                <div>
+                                                    <CardTitle>Question {i + 1}</CardTitle>
+                                                    <div className="text-sm text-white/60 mt-1">{int.question}</div>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    {int.communication_score && (
+                                                        <Badge variant="outline" className={`${int.communication_score >= 80 ? 'border-green-500 text-green-400' :
+                                                            int.communication_score >= 60 ? 'border-yellow-500 text-yellow-400' :
+                                                                'border-red-500 text-red-400'
+                                                            }`}>
+                                                            {int.communication_score}/100
+                                                        </Badge>
+                                                    )}
+                                                    <Button
+                                                        size="xs"
+                                                        variant="outline"
+                                                        className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
+                                                        disabled={loading}
+                                                        onClick={async () => {
+                                                            if (!confirm("Re-run AI Analysis for this Interview?")) return;
+                                                            setLoading(true);
+                                                            try {
+                                                                const { error } = await supabase.functions.invoke('analyze-interview', {
+                                                                    body: { interviewId: int.id }
+                                                                });
+                                                                if (error) throw error;
+                                                                toast({ title: "Analysis Queued", description: "Refreshed result." });
+                                                                fetchData();
+                                                            } catch (err: any) {
+                                                                toast({ title: "Error", description: err.message, variant: "destructive" });
+                                                            } finally {
+                                                                setLoading(false);
+                                                            }
+                                                        }}
+                                                    >
+                                                        {loading ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />} Retry AI
+                                                    </Button>
                                             </CardHeader>
                                             <CardContent>
                                                 {int.audio_url && <audio controls src={int.audio_url} className="w-full mb-4" />}

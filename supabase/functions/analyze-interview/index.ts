@@ -84,7 +84,12 @@ serve(async (req) => {
         const body = await req.json();
         const { interviewId, audioUrl, question } = body ?? {};
 
+        // Diagnostic logging
+        console.log("analyze-interview received body:", JSON.stringify(body));
+        console.log("Extracted fields:", { interviewId, audioUrl, question });
+
         if (!interviewId || !audioUrl || !question) {
+            console.error("Missing fields error:", { interviewId: !!interviewId, audioUrl: !!audioUrl, question: !!question });
             return new Response(JSON.stringify({ error: "Missing required fields: interviewId, audioUrl, question" }), { headers: { ...CORS_HEADERS, "Content-Type": "application/json" }, status: 400 });
         }
 
@@ -184,7 +189,7 @@ serve(async (req) => {
                         { role: "system", content: "You are a concise assistant that MUST output JSON only." },
                         { role: "user", content: prompt },
                     ],
-                    temperature: 0.05,
+                    temperature: 0.1,
                     max_tokens: 500,
                     response_format: { type: "json_object" },
                 }),
@@ -232,82 +237,49 @@ serve(async (req) => {
         const feedback = String(content.feedback ?? "").slice(0, 1000);
 
         // Decide status
-        const MIN_SCORE_COMM = 65;
-        let newStatus = "Analyzed";
-        let shouldQueueEmail = false;
-        let emailSubject = "";
-        let emailBody = "";
+        // Update interview record with AI analysis (NO auto-status change to Technical/Rejected)
+        // Admin will review ALL interviews and decide manually
 
-        if (!Number.isFinite(overallScore) || overallScore < 0) {
-            newStatus = "Requires Review";
-        } else if (overallScore >= MIN_SCORE_COMM) {
-            newStatus = "Technical Round";
-            shouldQueueEmail = true;
-            const t = buildEmailTemplates(candidateName, jobTitle, overallScore);
-            emailSubject = t.successSubject;
-            emailBody = t.successBody;
-        } else {
-            newStatus = "Rejected";
-            shouldQueueEmail = true;
-            const t = buildEmailTemplates(candidateName, jobTitle, overallScore);
-            emailSubject = t.rejectSubject;
-            emailBody = t.rejectBody;
-        }
-
-        // Update interview record
         const { error: updateError } = await supabaseAdmin
             .from("interviews")
             .update({
-                transcript: transcription,
+                transcription: transcription,
                 ai_score: Number.isFinite(overallScore) && overallScore >= 0 ? overallScore : null,
                 ai_feedback: feedback || null,
                 ai_strengths: strengths.length ? strengths : null,
                 ai_weaknesses: weaknesses.length ? weaknesses : null,
                 communication_score: Number.isFinite(commScore) && commScore >= 0 ? commScore : null,
-                status: newStatus,
+                status: "Analyzed",
             })
             .eq("id", interviewId);
 
         if (updateError) throw updateError;
 
-        // Update applications table status if present
-        if (interviewData.application_id) {
-            try {
-                await supabaseAdmin.from("applications").update({ status: newStatus }).eq("id", interviewData.application_id);
-            } catch (e) {
-                console.warn("Failed to update application:", e);
-            }
-        }
+        // Calculate average communication score across ALL interviews for this application
+        const { data: allInterviews, error: fetchAllError } = await supabaseAdmin
+            .from("interviews")
+            .select("communication_score, status")
+            .eq("application_id", interviewData.application_id);
 
-        // Queue email (outbox) and attempt fire-and-forget immediate send
-        if (shouldQueueEmail && candidateEmail) {
-            try {
-                await supabaseAdmin.from("outbox").insert({
-                    to_email: candidateEmail,
-                    subject: emailSubject,
-                    body: emailBody,
-                    metadata: { interview_id: interviewId, score: overallScore },
-                    status: "queued",
-                    created_at: new Date().toISOString(),
-                });
-            } catch (e) {
-                console.warn("Failed to enqueue email:", e);
-            }
+        if (!fetchAllError && allInterviews && allInterviews.length > 0) {
+            const analyzedInterviews = allInterviews.filter(i => i.status === "Analyzed" && Number.isFinite(i.communication_score));
 
-            (async () => {
+            if (analyzedInterviews.length > 0) {
+                const avgScore = analyzedInterviews.reduce((sum, i) => sum + (i.communication_score || 0), 0) / analyzedInterviews.length;
+
+                // Store average in applications table (for admin review)
                 try {
-                    await fetch(`${supabaseUrl}/functions/v1/send-rejection-email`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${supabaseKey}`,
-                        },
-                        body: JSON.stringify({ email: candidateEmail, subject: emailSubject, body: emailBody }),
-                    });
+                    await supabaseAdmin
+                        .from("applications")
+                        .update({
+                            communication_average_score: Math.round(avgScore)
+                            // Status stays "Communication Round" - admin will change it
+                        })
+                        .eq("id", interviewData.application_id);
                 } catch (e) {
-                    console.warn("Immediate send failed; relying on outbox worker:", e);
+                    console.warn("Failed to update average score:", e);
                 }
-            })();
+            }
         }
 
         return new Response(JSON.stringify({
@@ -317,7 +289,8 @@ serve(async (req) => {
             communication_score: Number.isFinite(commScore) && commScore >= 0 ? commScore : null,
             strengths,
             weaknesses,
-            feedback
+            feedback,
+            note: "Interview analyzed. Admin will review all responses and decide."
         }), { headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
 
     } catch (error) {
