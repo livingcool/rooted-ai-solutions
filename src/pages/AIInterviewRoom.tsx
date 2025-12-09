@@ -23,6 +23,22 @@ const AIInterviewRoom = () => {
     // Timer
     const [timeLeft, setTimeLeft] = useState(MAX_ANSWER_TIME);
 
+    // Proctoring
+    const [tabViolations, setTabViolations] = useState(0);
+
+    // Tab Switch Detection
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                setTabViolations(prev => prev + 1);
+                alert("⚠️ Warning: Please stay on this tab during the interview. Switching tabs is monitored.");
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, []);
+
     useEffect(() => {
         if (!token) {
             setStatus("Invalid Interview Token.");
@@ -83,6 +99,7 @@ const AIInterviewRoom = () => {
         const formData = new FormData();
         formData.append('interview_token', token || '');
         formData.append('audio', audioBlob, 'recording.webm');
+        formData.append('tab_violations', tabViolations.toString()); // Send violations
         if (imageSrc) {
             formData.append('frame', imageSrc); // Send base64 frame
         }
@@ -190,6 +207,7 @@ const AIInterviewRoom = () => {
                         <div className="text-center z-10">
                             <h2 className="text-2xl font-bold text-white mb-1">AI Founder Agent</h2>
                             <p className="text-zinc-400 text-sm">{status}</p>
+                            {tabViolations > 0 && <p className="text-red-500 text-xs mt-1">⚠️ Tab Switch Violations: {tabViolations}</p>}
                         </div>
 
                         <div className="flex items-center gap-6 z-10 w-full justify-center mt-2">
