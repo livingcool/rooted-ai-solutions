@@ -78,6 +78,7 @@ export const CandidateDetailDialog = ({
             toast({ title: "Success", description: "Invitation sent successfully!" });
             setIsInviteOpen(false);
             setDeadline("");
+            if (selectedApp) setSelectedApp({ ...selectedApp, status: 'Communication Round' });
             fetchData();
         } catch (error: any) {
             console.error("Error sending invitation:", error);
@@ -108,6 +109,7 @@ export const CandidateDetailDialog = ({
             setIsTechnicalInviteOpen(false);
             setTechnicalDeadline("");
             setProjectDescription("");
+            if (selectedApp) setSelectedApp({ ...selectedApp, status: 'Technical Round' });
             fetchData();
         } catch (error: any) {
             console.error("Error sending technical invitation:", error);
@@ -127,6 +129,7 @@ export const CandidateDetailDialog = ({
             if (data?.error) throw new Error(data.error);
 
             toast({ title: "Success", description: "Candidate invited to Final Interview!" });
+            if (selectedApp) setSelectedApp({ ...selectedApp, status: 'Final Interview' });
             fetchData();
         } catch (error: any) {
             console.error("Error inviting candidate:", error);
@@ -232,11 +235,27 @@ export const CandidateDetailDialog = ({
         }
     }
 
-    const getResumeUrl = (path: string) => {
-        if (!path) return "";
-        if (path.startsWith('http')) return path;
-        return supabase.storage.from('resumes').getPublicUrl(path).data.publicUrl;
-    };
+    const [resumeUrl, setResumeUrl] = useState("");
+
+    useEffect(() => {
+        const fetchResumeUrl = async () => {
+            if (selectedApp?.resume_url) {
+                if (selectedApp.resume_url.startsWith('http')) {
+                    setResumeUrl(selectedApp.resume_url);
+                } else {
+                    const { data, error } = await supabase.storage.from('resumes').createSignedUrl(selectedApp.resume_url, 3600); // 1 hour expiry
+                    if (data?.signedUrl) {
+                        setResumeUrl(data.signedUrl);
+                    } else {
+                        console.error("Error creating signed URL:", error);
+                    }
+                }
+            } else {
+                setResumeUrl("");
+            }
+        };
+        fetchResumeUrl();
+    }, [selectedApp]);
 
 
     if (!selectedApp) return null;
@@ -395,8 +414,8 @@ export const CandidateDetailDialog = ({
 
                                 <TabsContent value="resume" className="mt-4">
                                     <div className="bg-white/5 p-4 rounded-lg border border-white/10 h-[600px]">
-                                        {selectedApp.resume_url ? (
-                                            <iframe src={getResumeUrl(selectedApp.resume_url)} className="w-full h-full rounded" />
+                                        {resumeUrl ? (
+                                            <iframe src={resumeUrl} className="w-full h-full rounded" />
                                         ) : (
                                             <div className="flex items-center justify-center h-full text-white/40 flex-col gap-2">
                                                 <FileText className="w-8 h-8" />

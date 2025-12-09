@@ -25,8 +25,8 @@ serve(async (req) => {
             .from('applications')
             .select(`
                 full_name, status,
-                resume_score, resume_feedback,
-                interview_score, interview_feedback,
+                ai_score, ai_feedback,
+                interviews(ai_score, ai_feedback),
                 technical_assessments(ai_score, ai_feedback),
                 final_interviews(ai_confidence_score, ai_role_fit_score, ai_feedback)
             `)
@@ -44,8 +44,8 @@ serve(async (req) => {
         const candidatesData = candidates.map(c => ({
             Name: c.full_name,
             Status: c.status,
-            Resume: `${c.resume_score}/100`,
-            Communication: `${c.interview_score}/100`,
+            Resume: c.ai_score ? `${c.ai_score}/100` : "N/A",
+            Communication: c.interviews?.[0]?.ai_score ? `${c.interviews[0].ai_score}/100` : "N/A",
             Technical: c.technical_assessments?.[0]?.ai_score ? `${c.technical_assessments[0].ai_score}/100` : "N/A",
             Final_Confidence: c.final_interviews?.[0]?.ai_confidence_score ? `${c.final_interviews[0].ai_confidence_score}/100` : "N/A",
             Tech_Feedback: c.technical_assessments?.[0]?.ai_feedback || "",
