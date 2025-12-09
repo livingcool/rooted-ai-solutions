@@ -17,6 +17,7 @@ serve(async (req) => {
         const audioFile = formData.get('audio');
         const videoFrame = formData.get('frame'); // Base64 or file
         const tabViolations = formData.get('tab_violations'); // Compliance check
+        const forceEnd = formData.get('force_end') === 'true';
 
         if (!interviewToken) throw new Error("Missing interview token");
 
@@ -137,6 +138,8 @@ F. Culture: Why RootedAI?
 G. Closing: Ask for questions, say Goodbye.
 H. EVALUATION (Only when done): Output detailed scores.
 
+${forceEnd ? "URGENT: user has requested to END the interview immediately. You MUST output Stage H (EVALUATION) NOW based on the conversation so far. Do not ask more questions." : ""}
+
 OUTPUT FORMAT (JSON):
 Standard: {"reply": "...", "confidence_score": 0.5, "is_interview_complete": false}
 Final (Stage H - Evaluation):
@@ -145,7 +148,7 @@ Final (Stage H - Evaluation):
 History:
 ${transcriptHistory}
 
-Candidate Input: "${userText}"
+Candidate Input: "${userText}" ${forceEnd ? "(User clicked 'Submit / End Interview')" : ""}
 `;
 
         const chatResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {

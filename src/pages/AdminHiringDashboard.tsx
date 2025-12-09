@@ -254,18 +254,22 @@ const AdminHiringDashboard = () => {
     // --- Application Handlers ---
 
     const handleDeleteApplication = async (appId: string) => {
-        if (!confirm("Are you sure you want to delete this application? This action cannot be undone.")) return;
+        if (!confirm("Are you sure you want to delete this application? This action cannot be undone and will remove all associated data (Resume, Videos, Interviews).")) return;
         setLoading(true);
         try {
-            await supabase.from('interviews' as any).delete().eq('application_id', appId);
-            const { error } = await supabase.from('applications' as any).delete().eq('id', appId);
+            // Call Edge Function for complete cleanup
+            const { error } = await supabase.functions.invoke('delete-application', {
+                body: { applicationId: appId }
+            });
+
             if (error) throw error;
-            toast({ title: "Success", description: "Application deleted successfully!" });
+
+            toast({ title: "Success", description: "Application and all data deleted successfully!" });
             setSelectedApp(null);
             fetchData();
         } catch (error: any) {
             console.error("Error deleting application:", error);
-            toast({ title: "Error", description: "Failed to delete application.", variant: "destructive" });
+            toast({ title: "Error", description: error.message || "Failed to delete application.", variant: "destructive" });
         } finally {
             setLoading(false);
         }

@@ -180,9 +180,44 @@ const AIInterviewRoom = () => {
 
     const progressPercentage = Math.min((turnCount / TOTAL_STAGES_ESTIMATE) * 100, 100);
 
-    const finishEarly = () => {
-        if (confirm("Are you sure you want to exit? Your progress so far is saved.")) {
-            window.location.href = '/';
+    const finishEarly = async () => {
+        if (confirm("Are you sure you want to end the interview now? We will generate your final evaluation based on the current progress.")) {
+            setStatus("Generating final evaluation...");
+            setAiThinking(true);
+
+            // Create empty blob or send dummy data if no recording actively happened?
+            // handleSubmission expects a blob.
+            // We can send an empty blob, but we need to append 'force_end' to formData manually.
+            // Let's modify handleSubmission to take optional forceEnd flag or duplicate logic here.
+            // Better: update handleSubmission to accept 'forceEnd' boolean.
+
+            // Actually, cleanest way is to just call backend here similar to handleSubmission but with specific flag
+
+            const formData = new FormData();
+            formData.append('interview_token', token || '');
+            formData.append('force_end', 'true');
+            formData.append('tab_violations', tabViolations.toString());
+            // No audio, no video frame needed for forced end (or take one if possible)
+
+            try {
+                const response = await fetch('https://gtxbxdgnfpaxwxrgcrgz.supabase.co/functions/v1/conduct-ai-interview', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.evaluation) {
+                    // Successfully analyzed
+                    setStatus("Interview Complete. Redirecting...");
+                    setTimeout(() => window.location.href = '/', 2000);
+                } else {
+                    // Fallback
+                    window.location.href = '/';
+                }
+            } catch (e) {
+                console.error("Forced end failed", e);
+                window.location.href = '/';
+            }
         }
     };
 

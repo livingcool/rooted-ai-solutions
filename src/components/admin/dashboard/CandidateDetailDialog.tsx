@@ -482,7 +482,32 @@ export const CandidateDetailDialog = ({
 
                                         {(selectedApp.ai_score || selectedApp.ai_feedback) && (
                                             <div className="bg-white/5 p-4 rounded-lg border border-white/10 space-y-2">
-                                                <h4 className="font-semibold text-white">AI Resume Analysis</h4>
+                                                <div className="flex justify-between items-center">
+                                                    <h4 className="font-semibold text-white">AI Resume Analysis</h4>
+                                                    <Button
+                                                        size="xs"
+                                                        variant="outline"
+                                                        className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
+                                                        onClick={async () => {
+                                                            if (!confirm("Re-run AI Analysis for Resume?")) return;
+                                                            setLoading(true);
+                                                            try {
+                                                                const { error } = await supabase.functions.invoke('analyze-application', {
+                                                                    body: { applicationId: selectedApp.id }
+                                                                });
+                                                                if (error) throw error;
+                                                                toast({ title: "Analysis Queued", description: "Refreshed result." });
+                                                                fetchData();
+                                                            } catch (err: any) {
+                                                                toast({ title: "Error", description: err.message, variant: "destructive" });
+                                                            } finally {
+                                                                setLoading(false);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <Sparkles className="w-3 h-3 mr-1" /> Retry
+                                                    </Button>
+                                                </div>
                                                 {selectedApp.ai_score && (
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <div className="text-sm text-white/60">Match Score:</div>
@@ -510,7 +535,32 @@ export const CandidateDetailDialog = ({
                                     )}
                                     {((selectedApp as any).interviews || []).map((int: any, i: number) => (
                                         <Card key={i} className="bg-white/5 border-white/10">
-                                            <CardHeader><CardTitle>Attempt {i + 1}</CardTitle></CardHeader>
+                                            <CardHeader className="flex flex-row items-center justify-between">
+                                                <CardTitle>Attempt {i + 1}</CardTitle>
+                                                <Button
+                                                    size="xs"
+                                                    variant="outline"
+                                                    className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
+                                                    onClick={async () => {
+                                                        if (!confirm("Re-run AI Analysis for this Interview?")) return;
+                                                        setLoading(true);
+                                                        try {
+                                                            const { error } = await supabase.functions.invoke('analyze-interview', {
+                                                                body: { interviewId: int.id }
+                                                            });
+                                                            if (error) throw error;
+                                                            toast({ title: "Analysis Queued", description: "Refreshed result." });
+                                                            fetchData();
+                                                        } catch (err: any) {
+                                                            toast({ title: "Error", description: err.message, variant: "destructive" });
+                                                        } finally {
+                                                            setLoading(false);
+                                                        }
+                                                    }}
+                                                >
+                                                    <Sparkles className="w-3 h-3 mr-1" /> Retry AI
+                                                </Button>
+                                            </CardHeader>
                                             <CardContent>
                                                 {int.audio_url && <audio controls src={int.audio_url} className="w-full mb-4" />}
                                                 <div className="bg-black/20 p-4 rounded text-sm text-white/80 whitespace-pre-wrap font-mono">
@@ -532,7 +582,32 @@ export const CandidateDetailDialog = ({
                                         <Card key={i} className="bg-white/5 border-white/10">
                                             <CardHeader className="flex flex-row items-center justify-between">
                                                 <CardTitle>Submission {i + 1}</CardTitle>
-                                                <div className="text-sm text-white/40">{new Date(tech.created_at || tech.updated_at).toLocaleString()}</div>
+                                                <div className="flex items-center gap-2">
+                                                    <Button
+                                                        size="xs"
+                                                        variant="outline"
+                                                        className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
+                                                        onClick={async () => {
+                                                            if (!confirm("Re-run AI Analysis for this Technical Submission?")) return;
+                                                            setLoading(true);
+                                                            try {
+                                                                const { error } = await supabase.functions.invoke('analyze-technical-submission', {
+                                                                    body: { assessmentId: tech.id }
+                                                                });
+                                                                if (error) throw error;
+                                                                toast({ title: "Analysis Queued", description: "Refreshed result." });
+                                                                fetchData();
+                                                            } catch (err: any) {
+                                                                toast({ title: "Error", description: err.message, variant: "destructive" });
+                                                            } finally {
+                                                                setLoading(false);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <Sparkles className="w-3 h-3 mr-1" /> Retry AI
+                                                    </Button>
+                                                    <div className="text-sm text-white/40">{new Date(tech.created_at || tech.updated_at).toLocaleString()}</div>
+                                                </div>
                                             </CardHeader>
                                             <CardContent>
                                                 <div className="flex gap-4 mb-4">
@@ -592,7 +667,33 @@ export const CandidateDetailDialog = ({
                                             <Card key={i} className="bg-white/5 border-white/10">
                                                 <CardHeader className="flex flex-row items-center justify-between">
                                                     <CardTitle>Interview Session</CardTitle>
-                                                    <Badge variant="outline" className={`${getStatusColor(interview.status)}`}>{interview.status}</Badge>
+                                                    <div className="flex gap-2 items-center">
+                                                        <Button
+                                                            size="xs"
+                                                            variant="outline"
+                                                            className="text-white/60 hover:text-white border-white/10 bg-transparent text-xs h-7"
+                                                            onClick={async (e) => {
+                                                                e.stopPropagation();
+                                                                if (!confirm("Re-run AI Analysis for this Final Interview?")) return;
+                                                                setLoading(true);
+                                                                try {
+                                                                    const { error } = await supabase.functions.invoke('analyze-final-interview', {
+                                                                        body: { interviewId: interview.id }
+                                                                    });
+                                                                    if (error) throw error;
+                                                                    toast({ title: "Analysis Queued/Completed", description: "Refreshed result." });
+                                                                    fetchData();
+                                                                } catch (err: any) {
+                                                                    toast({ title: "Error", description: err.message, variant: "destructive" });
+                                                                } finally {
+                                                                    setLoading(false);
+                                                                }
+                                                            }}
+                                                        >
+                                                            <Sparkles className="w-3 h-3 mr-1" /> Retry AI
+                                                        </Button>
+                                                        <Badge variant="outline" className={`${getStatusColor(interview.status)}`}>{interview.status}</Badge>
+                                                    </div>
                                                 </CardHeader>
                                                 <CardContent className="space-y-6">
                                                     {interview.status === 'Analyzed' || interview.status === 'Offer' || interview.status === 'Rejected' ? (
@@ -680,7 +781,6 @@ export const CandidateDetailDialog = ({
                 handleSelectProject={handleSelectProject}
             />
 
-            {/* Rejection Dialog */}
             <Dialog open={isRejectOpen} onOpenChange={setIsRejectOpen}>
                 <DialogContent className="bg-black border-white/10 text-white max-w-lg">
                     <DialogHeader>
