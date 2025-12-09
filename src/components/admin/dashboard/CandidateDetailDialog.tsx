@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { JobApplication } from "@/types/hiring";
-import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send } from "lucide-react";
+import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getStatusColor } from "@/utils/adminUtils";
 import { InterviewInviteDialog } from "./InterviewInviteDialog";
