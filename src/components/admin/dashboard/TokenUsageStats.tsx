@@ -62,6 +62,30 @@ export const TokenUsageStats = () => {
 
     useEffect(() => {
         fetchLogs();
+
+        const channel = supabase
+            .channel('schema-db-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'ai_usage_logs'
+                },
+                (payload) => {
+                    const newLog = payload.new as UsageLog;
+                    setLogs((prevLogs) => {
+                        const updated = [newLog, ...prevLogs];
+                        calculateCost(updated);
+                        return updated;
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
 
     const filteredLogs = filterProvider === "all"
