@@ -555,7 +555,8 @@ export const CandidateDetailDialog = ({
                                                             setLoading(true);
                                                             try {
                                                                 const { error } = await supabase.functions.invoke('analyze-application', {
-                                                                    body: { applicationId: selectedApp.id }
+                                                                    body: { applicationId: selectedApp.id },
+                                                                    method: 'POST'
                                                                 });
                                                                 if (error) throw error;
                                                                 toast({ title: "Analysis Queued", description: "Refreshed result." });
@@ -664,7 +665,8 @@ export const CandidateDetailDialog = ({
                                                                         interviewId: int.id,
                                                                         audioUrl: int.audio_url,
                                                                         question: int.question
-                                                                    }
+                                                                    },
+                                                                    method: 'POST'
                                                                 });
                                                                 if (error) throw error;
                                                                 toast({ title: "Analysis Queued", description: "Refreshed result." });
@@ -712,7 +714,8 @@ export const CandidateDetailDialog = ({
                                                             setLoading(true);
                                                             try {
                                                                 const { error } = await supabase.functions.invoke('analyze-technical-submission', {
-                                                                    body: { assessmentId: tech.id }
+                                                                    body: { assessmentId: tech.id },
+                                                                    method: 'POST'
                                                                 });
                                                                 if (error) throw error;
                                                                 toast({ title: "Analysis Queued", description: "Refreshed result." });
@@ -817,7 +820,8 @@ export const CandidateDetailDialog = ({
                                                                 setLoading(true);
                                                                 try {
                                                                     const { error } = await supabase.functions.invoke('analyze-final-interview', {
-                                                                        body: { interviewId: interview.id }
+                                                                        body: { interviewId: interview.id },
+                                                                        method: 'POST'
                                                                     });
                                                                     if (error) throw error;
                                                                     toast({ title: "Analysis Queued/Completed", description: "Refreshed result." });
