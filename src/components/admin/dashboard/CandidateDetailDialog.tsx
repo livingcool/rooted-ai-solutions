@@ -51,6 +51,10 @@ export const CandidateDetailDialog = ({
     const [rejectionEmail, setRejectionEmail] = useState({ subject: "", body: "" });
     const [generatingRejection, setGeneratingRejection] = useState(false);
 
+    // Final Invite State
+    const [isFinalInviteOpen, setIsFinalInviteOpen] = useState(false);
+    const [finalScheduledAt, setFinalScheduledAt] = useState("");
+
     useEffect(() => {
         if (isTechnicalInviteOpen && selectedApp) {
             const job = (selectedApp as any).jobs;
@@ -119,24 +123,36 @@ export const CandidateDetailDialog = ({
         }
     };
 
-    const handleMoveToFinalRound = async (applicationId: string) => {
+    const handleFinalInvite = async () => {
+        if (!finalScheduledAt) {
+            toast({ title: "Error", description: "Please select a date and time.", variant: "destructive" });
+            return;
+        }
         setLoading(true);
         try {
             const { data, error } = await supabase.functions.invoke('invite-final-interview', {
-                body: { applicationId }
+                body: {
+                    applicationId: selectedApp?.id,
+                    scheduledAt: new Date(finalScheduledAt).toISOString()
+                }
             });
             if (error) throw error;
             if (data?.error) throw new Error(data.error);
 
-            toast({ title: "Success", description: "Candidate invited to Final Interview!" });
+            toast({ title: "Success", description: "Interview Scheduled & Candidate Invited!" });
+            setIsFinalInviteOpen(false);
             if (selectedApp) setSelectedApp({ ...selectedApp, status: 'Final Interview' });
             fetchData();
         } catch (error: any) {
             console.error("Error inviting candidate:", error);
-            toast({ title: "Error", description: "Failed to invite candidate.", variant: "destructive" });
+            toast({ title: "Scheduling Failed", description: error.message || "Failed to invite.", variant: "destructive" });
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleMoveToFinalRound = (applicationId: string) => {
+        setIsFinalInviteOpen(true); // Open Dialog instead of direct call
     };
 
     const handleGenerateProjects = async () => {
@@ -313,26 +329,43 @@ export const CandidateDetailDialog = ({
                                     )}
 
                                     {selectedApp.status === 'Final Interview' && (
-                                        <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {
-                                            setLoading(true);
-                                            try {
-                                                const { data, error } = await supabase.functions.invoke('invite-final-interview', {
-                                                    body: { applicationId: selectedApp.id }
-                                                });
-                                                if (error) throw error;
-                                                if (data?.error) throw new Error(data.error);
-                                                toast({ title: "Invitation Resent", description: "The final interview link has been resent to the candidate." });
-                                            } catch (error: any) {
-                                                console.error("Error resending invite:", error);
-                                                toast({ title: "Error", description: "Failed to resend invitation.", variant: "destructive" });
-                                            } finally {
-                                                setLoading(false);
-                                            }
-                                        }}>
-                                            <Send className="w-4 h-4 mr-2" />
-                                            Resend Interview Link
-                                        </Button>
+                                        <div className="flex gap-2 items-center">
+                                            <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => setIsFinalInviteOpen(true)}>
+                                                <Send className="w-4 h-4 mr-2" />
+                                                Resend/Reschedule Final
+                                            </Button>
+                                        </div>
                                     )}
+
+                                    {/* Final Invite Dialog (Custom) */}
+                                    <Dialog open={isFinalInviteOpen} onOpenChange={setIsFinalInviteOpen}>
+                                        <DialogContent className="bg-black border-white/10 text-white">
+                                            <DialogHeader>
+                                                <DialogTitle>Schedule Final Interview</DialogTitle>
+                                                <DialogDescription>
+                                                    Select a strict time slot. The system will check for conflicts.
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <div className="py-4 space-y-4">
+                                                <div className="space-y-2">
+                                                    <label className="text-sm">Interview Date & Time</label>
+                                                    <input
+                                                        type="datetime-local"
+                                                        className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white"
+                                                        value={finalScheduledAt}
+                                                        onChange={(e) => setFinalScheduledAt(e.target.value)}
+                                                    />
+                                                </div>
+                                                <Button
+                                                    onClick={handleFinalInvite}
+                                                    disabled={loading}
+                                                    className="w-full bg-green-600 hover:bg-green-500"
+                                                >
+                                                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send Invitation"}
+                                                </Button>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
 
                                     {selectedApp.status === 'Rejected' && (
                                         <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {

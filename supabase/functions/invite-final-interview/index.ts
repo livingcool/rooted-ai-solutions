@@ -12,14 +12,34 @@ serve(async (req) => {
     }
 
     try {
-        const { applicationId } = await req.json()
+        const { applicationId, scheduledAt } = await req.json()
         if (!applicationId) throw new Error("Missing applicationId")
+        if (!scheduledAt) throw new Error("Missing scheduledAt time")
 
         const supabaseUrl = Deno.env.get('SUPABASE_URL')!
         const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
         const supabaseAdmin = createClient(supabaseUrl, supabaseKey)
 
-        // 1. Fetch Application & Job Details
+        // 1. Conflict Check (One Person Per Slot)
+        // Detect if ANY interview is scheduled within 45 mins of this time
+        const requestedTime = new Date(scheduledAt);
+        const bufferTimeStart = new Date(requestedTime.getTime() - 45 * 60000).toISOString();
+        const bufferTimeEnd = new Date(requestedTime.getTime() + 45 * 60000).toISOString();
+
+        const { data: conflicts, error: conflictError } = await supabaseAdmin
+            .from('final_interviews')
+            .select('id, scheduled_at')
+            .gte('scheduled_at', bufferTimeStart)
+            .lte('scheduled_at', bufferTimeEnd)
+            // Exclude current app if rescheduling
+            .neq('application_id', applicationId);
+
+        if (conflictError) throw conflictError;
+        if (conflicts && conflicts.length > 0) {
+            throw new Error(`Slot Conflict: Another interview is already scheduled near ${scheduledAt}. Please choose a different time.`);
+        }
+
+        // 2. Fetch Application
         const { data: app, error: appError } = await supabaseAdmin
             .from('applications')
             .select('*, jobs(title)')
@@ -28,31 +48,45 @@ serve(async (req) => {
 
         if (appError || !app) throw new Error("Application not found")
 
-        // 2. Check/Create Final Interview Record
-        // We can just upsert or insert. Let's check if one exists first to reuse token if possible?
-        // Actually, for a manual invite, we might want to generate a new token or ensure one exists.
+        // 3. Create Interview Record with Expiry
+        // Expires 90 mins after scheduled start
+        const expiresAt = new Date(requestedTime.getTime() + 90 * 60000).toISOString();
 
-        let token;
-
-        // Try to find existing
+        // Check for existing to upsert
         const { data: existingInterview } = await supabaseAdmin
             .from('final_interviews')
-            .select('interview_token')
+            .select('id, interview_token')
             .eq('application_id', applicationId)
-            .maybeSingle()
+            .maybeSingle();
 
+        let token;
         if (existingInterview) {
-            token = existingInterview.interview_token;
+            // Update scheduling
+            const { data: updated, error: updateError } = await supabaseAdmin
+                .from('final_interviews')
+                .update({
+                    scheduled_at: scheduledAt,
+                    expires_at: expiresAt,
+                    status: 'Scheduled'
+                })
+                .eq('id', existingInterview.id)
+                .select('interview_token')
+                .single();
+
+            if (updateError) throw updateError;
+            token = updated.interview_token;
         } else {
-            // Create new
+            // Insert new
             const { data: newInterview, error: createError } = await supabaseAdmin
                 .from('final_interviews')
                 .insert({
                     application_id: applicationId,
                     status: 'Scheduled',
+                    scheduled_at: scheduledAt,
+                    expires_at: expiresAt,
                     project_questions: {
-                        context: `Manual invite by Admin for ${app.jobs?.title}.`,
-                        ai_notes: "Manual progression."
+                        context: `Scheduled invite for ${app.jobs?.title}.`,
+                        ai_notes: "Automated Setup."
                     }
                 })
                 .select('interview_token')
@@ -62,34 +96,45 @@ serve(async (req) => {
             token = newInterview.interview_token;
         }
 
-        // 3. Update Application Status
+        // 4. Update App Status
         await supabaseAdmin
             .from('applications')
             .update({ status: 'Final Interview' })
             .eq('id', applicationId)
 
-        // 4. Send Email
+        // 5. Send Invite Email
         const frontendUrl = Deno.env.get('FRONTEND_URL') || 'https://rooted-ai-solutions.vercel.app';
         const interviewLink = `${frontendUrl}/final-interview?token=${token}`
-        const emailSubject = `Final Round Invitation: AI Founder Interview`
+
+        // Format Date for Email
+        const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' };
+        const formattedDate = new Date(scheduledAt).toLocaleString('en-US', dateOptions);
+
+        const emailSubject = `Final Interview Invitation: ${formattedDate}`
         const emailBody = `
 Dear ${app.full_name},
 
-Congratulations! You have been selected for the Final Interview for the **${app.jobs?.title || 'Engineer'}** role.
+You have been selected for the Final Interview for the **${app.jobs?.title}** position.
 
-This stage involves a live video interview with our AI Founder Agent.
+**Your Slot:** ${formattedDate}
+**Duration:** Approx. 30 Minutes
+**Platform:** RootedAI Virtual Interview Room
 
-**Click here to start your interview:**
-${interviewLink}
+**IMPORTANT:**
+This is a strict time slot. The link below will **only be valid** for your scheduled time.
 
-Please ensure you have a working camera and microphone.
+[Start Interview](${interviewLink})
+
+Or copy: ${interviewLink}
+
+Please check your camera and microphone beforehand.
 
 Best regards,
-RootedAI Recruiting Team
+RootedAI Recruiting
 `
 
         if (app.email) {
-            await fetch(`${supabaseUrl}/functions/v1/send-rejection-email`, { // reusing send-email generic function if available, user calls it 'send-rejection-email' but it seems generic in other usages? check this.
+            await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/send-rejection-email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +149,7 @@ RootedAI Recruiting Team
         }
 
         return new Response(
-            JSON.stringify({ success: true, message: "Invitation sent" }),
+            JSON.stringify({ success: true, message: "Invitation sent with slot booking." }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
 

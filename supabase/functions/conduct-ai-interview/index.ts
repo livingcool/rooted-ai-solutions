@@ -16,6 +16,7 @@ serve(async (req) => {
         const interviewToken = formData.get('interview_token');
         const audioFile = formData.get('audio');
         const videoFrame = formData.get('frame'); // Base64 or file
+        const tabViolations = formData.get('tab_violations'); // Compliance check
 
         if (!interviewToken) throw new Error("Missing interview token");
 
@@ -36,6 +37,12 @@ serve(async (req) => {
 
             if (error) throw new Error(error.message);
             if (!data) throw new Error("No session found");
+
+            // Check Expiry
+            if (data.expires_at && new Date() > new Date(data.expires_at)) {
+                throw new Error("This interview link has expired. Please contact the recruiting team.");
+            }
+
             session = data;
         } catch (err: any) {
             console.error("Session Verification Failed:", err);
@@ -67,8 +74,8 @@ serve(async (req) => {
             userText = transJson.text;
         }
 
-        // 3. Analyze Video Frame (Llama Vision) - Confidence Check
-        let visionContext = "No video frame provided.";
+        // 3. Analyze Video Frame (Llama Vision) - Token Optimized
+        let visionContext = "No video frame.";
         if (videoFrame) {
             const visionResp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
@@ -81,20 +88,19 @@ serve(async (req) => {
                     messages: [{
                         role: "user",
                         content: [
-                            { type: "text", text: "Analyze this image of a candidate during an interview. Describe their body language, eye contact, and estimated confidence level (High/Medium/Low). Be brief." },
+                            { type: "text", text: "Candidate visual check. Output 'Normal' or brief issue (max 5 words)." },
                             { type: "image_url", image_url: { url: videoFrame } }
                         ]
                     }]
                 })
             });
             const visionJson = await visionResp.json();
-            console.log("Vision API Response:", JSON.stringify(visionJson)); // DEBUG LOG
 
             if (visionJson.error) {
                 console.error("Vision API Error:", visionJson.error);
-                visionContext = `Vision analysis failed: ${visionJson.error.message}`;
+                visionContext = `Error: ${visionJson.error.message}`;
             } else {
-                visionContext = visionJson.choices?.[0]?.message?.content || "Vision analysis failed (No content)";
+                visionContext = visionJson.choices?.[0]?.message?.content || "No content";
             }
         }
 
@@ -114,11 +120,13 @@ Context:
 - Type: ${experienceLevel}
 - Resume: ${extendedContext}
 - Visual: ${visionContext}
+
 Rules:
 - One question at a time.
 - Tailor to role.
 - Be professional & friendly.
 - Output JSON ONLY.
+
 Stages (A-H):
 A. Intro: Welcome, warm-up.
 B. Projects: Ask about relevant project (Objective, Contribution, Outcome).
@@ -128,12 +136,15 @@ E. Scenario: Hypothetical role challenge.
 F. Culture: Why RootedAI?
 G. Closing: Ask for questions, say Goodbye.
 H. EVALUATION (Only when done): Output detailed scores.
+
 OUTPUT FORMAT (JSON):
 Standard: {"reply": "...", "confidence_score": 0.5, "is_interview_complete": false}
 Final (Stage H - Evaluation):
 {"reply": "Goodbye!", "confidence_score": 0.5, "is_interview_complete": true, "evaluation": {"technical_score": 0-10, "communication_score": 0-10, "behaviour_score": 0-10, "culture_fit_score": 0-10, "recommendation": "Strong Hire / Hire / No Hire", "reasoning_summary": "bullets"}}
+
 History:
 ${transcriptHistory}
+
 Candidate Input: "${userText}"
 `;
 
@@ -175,7 +186,7 @@ Candidate Input: "${userText}"
 
         if (
             lowerContext.includes("no video frame") ||
-            lowerContext.includes("vision analysis failed") ||
+            (lowerContext.includes("error") && lowerContext.length > 20) || // Only legitimate errors
             lowerContext.includes("cannot see") ||
             lowerContext.includes("unable to") ||
             lowerContext.length < 5
@@ -184,7 +195,8 @@ Candidate Input: "${userText}"
         }
 
         // 5. Append to Transcript Log (Database)
-        const newEntry = `\nCandidate: ${userText}\n[Vision: ${visionContext}]\nAI: ${aiResponse.reply}`;
+        const violationText = (tabViolations && parseInt(tabViolations.toString()) > 0) ? `\n[⚠️ TAB VIOLATIONS: ${tabViolations}]` : "";
+        const newEntry = `\nCandidate: ${userText}\n[Vision: ${visionContext}]${violationText}\nAI: ${aiResponse.reply}`;
 
         const updatePayload: any = {
             transcript: (session.transcript || "") + newEntry,
