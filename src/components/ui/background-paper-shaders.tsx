@@ -4,7 +4,7 @@ import { useRef, useMemo } from "react"
 import { useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 
-// Custom shader material for advanced effects
+// Silky smooth vertex shader
 const vertexShader = `
   uniform float time;
   uniform float intensity;
@@ -16,13 +16,15 @@ const vertexShader = `
     vPosition = position;
     
     vec3 pos = position;
-    pos.y += sin(pos.x * 10.0 + time) * 0.1 * intensity;
-    pos.x += cos(pos.y * 8.0 + time * 1.5) * 0.05 * intensity;
+    // Gentle flowing movement
+    float wave = sin(pos.x * 2.0 + time * 0.5) * 0.2 + cos(pos.y * 1.5 + time * 0.3) * 0.2;
+    pos.z += wave * intensity;
     
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
   }
 `
 
+// Premium silky fragment shader
 const fragmentShader = `
   uniform float time;
   uniform float intensity;
@@ -34,26 +36,48 @@ const fragmentShader = `
   void main() {
     vec2 uv = vUv;
     
-    // Create animated noise pattern
-    float noise = sin(uv.x * 20.0 + time) * cos(uv.y * 15.0 + time * 0.8);
-    noise += sin(uv.x * 35.0 - time * 2.0) * cos(uv.y * 25.0 + time * 1.2) * 0.5;
+    // Create organic flow pattern (Silky effect)
+    float t = time * 0.2;
     
-    // Mix colors based on noise and position
-    vec3 color = mix(color1, color2, noise * 0.5 + 0.5);
-    color = mix(color, vec3(1.0), pow(abs(noise), 2.0) * intensity);
+    // Layer 1: Broad strokes
+    float flow1 = sin(uv.x * 8.0 + t) * cos(uv.y * 6.0 - t * 0.5);
     
-    // Add glow effect
-    float glow = 1.0 - length(uv - 0.5) * 2.0;
-    glow = pow(glow, 2.0);
+    // Layer 2: Fine details
+    float flow2 = sin(uv.x * 15.0 - t * 1.2) * cos(uv.y * 12.0 + t * 0.8);
     
-    gl_FragColor = vec4(color * glow, glow * 0.8);
+    // Layer 3: Diagonal movement for silk sheen
+    float flow3 = sin((uv.x + uv.y) * 10.0 + t * 0.5);
+    
+    // Combine layers for rich texture
+    float pattern = (flow1 * 0.5 + flow2 * 0.3 + flow3 * 0.2);
+    
+    // Smooth out the pattern
+    pattern = pattern * 0.5 + 0.5; // Normalize to 0-1
+    
+    // Enhance contrast for "folds"
+    float folds = pow(pattern, 1.5);
+    
+    // Calculate sheen (specular-like highlight)
+    float sheen = smoothstep(0.4, 0.6, pattern) * 0.3;
+    
+    // Mix colors with premium gradient
+    vec3 baseColor = mix(color1, color2, folds);
+    
+    // Add the sheen
+    vec3 finalColor = baseColor + vec3(sheen) * 0.2;
+    
+    // Subtle vignette
+    float vignette = 1.0 - length(uv - 0.5) * 0.8;
+    vignette = smoothstep(0.0, 1.0, vignette);
+    
+    gl_FragColor = vec4(finalColor * vignette, 1.0);
   }
 `
 
 export function ShaderPlane({
     position,
-    color1 = "#ff5722",
-    color2 = "#ffffff",
+    color1 = "#000000",
+    color2 = "#333333",
 }: {
     position: [number, number, number]
     color1?: string
@@ -64,7 +88,7 @@ export function ShaderPlane({
     const uniforms = useMemo(
         () => ({
             time: { value: 0 },
-            intensity: { value: 1.0 },
+            intensity: { value: 0.5 },
             color1: { value: new THREE.Color(color1) },
             color2: { value: new THREE.Color(color2) },
         }),
@@ -74,13 +98,15 @@ export function ShaderPlane({
     useFrame((state) => {
         if (mesh.current) {
             uniforms.time.value = state.clock.elapsedTime
-            uniforms.intensity.value = 1.0 + Math.sin(state.clock.elapsedTime * 2) * 0.3
+            // Gentle breathing intensity
+            uniforms.intensity.value = 0.5 + Math.sin(state.clock.elapsedTime * 0.5) * 0.1
         }
     })
 
     return (
         <mesh ref={mesh} position={position}>
-            <planeGeometry args={[16, 16, 64, 64]} />
+            {/* High resolution plane for smooth waves */}
+            <planeGeometry args={[16, 16, 128, 128]} />
             <shaderMaterial
                 uniforms={uniforms}
                 vertexShader={vertexShader}
@@ -103,15 +129,15 @@ export function EnergyRing({
 
     useFrame((state) => {
         if (mesh.current) {
-            mesh.current.rotation.z = state.clock.elapsedTime
-            mesh.current.material.opacity = 0.5 + Math.sin(state.clock.elapsedTime * 3) * 0.3
+            mesh.current.rotation.z = state.clock.elapsedTime * 0.2
+            mesh.current.material.opacity = 0.3 + Math.sin(state.clock.elapsedTime) * 0.2
         }
     })
 
     return (
         <mesh ref={mesh} position={position}>
-            <ringGeometry args={[radius * 0.8, radius, 32]} />
-            <meshBasicMaterial color="#ff5722" transparent opacity={0.6} side={THREE.DoubleSide} />
+            <ringGeometry args={[radius * 0.95, radius, 64]} />
+            <meshBasicMaterial color="#ffffff" transparent opacity={0.3} side={THREE.DoubleSide} />
         </mesh>
     )
 }
