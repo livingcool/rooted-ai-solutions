@@ -20,14 +20,14 @@ import AIInterviewRoom from "./pages/AIInterviewRoom";
 import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
-import { DarkShaderBackground } from "@/components/ui/dark-shader-background";
+import GlobalBackground from "@/components/GlobalBackground";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
-      <DarkShaderBackground />
+      <GlobalBackground />
       <TooltipProvider>
         <Toaster />
         <Sonner />
