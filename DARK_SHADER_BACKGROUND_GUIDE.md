@@ -6,8 +6,8 @@ I have replaced the previous background with the **exact animated effect** you r
 
 ### **1. New Shader Implementation**
 - Created `src/components/ui/background-paper-shaders.tsx` containing the custom `ShaderPlane` and `EnergyRing` components.
-- Implemented the **Mesh Gradient** effect using the provided vertex and fragment shaders.
-- **UPDATED**: Increased plane geometry size to `[16, 16]` to ensure full screen coverage.
+- **UPDATED**: Implemented a **Premium Silky Design** shader with organic folds and sheen highlights.
+- **UPDATED**: Increased plane geometry resolution to `[128, 128]` for ultra-smooth waves.
 
 ### **2. Global Background Update**
 - Updated `src/components/ui/dark-shader-background.tsx` to use the new `ShaderPlane`.
@@ -39,7 +39,7 @@ Edit `src/components/ui/background-paper-shaders.tsx`:
 ```javascript
 // In ShaderPlane component
 uniforms.time.value = state.clock.elapsedTime       // Speed
-uniforms.intensity.value = 1.0 + Math.sin(...) * 0.3 // Intensity
+uniforms.intensity.value = 0.5 + Math.sin(...) * 0.1 // Intensity
 ```
 
 ### **Lighting Overlays**

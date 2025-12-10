@@ -57,17 +57,17 @@ const fragmentShader = `
     // Enhance contrast for "folds"
     float folds = pow(pattern, 1.5);
     
-    // Calculate sheen (specular-like highlight)
-    float sheen = smoothstep(0.4, 0.6, pattern) * 0.3;
+    // Calculate sheen (specular-like highlight) - boosted brightness
+    float sheen = smoothstep(0.4, 0.6, pattern) * 0.5;
     
     // Mix colors with premium gradient
     vec3 baseColor = mix(color1, color2, folds);
     
     // Add the sheen
-    vec3 finalColor = baseColor + vec3(sheen) * 0.2;
+    vec3 finalColor = baseColor + vec3(sheen) * 0.3;
     
-    // Subtle vignette
-    float vignette = 1.0 - length(uv - 0.5) * 0.8;
+    // Subtle vignette - reduced strength
+    float vignette = 1.0 - length(uv - 0.5) * 0.6;
     vignette = smoothstep(0.0, 1.0, vignette);
     
     gl_FragColor = vec4(finalColor * vignette, 1.0);
