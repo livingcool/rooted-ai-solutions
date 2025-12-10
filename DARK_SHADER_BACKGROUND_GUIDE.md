@@ -7,14 +7,16 @@ I have replaced the previous background with the **exact animated effect** you r
 ### **1. New Shader Implementation**
 - Created `src/components/ui/background-paper-shaders.tsx` containing the custom `ShaderPlane` and `EnergyRing` components.
 - Implemented the **Mesh Gradient** effect using the provided vertex and fragment shaders.
+- **UPDATED**: Increased plane geometry size to `[16, 16]` to ensure full screen coverage.
 
 ### **2. Global Background Update**
 - Updated `src/components/ui/dark-shader-background.tsx` to use the new `ShaderPlane`.
 - Applied the **Dark Theme** colors (`#000000` mixed with `#333333`) to match the demo's aesthetic.
 - Added the **Lighting Overlay Effects** (pulsing blur orbs) as requested.
 
-### **3. CSS Updates**
-- Extended `src/index.css` with the provided **Tailwind CSS variables** using the `oklch` color space.
+### **3. Configuration Updates**
+- **CSS**: Extended `src/index.css` with the provided **Tailwind CSS variables** using the `oklch` color space.
+- **Tailwind**: Updated `tailwind.config.ts` to remove `hsl()` wrappers, allowing the new `oklch` variables to work natively.
 
 ---
 
