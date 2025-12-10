@@ -4,9 +4,10 @@
 
 @layer base {
   :root {
-    /* --- Font Mappings (From your requested block) --- */
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
+    /* --- Font Mappings --- */
+    --font-sans: "Inter", sans-serif;
+    --font-heading: "Outfit", sans-serif;
+    --font-mono: "Geist Mono", monospace;
 
     /* --- Color Variables (OKLCH) --- */
     --background: oklch(0 0 0);
@@ -58,7 +59,6 @@
     --sidebar-ring: oklch(1 0 0 / 0.3);
 
     /* --- Font Definitions --- */
-    --font-geist-sans: "Geist Sans", sans-serif;
     --font-geist-mono: "Geist Mono", monospace;
   }
 
@@ -113,9 +113,8 @@
   h4,
   h5,
   h6 {
-    /* Ensure you have 'font-heading' defined in your tailwind.config.js, 
-       otherwise change this to font-sans or font-bold */
-    @apply font-sans tracking-tight font-bold;
+    /* Using font-heading (Outfit) for headings */
+    @apply font-heading tracking-tight font-bold;
   }
 }
 
@@ -144,6 +143,7 @@
   .animate-fade-in {
     animation: fadeIn 1s ease-out forwards;
     opacity: 0;
+    transform: translateY(20px);
   }
 
   .hover-underline-animation {
