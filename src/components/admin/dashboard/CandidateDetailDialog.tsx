@@ -841,7 +841,10 @@ export const CandidateDetailDialog = ({
                                                             setLoading(true);
                                                             try {
                                                                 const { error } = await supabase.functions.invoke('analyze-technical-submission', {
-                                                                    body: { assessmentId: tech.id },
+                                                                    body: {
+                                                                        assessmentId: tech.id,
+                                                                        force: true
+                                                                    },
                                                                     method: 'POST'
                                                                 });
                                                                 if (error) throw error;

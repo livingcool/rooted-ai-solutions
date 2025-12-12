@@ -93,25 +93,34 @@ serve(async (req) => {
         const txt = await req.text();
         if (!txt) throw new Error("Empty request body");
         const body = JSON.parse(txt);
-        const { applicationId, frames: inputFrames } = body;
+        const { applicationId, assessmentId, force, frames: inputFrames } = body;
         const frames = Array.isArray(inputFrames) ? inputFrames : [];
 
-        if (!applicationId) throw new Error("Missing applicationId");
+        if (!applicationId && !assessmentId) throw new Error("Missing applicationId or assessmentId");
 
-        // Fetch latest assessment for this application
-        const { data: assessment, error: fetchError } = await supabaseAdmin
+        // Fetch assessment (by ID if provided, else latest for application)
+        let query = supabaseAdmin
             .from("technical_assessments")
-            .select("*, applications(full_name, email, jobs(title, description, technical_problem_statement))")
-            .eq("application_id", applicationId)
-            .order("created_at", { ascending: false })
-            .limit(1)
-            .maybeSingle();
+            .select("*, applications(full_name, email, jobs(title, description, technical_problem_statement))");
+
+        if (assessmentId) {
+            query = query.eq("id", assessmentId);
+        } else {
+            query = query
+                .eq("application_id", applicationId)
+                .order("created_at", { ascending: false })
+                .limit(1);
+        }
+
+        const { data: assessment, error: fetchError } = await query.maybeSingle();
 
         if (fetchError) throw new Error(`DB fetch failed: ${fetchError.message}`);
         if (!assessment) throw new Error("Assessment not found");
 
-        // Idempotency: if already Analyzed/Requires Review/Final Interview, skip
-        if (["Analyzed", "Requires Review", "Final Interview"].includes(assessment.status)) {
+        const appId = assessment.application_id; // Ensure we have the correct app ID from the DB record
+
+        // Idempotency: skip if already processed, unless forced
+        if (!force && ["Analyzed", "Requires Review", "Final Interview"].includes(assessment.status)) {
             return new Response(JSON.stringify({ success: true, note: `Already processed (status=${assessment.status})` }), { headers: { ...CORS_HEADERS, "Content-Type": "application/json" } });
         }
 
@@ -261,10 +270,17 @@ serve(async (req) => {
         // Parse AI JSON robustly
         let content: any = {};
         try {
-            const raw = aiData.choices?.[0]?.message?.content;
-            content = typeof raw === "string" ? JSON.parse(raw) : raw ?? {};
+            let raw = aiData.choices?.[0]?.message?.content;
+            if (typeof raw === "string") {
+                // Strip markdown code blocks if present
+                raw = raw.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+                content = JSON.parse(raw);
+            } else {
+                content = raw ?? {};
+            }
         } catch (e) {
             console.warn("Failed to parse AI JSON:", e);
+            console.warn("Raw content was:", aiData.choices?.[0]?.message?.content);
             content = {};
         }
 
