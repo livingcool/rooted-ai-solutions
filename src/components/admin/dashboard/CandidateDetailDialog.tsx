@@ -1019,12 +1019,51 @@ export const CandidateDetailDialog = ({
                                                             <div className="grid grid-cols-2 gap-4">
                                                                 <div className="bg-black/20 p-4 rounded border border-white/5 text-center">
                                                                     <div className="text-sm text-white/60 mb-1">Confidence Score</div>
-                                                                    <div className="text-3xl font-bold text-blue-400">{interview.ai_confidence_score || 0}%</div>
+                                                                    <div className="text-3xl font-bold text-blue-400">{((interview.ai_confidence_score || 0) * 100).toFixed(0)}%</div>
                                                                 </div>
                                                                 <div className="bg-black/20 p-4 rounded border border-white/5 text-center">
                                                                     <div className="text-sm text-white/60 mb-1">Role Fit</div>
-                                                                    <div className="text-3xl font-bold text-purple-400">{interview.ai_role_fit_score || 0}%</div>
+                                                                    <div className="text-3xl font-bold text-purple-400">{(interview.ai_role_fit_score || 0).toFixed(1)}/10</div>
                                                                 </div>
+                                                            </div>
+
+                                                            {/* Report Generation */}
+                                                            <div className="flex justify-end mb-2">
+                                                                <Button
+                                                                    size="sm"
+                                                                    variant="outline"
+                                                                    className="border-white/10 text-white/80 hover:bg-white/10 hover:text-white"
+                                                                    onClick={() => {
+                                                                        const reportContent = [
+                                                                            `ROOTED AI - CANDIDATE HIRING REPORT`,
+                                                                            `===================================`,
+                                                                            `Candidate: ${selectedApp.full_name}`,
+                                                                            `Email: ${selectedApp.email}`,
+                                                                            `Role: ${selectedApp.jobs?.title || 'N/A'}`,
+                                                                            `Date: ${new Date().toLocaleDateString()}`,
+                                                                            `\n--- SCORES ---`,
+                                                                            `Type: ${interview.ai_recommendation}`,
+                                                                            `Confidence: ${((interview.ai_confidence_score || 0) * 100).toFixed(1)}%`,
+                                                                            `Role Fit: ${(interview.ai_role_fit_score || 0).toFixed(1)}/10`,
+                                                                            `\n--- AI FEEDBACK ---`,
+                                                                            interview.ai_feedback || "No feedback generated.",
+                                                                            `\n--- TRANSCRIPT EXCERPT ---`,
+                                                                            (interview.transcript || "").slice(0, 2000) + "..."
+                                                                        ].join("\n");
+
+                                                                        const blob = new Blob([reportContent], { type: 'text/plain' });
+                                                                        const url = window.URL.createObjectURL(blob);
+                                                                        const a = document.createElement('a');
+                                                                        a.href = url;
+                                                                        a.download = `${selectedApp.full_name.replace(/\s+/g, '_')}_Hiring_Report.txt`;
+                                                                        document.body.appendChild(a);
+                                                                        a.click();
+                                                                        window.URL.revokeObjectURL(url);
+                                                                        document.body.removeChild(a);
+                                                                    }}
+                                                                >
+                                                                    <FileText className="w-4 h-4 mr-2" /> Generate Hiring Report
+                                                                </Button>
                                                             </div>
 
                                                             {/* Recommendation */}
