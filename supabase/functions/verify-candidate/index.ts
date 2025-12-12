@@ -43,11 +43,32 @@ const handler = async (req: Request): Promise<Response> => {
         }
 
         // Check if deadline passed
-        if (app.communication_deadline && new Date(app.communication_deadline) < new Date()) {
-            return new Response(JSON.stringify({ error: 'Assessment deadline has passed' }), {
+        const now = new Date();
+
+        // 1. Communication Round Deadline Check
+        if (app.status === 'Invited to Interview' && app.communication_deadline && new Date(app.communication_deadline) < now) {
+            return new Response(JSON.stringify({ error: 'Communication assessment deadline has passed' }), {
                 headers: { ...corsHeaders, "Content-Type": "application/json" },
                 status: 403,
             });
+        }
+
+        // 2. Technical Round Deadline Check
+        if (app.status === 'Technical Round') {
+            const { data: tech } = await supabaseAdmin
+                .from('technical_assessments')
+                .select('deadline')
+                .eq('application_id', app.id)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (tech && tech.deadline && new Date(tech.deadline) < now) {
+                return new Response(JSON.stringify({ error: 'Technical assessment deadline has passed' }), {
+                    headers: { ...corsHeaders, "Content-Type": "application/json" },
+                    status: 403,
+                });
+            }
         }
 
         return new Response(JSON.stringify({

@@ -140,11 +140,9 @@ const TechnicalAssessment = () => {
                 const fileName = `${applicationId}/technical_${Date.now()}.${fileExt}`;
                 const { error: uploadError } = await supabase.storage
                     .from('technical-submissions')
-                    .upload({
-                        path: fileName,
-                        data: videoFile,
+                    .upload(fileName, videoFile, {
                         upsert: true
-                    }); // FIX: correct upload signature
+                    });
 
                 if (uploadError) throw uploadError;
                 videoUrl = fileName;

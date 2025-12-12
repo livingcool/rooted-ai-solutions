@@ -44,9 +44,22 @@ const CandidateLogin = () => {
 
         } catch (error: any) {
             console.error("Login error:", error);
+
+            let message = error.message || "Invalid credentials";
+
+            // Handle specific status codes if error object exposes them (Supabase FunctionsHttpError)
+            if (message.includes("Edge Function returned a non-2xx status code")) {
+                message = "Login failed. Please check your credentials.";
+            }
+
+            // If the error response implies a deadline, make it clear
+            if (error instanceof Error && error.message.includes("deadline")) {
+                message = error.message;
+            }
+
             toast({
                 title: "Login Failed",
-                description: error.message || "Invalid credentials",
+                description: message,
                 variant: "destructive",
             });
         } finally {
