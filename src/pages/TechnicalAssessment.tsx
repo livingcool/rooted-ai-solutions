@@ -168,9 +168,21 @@ const TechnicalAssessment = () => {
 
             // Save to Database
             const { error: dbError } = await supabase
+            // 3. Update Existing Technical Assessment (Prevent Duplicates)
+            // Retrieve the pending assessment ID first
+            const { data: existingAssessment, error: fetchError } = await supabase
                 .from('technical_assessments')
-                .insert({
-                    application_id: applicationId,
+                .select('id')
+                .eq('application_id', applicationId)
+                .order('created_at', { ascending: false })
+                .limit(1)
+                .single();
+
+            if (fetchError || !existingAssessment) throw new Error("Could not find assessment record to update.");
+
+            const { error: dbError } = await supabase
+                .from('technical_assessments')
+                .update({
                     video_url: videoUrl,
                     documentation_url: documentationUrl,
                     github_url: formData.githubUrl,
@@ -178,14 +190,22 @@ const TechnicalAssessment = () => {
                     tech_stack: formData.techStack,
                     process_flow: formData.processFlow,
                     cost_analysis: formData.costAnalysis,
-                    status: 'Submitted'
-                });
+                    status: 'Submitted', // Ready for AI
+                    submitted_at: new Date().toISOString()
+                })
+                .eq('id', existingAssessment.id);
 
             if (dbError) throw dbError;
 
-            // Trigger AI Analysis with Frames
+            // Trigger AI Analysis with Specific Assessment ID
+            // We use 'force: true' to ensure it runs immediately
             supabase.functions.invoke('analyze-technical-submission', {
-                body: { applicationId, frames: capturedFrames }
+                body: {
+                    applicationId,
+                    assessmentId: existingAssessment.id,
+                    frames: capturedFrames,
+                    force: true
+                }
             }).then(({ error }) => {
                 if (error) console.error("Error triggering AI analysis:", error);
             });

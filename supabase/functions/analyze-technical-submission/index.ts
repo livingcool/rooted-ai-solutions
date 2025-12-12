@@ -218,6 +218,7 @@ serve(async (req) => {
         const systemMessage = [
             `You are a Senior Lead Engineer assessing a technical submission for the role "${jobTitle}".`,
             `Be STRICT and practical. Score 0-100 (>=70 passes).`,
+            `CRITICAL: Reference the 'Video Transcript' to validate claims. If the code/text claims features not shown or explained in the video, penalize the score.`,
             `Focus: correctness, code quality, product thinking, role fit, and deployment feasibility.`,
             `Return ONLY valid JSON: {"score":0-100,"feedback":"<=150 words","improvement_suggestions":"<=50 words"}`
         ].join("\n");
