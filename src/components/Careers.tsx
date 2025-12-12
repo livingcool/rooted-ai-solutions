@@ -21,6 +21,7 @@ const Careers = () => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -93,107 +94,106 @@ const Careers = () => {
           ))}
         </div>
 
-        {/* Job Openings */}
-        <div className="mb-24">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <h3 className="text-2xl font-bold text-white border-l-4 border-white pl-4">
-              Open Positions
-            </h3>
-            <div className="relative w-full md:w-64">
-              <input
-                type="text"
-                placeholder="Search roles or skills..."
-                className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-12">
-            {Object.entries(
-              filteredJobs.reduce((acc, job) => {
-                const dept = job.department || "Other";
-                if (!acc[dept]) acc[dept] = [];
-                acc[dept].push(job);
-                return acc;
-              }, {} as Record<string, typeof jobs>)
-            ).map(([department, deptJobs]) => (
-              <div key={department} className="space-y-6">
-                <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-2">{department}</h3>
-                <div className="grid gap-4">
-                  {deptJobs.map((job) => (
-                    <div
-                      key={job.id}
-                      className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 transition-all hover:bg-white/10 hover:border-white/20"
-                    >
-                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                          <h4 className="text-xl font-bold text-white mb-2">{job.title}</h4>
-                          <div className="flex flex-wrap gap-2 text-sm text-white/60">
-                            <span className="flex items-center gap-1">
-                              <Briefcase className="w-3 h-3" />
-                              {job.type}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-3 h-3" />
-                              {job.location}
-                            </span>
-                            {job.salary_range && (
-                              <span className="flex items-center gap-1">
-                                <DollarSign className="w-3 h-3" />
-                                {job.salary_range}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <Button
-                          className="bg-white text-black hover:bg-white/90 font-medium px-6"
-                          onClick={() => window.open(`/jobs/${job.id}`, '_blank')}
-                        >
-                          View Details
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-
-            {filteredJobs.length === 0 && (
-              <div className="text-center py-12 text-white/40">
-                No open positions found matching your criteria.
-              </div>
-            )}
-          </div>
+        {/* Collapsible Job Openings Section */}
+        <div className="flex flex-col items-center justify-center mb-16">
+          {!isExpanded && (
+            <Button
+              onClick={() => setIsExpanded(true)}
+              className="bw-button text-lg px-8 py-6 group"
+            >
+              View Open Positions
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          )}
         </div>
 
-        {/* Join Our Team - General Call to Action */}
-        <div className="mt-24 mb-24">
-          <TiltCard className="bw-card p-6 md:p-16 text-center border-white/10 bg-gradient-to-b from-white/5 to-transparent">
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Ready to Shape the Future?
-            </h3>
-            <p className="text-lg text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed">
-              We are always looking for exceptional talent to join our mission.
-              If you're passionate about AI, automation, and engineering autonomy, we want to hear from you.
-            </p>
+        <div className={`transition-all duration-700 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="mb-24">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+              <h3 className="text-2xl font-bold text-white border-l-4 border-white pl-4">
+                Open Positions
+              </h3>
+              <div className="relative w-full md:w-64">
+                <input
+                  type="text"
+                  placeholder="Search roles or skills..."
+                  className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div className="space-y-12">
+              {Object.entries(
+                filteredJobs.reduce((acc, job) => {
+                  const dept = job.department || "Other";
+                  if (!acc[dept]) acc[dept] = [];
+                  acc[dept].push(job);
+                  return acc;
+                }, {} as Record<string, typeof jobs>)
+              ).map(([department, deptJobs]) => (
+                <div key={department} className="space-y-6">
+                  <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-2">{department}</h3>
+                  <div className="grid gap-4">
+                    {deptJobs.map((job) => (
+                      <div
+                        key={job.id}
+                        className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 transition-all hover:bg-white/10 hover:border-white/20"
+                      >
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                          <div>
+                            <h4 className="text-xl font-bold text-white mb-2">{job.title}</h4>
+                            <div className="flex flex-wrap gap-2 text-sm text-white/60">
+                              <span className="flex items-center gap-1">
+                                <Briefcase className="w-3 h-3" />
+                                {job.type}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <MapPin className="w-3 h-3" />
+                                {job.location}
+                              </span>
+                              {job.salary_range && (
+                                <span className="flex items-center gap-1">
+                                  <DollarSign className="w-3 h-3" />
+                                  {job.salary_range}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <Button
+                            className="bg-white text-black hover:bg-white/90 font-medium px-6"
+                            onClick={() => window.open(`/jobs/${job.id}`, '_blank')}
+                          >
+                            View Details
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {filteredJobs.length === 0 && (
+                <div className="text-center py-12 text-white/40">
+                  No open positions found matching your criteria.
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-center mt-12">
               <Button
-                className="bw-button text-lg px-8 py-6 group"
-                onClick={() => window.location.href = "mailto:rootedaiofficial@gmail.com"}
+                variant="ghost"
+                onClick={() => setIsExpanded(false)}
+                className="text-white/60 hover:text-white"
               >
-                Send Your Resume
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                Show Less
               </Button>
             </div>
-
-            <p className="text-sm text-white/40 mt-6">
-              Email us at <span className="text-white">rootedaiofficial@gmail.com</span>
-            </p>
-          </TiltCard>
+          </div>
         </div>
+
+
 
         {/* Culture Section */}
         <div className="mt-24 p-8 md:p-12 border border-white/10 bg-white/5">
@@ -223,19 +223,7 @@ const Careers = () => {
           </div>
         </div>
 
-        {/* Contact for Custom Roles */}
-        <div className="mt-16 text-center">
-          <p className="text-white/60 mb-6">
-            Fresh graduate or career changer? We welcome diverse backgrounds.
-          </p>
-          <Button
-            variant="ghost"
-            className="bw-button-outline text-white hover:text-black"
-            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            Contact Us About Opportunities
-          </Button>
-        </div>
+
 
       </div>
     </section>

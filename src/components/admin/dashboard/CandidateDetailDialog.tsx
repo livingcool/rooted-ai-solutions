@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { JobApplication } from "@/types/hiring";
-import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send, Sparkles, CheckCircle, XCircle } from "lucide-react";
+import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send, Sparkles, CheckCircle, XCircle, MoreVertical, MoveRight, Check, X, RefreshCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getStatusColor } from "@/utils/adminUtils";
 import { InterviewInviteDialog } from "./InterviewInviteDialog";
@@ -455,47 +463,63 @@ export const CandidateDetailDialog = ({
                                 </div>
 
                                 <div className="flex flex-col items-end gap-2">
-                                    {/* Action Buttons */}
-                                    {/* Action Buttons */}
-                                    {(['Applied', 'Screening', 'Rejected'].includes(selectedApp.status) || (selectedApp.status === 'Communication Round Completed' && selectedApp.status !== 'Technical Round')) && (
-                                        <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => setIsInviteOpen(true)}>
-                                            Invite to Communication
-                                        </Button>
-                                    )}
+                                    {/* Admin Super Powers Dropdown */}
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline" className="border-white/20 bg-white/5 hover:bg-white/10 gap-2">
+                                                Manage Application <MoreVertical className="w-4 h-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end" className="bg-black border-white/20 text-white min-w-[220px]">
+                                            <DropdownMenuLabel>Move Candidate To...</DropdownMenuLabel>
+                                            <DropdownMenuSeparator className="bg-white/10" />
 
-                                    {(selectedApp.status === 'Communication Round Completed' || ['Screening', 'Rejected'].includes(selectedApp.status) || ((selectedApp as any).interviews?.length > 0 && selectedApp.status !== 'Technical Round' && selectedApp.status !== 'Technical Round Completed' && selectedApp.status !== 'Final Interview')) && (
-                                        <div className="flex gap-2">
-                                            {selectedApp.status === 'Communication Round Completed' && (
-                                                <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => setIsInviteOpen(true)}>
-                                                    Resend Communication
-                                                </Button>
+                                            <DropdownMenuItem onClick={() => setIsInviteOpen(true)} className="cursor-pointer hover:bg-white/10 focus:bg-white/10 gap-2">
+                                                <MoveRight className="w-4 h-4 text-blue-400" />
+                                                <span>Communication Round</span>
+                                            </DropdownMenuItem>
+
+                                            <DropdownMenuItem onClick={() => setIsTechnicalInviteOpen(true)} className="cursor-pointer hover:bg-white/10 focus:bg-white/10 gap-2">
+                                                <MoveRight className="w-4 h-4 text-purple-400" />
+                                                <span>Technical Round</span>
+                                            </DropdownMenuItem>
+
+                                            <DropdownMenuItem onClick={() => setIsFinalInviteOpen(true)} className="cursor-pointer hover:bg-white/10 focus:bg-white/10 gap-2">
+                                                <MoveRight className="w-4 h-4 text-green-400" />
+                                                <span>Final Interview</span>
+                                            </DropdownMenuItem>
+
+                                            <DropdownMenuSeparator className="bg-white/10" />
+                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+                                            <DropdownMenuItem onClick={handleMakeOffer} className="cursor-pointer hover:bg-white/10 focus:bg-white/10 gap-2">
+                                                <Check className="w-4 h-4 text-green-500" />
+                                                <span>Make Job Offer</span>
+                                            </DropdownMenuItem>
+
+                                            <DropdownMenuItem onClick={() => setIsRejectOpen(true)} className="cursor-pointer hover:bg-white/10 focus:bg-white/10 gap-2 text-red-400">
+                                                <X className="w-4 h-4" />
+                                                <span>Reject Candidate</span>
+                                            </DropdownMenuItem>
+
+                                            {selectedApp.status === 'Rejected' && (
+                                                <DropdownMenuItem
+                                                    onClick={async () => {
+                                                        const { error } = await supabase.from('applications' as any).update({ status: 'Applied' }).eq('id', selectedApp.id);
+                                                        if (!error) {
+                                                            toast({ title: "Success", description: "Candidate restored to Applied status" });
+                                                            setSelectedApp({ ...selectedApp, status: 'Applied' });
+                                                            fetchData();
+                                                        }
+                                                    }}
+                                                    className="cursor-pointer hover:bg-white/10 focus:bg-white/10 gap-2"
+                                                >
+                                                    <RefreshCcw className="w-4 h-4" />
+                                                    <span>Restore to Applied</span>
+                                                </DropdownMenuItem>
                                             )}
-                                            <Button size="sm" className="bg-green-500 text-white hover:bg-green-600 border-0" onClick={() => setIsTechnicalInviteOpen(true)}>
-                                                Invite to Technical Round
-                                            </Button>
-                                        </div>
-                                    )}
-
-                                    {/* Action Buttons for Technical -> Final */}
-                                    {((['Technical Round Completed', 'Rejected'].includes(selectedApp.status) || selectedApp.status === 'Technical Round') && (selectedApp as any).technical_assessments?.length > 0) && (
-                                        <div className="flex gap-2">
-                                            <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => setIsTechnicalInviteOpen(true)}>
-                                                Retake Technical
-                                            </Button>
-                                            <Button size="sm" className="bg-green-500 text-white hover:bg-green-600 border-0" onClick={() => handleMoveToFinalRound(selectedApp.id)}>
-                                                Select for Final Interview
-                                            </Button>
-                                        </div>
-                                    )}
-
-                                    {selectedApp.status === 'Final Interview' && (
-                                        <div className="flex gap-2 items-center">
-                                            <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={() => setIsFinalInviteOpen(true)}>
-                                                <Send className="w-4 h-4 mr-2" />
-                                                Resend/Reschedule Final
-                                            </Button>
-                                        </div>
-                                    )}
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
 
                                     {/* Final Invite Dialog (Custom) */}
                                     <Dialog open={isFinalInviteOpen} onOpenChange={setIsFinalInviteOpen}>
@@ -526,25 +550,6 @@ export const CandidateDetailDialog = ({
                                             </div>
                                         </DialogContent>
                                     </Dialog>
-
-                                    {selectedApp.status === 'Rejected' && (
-                                        <Button size="sm" variant="outline" className="border-white/20 hover:bg-white/10" onClick={async () => {
-                                            const { error } = await supabase.from('applications' as any).update({ status: 'Applied' }).eq('id', selectedApp.id);
-                                            if (!error) {
-                                                toast({ title: "Success", description: "Candidate restored to Applied status" });
-                                                setSelectedApp({ ...selectedApp, status: 'Applied' });
-                                                fetchData();
-                                            }
-                                        }}>
-                                            Restore to Applied
-                                        </Button>
-                                    )}
-
-                                    {selectedApp.status !== 'Rejected' && (
-                                        <Button size="sm" variant="destructive" className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 mt-2" onClick={() => setIsRejectOpen(true)}>
-                                            Reject
-                                        </Button>
-                                    )}
                                 </div>
                             </div>
 

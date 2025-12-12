@@ -13,12 +13,12 @@ const Footer = () => {
 
                     {/* Brand */}
                     <div className="space-y-6">
-                        <a href="/" className="flex items-center space-x-2">
-                            <div className="w-8 h-8 flex items-center justify-center">
+                        <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center space-x-2 cursor-pointer group">
+                            <div className="w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-110">
                                 <img src="/logo.png" alt="RootedAI" className="w-full h-full object-contain" />
                             </div>
                             <span className="text-xl font-bold text-white tracking-tight">RootedAI</span>
-                        </a>
+                        </div>
                         <p className="text-white/60 text-sm leading-relaxed">
                             Engineering autonomy for the modern enterprise.
                         </p>

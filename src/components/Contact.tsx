@@ -74,7 +74,7 @@ const Contact = () => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
-                className="bg-transparent border-white/10 text-white placeholder:text-white/20 focus:border-white/40 h-12"
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300 h-12"
                 placeholder="Enter your name"
               />
             </div>
@@ -87,7 +87,7 @@ const Contact = () => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                className="bg-transparent border-white/10 text-white placeholder:text-white/20 focus:border-white/40 h-12"
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300 h-12"
                 placeholder="Enter your email"
               />
             </div>
@@ -99,7 +99,7 @@ const Contact = () => {
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 required
-                className="bg-transparent border-white/10 text-white placeholder:text-white/20 focus:border-white/40 min-h-[150px] resize-none"
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300 min-h-[150px] resize-none"
                 placeholder="Tell us about your project"
               />
             </div>

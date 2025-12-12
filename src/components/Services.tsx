@@ -59,7 +59,7 @@ const Services = () => {
           <CarouselContent className="-ml-2 md:-ml-4">
             {services.map((service, index) => (
               <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                <div className="p-1 h-full">
+                <div className="p-1 h-full animate-fade-up" style={{ animationDelay: `${index * 100}ms` }}>
                   <TiltCard className="bw-card h-full p-6 md:p-8 group hover:bg-white/5 transition-colors duration-500">
                     <div className="mb-6 inline-block p-3 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
                       <service.icon className="w-8 h-8 text-white" />

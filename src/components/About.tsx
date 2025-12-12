@@ -23,16 +23,33 @@ const About = () => {
               <TextScramble text="Engineering Intelligence." /> <br />
               <span className="text-white/50"><TextScramble text="COMPLEXITY.SIMPLIFIED" duration={2} /></span>
             </h2>
-            <p className="text-lg text-white/60 leading-relaxed font-light">
-              RootedAI is a strategic automation partner for forward-thinking enterprises.
-              We move beyond simple chatbots to deploy autonomous agents that understand context,
-              execute complex workflows, and drive tangible business outcomes.
-            </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+            <div className="grid grid-cols-1 gap-6">
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                  <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
+                  Our Mission
+                </h3>
+                <p className="text-lg text-white/60 leading-relaxed font-light">
+                  To automate the mundane so humanity can focus on the extraordinary. We don't just build software; we build autonomous systems that think and adapt.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                  <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
+                  Our Vision
+                </h3>
+                <p className="text-lg text-white/60 leading-relaxed font-light">
+                  A world where businesses run at the speed of thought, powered by AI agents that are as reliable as they are intelligent.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
               {features.map((feature, index) => (
-                <div key={index} className="flex items-center space-x-3 group">
-                  <CheckCircle2 className="w-5 h-5 text-white group-hover:text-white/80 transition-colors" />
+                <div key={index} className="flex items-center space-x-3 group p-2 rounded-lg hover:bg-white/5 transition-colors">
+                  <CheckCircle2 className="w-5 h-5 text-blue-500 group-hover:text-blue-400 transition-colors" />
                   <span className="text-white/80 font-medium">{feature}</span>
                 </div>
               ))}

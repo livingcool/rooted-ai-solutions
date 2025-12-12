@@ -78,22 +78,7 @@ const Hero = () => {
             </Button>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-20 border-t border-white/10 mt-20">
-            {[
-              { label: "Accuracy Rate", value: ">95%" },
-              { label: "Time Saved", value: "40h+" },
-              { label: "ROI Increase", value: "3x" },
-              { label: "Active Agents", value: "10+" },
-            ].map((stat, index) => (
-              <div key={index} className="space-y-2">
-                <div className="text-3xl md:text-4xl font-bold text-white">
-                  <TextScramble text={stat.value} characterSet="0123456789%+" duration={1.0} />
-                </div>
-                <div className="text-sm text-white/50 uppercase tracking-wider">{stat.label}</div>
-              </div>
-            ))}
-          </div>
+
 
         </div>
       </div>

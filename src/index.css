@@ -122,15 +122,16 @@
 
   /* Minimalist Utilities */
   .bw-card {
-    @apply bg-black border border-white/10 rounded-xl transition-all duration-300 hover:border-white/30;
+    @apply bg-black/40 backdrop-blur-md border border-white/10 rounded-xl transition-all duration-300 hover:border-white/30 hover:bg-black/60 shadow-lg;
   }
 
   .bw-button {
-    @apply bg-white text-black hover:bg-white/90 transition-colors font-medium px-6 py-3 rounded-full;
+    @apply bg-white text-black hover:bg-white/90 transition-all duration-300 px-6 py-3 rounded-full hover:scale-105 active:scale-95;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
   }
 
   .bw-button-outline {
-    @apply bg-transparent border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-300 px-6 py-3 rounded-full;
+    @apply bg-transparent border border-white/20 text-white hover:bg-white/10 hover:border-white/40 transition-all duration-300 px-6 py-3 rounded-full;
   }
 
   /* Animations */
