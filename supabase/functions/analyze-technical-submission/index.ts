@@ -289,46 +289,10 @@ serve(async (req) => {
         const improvement_suggestions = String(content.improvement_suggestions ?? "").slice(0, 300);
 
         // Decision logic
-        const MIN_SCORE_TECH = 70;
-        let newStatus = "Analyzed";
-        let shouldQueueEmail = false;
-        let emailSubject = "";
-        let emailBody = "";
-
-        if (!Number.isFinite(score) || score < 0) {
-            newStatus = "Requires Review";
-        } else if (score >= MIN_SCORE_TECH) {
-            newStatus = "Final Interview";
-            shouldQueueEmail = true;
-
-            // Create final interview record (best-effort)
-            let token: string | null = null;
-            try {
-                const { data: finalRound, error: createErr } = await supabaseAdmin
-                    .from("final_interviews")
-                    .insert({
-                        application_id: applicationId,
-                        status: "Scheduled",
-                        project_questions: { context: `Built solution: ${String(assessment.tech_stack ?? "").slice(0, 200)}`, ai_notes: feedback }
-                    })
-                    .select("interview_token")
-                    .single();
-                if (!createErr && finalRound?.interview_token) token = finalRound.interview_token;
-            } catch (e) {
-                console.warn("Failed to create final_interview record:", e);
-            }
-
-            const interviewLink = token ? `${frontendUrl}/final-interview?token=${token}` : `${frontendUrl}/dashboard`;
-            const templates = buildEmailTemplates(candidateName, jobTitle, score);
-            emailSubject = templates.successSubject;
-            emailBody = `${templates.successBody}\n\nStart: ${interviewLink}`;
-        } else {
-            newStatus = "Rejected";
-            shouldQueueEmail = true;
-            const templates = buildEmailTemplates(candidateName, jobTitle, score);
-            emailSubject = templates.rejectSubject;
-            emailBody = templates.rejectBody;
-        }
+        // Decision logic
+        // Updated: strictly AI analysis only. No auto-status changes to "Final Interview" or "Rejected"
+        // and NO automatic emails. Admin must decide.
+        const newStatus = "Analyzed";
 
         // Update assessment with AI results (idempotent)
         const { error: updateErr } = await supabaseAdmin
@@ -344,40 +308,18 @@ serve(async (req) => {
 
         if (updateErr) throw updateErr;
 
-        // Update application status
+        // Update application status to "Analyzed" so it shows up for review
+        // (Only if it's not already in a later stage)
         try {
-            await supabaseAdmin.from("applications").update({ status: newStatus }).eq("id", applicationId);
+            if (!["Final Interview", "Offer", "Hired", "Rejected"].includes(assessment.status)) {
+                await supabaseAdmin.from("applications").update({ status: "Technical Round Completed" }).eq("id", applicationId);
+            }
         } catch (e) {
             console.warn("Failed to update application status:", e);
         }
 
-        // Queue email to outbox table and attempt non-blocking immediate send
-        if (shouldQueueEmail && candidateEmail) {
-            try {
-                await supabaseAdmin.from("outbox").insert({
-                    to_email: candidateEmail,
-                    subject: emailSubject,
-                    body: emailBody,
-                    metadata: { assessment_id: assessment.id, score },
-                    status: "queued",
-                    created_at: new Date().toISOString(),
-                });
-            } catch (e) {
-                console.warn("Failed to enqueue email:", e);
-            }
-
-            (async () => {
-                try {
-                    await fetch(`${supabaseUrl}/functions/v1/send-rejection-email`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json", Authorization: `Bearer ${supabaseKey}` },
-                        body: JSON.stringify({ email: candidateEmail, subject: emailSubject, body: emailBody }),
-                    });
-                } catch (e) {
-                    console.warn("Immediate-send attempt failed:", e);
-                }
-            })();
-        }
+        // REMOVED: Automatic Email Queueing & Sending
+        // Admin will manually trigger the next stage email.
 
         return new Response(JSON.stringify({ success: true, assessmentId: assessment.id, score: Number.isFinite(score) && score >= 0 ? score : null }), {
             headers: { ...CORS_HEADERS, "Content-Type": "application/json" },
