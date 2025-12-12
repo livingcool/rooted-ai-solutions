@@ -182,4 +182,22 @@
       opacity: 1;
     }
   }
+
+  /* Voice Wave Animation */
+  @keyframes voice-wave {
+
+    0%,
+    100% {
+      height: 20%;
+    }
+
+    50% {
+      height: 100%;
+    }
+  }
+
+  .animate-voice-wave {
+    animation: voice-wave 1s ease-in-out infinite;
+    display: inline-block;
+  }
 }

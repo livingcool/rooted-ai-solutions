@@ -73,27 +73,61 @@ const AIInterviewRoom = () => {
         return () => clearInterval(interval);
     }, [isRecording, timeLeft]);
 
-    const startRecording = () => {
+    const startRecording = async () => {
         setStatus("Recording...");
         setIsRecording(true);
-        setTimeLeft(MAX_ANSWER_TIME); // Reset timer
+        setTimeLeft(MAX_ANSWER_TIME);
 
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            const mediaRecorder = new MediaRecorder(stream);
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+            // Robust MIME type selection
+            const mimeTypes = [
+                'audio/webm;codecs=opus',
+                'audio/webm',
+                'audio/mp4',
+                'audio/ogg'
+            ];
+            const selectedMime = mimeTypes.find(type => MediaRecorder.isTypeSupported(type)) || '';
+
+            const options = selectedMime ? { mimeType: selectedMime } : undefined;
+            const mediaRecorder = new MediaRecorder(stream, options);
+
             mediaRecorderRef.current = mediaRecorder;
-            mediaRecorder.start();
-
             const chunks: Blob[] = [];
-            mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-            mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(chunks, { type: 'audio/webm' });
-                handleSubmission(audioBlob);
+
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data && e.data.size > 0) {
+                    chunks.push(e.data);
+                }
             };
-        });
+
+            mediaRecorder.onstop = () => {
+                const type = selectedMime || 'audio/webm';
+                const audioBlob = new Blob(chunks, { type });
+
+                // Stop all tracks to release mic
+                stream.getTracks().forEach(track => track.stop());
+
+                if (audioBlob.size > 0) {
+                    handleSubmission(audioBlob);
+                } else {
+                    console.error("Recorded audio is empty");
+                    setStatus("Error: No audio recorded. Check microphone.");
+                    setIsRecording(false);
+                }
+            };
+
+            mediaRecorder.start(1000); // Collect in 1s chunks
+        } catch (err) {
+            console.error("Mic Error:", err);
+            setStatus("Error: Could not access microphone.");
+            setIsRecording(false);
+        }
     };
 
     const stopRecording = () => {
-        if (mediaRecorderRef.current && isRecording) {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
             mediaRecorderRef.current.stop();
             setIsRecording(false);
             setStatus("Processing...");
@@ -221,14 +255,27 @@ const AIInterviewRoom = () => {
         }
     };
 
+    // Auto-scroll ref
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, aiThinking]);
+
     if (!token) return <div className="p-10 text-center text-red-500">Missing Interview Token</div>;
 
     return (
-        <div className="min-h-screen bg-black text-white flex flex-col font-sans">
+        <div className="h-screen bg-black text-white flex flex-col font-sans overflow-hidden">
             {/* Header */}
-            <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50 backdrop-blur">
+            <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50 backdrop-blur shrink-0">
                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-zinc-100 rounded-full"></div> {/* Logo Placeholder */}
+                    <div className="w-8 h-8 bg-zinc-100 rounded-full flex items-center justify-center">
+                        <div className="w-4 h-4 bg-black rounded-full" />
+                    </div>
                     <span className="font-semibold text-lg tracking-tight">RootedAI Interview</span>
                 </div>
                 <button onClick={finishEarly} className="text-zinc-400 hover:text-white flex items-center gap-2 text-sm transition-colors">
@@ -237,19 +284,19 @@ const AIInterviewRoom = () => {
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-zinc-900 h-1">
+            <div className="w-full bg-zinc-900 h-1 shrink-0">
                 <div
                     className="bg-white h-full transition-all duration-500"
                     style={{ width: `${progressPercentage}%` }}
                 ></div>
             </div>
 
-            <div className="flex-1 flex flex-col md:flex-row p-6 gap-6 max-w-7xl mx-auto w-full">
+            <div className="flex-1 flex flex-col md:flex-row p-6 gap-6 max-w-7xl mx-auto w-full overflow-hidden">
 
                 {/* Left Column: AI Avatar & Controls */}
-                <div className="flex-1 flex flex-col gap-6">
+                <div className="flex-1 flex flex-col gap-6 h-full overflow-y-auto hidden-scrollbar">
                     {/* Video Feed */}
-                    <div className="relative rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 shadow-2xl aspect-video group">
+                    <div className="relative rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 shadow-2xl aspect-video group shrink-0">
                         <Webcam
                             ref={webcamRef}
                             audio={false}
@@ -263,7 +310,7 @@ const AIInterviewRoom = () => {
                     </div>
 
                     {/* Controls */}
-                    <div className="bg-zinc-900/80 p-8 rounded-2xl border border-zinc-800 flex flex-col items-center justify-center gap-4 shadow-xl backdrop-blur-sm relative overflow-hidden">
+                    <div className="bg-zinc-900/80 p-8 rounded-2xl border border-zinc-800 flex flex-col items-center justify-center gap-4 shadow-xl backdrop-blur-sm relative overflow-hidden shrink-0">
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 pointer-events-none"></div>
 
                         <div className="text-center z-10">
@@ -284,16 +331,23 @@ const AIInterviewRoom = () => {
                                         {aiThinking ? "Analyzing..." : "Start Answer"}
                                     </button>
                                 ) : (
-                                    <div className="flex flex-col items-center gap-2">
+                                    <div className="flex flex-col items-center gap-4">
+                                        {/* Listening Animation */}
+                                        <div className="flex items-center gap-1 h-8">
+                                            {[...Array(5)].map((_, i) => (
+                                                <div key={i} className="w-2 bg-red-500 rounded-full animate-voice-wave" style={{ animationDelay: `${i * 0.1}s`, height: '100%' }}></div>
+                                            ))}
+                                        </div>
+
                                         <button
                                             onClick={stopRecording}
-                                            className="flex items-center gap-3 bg-red-600 hover:bg-red-500 text-white px-8 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-red-500/20 animate-pulse"
+                                            className="flex items-center gap-3 bg-red-600 hover:bg-red-500 text-white px-8 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-red-500/20"
                                         >
                                             <MicOff size={24} /> Stop & Send
                                         </button>
-                                        <div className="flex items-center gap-2 text-red-400 font-mono text-sm mt-2">
+                                        <div className="flex items-center gap-2 text-red-400 font-mono text-sm">
                                             <Clock size={14} />
-                                            Time Remaining: {timeLeft}s
+                                            {timeLeft}s
                                         </div>
                                     </div>
                                 )
@@ -310,8 +364,8 @@ const AIInterviewRoom = () => {
                 </div>
 
                 {/* Right Column: Transcript */}
-                <div className="w-full md:w-[400px] bg-zinc-900/80 rounded-2xl border border-zinc-800 flex flex-col shadow-xl backdrop-blur-sm h-[600px] md:h-auto">
-                    <div className="p-4 border-b border-zinc-800 font-medium flex items-center justify-between text-zinc-300 bg-zinc-900/50 rounded-t-2xl">
+                <div className="w-full md:w-[400px] bg-zinc-900/80 rounded-2xl border border-zinc-800 flex flex-col shadow-xl backdrop-blur-sm h-[600px] md:h-full overflow-hidden">
+                    <div className="p-4 border-b border-zinc-800 font-medium flex items-center justify-between text-zinc-300 bg-zinc-900/50 rounded-t-2xl shrink-0">
                         <div className="flex items-center gap-2">
                             <MessageSquare size={18} /> Transcript
                         </div>
@@ -344,7 +398,7 @@ const AIInterviewRoom = () => {
                                 </div>
                             </div>
                         )}
-                        <div className="h-4"></div> {/* Bottom Spacer */}
+                        <div ref={messagesEndRef} />
                     </div>
                 </div>
 

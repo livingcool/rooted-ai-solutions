@@ -59,12 +59,17 @@ serve(async (req) => {
         // Truncate Resume Context significantly (max 1000 chars)
         const extendedContext = (resumeText.length > 50) ? resumeText.substring(0, 1000).replace(/\s+/g, ' ') : (session.project_questions?.context || "").substring(0, 500);
 
-        // 2. Transcribe Audio (Whisper)
+        // 2. Transcribe Audio (Whisper) - Optimized
         let userText = "";
         if (audioFile) {
             const transData = new FormData();
             transData.append('file', audioFile);
             transData.append('model', 'whisper-large-v3');
+            transData.append('language', 'en'); // Improve accuracy for English
+
+            // Context Prompting: Helps Whisper understand domain-specific terms
+            const previousContext = session.transcript ? session.transcript.slice(-300) : "";
+            transData.append('prompt', `Technical interview about ${jobTitle}. Context: ${previousContext}`);
 
             const transResp = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
                 method: 'POST',
@@ -72,7 +77,13 @@ serve(async (req) => {
                 body: transData
             });
             const transJson = await transResp.json();
-            userText = transJson.text;
+
+            if (transJson.error) {
+                console.error("Transcription Error:", transJson.error);
+                userText = "[Unintelligible / Error in transcription]";
+            } else {
+                userText = transJson.text;
+            }
         }
 
         // 3. Analyze Video Frame (Llama Vision) - Token Optimized
@@ -119,9 +130,16 @@ serve(async (req) => {
         }
 
         // 4. Generate AI Response (Behavioral + Project Context)
+        // 4. Generate AI Response (Behavioral + Project Context)
         const projectContext = session.project_questions?.context || "";
+
+        // Context Awareness: If transcript is empty, inject the implicit greeting so the AI knows it started.
+        let fullTranscript = session.transcript || "";
+        if (!fullTranscript.trim()) {
+            fullTranscript = "AI: Hello! I'm the AI Founder. I've reviewed your project. I'd like to ask you a few questions about your technical choices. When you're ready, please start recording your answer.\n";
+        }
+
         // Optimize History: Keep only last 4000 chars (~1000 tokens) to prevent rate limits
-        const fullTranscript = session.transcript || "";
         const transcriptHistory = fullTranscript.length > 4000 ?
             "...(older history truncated)...\n" + fullTranscript.slice(-4000) :
             fullTranscript;
@@ -142,7 +160,7 @@ Rules:
 - Output JSON ONLY.
 
 Stages (A-H):
-A. Intro: Welcome, warm-up.
+A. Intro: (ALREADY DONE).
 B. Projects: Ask about relevant project (Objective, Contribution, Outcome).
 C. Technical: 3 Qs (Beginner->Advanced) from Skills.
 D. Behavioral: STAR (Conflict/Teamwork).
@@ -150,6 +168,8 @@ E. Scenario: Hypothetical role challenge.
 F. Culture: Why RootedAI?
 G. Closing: Ask for questions, say Goodbye.
 H. EVALUATION (Only when done): Output detailed scores.
+
+CRITICAL: If the user says "Ready", "Start", or similar, MOVE IMMEDIATELY TO STAGE B (Projects). Do not repeat the greeting.
 
 ${forceEnd ? "URGENT: user has requested to END the interview immediately. You MUST output Stage H (EVALUATION) NOW based on the conversation so far. Do not ask more questions." : ""}
 
@@ -171,7 +191,7 @@ Candidate Input: "${userText}" ${forceEnd ? "(User clicked 'Submit / End Intervi
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'qwen/qwen3-32b',
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { role: "system", content: systemPrompt },
                     { role: "user", content: `(Candidate just said): "${userText || "..."}" \n(Vision analysis): ${visionContext}` }
