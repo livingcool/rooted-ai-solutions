@@ -167,7 +167,6 @@ const TechnicalAssessment = () => {
             }
 
             // Save to Database
-            const { error: dbError } = await supabase
             // 3. Update Existing Technical Assessment (Prevent Duplicates)
             // Retrieve the pending assessment ID first
             const { data: existingAssessment, error: fetchError } = await supabase

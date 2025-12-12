@@ -200,44 +200,56 @@ serve(async (req) => {
 
         // --- Build prompt (token-efficient) ---
         // If frames provided, include first few URLs only (they are external resources)
-        const MAX_FRAME_URLS = 6;
-        const frameUrls = frames.slice(0, MAX_FRAME_URLS).map(String);
-        const framesText = frameUrls.length ? `Frame URLs:\n${frameUrls.join("\n")}` : "";
-
-        const submissionSummary = [
+        // --- Build prompt (token-efficient) ---
+        // Prepare content for Vision model
+        const submissionText = [
             `Problem: ${String(problemStatement).slice(0, 800)}`,
             `GitHub: ${String(assessment.github_url ?? "none")}`,
             `Tech Stack: ${String(assessment.tech_stack ?? "n/a")}`,
             `Process Flow: ${String(assessment.process_flow ?? "").slice(0, 800)}`,
             `Issues Faced: ${String(assessment.issues_faced ?? "").slice(0, 500)}`,
             `Cost Analysis: ${String(assessment.cost_analysis ?? "").slice(0, 300)}`,
-            `Video Transcript (trimmed): ${transcription.slice(0, 2000)}`,
-            framesText
+            `Video Transcript (trimmed): ${transcription.slice(0, 2000)}`
         ].filter(Boolean).join("\n\n");
 
         const systemMessage = [
             `You are a Senior Lead Engineer assessing a technical submission for the role "${jobTitle}".`,
             `Be STRICT and practical. Score 0-100 (>=70 passes).`,
-            `CRITICAL: Reference the 'Video Transcript' to validate claims. If the code/text claims features not shown or explained in the video, penalize the score.`,
+            `CRITICAL: Analyze the provided VIDEO FRAMES and Transcript to validate claims. check if the UI looks professional, if the features demonstrated match the description.`,
             `Focus: correctness, code quality, product thinking, role fit, and deployment feasibility.`,
             `Return ONLY valid JSON: {"score":0-100,"feedback":"<=150 words","improvement_suggestions":"<=50 words"}`
         ].join("\n");
 
-        const userMessage = `SubmissionSummary:\n${submissionSummary}`;
+        // Construct User Message with Text + Images
+        const userContent: any[] = [
+            { type: "text", text: `SubmissionSummary:\n${submissionText}` }
+        ];
 
-        // --- Call Groq chat (deterministic) ---
+        // Add frames if available (limit to 3 for payload size safety)
+        if (frames.length > 0) {
+            frames.slice(0, 3).forEach((frameData: string) => {
+                if (typeof frameData === 'string' && frameData.startsWith('data:image')) {
+                    userContent.push({
+                        type: "image_url",
+                        image_url: { url: frameData }
+                    });
+                }
+            });
+        }
+
+        // --- Call Groq chat (Vision Model) ---
         const aiFetch = async () => {
             const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
                 headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    model: "qwen/qwen3-32b",
+                    model: "llama-3.2-90b-vision-preview",
                     messages: [
                         { role: "system", content: systemMessage },
-                        { role: "user", content: userMessage }
+                        { role: "user", content: userContent }
                     ],
-                    temperature: 0.05,
-                    max_tokens: 600,
+                    temperature: 0.1,
+                    max_tokens: 1024,
                     response_format: { type: "json_object" },
                 }),
             });
