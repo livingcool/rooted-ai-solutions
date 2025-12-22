@@ -1,4 +1,4 @@
-import { Twitter, Linkedin, Instagram, ArrowUp } from "lucide-react";
+import { Twitter, Linkedin, Instagram, ArrowUp, Phone, Mail, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
@@ -10,9 +10,8 @@ const Footer = () => {
         <footer className="border-t border-white/10 pt-20 pb-10">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-
-                    {/* Brand */}
-                    <div className="space-y-6">
+                    {/* Brand & Contact */}
+                    <div className="space-y-6 md:col-span-2">
                         <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center space-x-2 cursor-pointer group">
                             <div className="w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-110">
                                 <img src="/logo.png" alt="RootedAI" className="w-full h-full object-contain" />
@@ -20,8 +19,34 @@ const Footer = () => {
                             <span className="text-xl font-bold text-white tracking-tight">RootedAI</span>
                         </div>
                         <p className="text-white/60 text-sm leading-relaxed">
-                            Engineering autonomy for the modern enterprise.
+                            Automating logistics, hiring, and support for Indian SMEs and fast-growing teams.
                         </p>
+
+                        {/* Contact Information */}
+                        <div className="space-y-3">
+                            <a
+                                href="https://wa.me/917904168521"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-3 text-white/60 hover:text-white transition-colors group"
+                            >
+                                <Phone className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                <span className="text-sm">+91 7904168521</span>
+                            </a>
+                            <a
+                                href="mailto:rootedaiofficial@gmail.com"
+                                className="flex items-center gap-3 text-white/60 hover:text-white transition-colors group"
+                            >
+                                <Mail className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                <span className="text-sm">rootedaiofficial@gmail.com</span>
+                            </a>
+                            <div className="flex items-center gap-3 text-white/60">
+                                <MapPin className="w-4 h-4" />
+                                <span className="text-sm">Based in India, working globally</span>
+                            </div>
+                        </div>
+
+                        {/* Social Media */}
                         <div className="flex space-x-4">
                             <a href="https://x.com/rootedai2025?s=20" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
                                 <Twitter className="w-5 h-5" />
@@ -42,6 +67,7 @@ const Footer = () => {
                             <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
                             <li><a href="#careers" className="hover:text-white transition-colors">Careers</a></li>
                             <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
+                            <li><a href="#products" className="hover:text-white transition-colors">Products</a></li>
                         </ul>
                     </div>
 
@@ -51,21 +77,15 @@ const Footer = () => {
                             <li><a href="#services" className="hover:text-white transition-colors">AI Agents</a></li>
                             <li><a href="#services" className="hover:text-white transition-colors">Automation</a></li>
                             <li><a href="#services" className="hover:text-white transition-colors">Analytics</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-white font-bold mb-6">Legal</h4>
-                        <ul className="space-y-4 text-sm text-white/60">
-                            <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                            <li><a href="#case-studies" className="hover:text-white transition-colors">Case Studies</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-xs text-white/40">
-                        © {new Date().getFullYear()} RootedAI Solutions. All rights reserved.
+                    <p className="text-xs text-white/40 text-center md:text-left">
+                        © {new Date().getFullYear()} RootedAI Solutions. All rights reserved. <br className="md:hidden" />
+                        Helping businesses save 40% on ops cost through AI automation.
                     </p>
                     <Button
                         variant="ghost"

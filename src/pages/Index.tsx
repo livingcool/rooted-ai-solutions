@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Services from "@/components/Services";
 import CaseStudies from "@/components/CaseStudies";
+import Products from "@/components/Products";
 import Careers from "@/components/Careers";
 import Contact from "@/components/Contact";
 
@@ -47,6 +48,9 @@ const Index = () => {
         </RevealOnScroll>
         <RevealOnScroll>
           <CaseStudies />
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <Products />
         </RevealOnScroll>
         <RevealOnScroll>
           <Careers />

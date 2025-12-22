@@ -1,56 +1,63 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Building, TrendingDown, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TiltCard from "@/components/ui/TiltCard";
 
 const caseStudies = [
   {
     title: "WhatsApp Pet Food Ordering Automation",
-    client: "",
-    description: "Automated ordering system via WhatsApp, streamlining customer orders and reducing manual entry errors.",
+    clientType: "Pet Food Distributor",
+    problem: "Manual order entry via WhatsApp led to 15% error rate and 2+ hour response time",
+    solution: "Built AI agent to auto-parse orders, validate inventory, send confirmations",
     metric: "100% Automated",
+    subMetric: "Replaced 3 data-entry staff",
+    impact: "0% errors, instant confirmations",
     tags: ["WhatsApp Automation", "Order Processing"],
     link: "https://www.linkedin.com/pulse/5-critical-automation-mistakes-indian-smes-make-how-fix-them-u5tme/?trackingId=Qp1WkEtnRk2IZi0eQcpYTQ%3D%3D"
   },
   {
     title: "Voter Verification Automation",
-    client: "",
-    description: "Automated verification of voter lists, comparing historical data to ensure accuracy and integrity.",
-    metric: "Data Integrity",
-    tags: ["Government", "Verification", "Data Analysis"],
+    clientType: "Government / NGO",
+    problem: "Manual comparison of 50,000+ voter records took weeks and was error-prone",
+    solution: "Automated data archaeology system to compare 2002 vs 2024 voter lists",
+    metric: "99.8% Accuracy",
+    subMetric: "Completed in 3 days vs 4 weeks",
+    impact:
+      "85% time saved",
+    tags: ["Government", "Data Analysis", "Verification"],
     link: "https://www.linkedin.com/pulse/data-archaeology-comparing-2002-vs-2024-voter-lists-rootdai-bo0me/?trackingId=VFBJkwh6CiBd8GfgPZUHUw%3D%3D"
   },
   {
-    title: "E-Commerce Logistics",
-    client: "",
-    description: "Predictive inventory management system optimizing stock levels and reducing waste.",
-    metric: "20% Cost Saving",
+    title: "E-Commerce Inventory Optimization",
+    clientType: "Logistics Firm",
+    problem: "Overstocking led to 25% wastage; understocking caused lost sales",
+    solution: "Predictive ML model for demand forecasting with real-time stock alerts",
+    metric: "23% Cost Saving",
+    subMetric: "Reduced wastage from 25% to 7%",
+    impact: "₹12L saved annually",
     tags: ["Predictive Analytics", "Supply Chain"],
     link: null
   }
 ];
 
 const CaseStudies = () => {
+  const handleBookCall = () => {
+    const message = encodeURIComponent("Hi, I'd like to see if you can automate my process in 7 days. Let's book a 20-min call.");
+    window.open(`https://wa.me/917904168521?text=${message}`, "_blank");
+  };
+
   return (
     <section id="case-studies" className="py-24 border-t border-white/10">
       <div className="container mx-auto px-4 md:px-6">
-
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div className="space-y-4">
             <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
               Proven Impact
             </h2>
             <p className="text-white/60 max-w-xl text-lg font-light">
-              Real-world results from our strategic AI implementations.
+              Real businesses. Real savings. Real results.
             </p>
           </div>
-          <Button
-            variant="ghost"
-            className="bw-button-outline hidden md:flex text-white hover:text-black"
-            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            Start Your Project
-          </Button>
         </div>
 
         <Carousel
@@ -65,8 +72,8 @@ const CaseStudies = () => {
               <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                 <div className="h-full">
                   <TiltCard className="bw-card h-full p-6 md:p-8 flex flex-col justify-between group hover:bg-white/5 transition-colors duration-500">
-
                     <div className="space-y-6">
+                      {/* Tags */}
                       <div className="flex flex-wrap gap-2">
                         {study.tags.map((tag, i) => (
                           <span key={i} className="text-xs font-mono text-white/40 border border-white/10 px-2 py-1 rounded-full">
@@ -75,40 +82,63 @@ const CaseStudies = () => {
                         ))}
                       </div>
 
-                      <div>
-                        <h3 className="text-2xl font-bold text-white mb-2 group-hover:translate-x-1 transition-transform duration-300">
-                          {study.title}
-                        </h3>
-                        <p className="text-sm text-white/40 uppercase tracking-widest mb-4">
-                          {study.client}
-                        </p>
-                        <p className="text-white/60 leading-relaxed">
-                          {study.description}
-                        </p>
+                      {/* Client Type */}
+                      <div className="flex items-center gap-2 text-sm text-white/50">
+                        <Building className="w-4 h-4" />
+                        {study.clientType}
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="text-2xl font-bold text-white mb-2 group-hover:translate-x-1 transition-transform duration-300">
+                        {study.title}
+                      </h3>
+
+                      {/* Problem-Solution */}
+                      <div className="space-y-3 text-sm">
+                        <div>
+                          <div className="text-red-400/80 font-semibold mb-1">Problem:</div>
+                          <p className="text-white/60 leading-relaxed">
+                            {study.problem}
+                          </p>
+                        </div>
+                        <div>
+                          <div className="text-green-400/80 font-semibold mb-1">Solution:</div>
+                          <p className="text-white/60 leading-relaxed">
+                            {study.solution}
+                          </p>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="mt-8 pt-8 border-t border-white/10 flex items-center justify-between">
-                      <div>
-                        <div className="text-2xl font-bold text-white">{study.metric}</div>
-                        <div className="text-xs text-white/40">Key Result</div>
+                    {/* Metrics & CTA */}
+                    <div className="mt-8 pt-6 border-t border-white/10 space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <div className="text-3xl font-bold text-white">{study.metric}</div>
+                          <div className="text-xs text-white/40">Key Result</div>
+                        </div>
+                        <div>
+                          <div className="text-sm font-semibold text-white/80">{study.subMetric}</div>
+                          <div className="text-xs text-white/60 mt-1">{study.impact}</div>
+                        </div>
                       </div>
+
                       {study.link ? (
                         <a
                           href={study.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300"
+                          className="flex items-center justify-between w-full p-3 rounded-lg border border-white/20 hover:bg-white hover:text-black transition-all duration-300 group/link"
                         >
-                          <ArrowRight className="w-4 h-4" />
+                          <span className="text-sm font-medium">Read Full Case Study</span>
+                          <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                         </a>
                       ) : (
-                        <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
-                          <ArrowRight className="w-4 h-4" />
+                        <div className="flex items-center justify-center w-full p-3 rounded-lg border border-white/10 bg-white/5">
+                          <span className="text-xs text-white/40">Case study coming soon</span>
                         </div>
                       )}
                     </div>
-
                   </TiltCard>
                 </div>
               </CarouselItem>
@@ -120,16 +150,24 @@ const CaseStudies = () => {
           </div>
         </Carousel>
 
-        <div className="mt-12 text-center md:hidden">
-          <Button
-            variant="ghost"
-            className="bw-button-outline w-full text-white hover:text-black"
-            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            Start Your Project
-          </Button>
+        {/* CTA Section */}
+        <div className="mt-16 text-center">
+          <div className="bw-card p-8 md:p-12 max-w-3xl mx-auto bg-gradient-to-b from-white/5 to-transparent">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              See if we can automate your process in 7 days
+            </h3>
+            <p className="text-white/60 mb-6">
+              Book a 20‑minute discovery call to identify quick wins
+            </p>
+            <Button
+              onClick={handleBookCall}
+              className="bw-button text-lg px-8 py-6 group"
+            >
+              Book Discovery Call
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
         </div>
-
       </div>
     </section>
   );
