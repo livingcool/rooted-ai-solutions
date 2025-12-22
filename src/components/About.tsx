@@ -152,8 +152,7 @@ const About = () => {
               />
 
               <div className="relative z-10 space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-1 h-8 bg-blue-500 rounded-full" />
+                <div>
                   <h3 className="text-2xl font-bold text-white">
                     {typeMission ? (
                       <span className="inline-block animate-type-on">Our Mission</span>
@@ -221,8 +220,7 @@ const About = () => {
               />
 
               <div className="relative z-10 space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-1 h-8 bg-purple-500 rounded-full" />
+                <div>
                   <h3 className="text-2xl font-bold text-white">
                     {typeVision ? (
                       <span className="inline-block animate-type-on">Our Vision</span>
