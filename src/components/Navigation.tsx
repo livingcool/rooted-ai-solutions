@@ -29,10 +29,10 @@ const Navigation = () => {
         }`}
     >
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between py-2">
           {/* Logo */}
           <a href="/" className="flex items-center group">
-            <div className="relative h-16 w-auto">
+            <div className="relative h-40 w-auto">
               <img
                 src="/logo-v2.png"
                 alt="RootedAI Logo"

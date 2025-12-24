@@ -13,7 +13,7 @@ const Footer = () => {
                     {/* Brand & Contact */}
                     <div className="space-y-6 md:col-span-2">
                         <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center cursor-pointer group">
-                            <div className="relative h-16 w-auto">
+                            <div className="relative h-40 w-auto">
                                 <img src="/logo-v2.png" alt="RootedAI" className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
                             </div>
                         </div>

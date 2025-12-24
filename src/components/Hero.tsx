@@ -43,11 +43,8 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto text-center space-y-8">
           {/* Main Headline */}
-          <h1 className="text-4xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white min-h-[1.2em] leading-tight">
-            We automate logistics, hiring, and support{" "}
-            <span className="text-white/70">
-              so your team saves 40% on ops cost
-            </span>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white min-h-[1.2em] leading-tight">
+            Automate. Optimize. <span className="text-white/70">Scale.</span>
           </h1>
 
           {/* Target Audience */}
