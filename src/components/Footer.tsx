@@ -12,11 +12,10 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                     {/* Brand & Contact */}
                     <div className="space-y-6 md:col-span-2">
-                        <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center space-x-2 cursor-pointer group">
-                            <div className="w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-110">
-                                <img src="/logo.png" alt="RootedAI" className="w-full h-full object-contain" />
+                        <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center cursor-pointer group">
+                            <div className="relative h-16 w-auto">
+                                <img src="/logo-v2.png" alt="RootedAI" className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
                             </div>
-                            <span className="text-xl font-bold text-white tracking-tight">RootedAI</span>
                         </div>
                         <p className="text-white/60 text-sm leading-relaxed">
                             Automating logistics, hiring, and support for Indian SMEs and fast-growing teams.

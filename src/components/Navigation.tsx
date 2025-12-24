@@ -31,17 +31,14 @@ const Navigation = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center space-x-2 group">
-            <div className="relative w-10 h-10">
+          <a href="/" className="flex items-center group">
+            <div className="relative h-16 w-auto">
               <img
-                src="/logo.png"
+                src="/logo-v2.png"
                 alt="RootedAI Logo"
-                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </div>
-            <span className="text-2xl font-heading font-bold text-white tracking-tight">
-              RootedAI
-            </span>
           </a>
 
           {/* Desktop Navigation */}
