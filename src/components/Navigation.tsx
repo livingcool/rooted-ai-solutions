@@ -32,9 +32,9 @@ const Navigation = () => {
         <div className="flex items-center justify-between py-2">
           {/* Logo */}
           <a href="/" className="flex items-center group">
-            <div className="relative h-40 w-auto">
+            <div className="relative h-10 w-auto">
               <img
-                src="/logo-v2.png"
+                src="/logo-v3.png"
                 alt="RootedAI Logo"
                 className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
@@ -72,7 +72,7 @@ const Navigation = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-20 left-0 right-0 bg-black border-b border-white/10 p-4 animate-fade-in">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-black border-b border-white/10 p-4 animate-fade-in">
           <div className="flex flex-col space-y-4">
             {navLinks.map((link) => (
               <a
