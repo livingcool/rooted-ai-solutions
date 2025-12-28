@@ -34,7 +34,7 @@ const Navigation = () => {
           <a href="/" className="flex items-center group">
             <div className="relative h-10 w-auto">
               <img
-                src="/logo-v3.png"
+                src="/logo-v4.png"
                 alt="RootedAI Logo"
                 className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />

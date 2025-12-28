@@ -43,13 +43,17 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto text-center space-y-8">
           {/* Main Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white min-h-[1.2em] leading-tight">
-            Automate. Optimize. <span className="text-white/70">Scale.</span>
-          </h1>
+          <div className="flex justify-center">
+            <img
+              src="/hero-title.png"
+              alt="Automate. Optimize. Scale."
+              className="h-16 md:h-24 w-auto object-contain brightness-0 invert"
+            />
+          </div>
 
           {/* Target Audience */}
           <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto font-medium tracking-wide animate-fade-up" style={{ animationDelay: "0.1s" }}>
-            For Indian SMEs, logistics firms, and fast-growing teams
+            Automate. Optimize. Scale.
           </p>
 
           {/* Trusted Impact - Social Proof */}

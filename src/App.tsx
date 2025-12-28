@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 import AdminHiringDashboard from "./pages/AdminHiringDashboard";
+import AdminPassSet from "./pages/AdminPassSet";
 import Login from "./pages/Login";
 import Interview from "./pages/Interview";
 import CandidateLogin from "./pages/CandidateLogin";
@@ -41,6 +42,8 @@ const App = () => (
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin-hiring" element={<AdminHiringDashboard />} />
+            <Route path="/:orgSlug/admin-pass-set" element={<AdminPassSet />} />
+            <Route path="/:orgSlug" element={<AdminHiringDashboard />} />
             <Route path="/candidate-login" element={<CandidateLogin />} />
             <Route path="/assessment" element={<Interview />} />
             <Route path="/jobs/:id" element={<JobDetails />} />
