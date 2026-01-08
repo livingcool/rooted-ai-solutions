@@ -1,9 +1,11 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { useTheme } from "@/components/ThemeProvider"
 
 const GlobalBackground = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
+    const { theme } = useTheme()
 
     useEffect(() => {
         const canvas = canvasRef.current
@@ -30,10 +32,9 @@ const GlobalBackground = () => {
         let particles: ParticleType[] = []
         let shootingStars: ShootingStar[] = []
         let lastTime = 0
-        let shootingStarTimer = 0
 
         // Configuration
-        const particleCount = Math.min(100, (width * height) / 15000) // Responsive count
+        const particleCount = Math.min(100, (width * height) / 15000)
         const connectionDistance = 150
         const mouseDistance = 250
 
@@ -59,40 +60,38 @@ const GlobalBackground = () => {
             }
 
             update() {
-                // Movement
                 this.x += this.vx
                 this.y += this.vy
 
-                // Wrap
                 if (this.x > width) this.x = 0
                 if (this.x < 0) this.x = width
                 if (this.y > height) this.y = 0
                 if (this.y < 0) this.y = height
 
-                // Mouse interaction
                 const dx = mouse.x - this.x
                 const dy = mouse.y - this.y
                 const distance = Math.sqrt(dx * dx + dy * dy)
 
                 if (distance < mouseDistance) {
-                    // Gentle push
                     const forceDirectionX = dx / distance
                     const forceDirectionY = dy / distance
                     const force = (mouseDistance - distance) / mouseDistance
                     this.x -= forceDirectionX * force * 0.5
                     this.y -= forceDirectionY * force * 0.5
-                    this.targetAlpha = 0.8 // Brighten on hover
+                    this.targetAlpha = 0.8
                 } else {
                     this.targetAlpha = Math.random() * 0.5 + 0.1
                 }
 
-                // Smooth alpha transition
                 this.alpha += (this.targetAlpha - this.alpha) * 0.05
             }
 
             draw() {
                 if (!ctx) return
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`
+                const isDark = document.documentElement.classList.contains("dark")
+                const color = isDark ? "255, 255, 255" : "0, 0, 0"
+
+                ctx.fillStyle = `rgba(${color}, ${this.alpha})`
                 ctx.beginPath()
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
                 ctx.fill()
@@ -117,7 +116,7 @@ const GlobalBackground = () => {
                 this.size = Math.random() * 1 + 0.1
                 this.waitTime = new Date().getTime() + Math.random() * 3000 + 500
                 this.active = false
-                this.angle = 45 // degrees
+                this.angle = 45
             }
 
             update() {
@@ -139,8 +138,10 @@ const GlobalBackground = () => {
 
             draw() {
                 if (!this.active || !ctx) return
+                const isDark = document.documentElement.classList.contains("dark")
+                const color = isDark ? "255, 255, 255" : "0, 0, 0"
 
-                ctx.strokeStyle = "rgba(255, 255, 255, 0.5)"
+                ctx.strokeStyle = `rgba(${color}, 0.5)`
                 ctx.lineWidth = this.size
                 ctx.lineCap = "round"
 
@@ -157,7 +158,6 @@ const GlobalBackground = () => {
             for (let i = 0; i < particleCount; i++) {
                 particles.push(new Particle())
             }
-            // Add a few shooting stars
             for (let i = 0; i < 2; i++) {
                 shootingStars.push(new ShootingStar())
             }
@@ -170,12 +170,13 @@ const GlobalBackground = () => {
 
             ctx.clearRect(0, 0, width, height)
 
-            // Update and draw particles
+            const isDark = document.documentElement.classList.contains("dark")
+            const color = isDark ? "255, 255, 255" : "0, 0, 0"
+
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update()
                 particles[i].draw()
 
-                // Connections
                 for (let j = i; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x
                     const dy = particles[i].y - particles[j].y
@@ -184,7 +185,7 @@ const GlobalBackground = () => {
                     if (distance < connectionDistance) {
                         ctx.beginPath()
                         const opacity = 1 - distance / connectionDistance
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.15})`
+                        ctx.strokeStyle = `rgba(${color}, ${opacity * 0.15})`
                         ctx.lineWidth = 1
                         ctx.moveTo(particles[i].x, particles[i].y)
                         ctx.lineTo(particles[j].x, particles[j].y)
@@ -193,7 +194,6 @@ const GlobalBackground = () => {
                 }
             }
 
-            // Update and draw shooting stars
             shootingStars.forEach(star => {
                 star.update()
                 star.draw()
@@ -229,19 +229,19 @@ const GlobalBackground = () => {
             window.removeEventListener("resize", handleResize)
             window.removeEventListener("mousemove", handleMouseMove)
         }
-    }, [])
+    }, [theme]) // Re-run effect when theme changes to potentially re-init logic if needed
 
     return (
-        <div className="fixed inset-0 -z-10 bg-black pointer-events-none overflow-hidden">
-            {/* Ambient Background Glows */}
-            <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-violet-900/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
-            <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-indigo-900/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
+        <div className="fixed inset-0 -z-10 bg-background transition-colors duration-500 pointer-events-none overflow-hidden">
+            {/* Ambient Background Glows - Adjusted for themes */}
+            <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-violet-500/10 dark:bg-violet-900/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+            <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-indigo-500/10 dark:bg-indigo-900/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
 
             {/* The Canvas */}
             <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-80" />
 
             {/* Overlay Gradient for depth */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/10 dark:via-black/20 dark:to-black/80 transition-colors duration-500" />
         </div>
     )
 }

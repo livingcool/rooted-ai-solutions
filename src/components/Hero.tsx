@@ -1,23 +1,75 @@
 import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Building2, TrendingUp, Users } from "lucide-react";
-import TextScramble from "@/components/ui/TextScramble";
+import { ArrowRight } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
-  const [text, setText] = useState("");
-  const fullText = "ROOTEDAI";
+  const [currentSlide, setCurrentSlide] = useState(0);
 
+  const slides = [
+    {
+      headline: "Customized Software",
+      subheadline: "Built for Your Business",
+      description: "Enterprise-grade solutions tailored to your unique needs. From concept to deployment, we build software that grows with you.",
+      cta: "Get Custom Solution",
+      ctaMessage: "Hi, I'd like a customized software solution from RootedAI",
+      stats: [
+        { value: "100%", label: "Custom Built" },
+        { value: "2-4 Wk", label: "Delivery" },
+        { value: "24/7", label: "Support" },
+        { value: "AI-First", label: "Approach" },
+      ],
+    },
+    {
+      headline: "Automate Everything,",
+      subheadline: "Focus on Growth",
+      description: "AI-powered automation that handles repetitive tasks. Let intelligent systems do the heavy lifting while your team focuses on innovation.",
+      cta: "Automate Your Workflow",
+      ctaMessage: "Hi, I'd like to automate my workflow with RootedAI",
+      stats: [
+        { value: "90%", label: "Time Saved" },
+        { value: "Zero", label: "Errors" },
+        { value: "5+", label: "Solutions" },
+        { value: "24/7", label: "Active" },
+      ],
+    },
+    {
+      headline: "From Idea to",
+      subheadline: "Production Ready",
+      description: "Full-stack development expertise. We transform your vision into production-ready software with modern tech and best practices.",
+      cta: "Start Building",
+      ctaMessage: "Hi, I'd like to start building with RootedAI",
+      stats: [
+        { value: "Full", label: "Stack Dev" },
+        { value: "Modern", label: "Tech Stack" },
+        { value: "Fast", label: "Deployment" },
+        { value: "Scalable", label: "Solutions" },
+      ],
+    },
+    {
+      headline: "Smart Solutions,",
+      subheadline: "Lower Costs",
+      description: "Reduce operational costs with intelligent automation and streamlined processes. Get enterprise quality without enterprise overhead.",
+      cta: "Cut Your Costs",
+      ctaMessage: "Hi, I'd like to reduce costs with RootedAI",
+      stats: [
+        { value: "40%", label: "Cost Savings" },
+        { value: "Fast", label: "ROI" },
+        { value: "No", label: "Overhead" },
+        { value: "Proven", label: "Results" },
+      ],
+    },
+  ];
+
+  // Auto-rotate carousel
   useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      setText(fullText.slice(0, i + 1));
-      i++;
-      if (i > fullText.length) clearInterval(interval);
-    }, 150);
-    return () => clearInterval(interval);
-  }, []);
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -25,7 +77,7 @@ const Hero = () => {
       const { clientX, clientY } = e;
       const moveX = clientX - window.innerWidth / 2;
       const moveY = clientY - window.innerHeight / 2;
-      const offset = 0.02;
+      const offset = 0.01;
 
       heroRef.current.style.setProperty("--move-x", `${moveX * offset}px`);
       heroRef.current.style.setProperty("--move-y", `${moveY * offset}px`);
@@ -40,89 +92,118 @@ const Hero = () => {
       ref={heroRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
     >
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-6xl mx-auto text-center space-y-8">
-          {/* Main Headline */}
-          <div className="flex justify-center">
-            <img
-              src="/hero-title.png"
-              alt="Automate. Optimize. Scale."
-              className="h-16 md:h-24 w-auto object-contain brightness-0 invert"
-            />
-          </div>
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute top-1/4 right-10 w-64 h-64 rounded-full bg-gradient-to-br from-black/5 to-transparent dark:from-white/10 blur-3xl"
+          style={{ transform: 'translate(var(--move-x), var(--move-y))' }}
+        />
+        <div
+          className="absolute bottom-1/4 left-10 w-96 h-96 rounded-full bg-gradient-to-tr from-black/5 to-transparent dark:from-white/5 blur-3xl"
+          style={{ transform: 'translate(calc(var(--move-x) * -1), calc(var(--move-y) * -1))' }}
+        />
+      </div>
 
-          {/* Target Audience */}
-          <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto font-medium tracking-wide animate-fade-up" style={{ animationDelay: "0.1s" }}>
-            Automate. Optimize. Scale.
-          </p>
-
-          {/* Trusted Impact - Social Proof */}
-          <div className="animate-fade-up pt-4" style={{ animationDelay: "0.2s" }}>
-            <p className="text-xs uppercase tracking-widest text-white/40 mb-4">Trusted Impact</p>
-            <div className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
-              <div className="space-y-1">
-                <div className="text-3xl md:text-4xl font-bold text-white">10+</div>
-                <div className="text-xs uppercase tracking-wider text-white/60">Active AI Agents</div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-3xl md:text-4xl font-bold text-white">40%</div>
-                <div className="text-xs uppercase tracking-wider text-white/60">Avg Cost Reduction</div>
-              </div>
-              <div className="space-y-1">
-                <div className="text-3xl md:text-4xl font-bold text-white">75+</div>
-                <div className="text-xs uppercase tracking-wider text-white/60">Projects Delivered</div>
-              </div>
-            </div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 animate-fade-up" style={{ animationDelay: "0.4s" }}>
-            <MagneticButton>
-              <Button
-                className="bw-button text-lg px-8 py-6 group"
-                onClick={() => window.open("https://wa.me/917904168521?text=Hi,%20I'd%20like%20to%20discuss%20automation%20for%20my%20business", "_blank")}
+      <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+          {/* Left Column - Main Content */}
+          <div className="space-y-8 text-left">
+            {/* Headline - with transition */}
+            <div className="min-h-[200px] md:min-h-[250px]">
+              <h1
+                key={currentSlide}
+                className="text-5xl md:text-6xl lg:text-7xl font-bold text-black dark:text-white leading-tight animate-fade-up"
               >
-                Book a Discovery Call
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </MagneticButton>
-            <Button
-              variant="ghost"
-              className="bw-button-outline text-lg px-8 py-6 text-white hover:text-black"
-              onClick={() => document.getElementById("case-studies")?.scrollIntoView({ behavior: "smooth" })}
+                {slides[currentSlide].headline}{" "}
+                <span className="block mt-2 bg-gradient-to-r from-black via-black/90 to-black/70 dark:from-white dark:via-white/90 dark:to-white/70 bg-clip-text text-transparent">
+                  {slides[currentSlide].subheadline}
+                </span>
+              </h1>
+            </div>
+
+            {/* Subheadline */}
+            <p
+              key={`desc-${currentSlide}`}
+              className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl animate-fade-up"
+              style={{ animationDelay: "0.1s" }}
             >
-              View Case Studies
-            </Button>
+              {slides[currentSlide].description}
+            </p>
+
+            {/* CTA Button */}
+            <div className="animate-fade-up" style={{ animationDelay: "0.2s" }}>
+              <MagneticButton>
+                <Button
+                  key={`cta-${currentSlide}`}
+                  size="lg"
+                  className="bw-button text-lg font-semibold group"
+                  onClick={() => window.open(`https://wa.me/917904168521?text=${encodeURIComponent(slides[currentSlide].ctaMessage)}`, "_blank")}
+                >
+                  {slides[currentSlide].cta}
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </MagneticButton>
+            </div>
+
+            {/* Carousel Indicator Dots */}
+            <div className="flex gap-3 pt-4 animate-fade-up" style={{ animationDelay: "0.3s" }}>
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide
+                    ? "w-12 bg-black dark:bg-white"
+                    : "w-12 bg-black/20 dark:bg-white/20 hover:bg-black/40 dark:hover:bg-white/40"
+                    }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Key Value Props */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 max-w-4xl mx-auto animate-fade-up" style={{ animationDelay: "0.6s" }}>
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-              <Building2 className="w-5 h-5 text-white/60 flex-shrink-0 mt-1" />
-              <div className="text-left">
-                <div className="text-sm font-semibold text-white">Replace 3-5 FTEs</div>
-                <div className="text-xs text-white/60">with AI agents in logistics & support</div>
+          {/* Right Column - Visual Elements & Stats */}
+          <div className="relative animate-fade-up" style={{ animationDelay: "0.4s" }}>
+            {/* Decorative Shapes - More prominent */}
+            <div className="relative w-full h-[550px] flex items-center justify-center">
+              {/* Corner decorative elements */}
+              <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-gradient-to-br from-orange-500/30 to-red-500/30 blur-2xl animate-pulse-glow"></div>
+              <div className="absolute top-20 right-10 w-24 h-24 rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 blur-xl"></div>
+
+              {/* Abstract geometric shapes */}
+              <div className="absolute top-10 right-20 w-32 h-32 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 blur-xl"></div>
+              <div className="absolute bottom-20 left-10 w-40 h-40 rounded-full bg-gradient-to-tr from-yellow-500/20 to-red-500/20 blur-xl"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-gradient-to-br from-black/10 to-black/5 dark:from-white/10 dark:to-white/5 blur-2xl"></div>
+
+              {/* Glowing corner accent */}
+              <div className="absolute -top-4 -right-4 w-32 h-32">
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-black/20 dark:from-white/20 via-orange-500/20 to-transparent blur-xl animate-pulse"></div>
               </div>
-            </div>
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-              <TrendingUp className="w-5 h-5 text-white/60 flex-shrink-0 mt-1" />
-              <div className="text-left">
-                <div className="text-sm font-semibold text-white">90% error reduction</div>
-                <div className="text-xs text-white/60">in repetitive data entry tasks</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-              <Users className="w-5 h-5 text-white/60 flex-shrink-0 mt-1" />
-              <div className="text-left">
-                <div className="text-sm font-semibold text-white">5-second resolution</div>
-                <div className="text-xs text-white/60">for internal support tickets</div>
+
+              {/* Stats Overlay - Bigger cards with animations */}
+              <div
+                key={`stats-${currentSlide}`}
+                className="relative z-10 grid grid-cols-2 gap-6 max-w-lg animate-fade-up"
+              >
+                {slides[currentSlide].stats.map((stat, index) => (
+                  <div
+                    key={index}
+                    className="bw-card p-8 text-center hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 backdrop-blur-sm hover:scale-105"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="text-5xl font-bold text-black dark:text-white mb-3">{stat.value}</div>
+                    <div className="text-xs text-black/60 dark:text-white/60 uppercase tracking-wider">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
+
+
       </div>
     </section>
   );
 };
+
 
 export default Hero;

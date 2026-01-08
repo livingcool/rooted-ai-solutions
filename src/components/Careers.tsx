@@ -67,15 +67,15 @@ const Careers = () => {
   ];
 
   return (
-    <section id="careers" className="py-24 border-t border-white/10">
+    <section id="careers" className="py-24 border-t border-black/10 dark:border-white/10">
       <div className="container mx-auto px-4 md:px-6">
 
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div className="space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
               Join RootedAI
             </h2>
-            <p className="text-white/60 max-w-xl text-lg font-light">
+            <p className="text-muted-foreground max-w-xl text-lg font-light">
               Launch Your AI Career. Join our passionate team and grow with us as we transform businesses through intelligent automation.
             </p>
           </div>
@@ -84,12 +84,12 @@ const Careers = () => {
         {/* Benefits Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
           {benefits.map((benefit, index) => (
-            <div key={index} className="p-6 border border-white/10 hover:bg-white/5 transition-colors duration-300">
-              <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6">
-                <benefit.icon className="w-6 h-6 text-white" />
+            <div key={index} className="p-6 border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-300">
+              <div className="w-12 h-12 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
+                <benefit.icon className="w-6 h-6 text-black dark:text-white" />
               </div>
-              <h4 className="font-bold text-white mb-2">{benefit.title}</h4>
-              <p className="text-sm text-white/60">{benefit.description}</p>
+              <h4 className="font-bold text-black dark:text-white mb-2">{benefit.title}</h4>
+              <p className="text-sm text-muted-foreground">{benefit.description}</p>
             </div>
           ))}
         </div>
@@ -110,14 +110,14 @@ const Careers = () => {
         <div className={`transition-all duration-700 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}`}>
           <div className="mb-24">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-              <h3 className="text-2xl font-bold text-white border-l-4 border-white pl-4">
+              <h3 className="text-2xl font-bold text-black dark:text-white border-l-4 border-black dark:border-white pl-4">
                 Open Positions
               </h3>
               <div className="relative w-full md:w-64">
                 <input
                   type="text"
                   placeholder="Search roles or skills..."
-                  className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
+                  className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full px-4 py-2 text-sm text-black dark:text-white focus:outline-none focus:border-black/30 dark:focus:border-white/30 transition-colors"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -134,17 +134,17 @@ const Careers = () => {
                 }, {} as Record<string, typeof jobs>)
               ).map(([department, deptJobs]) => (
                 <div key={department} className="space-y-6">
-                  <h3 className="text-2xl font-bold text-white border-b border-white/10 pb-2">{department}</h3>
+                  <h3 className="text-2xl font-bold text-black dark:text-white border-b border-black/10 dark:border-white/10 pb-2">{department}</h3>
                   <div className="grid gap-4">
                     {deptJobs.map((job) => (
                       <div
                         key={job.id}
-                        className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 p-6 transition-all hover:bg-white/10 hover:border-white/20"
+                        className="group relative overflow-hidden rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-6 transition-all hover:bg-black/10 dark:hover:bg-white/10 hover:border-black/20 dark:hover:border-white/20"
                       >
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                           <div>
-                            <h4 className="text-xl font-bold text-white mb-2">{job.title}</h4>
-                            <div className="flex flex-wrap gap-2 text-sm text-white/60">
+                            <h4 className="text-xl font-bold text-black dark:text-white mb-2">{job.title}</h4>
+                            <div className="flex flex-wrap gap-2 text-sm text-black/60 dark:text-white/60">
                               <span className="flex items-center gap-1">
                                 <Briefcase className="w-3 h-3" />
                                 {job.type}
@@ -162,7 +162,7 @@ const Careers = () => {
                             </div>
                           </div>
                           <Button
-                            className="bg-white text-black hover:bg-white/90 font-medium px-6"
+                            className="bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 font-medium px-6"
                             onClick={() => window.open(`/jobs/${job.id}`, '_blank')}
                           >
                             View Details
@@ -175,7 +175,7 @@ const Careers = () => {
               ))}
 
               {filteredJobs.length === 0 && (
-                <div className="text-center py-12 text-white/40">
+                <div className="text-center py-12 text-muted-foreground opacity-40">
                   No open positions found matching your criteria.
                 </div>
               )}
@@ -185,7 +185,7 @@ const Careers = () => {
               <Button
                 variant="ghost"
                 onClick={() => setIsExpanded(false)}
-                className="text-white/60 hover:text-white"
+                className="text-muted-foreground hover:text-foreground"
               >
                 Show Less
               </Button>
@@ -196,28 +196,28 @@ const Careers = () => {
 
 
         {/* Culture Section */}
-        <div className="mt-24 p-8 md:p-12 border border-white/10 bg-white/5">
+        <div className="mt-24 p-8 md:p-12 border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
           <div className="max-w-3xl mx-auto text-center space-y-8">
-            <h3 className="text-3xl font-bold text-white">
+            <h3 className="text-3xl font-bold text-black dark:text-white">
               Our Culture
             </h3>
-            <p className="text-lg text-white/60 leading-relaxed">
+            <p className="text-lg text-muted-foreground leading-relaxed">
               At RootedAI, we believe in nurturing fresh talent and fostering innovation through
               mentorship, hands-on learning, and a shared passion for transforming businesses through AI.
               Start your career with us and grow alongside cutting-edge technology.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-white/10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-black/10 dark:border-white/10">
               <div className="space-y-2">
-                <div className="text-xl font-bold text-white">Learning</div>
-                <div className="text-xs text-white/40 uppercase tracking-widest">Mentorship & Training</div>
+                <div className="text-xl font-bold text-black dark:text-white">Learning</div>
+                <div className="text-xs text-muted-foreground opacity-40 uppercase tracking-widest">Mentorship & Training</div>
               </div>
               <div className="space-y-2">
-                <div className="text-xl font-bold text-white">Growth</div>
-                <div className="text-xs text-white/40 uppercase tracking-widest">Career Progression</div>
+                <div className="text-xl font-bold text-black dark:text-white">Growth</div>
+                <div className="text-xs text-muted-foreground opacity-40 uppercase tracking-widest">Career Progression</div>
               </div>
               <div className="space-y-2">
-                <div className="text-xl font-bold text-white">Impact</div>
-                <div className="text-xs text-white/40 uppercase tracking-widest">Real World Projects</div>
+                <div className="text-xl font-bold text-black dark:text-white">Impact</div>
+                <div className="text-xs text-muted-foreground opacity-40 uppercase tracking-widest">Real World Projects</div>
               </div>
             </div>
           </div>

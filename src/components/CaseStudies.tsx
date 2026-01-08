@@ -47,14 +47,14 @@ const CaseStudies = () => {
   };
 
   return (
-    <section id="case-studies" className="py-24 border-t border-white/10">
+    <section id="case-studies" className="py-24 border-t border-black/10 dark:border-white/10">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div className="space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
               Proven Impact
             </h2>
-            <p className="text-white/60 max-w-xl text-lg font-light">
+            <p className="text-muted-foreground max-w-xl text-lg font-light">
               Real businesses. Real savings. Real results.
             </p>
           </div>
@@ -71,39 +71,39 @@ const CaseStudies = () => {
             {caseStudies.map((study, index) => (
               <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                 <div className="h-full">
-                  <TiltCard className="bw-card h-full p-6 md:p-8 flex flex-col justify-between group hover:bg-white/5 transition-colors duration-500">
+                  <TiltCard className="bw-card h-full p-6 md:p-8 flex flex-col justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-500">
                     <div className="space-y-6">
                       {/* Tags */}
                       <div className="flex flex-wrap gap-2">
                         {study.tags.map((tag, i) => (
-                          <span key={i} className="text-xs font-mono text-white/40 border border-white/10 px-2 py-1 rounded-full">
+                          <span key={i} className="text-xs font-mono text-muted-foreground opacity-80 border border-black/10 dark:border-white/10 px-2 py-1 rounded-full">
                             {tag}
                           </span>
                         ))}
                       </div>
 
                       {/* Client Type */}
-                      <div className="flex items-center gap-2 text-sm text-white/50">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground opacity-70">
                         <Building className="w-4 h-4" />
                         {study.clientType}
                       </div>
 
                       {/* Title */}
-                      <h3 className="text-2xl font-bold text-white mb-2 group-hover:translate-x-1 transition-transform duration-300">
+                      <h3 className="text-2xl font-bold text-black dark:text-white mb-2 group-hover:translate-x-1 transition-transform duration-300">
                         {study.title}
                       </h3>
 
                       {/* Problem-Solution */}
                       <div className="space-y-3 text-sm">
                         <div>
-                          <div className="text-red-400/80 font-semibold mb-1">Problem:</div>
-                          <p className="text-white/60 leading-relaxed">
+                          <div className="text-red-500/80 dark:text-red-400/80 font-semibold mb-1">Problem:</div>
+                          <p className="text-muted-foreground leading-relaxed">
                             {study.problem}
                           </p>
                         </div>
                         <div>
-                          <div className="text-green-400/80 font-semibold mb-1">Solution:</div>
-                          <p className="text-white/60 leading-relaxed">
+                          <div className="text-green-500/80 dark:text-green-400/80 font-semibold mb-1">Solution:</div>
+                          <p className="text-muted-foreground leading-relaxed">
                             {study.solution}
                           </p>
                         </div>
@@ -111,15 +111,15 @@ const CaseStudies = () => {
                     </div>
 
                     {/* Metrics & CTA */}
-                    <div className="mt-8 pt-6 border-t border-white/10 space-y-4">
+                    <div className="mt-8 pt-6 border-t border-black/10 dark:border-white/10 space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <div className="text-3xl font-bold text-white">{study.metric}</div>
-                          <div className="text-xs text-white/40">Key Result</div>
+                          <div className="text-3xl font-bold text-black dark:text-white">{study.metric}</div>
+                          <div className="text-xs text-muted-foreground opacity-60">Key Result</div>
                         </div>
                         <div>
-                          <div className="text-sm font-semibold text-white/80">{study.subMetric}</div>
-                          <div className="text-xs text-white/60 mt-1">{study.impact}</div>
+                          <div className="text-sm font-semibold text-black/80 dark:text-white/80">{study.subMetric}</div>
+                          <div className="text-xs text-muted-foreground mt-1">{study.impact}</div>
                         </div>
                       </div>
 
@@ -128,14 +128,14 @@ const CaseStudies = () => {
                           href={study.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between w-full p-3 rounded-lg border border-white/20 hover:bg-white hover:text-black transition-all duration-300 group/link"
+                          className="flex items-center justify-between w-full p-3 rounded-lg border border-black/20 dark:border-white/20 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group/link"
                         >
                           <span className="text-sm font-medium">Read Full Case Study</span>
                           <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                         </a>
                       ) : (
-                        <div className="flex items-center justify-center w-full p-3 rounded-lg border border-white/10 bg-white/5">
-                          <span className="text-xs text-white/40">Case study coming soon</span>
+                        <div className="flex items-center justify-center w-full p-3 rounded-lg border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
+                          <span className="text-xs text-muted-foreground opacity-50">Case study coming soon</span>
                         </div>
                       )}
                     </div>
@@ -145,18 +145,18 @@ const CaseStudies = () => {
             ))}
           </CarouselContent>
           <div className="flex justify-end gap-4 mt-8">
-            <CarouselPrevious className="static translate-y-0 bg-transparent border-white/20 text-white hover:bg-white hover:text-black" />
-            <CarouselNext className="static translate-y-0 bg-transparent border-white/20 text-white hover:bg-white hover:text-black" />
+            <CarouselPrevious className="static translate-y-0 bg-transparent border-black/20 dark:border-white/20 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black" />
+            <CarouselNext className="static translate-y-0 bg-transparent border-black/20 dark:border-white/20 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black" />
           </div>
         </Carousel>
 
         {/* CTA Section */}
         <div className="mt-16 text-center">
-          <div className="bw-card p-8 md:p-12 max-w-3xl mx-auto bg-gradient-to-b from-white/5 to-transparent">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+          <div className="bw-card p-8 md:p-12 max-w-3xl mx-auto bg-gradient-to-b from-black/5 to-transparent dark:from-white/5">
+            <h3 className="text-2xl md:text-3xl font-bold text-black dark:text-white mb-4">
               See if we can automate your process in 7 days
             </h3>
-            <p className="text-white/60 mb-6">
+            <p className="text-muted-foreground mb-6">
               Book a 20‑minute discovery call to identify quick wins
             </p>
             <Button

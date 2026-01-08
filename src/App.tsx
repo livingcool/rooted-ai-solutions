@@ -31,6 +31,7 @@ import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import GlobalBackground from "@/components/GlobalBackground";
+import SectionIndicator from "@/components/SectionIndicator";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
           <CustomCursor />
           <ScrollProgress />
           <ScrollToHash />
+          <SectionIndicator />
           <Routes>
             <Route path="/" element={<Index />} />
 

@@ -45,14 +45,14 @@ const About = () => {
   }, [isVisible]);
 
   return (
-    <section id="about" className="py-24 border-t border-white/10 relative overflow-hidden" ref={sectionRef}>
+    <section id="about" className="py-24 border-t border-black/10 dark:border-white/10 relative overflow-hidden" ref={sectionRef}>
       {/* Animated Background Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-full opacity-20">
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-32 h-32 border border-white/10 rounded-lg animate-float"
+              className="absolute w-32 h-32 border border-black/10 dark:border-white/10 rounded-lg animate-float"
               style={{
                 left: `${20 + i * 15}%`,
                 top: `${10 + (i % 3) * 30}%`,
@@ -72,16 +72,16 @@ const About = () => {
               }`}
             style={{ letterSpacing: '0.3em' }}
           >
-            <span className="text-xs uppercase text-white/40 font-medium tracking-[0.3em]">
+            <span className="text-xs uppercase text-muted-foreground font-medium tracking-[0.3em]">
               RootedAI Philosophy
             </span>
           </div>
 
           {/* Glowing Divider Line */}
           <div className="relative mt-6 mb-8 h-px max-w-md mx-auto overflow-hidden">
-            <div className="absolute inset-0 bg-white/10" />
+            <div className="absolute inset-0 bg-black/10 dark:bg-white/10" />
             <div
-              className={`absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent transition-all duration-2000 ${isVisible ? 'translate-x-0' : '-translate-x-full'
+              className={`absolute inset-0 bg-gradient-to-r from-transparent via-black dark:via-white to-transparent transition-all duration-2000 ${isVisible ? 'translate-x-0' : '-translate-x-full'
                 }`}
               style={{
                 boxShadow: '0 0 20px rgba(255,255,255,0.5)',
@@ -90,7 +90,7 @@ const About = () => {
             />
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight">
             Why We Exist
           </h2>
         </div>
@@ -102,7 +102,7 @@ const About = () => {
         >
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight max-w-5xl mx-auto">
             <TextScramble text="Engineering Intelligence. " />
-            <span className="text-white/50">
+            <span className="text-muted-foreground">
               <TextScramble text="COMPLEXITY.SIMPLIFIED" duration={2} />
             </span>
           </h2>
@@ -121,19 +121,19 @@ const About = () => {
               {/* Animated Background - Task Icons Flowing */}
               <div className="absolute inset-0 overflow-hidden opacity-10 pointer-events-none">
                 <div className="animate-flow-1">
-                  <FileText className="absolute w-6 h-6 text-white" style={{ top: '20%', left: '10%' }} />
+                  <FileText className="absolute w-6 h-6 text-black dark:text-white" style={{ top: '20%', left: '10%' }} />
                 </div>
                 <div className="animate-flow-2">
-                  <Ticket className="absolute w-6 h-6 text-white" style={{ top: '40%', left: '15%' }} />
+                  <Ticket className="absolute w-6 h-6 text-black dark:text-white" style={{ top: '40%', left: '15%' }} />
                 </div>
                 <div className="animate-flow-3">
-                  <Receipt className="absolute w-6 h-6 text-white" style={{ top: '60%', left: '20%' }} />
+                  <Receipt className="absolute w-6 h-6 text-black dark:text-white" style={{ top: '60%', left: '20%' }} />
                 </div>
                 <div className="animate-flow-4">
-                  <MessageSquare className="absolute w-6 h-6 text-white" style={{ top: '80%', left: '10%' }} />
+                  <MessageSquare className="absolute w-6 h-6 text-black dark:text-white" style={{ top: '80%', left: '10%' }} />
                 </div>
                 {/* AI Core Center */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/20 blur-xl animate-pulse" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-black/20 dark:bg-white/20 blur-xl animate-pulse" />
                 {/* Checkmarks Exiting */}
                 <div className="animate-flow-5">
                   <Check className="absolute w-6 h-6 text-green-400" style={{ top: '30%', right: '15%' }} />
@@ -153,7 +153,7 @@ const About = () => {
 
               <div className="relative z-10 space-y-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-white">
+                  <h3 className="text-2xl font-bold text-black dark:text-white">
                     {typeMission ? (
                       <span className="inline-block animate-type-on">Our Mission</span>
                     ) : (
@@ -161,11 +161,11 @@ const About = () => {
                     )}
                   </h3>
                 </div>
-                <p className="text-lg text-white/70 leading-relaxed font-light">
+                <p className="text-lg text-muted-foreground leading-relaxed font-light">
                   To{' '}
                   <span
                     className={`transition-all duration-700 ${highlightMundane
-                      ? 'text-white font-semibold bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-1 rounded'
+                      ? 'text-black dark:text-white font-semibold bg-gradient-to-r from-blue-500/20 to-purple-500/20 px-1 rounded'
                       : ''
                       }`}
                   >
@@ -174,7 +174,7 @@ const About = () => {
                   {' '}so humanity can focus on the{' '}
                   <span
                     className={`transition-all duration-700 ${highlightExtraordinary
-                      ? 'text-white font-semibold bg-gradient-to-r from-purple-500/20 to-pink-500/20 px-1 rounded'
+                      ? 'text-black dark:text-white font-semibold bg-gradient-to-r from-purple-500/20 to-pink-500/20 px-1 rounded'
                       : ''
                       }`}
                   >
@@ -200,13 +200,13 @@ const About = () => {
                 className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none"
                 style={{ transformStyle: 'preserve-3d' }}
               >
-                <div className="absolute w-20 h-20 border border-white/30 rounded-lg transform rotate-12 animate-float"
+                <div className="absolute w-20 h-20 border border-black/30 dark:border-white/30 rounded-lg transform rotate-12 animate-float"
                   style={{ top: '10%', right: '10%', animationDuration: '6s' }}
                 />
-                <div className="absolute w-16 h-16 border border-white/30 rounded-full animate-float"
+                <div className="absolute w-32 h-32 border border-black/10 dark:border-white/10 rounded-lg animate-float"
                   style={{ bottom: '20%', left: '15%', animationDuration: '8s', animationDelay: '1s' }}
                 />
-                <div className="absolute w-24 h-24 border border-white/30 transform rotate-45 animate-float"
+                <div className="absolute w-24 h-24 border border-black/30 dark:border-white/30 transform rotate-45 animate-float"
                   style={{ top: '50%', right: '20%', animationDuration: '10s', animationDelay: '2s' }}
                 />
               </div>
@@ -221,7 +221,7 @@ const About = () => {
 
               <div className="relative z-10 space-y-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-white">
+                  <h3 className="text-2xl font-bold text-black dark:text-white">
                     {typeVision ? (
                       <span className="inline-block animate-type-on">Our Vision</span>
                     ) : (
@@ -229,21 +229,21 @@ const About = () => {
                     )}
                   </h3>
                 </div>
-                <p className="text-lg text-white/70 leading-relaxed font-light mb-6">
+                <p className="text-lg text-muted-foreground leading-relaxed font-light mb-6">
                   A world where businesses run at the speed of thought, powered by AI agents that are as reliable as they are intelligent.
                 </p>
 
                 {/* Speed of Thought Line */}
-                <div className="relative h-px bg-white/20 overflow-hidden rounded-full">
+                <div className="relative h-px bg-black/10 dark:bg-white/20 overflow-hidden rounded-full">
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 animate-speed-line"
                     style={{ width: '30%' }}
                   />
                   {/* Moving Nodes */}
-                  <div className="absolute w-2 h-2 bg-white rounded-full animate-node-1" style={{ top: '-3px' }} />
-                  <div className="absolute w-2 h-2 bg-white rounded-full animate-node-2" style={{ top: '-3px' }} />
+                  <div className="absolute w-2 h-2 bg-black dark:bg-white rounded-full animate-node-1" style={{ top: '-3px' }} />
+                  <div className="absolute w-2 h-2 bg-black dark:bg-white rounded-full animate-node-2" style={{ top: '-3px' }} />
                   <div className="absolute w-1.5 h-1.5 bg-purple-400 rounded-full animate-node-3" style={{ top: '-2px' }} />
                 </div>
-                <p className="text-xs text-white/40 text-center mt-2 italic">Speed of thought ⚡</p>
+                <p className="text-xs text-muted-foreground text-center mt-2 italic">Speed of thought ⚡</p>
               </div>
             </TiltCard>
           </div>
@@ -254,14 +254,14 @@ const About = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className={`flex items-center space-x-3 group p-3 rounded-lg hover:bg-white/5 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              className={`flex items-center space-x-3 group p-3 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               style={{
                 transitionDelay: `${800 + index * 100}ms`
               }}
             >
               <CheckCircle2 className="w-5 h-5 text-blue-500 group-hover:text-blue-400 transition-colors flex-shrink-0" />
-              <span className="text-white/80 font-medium text-sm">{feature}</span>
+              <span className="text-black/80 dark:text-white/80 font-medium text-sm">{feature}</span>
             </div>
           ))}
         </div>

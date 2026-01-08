@@ -3,6 +3,7 @@ import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Services from "@/components/Services";
+import Outsourcing from "@/components/Outsourcing";
 import CaseStudies from "@/components/CaseStudies";
 import Products from "@/components/Products";
 import Careers from "@/components/Careers";
@@ -34,30 +35,55 @@ const Index = () => {
     <div className="min-h-screen relative">
       <div className="relative z-10">
         <Navigation />
-        <Hero />
+        <div id="hero">
+          <Hero />
+        </div>
 
         <RevealOnScroll delay={0.2}>
           <TechStackMarquee />
         </RevealOnScroll>
 
-        <RevealOnScroll>
-          <About />
-        </RevealOnScroll>
-        <RevealOnScroll>
-          <Services />
-        </RevealOnScroll>
-        <RevealOnScroll>
-          <CaseStudies />
-        </RevealOnScroll>
-        <RevealOnScroll>
-          <Products />
-        </RevealOnScroll>
-        <RevealOnScroll>
-          <Careers />
-        </RevealOnScroll>
-        <RevealOnScroll>
-          <Contact />
-        </RevealOnScroll>
+        <div id="about">
+          <RevealOnScroll>
+            <About />
+          </RevealOnScroll>
+        </div>
+
+        <div id="services">
+          <RevealOnScroll>
+            <Services />
+          </RevealOnScroll>
+        </div>
+
+        <div id="outsourcing">
+          <RevealOnScroll>
+            <Outsourcing />
+          </RevealOnScroll>
+        </div>
+
+        <div id="case-studies">
+          <RevealOnScroll>
+            <CaseStudies />
+          </RevealOnScroll>
+        </div>
+
+        <div id="products">
+          <RevealOnScroll>
+            <Products />
+          </RevealOnScroll>
+        </div>
+
+        <div id="careers">
+          <RevealOnScroll>
+            <Careers />
+          </RevealOnScroll>
+        </div>
+
+        <div id="contact">
+          <RevealOnScroll>
+            <Contact />
+          </RevealOnScroll>
+        </div>
 
         <RevealOnScroll>
           <Footer />

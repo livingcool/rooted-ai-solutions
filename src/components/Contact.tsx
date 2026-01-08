@@ -54,13 +54,13 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 border-t border-white/10">
+    <section id="contact" className="py-24 border-t border-black/10 dark:border-white/10">
       <div className="container mx-auto px-4 md:px-6">
         <div className="max-w-2xl mx-auto text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
             Let's Talk
           </h2>
-          <p className="text-white/60 text-lg font-light">
+          <p className="text-muted-foreground text-lg font-light">
             Ready to automate your operations?
           </p>
         </div>
@@ -68,38 +68,38 @@ const Contact = () => {
         <div className="max-w-xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium text-white/60 uppercase tracking-widest">Name</label>
+              <label htmlFor="name" className="text-sm font-medium text-muted-foreground opacity-60 uppercase tracking-widest">Name</label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300 h-12"
+                className="bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white placeholder:text-muted-foreground focus:border-black/40 dark:focus:border-white/40 focus:bg-black/10 dark:focus:bg-white/10 focus:ring-1 focus:ring-black/20 dark:focus:ring-white/20 transition-all duration-300 h-12"
                 placeholder="Enter your name"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-white/60 uppercase tracking-widest">Email</label>
+              <label htmlFor="email" className="text-sm font-medium text-muted-foreground opacity-60 uppercase tracking-widest">Email</label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300 h-12"
+                className="bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white placeholder:text-muted-foreground focus:border-black/40 dark:focus:border-white/40 focus:bg-black/10 dark:focus:bg-white/10 focus:ring-1 focus:ring-black/20 dark:focus:ring-white/20 transition-all duration-300 h-12"
                 placeholder="Enter your email"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="message" className="text-sm font-medium text-white/60 uppercase tracking-widest">Message</label>
+              <label htmlFor="message" className="text-sm font-medium text-muted-foreground opacity-60 uppercase tracking-widest">Message</label>
               <Textarea
                 id="message"
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 required
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-white/40 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300 min-h-[150px] resize-none"
+                className="bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white placeholder:text-muted-foreground focus:border-black/40 dark:focus:border-white/40 focus:bg-black/10 dark:focus:bg-white/10 focus:ring-1 focus:ring-black/20 dark:focus:ring-white/20 transition-all duration-300 min-h-[150px] resize-none"
                 placeholder="Tell us about your project"
               />
             </div>

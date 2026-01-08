@@ -120,23 +120,23 @@ const AIAgents = () => {
                 <Navigation />
 
                 {/* Hero Section */}
-                <section className="pt-32 pb-20 relative overflow-hidden border-b border-white/10">
+                <section className="pt-32 pb-20 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="max-w-4xl mx-auto text-center space-y-6">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-4">
-                                <Brain className="w-4 h-4 text-white" />
-                                <span className="text-sm text-white/80">AI Agents Services</span>
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 mb-4">
+                                <Brain className="w-4 h-4 text-black dark:text-white" />
+                                <span className="text-sm text-black/80 dark:text-white/80">AI Agents Services</span>
                             </div>
-                            <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight">
+                            <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white tracking-tight">
                                 AI Agents Development Services
                             </h1>
-                            <p className="text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
+                            <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
                                 Supercharge your business with RootedAI! Our AI agent services drive growth, efficiency, and innovation through autonomous, intelligent automation.
                             </p>
                             <Button
                                 onClick={handleConsultExperts}
                                 size="lg"
-                                className="mt-8 bg-white text-black hover:bg-white/90 font-semibold group"
+                                className="mt-8 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 font-semibold group"
                             >
                                 Consult our experts
                                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -146,30 +146,30 @@ const AIAgents = () => {
                 </section>
 
                 {/* Our Services Section */}
-                <section className="py-24 relative overflow-hidden border-b border-white/10">
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16 space-y-4">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
                                 Our Services
                             </h2>
-                            <p className="text-white/60 max-w-2xl mx-auto text-lg font-light">
+                            <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light">
                                 Experience the power of AI agents
                             </p>
-                            <p className="text-white/50 max-w-3xl mx-auto">
+                            <p className="text-muted-foreground opacity-70 max-w-3xl mx-auto">
                                 We offer AI agent development solutions to transform your business with custom autonomous systems.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {services.map((service, index) => (
-                                <TiltCard key={index} className="bw-card p-8 group hover:bg-white/5 transition-all duration-500">
-                                    <div className="mb-6 inline-block p-4 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                                        <service.icon className="w-8 h-8 text-white" />
+                                <TiltCard key={index} className="bw-card p-8 group hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                    <div className="mb-6 inline-block p-4 rounded-lg bg-black/5 dark:bg-white/5 group-hover:bg-black/10 dark:group-hover:bg-white/10 transition-colors">
+                                        <service.icon className="w-8 h-8 text-black dark:text-white" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-4 group-hover:translate-x-1 transition-transform">
+                                    <h3 className="text-xl font-bold text-black dark:text-white mb-4 group-hover:translate-x-1 transition-transform">
                                         {service.title}
                                     </h3>
-                                    <p className="text-white/60 leading-relaxed text-sm">
+                                    <p className="text-muted-foreground leading-relaxed text-sm">
                                         {service.description}
                                     </p>
                                 </TiltCard>
@@ -179,13 +179,13 @@ const AIAgents = () => {
                 </section>
 
                 {/* Why Choose RootedAI Section */}
-                <section className="py-24 relative overflow-hidden border-b border-white/10">
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
                                 Why Choose RootedAI?
                             </h2>
-                            <p className="text-white/60 max-w-2xl mx-auto">
+                            <p className="text-muted-foreground max-w-2xl mx-auto">
                                 Why RootedAI for AI agent development services
                             </p>
                         </div>
@@ -193,12 +193,12 @@ const AIAgents = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
                             {whyChoose.map((item, index) => (
                                 <div key={index} className="flex gap-6 group">
-                                    <div className="text-6xl font-bold text-white/10 group-hover:text-white/20 transition-colors">
+                                    <div className="text-6xl font-bold text-black/10 dark:text-white/10 group-hover:text-black/20 dark:group-hover:text-white/20 transition-colors">
                                         {item.number}
                                     </div>
                                     <div className="flex-1 space-y-3">
-                                        <h3 className="text-xl font-bold text-white">{item.title}</h3>
-                                        <p className="text-white/60 leading-relaxed">{item.description}</p>
+                                        <h3 className="text-xl font-bold text-black dark:text-white">{item.title}</h3>
+                                        <p className="text-muted-foreground leading-relaxed">{item.description}</p>
                                     </div>
                                 </div>
                             ))}
@@ -207,25 +207,25 @@ const AIAgents = () => {
                 </section>
 
                 {/* Benefits Section */}
-                <section className="py-24 relative overflow-hidden border-b border-white/10">
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
                                 Enhance Performance and Profitability
                             </h2>
-                            <p className="text-white/60 max-w-2xl mx-auto">
+                            <p className="text-muted-foreground max-w-2xl mx-auto">
                                 How AI agents fuel sustainable growth for your business
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
                             {benefits.map((benefit, index) => (
-                                <TiltCard key={index} className="bw-card p-8 hover:bg-white/5 transition-all duration-500">
+                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
                                     <div className="flex items-start gap-4">
-                                        <CheckCircle className="w-6 h-6 text-white flex-shrink-0 mt-1" />
+                                        <CheckCircle className="w-6 h-6 text-black dark:text-white flex-shrink-0 mt-1" />
                                         <div className="space-y-2">
-                                            <h3 className="text-xl font-bold text-white">{benefit.title}</h3>
-                                            <p className="text-white/60 leading-relaxed">{benefit.description}</p>
+                                            <h3 className="text-xl font-bold text-black dark:text-white">{benefit.title}</h3>
+                                            <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
                                         </div>
                                     </div>
                                 </TiltCard>
@@ -235,13 +235,13 @@ const AIAgents = () => {
                 </section>
 
                 {/* Process Section */}
-                <section className="py-24 relative overflow-hidden border-b border-white/10">
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
                                 Our Development Process
                             </h2>
-                            <p className="text-white/60 max-w-2xl mx-auto">
+                            <p className="text-muted-foreground max-w-2xl mx-auto">
                                 Explore our step-by-step AI agent development approach
                             </p>
                         </div>
@@ -249,12 +249,12 @@ const AIAgents = () => {
                         <div className="max-w-4xl mx-auto space-y-8">
                             {process.map((step, index) => (
                                 <div key={index} className="flex gap-6 items-start group">
-                                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/5 border border-white/20 flex items-center justify-center text-white font-bold group-hover:bg-white group-hover:text-black transition-all">
+                                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-black/5 dark:bg-white/5 border border-black/20 dark:border-white/20 flex items-center justify-center text-black dark:text-white font-bold group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-all">
                                         {index + 1}
                                     </div>
                                     <div className="flex-1 space-y-2 pt-2">
-                                        <h3 className="text-xl font-bold text-white">{step.title}</h3>
-                                        <p className="text-white/60 leading-relaxed">{step.description}</p>
+                                        <h3 className="text-xl font-bold text-black dark:text-white">{step.title}</h3>
+                                        <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                                     </div>
                                 </div>
                             ))}
@@ -263,20 +263,20 @@ const AIAgents = () => {
                 </section>
 
                 {/* FAQs */}
-                <section className="py-24 relative overflow-hidden border-b border-white/10">
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
                                 Frequently Asked Questions
                             </h2>
-                            <p className="text-white/60">Got questions? We've got answers!</p>
+                            <p className="text-muted-foreground">Got questions? We've got answers!</p>
                         </div>
 
                         <div className="max-w-4xl mx-auto space-y-6">
                             {faqs.map((faq, index) => (
-                                <TiltCard key={index} className="bw-card p-8 hover:bg-white/5 transition-all duration-500">
-                                    <h3 className="text-lg font-bold text-white mb-3">{faq.question}</h3>
-                                    <p className="text-white/60 leading-relaxed">{faq.answer}</p>
+                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                    <h3 className="text-lg font-bold text-black dark:text-white mb-3">{faq.question}</h3>
+                                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
                                 </TiltCard>
                             ))}
                         </div>
@@ -286,18 +286,18 @@ const AIAgents = () => {
                 {/* CTA Section */}
                 <section className="py-24 relative overflow-hidden">
                     <div className="container mx-auto px-4 md:px-6">
-                        <div className="bw-card p-12 md:p-16 text-center bg-gradient-to-b from-white/5 to-transparent">
-                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                        <div className="bw-card p-12 md:p-16 text-center bg-gradient-to-b from-black/5 to-transparent dark:from-white/5">
+                            <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-6">
                                 Don't just imagine the future. Start building it today.
                             </h2>
-                            <p className="text-white/60 mb-8 max-w-2xl mx-auto">
+                            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
                                 Transform your business with our AI agent development services
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <Button
                                     onClick={handleConsultExperts}
                                     size="lg"
-                                    className="bg-white text-black hover:bg-white/90 font-semibold"
+                                    className="bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 font-semibold"
                                 >
                                     Start your AI Journey
                                 </Button>
@@ -305,7 +305,7 @@ const AIAgents = () => {
                                     <Button
                                         size="lg"
                                         variant="outline"
-                                        className="border-white/20 text-white hover:bg-white/10"
+                                        className="border-black/20 dark:border-white/20 text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10"
                                     >
                                         Contact Us
                                     </Button>

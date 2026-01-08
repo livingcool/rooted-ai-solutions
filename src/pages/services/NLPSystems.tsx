@@ -85,23 +85,23 @@ const NLPSystems = () => {
             <div className="relative z-10">
                 <Navigation />
 
-                <section className="pt-32 pb-20 relative overflow-hidden border-b border-white/10">
+                <section className="pt-32 pb-20 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="max-w-4xl mx-auto text-center space-y-6">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-4">
-                                <MessageSquare className="w-4 h-4 text-white" />
-                                <span className="text-sm text-white/80">NLP Systems</span>
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 mb-4">
+                                <MessageSquare className="w-4 h-4 text-black dark:text-white" />
+                                <span className="text-sm text-black/80 dark:text-white/80">NLP Systems</span>
                             </div>
-                            <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight">
+                            <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white tracking-tight">
                                 Natural Language Processing Systems
                             </h1>
-                            <p className="text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
+                            <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
                                 Advanced NLP for sentiment analysis and automated reporting. Extract key insights from customer feedback and generate comprehensive reports automatically.
                             </p>
                             <Button
                                 onClick={handleConsultExperts}
                                 size="lg"
-                                className="mt-8 bg-white text-black hover:bg-white/90 font-semibold group"
+                                className="mt-8 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 font-semibold group"
                             >
                                 Consult our experts
                                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -110,49 +110,49 @@ const NLPSystems = () => {
                     </div>
                 </section>
 
-                <section className="py-24 relative overflow-hidden border-b border-white/10">
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16 space-y-4">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
                                 Our NLP Services
                             </h2>
-                            <p className="text-white/60 max-w-2xl mx-auto text-lg font-light">
+                            <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light">
                                 Process 1000s of documents in minutes with AI-powered text analysis
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {services.map((service, index) => (
-                                <TiltCard key={index} className="bw-card p-8 group hover:bg-white/5 transition-all duration-500">
-                                    <div className="mb-6 inline-block p-4 rounded-lg bg-white/5 group-hover:bg-white/10 transition-colors">
-                                        <service.icon className="w-8 h-8 text-white" />
+                                <TiltCard key={index} className="bw-card p-8 group hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                    <div className="mb-6 inline-block p-4 rounded-lg bg-black/5 dark:bg-white/5 group-hover:bg-black/10 dark:group-hover:bg-white/10 transition-colors">
+                                        <service.icon className="w-8 h-8 text-black dark:text-white" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-4">{service.title}</h3>
-                                    <p className="text-white/60 leading-relaxed text-sm">{service.description}</p>
+                                    <h3 className="text-xl font-bold text-black dark:text-white mb-4">{service.title}</h3>
+                                    <p className="text-muted-foreground leading-relaxed text-sm">{service.description}</p>
                                 </TiltCard>
                             ))}
                         </div>
                     </div>
                 </section>
 
-                <section className="py-24 relative overflow-hidden border-b border-white/10">
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
                                 Real-World Applications
                             </h2>
-                            <p className="text-white/60 max-w-2xl mx-auto">
+                            <p className="text-muted-foreground max-w-2xl mx-auto">
                                 How businesses leverage our NLP solutions
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                             {useCases.map((useCase, index) => (
-                                <TiltCard key={index} className="bw-card p-8 hover:bg-white/5 transition-all duration-500">
-                                    <h3 className="text-xl font-bold text-white mb-3">{useCase.title}</h3>
-                                    <p className="text-white/60 leading-relaxed text-sm mb-4">{useCase.description}</p>
-                                    <div className="pt-4 border-t border-white/10">
-                                        <span className="text-xs font-semibold text-white/80">{useCase.metric}</span>
+                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                    <h3 className="text-xl font-bold text-black dark:text-white mb-3">{useCase.title}</h3>
+                                    <p className="text-muted-foreground leading-relaxed text-sm mb-4">{useCase.description}</p>
+                                    <div className="pt-4 border-t border-black/10 dark:border-white/10">
+                                        <span className="text-xs font-semibold text-black/80 dark:text-white/80">{useCase.metric}</span>
                                     </div>
                                 </TiltCard>
                             ))}
@@ -160,10 +160,10 @@ const NLPSystems = () => {
                     </div>
                 </section>
 
-                <section className="py-24 relative overflow-hidden border-b border-white/10">
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
                                 Our Process
                             </h2>
                         </div>
@@ -171,12 +171,12 @@ const NLPSystems = () => {
                         <div className="max-w-4xl mx-auto space-y-8">
                             {process.map((step, index) => (
                                 <div key={index} className="flex gap-6 items-start group">
-                                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/5 border border-white/20 flex items-center justify-center text-white font-bold group-hover:bg-white group-hover:text-black transition-all">
+                                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-black/5 dark:bg-white/5 border border-black/20 dark:border-white/20 flex items-center justify-center text-black dark:text-white font-bold group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-all">
                                         {index + 1}
                                     </div>
                                     <div className="flex-1 space-y-2 pt-2">
-                                        <h3 className="text-xl font-bold text-white">{step.title}</h3>
-                                        <p className="text-white/60 leading-relaxed">{step.description}</p>
+                                        <h3 className="text-xl font-bold text-black dark:text-white">{step.title}</h3>
+                                        <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                                     </div>
                                 </div>
                             ))}
@@ -186,18 +186,18 @@ const NLPSystems = () => {
 
                 <section className="py-24 relative overflow-hidden">
                     <div className="container mx-auto px-4 md:px-6">
-                        <div className="bw-card p-12 md:p-16 text-center bg-gradient-to-b from-white/5 to-transparent">
-                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                        <div className="bw-card p-12 md:p-16 text-center bg-gradient-to-b from-black/5 to-transparent dark:from-white/5">
+                            <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-6">
                                 Unlock insights from your text data
                             </h2>
-                            <p className="text-white/60 mb-8 max-w-2xl mx-auto">
+                            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
                                 Process thousands of documents and extract actionable insights automatically
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <Button
                                     onClick={handleConsultExperts}
                                     size="lg"
-                                    className="bg-white text-black hover:bg-white/90 font-semibold"
+                                    className="bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90 font-semibold"
                                 >
                                     Get started with NLP
                                 </Button>
@@ -205,7 +205,7 @@ const NLPSystems = () => {
                                     <Button
                                         size="lg"
                                         variant="outline"
-                                        className="border-white/20 text-white hover:bg-white/10"
+                                        className="border-black/20 dark:border-white/20 text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10"
                                     >
                                         Contact Us
                                     </Button>
