@@ -18,6 +18,15 @@ import TechnicalAssessment from "./pages/TechnicalAssessment";
 import CandidateStatus from "./pages/CandidateStatus";
 import FinalInterviewLogin from './pages/FinalInterviewLogin';
 import AIInterviewRoom from "./pages/AIInterviewRoom";
+
+// Service Pages
+import AIAgents from "./pages/services/AIAgents";
+import ProcessAutomation from "./pages/services/ProcessAutomation";
+import WebSolutions from "./pages/services/WebSolutions";
+import NLPSystems from "./pages/services/NLPSystems";
+import PredictiveAnalytics from "./pages/services/PredictiveAnalytics";
+import EnterpriseSecurity from "./pages/services/EnterpriseSecurity";
+
 import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
@@ -51,6 +60,15 @@ const App = () => (
             <Route path="/candidate-status" element={<CandidateStatus />} />
             <Route path="/final-login" element={<FinalInterviewLogin />} />
             <Route path="/final-interview" element={<AIInterviewRoom />} />
+
+            {/* Service Detail Pages */}
+            <Route path="/services/ai-agents" element={<AIAgents />} />
+            <Route path="/services/process-automation" element={<ProcessAutomation />} />
+            <Route path="/services/web-solutions" element={<WebSolutions />} />
+            <Route path="/services/nlp-systems" element={<NLPSystems />} />
+            <Route path="/services/predictive-analytics" element={<PredictiveAnalytics />} />
+            <Route path="/services/enterprise-security" element={<EnterpriseSecurity />} />
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

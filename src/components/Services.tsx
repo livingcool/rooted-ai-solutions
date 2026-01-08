@@ -2,6 +2,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Brain, Cpu, Globe, MessageSquare, Zap, Shield } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const services = [
   {
@@ -10,6 +11,7 @@ const services = [
     example: "E.g., Auto-respond to 80% of support tickets, route complex queries to humans",
     icon: Brain,
     metrics: "Deflect 60% of tickets before escalation",
+    route: "/services/ai-agents",
   },
   {
     title: "Process Automation",
@@ -17,6 +19,7 @@ const services = [
     example: "E.g., Automate invoice reconciliation and order status updates for logistics",
     icon: Cpu,
     metrics: "Save 15-20 hrs/week per team member",
+    route: "/services/process-automation",
   },
   {
     title: "Web Solutions",
@@ -24,6 +27,7 @@ const services = [
     example: "E.g., Custom dashboards with real-time analytics and predictive insights",
     icon: Globe,
     metrics: "Deploy in 2-4 weeks",
+    route: "/services/web-solutions",
   },
   {
     title: "NLP Systems",
@@ -31,6 +35,7 @@ const services = [
     example: "E.g., Extract key insights from customer feedback and generate weekly reports",
     icon: MessageSquare,
     metrics: "Process 1000s of documents in minutes",
+    route: "/services/nlp-systems",
   },
   {
     title: "Predictive Analytics",
@@ -38,6 +43,7 @@ const services = [
     example: "E.g., Predict inventory demand and optimize stock levels for e-commerce",
     icon: Zap,
     metrics: "Reduce wastage by 20-30%",
+    route: "/services/predictive-analytics",
   },
   {
     title: "Enterprise Security",
@@ -45,14 +51,11 @@ const services = [
     example: "E.g., Real-time anomaly detection and automated security alerts",
     icon: Shield,
     metrics: "99.9% uptime SLA",
+    route: "/services/enterprise-security",
   },
 ];
 
 const Services = () => {
-  const handleServiceClick = (serviceName: string) => {
-    const message = encodeURIComponent(`Hi, I'd like to discuss ${serviceName} for my business`);
-    window.open(`https://wa.me/917904168521?text=${message}`, "_blank");
-  };
 
   return (
     <section id="services" className="py-24 relative overflow-hidden border-t border-white/10">
@@ -94,14 +97,15 @@ const Services = () => {
                       <div className="text-xs font-semibold text-white/80 mb-3">
                         {service.metrics}
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleServiceClick(service.title)}
-                        className="w-full text-xs bg-white/5 hover:bg-white hover:text-black border border-white/20 transition-all"
-                      >
-                        Discuss {service.title}
-                      </Button>
+                      <Link to={service.route}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full text-xs bg-white/5 hover:bg-white hover:text-black border border-white/20 transition-all"
+                        >
+                          Learn More
+                        </Button>
+                      </Link>
                     </div>
                   </TiltCard>
                 </div>
