@@ -54,7 +54,7 @@ const Footer = () => {
                             <a href="https://www.linkedin.com/company/rootdai" target="_blank" rel="noopener noreferrer" className="text-muted-foreground opacity-60 hover:text-black dark:hover:text-white hover:opacity-100 transition-colors">
                                 <Linkedin className="w-5 h-5" />
                             </a>
-                            <a href="#" className="text-muted-foreground opacity-60 hover:text-black dark:hover:text-white hover:opacity-100 transition-colors">
+                            <a href="https://www.instagram.com/rootedai_official/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground opacity-60 hover:text-black dark:hover:text-white hover:opacity-100 transition-colors">
                                 <Instagram className="w-5 h-5" />
                             </a>
                         </div>
