@@ -60,8 +60,8 @@ const Services = () => {
   return (
     <section id="services" className="py-24 relative overflow-hidden border-t border-black/10 dark:border-white/10">
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
+        <div className="text-center mb-12 md:mb-16 space-y-4">
+          <h2 className="text-3xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
             Our Capabilities
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light">

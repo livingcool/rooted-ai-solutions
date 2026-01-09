@@ -32,6 +32,8 @@ const TextScramble = ({
                 // "Cooling" effect: characters freeze from left to right
                 if (i < Math.floor(progress * text.length)) {
                     scrambled += text[i];
+                } else if (text[i] === ' ') {
+                    scrambled += ' ';
                 } else {
                     scrambled += characterSet[Math.floor(Math.random() * characterSet.length)];
                 }

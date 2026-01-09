@@ -90,7 +90,7 @@ const Hero = () => {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
+      className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden pt-24 pb-12 md:pt-20 md:pb-0"
     >
       {/* Decorative Elements */}
       <div className="absolute inset-0 pointer-events-none">
@@ -105,14 +105,14 @@ const Hero = () => {
       </div>
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[auto] md:min-h-[80vh]">
           {/* Left Column - Main Content */}
           <div className="space-y-8 text-left">
             {/* Headline - with transition */}
             <div className="min-h-[200px] md:min-h-[250px]">
               <h1
                 key={currentSlide}
-                className="text-5xl md:text-6xl lg:text-7xl font-bold text-black dark:text-white leading-tight animate-fade-up"
+                className="text-4xl md:text-6xl lg:text-7xl font-bold text-black dark:text-white leading-tight animate-fade-up"
               >
                 {slides[currentSlide].headline}{" "}
                 <span className="block mt-2 bg-gradient-to-r from-black via-black/90 to-black/70 dark:from-white dark:via-white/90 dark:to-white/70 bg-clip-text text-transparent">

@@ -100,7 +100,7 @@ const About = () => {
           className={`text-center mb-16 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
             }`}
         >
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight max-w-5xl mx-auto">
+          <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight max-w-5xl mx-auto">
             <TextScramble text="Engineering Intelligence. " />
             <span className="text-muted-foreground">
               <TextScramble text="COMPLEXITY.SIMPLIFIED" duration={2} />
