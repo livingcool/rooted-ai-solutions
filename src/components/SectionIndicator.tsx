@@ -6,9 +6,8 @@ const SectionIndicator = () => {
     const sections = [
         { id: "hero", name: "Home" },
         { id: "about", name: "About Us" },
-        { id: "services", name: "Services" },
-        { id: "outsourcing", name: "Outsourcing" },
-        { id: "case-studies", name: "Case Studies" },
+        { id: "services", label: "Services" },
+        { id: "case-studies", label: "Case Studies" },
         { id: "products", name: "Products" },
         { id: "careers", name: "Careers" },
         { id: "contact", name: "Contact" },

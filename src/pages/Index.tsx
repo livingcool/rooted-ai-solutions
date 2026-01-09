@@ -3,7 +3,6 @@ import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Services from "@/components/Services";
-import Outsourcing from "@/components/Outsourcing";
 import CaseStudies from "@/components/CaseStudies";
 import Products from "@/components/Products";
 import Careers from "@/components/Careers";
@@ -55,11 +54,7 @@ const Index = () => {
           </RevealOnScroll>
         </div>
 
-        <div id="outsourcing">
-          <RevealOnScroll>
-            <Outsourcing />
-          </RevealOnScroll>
-        </div>
+
 
         <div id="case-studies">
           <RevealOnScroll>

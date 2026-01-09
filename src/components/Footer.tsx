@@ -35,11 +35,10 @@ const Footer = () => {
                                 <span className="text-sm">+91 7904168521</span>
                             </a>
                             <a
-                                href="mailto:rootedaiofficial@gmail.com"
+                                href="mailto:info@rootedai.co.in"
                                 className="flex items-center gap-3 text-muted-foreground hover:text-black dark:hover:text-white transition-colors group"
                             >
-                                <Mail className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                                <span className="text-sm">rootedaiofficial@gmail.com</span>
+                                <span className="text-sm">info@rootedai.co.in</span>
                             </a>
                             <div className="flex items-center gap-3 text-muted-foreground">
                                 <MapPin className="w-4 h-4" />
@@ -66,7 +65,6 @@ const Footer = () => {
                         <h4 className="text-black dark:text-white font-bold mb-6">Company</h4>
                         <ul className="space-y-4 text-sm text-muted-foreground">
                             <li><a href="/#about" className="hover:text-black dark:hover:text-white transition-colors">About</a></li>
-                            <li><a href="/#outsourcing" className="hover:text-black dark:hover:text-white transition-colors">Outsourcing</a></li>
                             <li><a href="/#careers" className="hover:text-black dark:hover:text-white transition-colors">Careers</a></li>
                             <li><a href="/#contact" className="hover:text-black dark:hover:text-white transition-colors">Contact</a></li>
                             <li><a href="/#products" className="hover:text-black dark:hover:text-white transition-colors">Products</a></li>

@@ -1,5 +1,5 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Brain, Cpu, Globe, MessageSquare, Zap, Shield } from "lucide-react";
+import { Brain, Cpu, Globe, MessageSquare, Zap, Shield, Users } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -52,6 +52,14 @@ const services = [
     icon: Shield,
     metrics: "99.9% uptime SLA",
     route: "/services/enterprise-security",
+  },
+  {
+    title: "Outsourcing",
+    description: "Scale your team instantly with our elite pre-vetted developers.",
+    example: "E.g., Hire a full stack team in 48 hours for your next big project",
+    icon: Users,
+    metrics: "Save 60% on development costs",
+    route: "/services/outsourcing",
   },
 ];
 
@@ -117,6 +125,12 @@ const Services = () => {
             <CarouselNext className="static translate-y-0 bg-transparent border-black/20 dark:border-white/20 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black" />
           </div>
         </Carousel>
+
+        <div className="mt-8 text-center animate-fade-up" style={{ animationDelay: "200ms" }}>
+          <p className="text-muted-foreground text-sm">
+            Looking to scale your team? <Link to="/services/outsourcing" className="underline hover:text-black dark:hover:text-white transition-colors">Outsource your work with us</Link> without the hiring headaches.
+          </p>
+        </div>
 
         {/* Why Choose Us Section */}
         <div className="mt-32">

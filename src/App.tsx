@@ -26,6 +26,7 @@ import WebSolutions from "./pages/services/WebSolutions";
 import NLPSystems from "./pages/services/NLPSystems";
 import PredictiveAnalytics from "./pages/services/PredictiveAnalytics";
 import EnterpriseSecurity from "./pages/services/EnterpriseSecurity";
+import Outsourcing from "./pages/services/Outsourcing";
 
 import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
@@ -70,6 +71,7 @@ const App = () => (
             <Route path="/services/nlp-systems" element={<NLPSystems />} />
             <Route path="/services/predictive-analytics" element={<PredictiveAnalytics />} />
             <Route path="/services/enterprise-security" element={<EnterpriseSecurity />} />
+            <Route path="/services/outsourcing" element={<Outsourcing />} />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
