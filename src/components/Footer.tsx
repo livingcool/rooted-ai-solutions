@@ -15,7 +15,8 @@ const Footer = () => {
                     <div className="space-y-6 md:col-span-2">
                         <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center cursor-pointer group">
                             <div className="relative h-40 w-auto">
-                                <img src="/logo-v2.png" alt="RootedAI" className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105 brightness-0 dark:brightness-100" />
+                                <img src="/logo-light.png" alt="RootedAI" className="h-full w-auto object-contain dark:hidden" />
+                                <img src="/logo-dark.png" alt="RootedAI" className="hidden dark:block h-full w-auto object-contain" />
                             </div>
                         </Link>
                         <p className="text-muted-foreground text-sm leading-relaxed">
