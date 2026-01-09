@@ -40,12 +40,12 @@ const SectionIndicator = () => {
                 <img
                     src="/sidebar-logo-light.png"
                     alt="RootedAI Logo"
-                    className="h-10 w-auto object-contain transition-all duration-300 dark:hidden"
+                    className="h-8 w-auto object-contain transition-all duration-300 dark:hidden"
                 />
                 <img
                     src="/sidebar-logo-dark.png"
                     alt="RootedAI Logo"
-                    className="hidden h-10 w-auto object-contain transition-all duration-300 dark:block"
+                    className="hidden h-8 w-auto object-contain transition-all duration-300 dark:block"
                 />
             </div>
 

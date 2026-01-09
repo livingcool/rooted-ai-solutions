@@ -187,10 +187,12 @@ const Hero = () => {
                 {slides[currentSlide].stats.map((stat, index) => (
                   <div
                     key={index}
-                    className="bw-card p-8 text-center hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 backdrop-blur-sm hover:scale-105"
+                    className="bw-card p-6 md:p-8 text-center hover:bg-white/60 dark:hover:bg-white/10 transition-all duration-300 backdrop-blur-sm hover:scale-105 flex flex-col justify-center items-center h-full"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className="text-5xl font-bold text-black dark:text-white mb-3">{stat.value}</div>
+                    <div className={`font-bold text-black dark:text-white mb-2 ${stat.value.length > 6 ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-4xl md:text-5xl'}`}>
+                      {stat.value}
+                    </div>
                     <div className="text-xs text-black/60 dark:text-white/60 uppercase tracking-wider">{stat.label}</div>
                   </div>
                 ))}

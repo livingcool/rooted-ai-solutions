@@ -108,11 +108,11 @@ const About = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch max-w-6xl mx-auto">
           {/* Mission Card */}
           <div
             ref={missionRef}
-            className="group relative"
+            className="group relative h-full"
             style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}
           >
             <TiltCard
@@ -189,7 +189,7 @@ const About = () => {
           {/* Vision Card */}
           <div
             ref={visionRef}
-            className="group relative"
+            className="group relative h-full"
             style={{ perspective: '1000px' }}
           >
             <TiltCard
