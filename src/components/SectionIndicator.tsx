@@ -38,7 +38,7 @@ const SectionIndicator = () => {
             {/* Logo at Top - Aligned horizontally with Navigation RootedAI text */}
             <div className="ml-6 flex items-center h-[60px]">
                 <img
-                    src="/logo-v4.png"
+                    src="/sidebar-logo.png"
                     alt="RootedAI Logo"
                     className="h-10 w-auto object-contain brightness-0 dark:brightness-100 transition-all duration-300"
                 />

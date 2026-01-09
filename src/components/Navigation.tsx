@@ -36,8 +36,6 @@ const Navigation = () => {
         <div className="flex items-center justify-between py-2">
           {/* Brand Name Only */}
           <a href="/" className="flex items-center group">
-            <img src="/logo-light.png" alt="RootedAI" className="h-8 w-auto mr-2 dark:hidden" />
-            <img src="/logo-dark.png" alt="RootedAI" className="hidden dark:block h-8 w-auto mr-2" />
             <span className="text-3xl font-bold font-heading tracking-[0.15em] bg-gradient-to-r from-black via-black/95 to-black/80 dark:from-white dark:via-white/95 dark:to-white/80 bg-clip-text text-transparent hover:from-black hover:via-black hover:to-black dark:hover:from-white dark:hover:via-white dark:hover:to-white transition-all duration-300">
               ROOTEDAI
             </span>
