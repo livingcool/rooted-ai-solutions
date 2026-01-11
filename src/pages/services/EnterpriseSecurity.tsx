@@ -87,6 +87,29 @@ const EnterpriseSecurity = () => {
         { title: "Continuous Monitoring", description: "24/7 monitoring, regular security assessments, and proactive threat hunting to maintain strong security posture." },
     ];
 
+    const faqs = [
+        {
+            question: "How does AI enhance security?",
+            answer: "AI analyzes vast amounts of data in real-time to detect anomalies and patterns that indicate a threat. It identifies and blocks attacks much faster than human analysts or traditional rule-based systems.",
+        },
+        {
+            question: "Is my data safe with RootedAI?",
+            answer: "Yes. We operate with a security-first mindset. We implement zero-trust architectures, end-to-end encryption, and rigorous access controls to ensure your data is always protected.",
+        },
+        {
+            question: "Do you offer 24/7 monitoring?",
+            answer: "Yes, our managed security services include round-the-clock monitoring by our security operations center (SOC), ensuring immediate response to any incidents.",
+        },
+        {
+            question: "What compliance standards do you support?",
+            answer: "We help you achieve and maintain compliance with major standards including GDPR, HIPAA, SOC 2, and ISO 27001 through automated monitoring and reporting.",
+        },
+        {
+            question: "Can you prevent ransomware?",
+            answer: "While no solution is 100% foolproof, our multi-layered defense strategy significantly reduces risk. We use behavioral analysis to detect ransomware activity early and stop it before it spreads.",
+        }
+    ];
+
     return (
         <div className="min-h-screen relative">
             <Seo
@@ -108,24 +131,39 @@ const EnterpriseSecurity = () => {
                 canonical="https://rootedai.com/services/enterprise-security"
                 structuredData={{
                     "@context": "https://schema.org",
-                    "@type": "Service",
-                    "name": "Enterprise AI Security",
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "RootedAI",
-                        "url": "https://rootedai.com"
-                    },
-                    "description": "AI-powered threat detection and enterprise security services.",
-                    "areaServed": "Global",
-                    "catalogue": {
-                        "@type": "OfferCatalog",
-                        "name": "Security Services",
-                        "itemListElement": [
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Threat Detection" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Compliance Management" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Real-time Monitoring" } }
-                        ]
-                    }
+                    "@graph": [
+                        {
+                            "@type": "Service",
+                            "name": "Enterprise AI Security",
+                            "provider": {
+                                "@type": "Organization",
+                                "name": "RootedAI",
+                                "url": "https://rootedai.com"
+                            },
+                            "description": "AI-powered threat detection and enterprise security services.",
+                            "areaServed": "Global",
+                            "catalogue": {
+                                "@type": "OfferCatalog",
+                                "name": "Security Services",
+                                "itemListElement": [
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Threat Detection" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Compliance Management" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Real-time Monitoring" } }
+                                ]
+                            }
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": faqs.map(faq => ({
+                                "@type": "Question",
+                                "name": faq.question,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": faq.answer
+                                }
+                            }))
+                        }
+                    ]
                 }}
             />
             <div className="relative z-10">
@@ -244,6 +282,27 @@ const EnterpriseSecurity = () => {
                                         <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                                     </div>
                                 </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQs */}
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
+                                Frequently Asked Questions
+                            </h2>
+                            <p className="text-muted-foreground">Got questions? We've got answers!</p>
+                        </div>
+
+                        <div className="max-w-4xl mx-auto space-y-6">
+                            {faqs.map((faq, index) => (
+                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                    <h3 className="text-lg font-bold text-black dark:text-white mb-3">{faq.question}</h3>
+                                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                                </TiltCard>
                             ))}
                         </div>
                     </div>

@@ -70,6 +70,29 @@ const OutsourcingServicePage = () => {
         "React Native & Flutter", "AWS & Google Cloud", "PostgreSQL & MongoDB"
     ];
 
+    const faqs = [
+        {
+            question: "How quickly can I scale my team?",
+            answer: "We typically onboard developers within 2-5 days for staff augmentation models. For dedicated teams, we can assemble a full squad within 2 weeks, depending on the specific skills required.",
+        },
+        {
+            question: "How do you ensure code quality?",
+            answer: "We follow strict coding standards, conduct regular code reviews, and use automated testing pipelines (CI/CD). Our developers are senior-level experts who follow best practices for maintainable and scalable code.",
+        },
+        {
+            question: "What is your time zone overlap?",
+            answer: "We adjust our working hours to ensure at least 4 hours of overlap with your timezone for real-time collaboration. We use async communication tools for transparent updates.",
+        },
+        {
+            question: "Do I own the intellectual property (IP)?",
+            answer: "Yes, absolutely. Under our contracts, all code, designs, and assets created during the engagement are 100% your intellectual property.",
+        },
+        {
+            question: "What if I'm not satisfied with a developer?",
+            answer: "We offer a satisfaction guarantee. If a developer doesn't meet your expectations within the trial period, we will replace them at no extra cost to ensures your project stays on track.",
+        }
+    ];
+
     return (
         <div className="min-h-screen relative">
             <Seo
@@ -91,24 +114,39 @@ const OutsourcingServicePage = () => {
                 canonical="https://rootedai.com/services/outsourcing"
                 structuredData={{
                     "@context": "https://schema.org",
-                    "@type": "Service",
-                    "name": "Software Development Outsourcing",
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "RootedAI",
-                        "url": "https://rootedai.com"
-                    },
-                    "description": "Flexible software development outsourcing including dedicated teams and staff augmentation.",
-                    "areaServed": "Global",
-                    "catalogue": {
-                        "@type": "OfferCatalog",
-                        "name": "Outsourcing Models",
-                        "itemListElement": [
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Dedicated Development Teams" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Staff Augmentation" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Project-based Outsourcing" } }
-                        ]
-                    }
+                    "@graph": [
+                        {
+                            "@type": "Service",
+                            "name": "Software Development Outsourcing",
+                            "provider": {
+                                "@type": "Organization",
+                                "name": "RootedAI",
+                                "url": "https://rootedai.com"
+                            },
+                            "description": "Flexible software development outsourcing including dedicated teams and staff augmentation.",
+                            "areaServed": "Global",
+                            "catalogue": {
+                                "@type": "OfferCatalog",
+                                "name": "Outsourcing Models",
+                                "itemListElement": [
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Dedicated Development Teams" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Staff Augmentation" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Project-based Outsourcing" } }
+                                ]
+                            }
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": faqs.map(faq => ({
+                                "@type": "Question",
+                                "name": faq.question,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": faq.answer
+                                }
+                            }))
+                        }
+                    ]
                 }}
             />
             <div className="relative z-10">
@@ -251,6 +289,27 @@ const OutsourcingServicePage = () => {
                     </div>
                 </section>
 
+
+                {/* FAQs */}
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
+                                Frequently Asked Questions
+                            </h2>
+                            <p className="text-muted-foreground">Got questions? We've got answers!</p>
+                        </div>
+
+                        <div className="max-w-4xl mx-auto space-y-6">
+                            {faqs.map((faq, index) => (
+                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                    <h3 className="text-lg font-bold text-black dark:text-white mb-3">{faq.question}</h3>
+                                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                                </TiltCard>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
                 {/* CTA Section */}
                 <section className="py-24 relative overflow-hidden">

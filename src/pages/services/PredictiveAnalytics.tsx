@@ -101,6 +101,29 @@ const PredictiveAnalytics = () => {
         { title: "Monitoring & Refinement", description: "Continuously monitor prediction accuracy, retrain models with new data, and refine to maintain performance." },
     ];
 
+    const faqs = [
+        {
+            question: "What is predictive analytics?",
+            answer: "Predictive analytics uses historical data, statistical algorithms, and machine learning techniques to identify the likelihood of future outcomes. It helps businesses look forward and anticipate trends and behaviors.",
+        },
+        {
+            question: "How accurate are the predictions?",
+            answer: "Accuracy depends on the quality and quantity of data available. Typically, our models achieve 80-95% accuracy. We continuously monitor and retrain models to improve performance over time.",
+        },
+        {
+            question: "What data do I need?",
+            answer: "We work with whatever data you have—sales records, customer logs, website analytics, or operational data. If you have data gaps, we can help implement data collection strategies to build a robust dataset.",
+        },
+        {
+            question: "Can this help with inventory management?",
+            answer: "Absolutely. Demand forecasting is one of the most impactful applications. By predicting sales trends, we help you optimize stock levels, reduce carrying costs, and prevent stockouts.",
+        },
+        {
+            question: "How long does it take to see results?",
+            answer: "Initial insights can often be generated within 4-6 weeks. A fully deployed production model integrated into your systems typically takes 2-3 months to build, validate, and launch.",
+        }
+    ];
+
     return (
         <div className="min-h-screen relative">
             <Seo
@@ -122,24 +145,39 @@ const PredictiveAnalytics = () => {
                 canonical="https://rootedai.com/services/predictive-analytics"
                 structuredData={{
                     "@context": "https://schema.org",
-                    "@type": "Service",
-                    "name": "Predictive Analytics Services",
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "RootedAI",
-                        "url": "https://rootedai.com"
-                    },
-                    "description": "Data-driven predictive analytics for demand forecasting, churn prediction, and risk assessment.",
-                    "areaServed": "Global",
-                    "catalogue": {
-                        "@type": "OfferCatalog",
-                        "name": "Analytics Services",
-                        "itemListElement": [
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Demand Forecasting" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Churn Prediction" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Risk Assessment Models" } }
-                        ]
-                    }
+                    "@graph": [
+                        {
+                            "@type": "Service",
+                            "name": "Predictive Analytics Services",
+                            "provider": {
+                                "@type": "Organization",
+                                "name": "RootedAI",
+                                "url": "https://rootedai.com"
+                            },
+                            "description": "Data-driven predictive analytics for demand forecasting, churn prediction, and risk assessment.",
+                            "areaServed": "Global",
+                            "catalogue": {
+                                "@type": "OfferCatalog",
+                                "name": "Analytics Services",
+                                "itemListElement": [
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Demand Forecasting" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Churn Prediction" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Risk Assessment Models" } }
+                                ]
+                            }
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": faqs.map(faq => ({
+                                "@type": "Question",
+                                "name": faq.question,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": faq.answer
+                                }
+                            }))
+                        }
+                    ]
                 }}
             />
             <div className="relative z-10">
@@ -268,6 +306,27 @@ const PredictiveAnalytics = () => {
                                         <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                                     </div>
                                 </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQs */}
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
+                                Frequently Asked Questions
+                            </h2>
+                            <p className="text-muted-foreground">Got questions? We've got answers!</p>
+                        </div>
+
+                        <div className="max-w-4xl mx-auto space-y-6">
+                            {faqs.map((faq, index) => (
+                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                    <h3 className="text-lg font-bold text-black dark:text-white mb-3">{faq.question}</h3>
+                                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                                </TiltCard>
                             ))}
                         </div>
                     </div>

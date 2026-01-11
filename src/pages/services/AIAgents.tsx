@@ -137,35 +137,50 @@ const AIAgents = () => {
                 canonical="https://rootedai.com/services/ai-agents"
                 structuredData={{
                     "@context": "https://schema.org",
-                    "@type": "Service",
-                    "name": "AI Agents Development",
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "RootedAI",
-                        "url": "https://rootedai.com"
-                    },
-                    "description": "Custom AI agent development, consulting, and multi-agent systems.",
-                    "areaServed": "Global",
-                    "hasOfferCatalog": {
-                        "@type": "OfferCatalog",
-                        "name": "AI Agents Services",
-                        "itemListElement": [
-                            {
-                                "@type": "Offer",
-                                "itemOffered": {
-                                    "@type": "Service",
-                                    "name": "Expert AI Agent Consulting"
-                                }
+                    "@graph": [
+                        {
+                            "@type": "Service",
+                            "name": "AI Agents Development",
+                            "provider": {
+                                "@type": "Organization",
+                                "name": "RootedAI",
+                                "url": "https://rootedai.com"
                             },
-                            {
-                                "@type": "Offer",
-                                "itemOffered": {
-                                    "@type": "Service",
-                                    "name": "Custom AI Agent Development"
-                                }
+                            "description": "Custom AI agent development, consulting, and multi-agent systems.",
+                            "areaServed": "Global",
+                            "hasOfferCatalog": {
+                                "@type": "OfferCatalog",
+                                "name": "AI Agents Services",
+                                "itemListElement": [
+                                    {
+                                        "@type": "Offer",
+                                        "itemOffered": {
+                                            "@type": "Service",
+                                            "name": "Expert AI Agent Consulting"
+                                        }
+                                    },
+                                    {
+                                        "@type": "Offer",
+                                        "itemOffered": {
+                                            "@type": "Service",
+                                            "name": "Custom AI Agent Development"
+                                        }
+                                    }
+                                ]
                             }
-                        ]
-                    }
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": faqs.map(faq => ({
+                                "@type": "Question",
+                                "name": faq.question,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": faq.answer
+                                }
+                            }))
+                        }
+                    ]
                 }}
             />
             <div className="relative z-10">

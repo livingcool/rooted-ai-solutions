@@ -82,6 +82,29 @@ const NLPSystems = () => {
         { title: "Monitoring", description: "Continuously monitor model performance, retrain with new data, and optimize for accuracy." },
     ];
 
+    const faqs = [
+        {
+            question: "What is Natural Language Processing (NLP)?",
+            answer: "NLP is a branch of Artificial Intelligence that enables computers to understand, interpret, and generate human language. It is used in applications like sentiment analysis, chatbots, and automated translation.",
+        },
+        {
+            question: "How can NLP help my business?",
+            answer: "NLP extracts value from unstructured data like emails and reviews. It automates customer support, analyzes feedback for better decision-making, and streamlines document processing.",
+        },
+        {
+            question: "Is NLP only for English?",
+            answer: "No, our NLP solutions support over 100 languages. We build multilingual systems that analyze text and communicate with customers globally.",
+        },
+        {
+            question: "What is sentiment analysis?",
+            answer: "Sentiment analysis determines the emotional tone behind words. It helps businesses understand how customers feel about their brand or products by analyzing reviews and social media.",
+        },
+        {
+            question: "Can you build custom chatbots?",
+            answer: "Yes, we develop advanced AI chatbots that go beyond simple scripts. Our bots understand context, handle complex queries, and integrate with your existing systems.",
+        }
+    ];
+
     return (
         <div className="min-h-screen relative">
             <Seo
@@ -104,24 +127,39 @@ const NLPSystems = () => {
                 canonical="https://rootedai.com/services/nlp-systems"
                 structuredData={{
                     "@context": "https://schema.org",
-                    "@type": "Service",
-                    "name": "Natural Language Processing Systems",
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "RootedAI",
-                        "url": "https://rootedai.com"
-                    },
-                    "description": "Advanced NLP solutions including sentiment analysis, document processing, and automated reporting.",
-                    "areaServed": "Global",
-                    "catalogue": {
-                        "@type": "OfferCatalog",
-                        "name": "NLP Services",
-                        "itemListElement": [
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sentiment Analysis" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Document Processing" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Chatbot Development" } }
-                        ]
-                    }
+                    "@graph": [
+                        {
+                            "@type": "Service",
+                            "name": "Natural Language Processing Systems",
+                            "provider": {
+                                "@type": "Organization",
+                                "name": "RootedAI",
+                                "url": "https://rootedai.com"
+                            },
+                            "description": "Advanced NLP solutions including sentiment analysis, document processing, and automated reporting.",
+                            "areaServed": "Global",
+                            "catalogue": {
+                                "@type": "OfferCatalog",
+                                "name": "NLP Services",
+                                "itemListElement": [
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sentiment Analysis" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Document Processing" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Chatbot Development" } }
+                                ]
+                            }
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": faqs.map(faq => ({
+                                "@type": "Question",
+                                "name": faq.question,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": faq.answer
+                                }
+                            }))
+                        }
+                    ]
                 }}
             />
             <div className="relative z-10">
@@ -224,6 +262,27 @@ const NLPSystems = () => {
                                         <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                                     </div>
                                 </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQs */}
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
+                                Frequently Asked Questions
+                            </h2>
+                            <p className="text-muted-foreground">Got questions? We've got answers!</p>
+                        </div>
+
+                        <div className="max-w-4xl mx-auto space-y-6">
+                            {faqs.map((faq, index) => (
+                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                    <h3 className="text-lg font-bold text-black dark:text-white mb-3">{faq.question}</h3>
+                                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                                </TiltCard>
                             ))}
                         </div>
                     </div>

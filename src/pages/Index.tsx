@@ -49,6 +49,30 @@ const Index = () => {
           "cognitive computing"
         ]}
         canonical="https://rootedai.com"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "RootedAI",
+          "url": "https://rootedai.com",
+          "logo": "https://rootedai.com/logo.png",
+          "sameAs": [
+            "https://www.linkedin.com/company/rootedai",
+            "https://twitter.com/rootedai",
+            "https://github.com/rootedai"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+91-7904168521",
+            "contactType": "customer service",
+            "areaServed": "Global",
+            "availableLanguage": ["English"]
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "IN"
+          },
+          "description": "RootedAI is a premier AI software development company specializing in autonomous agents, process automation, and enterprise web solutions."
+        }}
       />
       <div className="relative z-10">
         <Navigation />

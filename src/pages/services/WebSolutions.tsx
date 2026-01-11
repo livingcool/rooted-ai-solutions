@@ -69,6 +69,29 @@ const WebSolutions = () => {
         { title: "Maintenance & Scaling", description: "Ongoing updates, performance optimization, and scaling to meet growing demand." },
     ];
 
+    const faqs = [
+        {
+            question: "What types of web solutions do you build?",
+            answer: "We build a wide range of custom web solutions, including enterprise web portals, SaaS platforms, e-commerce sites, progressive web apps (PWAs), and AI-integrated dashboards. Our focus is on creating scalable, high-performance applications that drive business growth.",
+        },
+        {
+            question: "How do you integrate AI into web applications?",
+            answer: "We seamlessly integrate AI features such as predictive analytics, personalized recommendations, chatbots, and automated content generation directly into your web application. We use modern frameworks to ensure these features are responsive and add real value to the user experience.",
+        },
+        {
+            question: "What technologies do you use?",
+            answer: "We use a modern tech stack primarily focused on React, Next.js, and TypeScript for the frontend, and Node.js, Python, or Go for the backend. We leverage cloud platforms like AWS and Google Cloud for scalable infrastructure and use cutting-edge AI libraries.",
+        },
+        {
+            question: "How long does it take to build a custom web app?",
+            answer: "Timeline depends on complexity, but a typical MVP (Minimum Viable Product) takes 4-8 weeks. Larger enterprise applications may take 3-6 months. We follow an agile process, delivering regular updates and working features every 2 weeks.",
+        },
+        {
+            question: "Do you offer post-launch support?",
+            answer: "Yes, we provide comprehensive post-launch support and maintenance packages. This includes bug fixes, security updates, performance monitoring, and feature enhancements to ensure your application continues to evolve with your business.",
+        }
+    ];
+
     return (
         <div className="min-h-screen relative">
             <Seo
@@ -90,24 +113,39 @@ const WebSolutions = () => {
                 canonical="https://rootedai.com/services/web-solutions"
                 structuredData={{
                     "@context": "https://schema.org",
-                    "@type": "Service",
-                    "name": "AI Integrated Web Solutions",
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "RootedAI",
-                        "url": "https://rootedai.com"
-                    },
-                    "description": "Custom web development with AI integration. Scalable web apps, dashboards, and PWAs.",
-                    "areaServed": "Global",
-                    "hasOfferCatalog": {
-                        "@type": "OfferCatalog",
-                        "name": "Web Development Services",
-                        "itemListElement": [
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Web Application Development" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Custom Dashboard Creation" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "PWA Development" } }
-                        ]
-                    }
+                    "@graph": [
+                        {
+                            "@type": "Service",
+                            "name": "AI Integrated Web Solutions",
+                            "provider": {
+                                "@type": "Organization",
+                                "name": "RootedAI",
+                                "url": "https://rootedai.com"
+                            },
+                            "description": "Custom web development with AI integration. Scalable web apps, dashboards, and PWAs.",
+                            "areaServed": "Global",
+                            "hasOfferCatalog": {
+                                "@type": "OfferCatalog",
+                                "name": "Web Development Services",
+                                "itemListElement": [
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Web Application Development" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Custom Dashboard Creation" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "PWA Development" } }
+                                ]
+                            }
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": faqs.map(faq => ({
+                                "@type": "Question",
+                                "name": faq.question,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": faq.answer
+                                }
+                            }))
+                        }
+                    ]
                 }}
             />
             <div className="relative z-10">
@@ -210,6 +248,27 @@ const WebSolutions = () => {
                                         <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                                     </div>
                                 </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQs */}
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 tracking-tight">
+                                Frequently Asked Questions
+                            </h2>
+                            <p className="text-muted-foreground">Got questions? We've got answers!</p>
+                        </div>
+
+                        <div className="max-w-4xl mx-auto space-y-6">
+                            {faqs.map((faq, index) => (
+                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                    <h3 className="text-lg font-bold text-black dark:text-white mb-3">{faq.question}</h3>
+                                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                                </TiltCard>
                             ))}
                         </div>
                     </div>

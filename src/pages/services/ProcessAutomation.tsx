@@ -175,24 +175,39 @@ const ProcessAutomation = () => {
                 canonical="https://rootedai.com/services/process-automation"
                 structuredData={{
                     "@context": "https://schema.org",
-                    "@type": "Service",
-                    "name": "Business Process Automation",
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "RootedAI",
-                        "url": "https://rootedai.com"
-                    },
-                    "description": "End-to-end process automation utilizing RPA and intelligent workflows to reduce manual effort.",
-                    "areaServed": "Global",
-                    "catalogue": {
-                        "@type": "OfferCatalog",
-                        "name": "Automation Services",
-                        "itemListElement": [
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Expert Automation Consulting" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "RPA Implementation" } },
-                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Document Processing Automation" } }
-                        ]
-                    }
+                    "@graph": [
+                        {
+                            "@type": "Service",
+                            "name": "Business Process Automation",
+                            "provider": {
+                                "@type": "Organization",
+                                "name": "RootedAI",
+                                "url": "https://rootedai.com"
+                            },
+                            "description": "End-to-end process automation utilizing RPA and intelligent workflows to reduce manual effort.",
+                            "areaServed": "Global",
+                            "catalogue": {
+                                "@type": "OfferCatalog",
+                                "name": "Automation Services",
+                                "itemListElement": [
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Expert Automation Consulting" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "RPA Implementation" } },
+                                    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Document Processing Automation" } }
+                                ]
+                            }
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": faqs.map(faq => ({
+                                "@type": "Question",
+                                "name": faq.question,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": faq.answer
+                                }
+                            }))
+                        }
+                    ]
                 }}
             />
             <div className="relative z-10">
