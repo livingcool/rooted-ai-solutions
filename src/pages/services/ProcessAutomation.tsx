@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Cpu, CheckCircle, ArrowRight, Workflow, Gauge, BarChart3, Timer, Lock, Repeat } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
+import Seo from "@/components/Seo";
 
 const ProcessAutomation = () => {
     useEffect(() => {
@@ -153,6 +154,12 @@ const ProcessAutomation = () => {
 
     return (
         <div className="min-h-screen relative">
+            <Seo
+                title="Business Process Automation Solutions"
+                description="End-to-end process automation services. Save time and costs by automating repetitive tasks with RPA and intelligent workflows."
+                keywords={["process automation", "RPA", "workflow automation", "business efficiency", "cost reduction"]}
+                canonical="https://rootedai.com/services/process-automation"
+            />
             <div className="relative z-10">
                 <Navigation />
 

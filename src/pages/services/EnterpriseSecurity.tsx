@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Shield, ArrowRight, Lock, Eye, FileCheck, AlertCircle, Activity, UserCheck } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
+import Seo from "@/components/Seo";
 
 const EnterpriseSecurity = () => {
     useEffect(() => {
@@ -87,6 +88,12 @@ const EnterpriseSecurity = () => {
 
     return (
         <div className="min-h-screen relative">
+            <Seo
+                title="Enterprise AI Security Solutions"
+                description="AI-powered threat detection and enterprise security services. Protect your business with real-time monitoring and compliance management."
+                keywords={["enterprise security", "AI threat detection", "cybersecurity", "compliance", "data protection"]}
+                canonical="https://rootedai.com/services/enterprise-security"
+            />
             <div className="relative z-10">
                 <Navigation />
 

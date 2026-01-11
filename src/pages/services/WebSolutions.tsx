@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Globe, ArrowRight, Code, Smartphone, Database, Cloud, LineChart, Lock } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
+import Seo from "@/components/Seo";
 
 const WebSolutions = () => {
     useEffect(() => {
@@ -69,6 +70,12 @@ const WebSolutions = () => {
 
     return (
         <div className="min-h-screen relative">
+            <Seo
+                title="AI-Integrated Web Solutions & Development"
+                description="Custom web development with AI integration. Scalable web apps, dashboards, and PWAs built with modern tech stacks."
+                keywords={["web development", "AI web apps", "custom dashboards", "PWA", "Next.js", "modern web solutions"]}
+                canonical="https://rootedai.com/services/web-solutions"
+            />
             <div className="relative z-10">
                 <Navigation />
 

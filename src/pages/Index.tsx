@@ -11,6 +11,7 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import TechStackMarquee from "@/components/TechStackMarquee";
+import Seo from "@/components/Seo";
 
 const Index = () => {
   useEffect(() => {
@@ -32,6 +33,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen relative">
+      <Seo
+        title="Enterprise AI Automation & Neural Architectures"
+        description="RootedAI delivers custom AI solutions for logistics, hiring, and predictive analytics. We build code-first agents and neural architectures for enterprise automation."
+        keywords={["AI automation", "neural architectures", "logistics AI", "hiring automation", "enterprise AI", "RootedAI India"]}
+        canonical="https://rootedai.com"
+      />
       <div className="relative z-10">
         <Navigation />
         <div id="hero">

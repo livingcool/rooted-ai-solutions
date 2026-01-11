@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { MessageSquare, ArrowRight, FileText, Languages, TrendingUp, BarChart, BookOpen, Mail } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
+import Seo from "@/components/Seo";
 
 const NLPSystems = () => {
     useEffect(() => {
@@ -82,6 +83,12 @@ const NLPSystems = () => {
 
     return (
         <div className="min-h-screen relative">
+            <Seo
+                title="NLP Systems & Sentiment Analysis Services"
+                description="Advanced Natural Language Processing solutions. Sentiment analysis, document processing, and automated reporting for your business."
+                keywords={["NLP", "sentiment analysis", "document processing", "text analysis", "AI reporting"]}
+                canonical="https://rootedai.com/services/nlp-systems"
+            />
             <div className="relative z-10">
                 <Navigation />
 

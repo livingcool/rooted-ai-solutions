@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Sparkles, Zap, Shield, Rocket } from "lucide-react";
+import Seo from "@/components/Seo";
 
 const Pricing = () => {
   const plans = [
@@ -62,6 +63,12 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo
+        title="Pricing Plans"
+        description="Transparent pricing for AI solutions. Choose from Starter, Professional, or Enterprise plans tailored to your business needs."
+        keywords={["AI pricing", "software plans", "enterprise AI cost", "chatbot pricing", "automation costs"]}
+        canonical="https://rootedai.com/pricing"
+      />
       <Navigation />
 
       {/* Hero Section */}

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Users, Code2, Zap, Clock, Shield, Globe, CheckCircle, TrendingUp, ArrowRight } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
+import Seo from "@/components/Seo";
 
 const OutsourcingServicePage = () => {
     useEffect(() => {
@@ -70,6 +71,12 @@ const OutsourcingServicePage = () => {
 
     return (
         <div className="min-h-screen relative">
+            <Seo
+                title="Software Development Outsourcing Services"
+                description="Scale your team with RootedAI's expert developers. Flexible outsourcing models: project-based, dedicated teams, or staff augmentation."
+                keywords={["outsourcing", "software development", "dedicated team", "staff augmentation", "remote developers"]}
+                canonical="https://rootedai.com/services/outsourcing"
+            />
             <div className="relative z-10">
                 <Navigation />
 

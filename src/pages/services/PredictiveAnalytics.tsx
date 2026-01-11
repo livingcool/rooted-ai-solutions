@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Zap, ArrowRight, TrendingUp, ShoppingCart, Users2, Factory, DollarSign, AlertTriangle } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
+import Seo from "@/components/Seo";
 
 const PredictiveAnalytics = () => {
     useEffect(() => {
@@ -101,6 +102,12 @@ const PredictiveAnalytics = () => {
 
     return (
         <div className="min-h-screen relative">
+            <Seo
+                title="Predictive Analytics & Forecasting Services"
+                description="Data-driven predictive analytics for demand forecasting, churn prediction, and risk assessment. Optimize decisions with AI."
+                keywords={["predictive analytics", "demand forecasting", "churn prediction", "business intelligence", "data insights"]}
+                canonical="https://rootedai.com/services/predictive-analytics"
+            />
             <div className="relative z-10">
                 <Navigation />
 
