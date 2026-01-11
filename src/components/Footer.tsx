@@ -20,7 +20,7 @@ const Footer = () => {
                             </div>
                         </Link>
                         <p className="text-muted-foreground text-sm leading-relaxed">
-                            Engineering Intelligence.COMPLEXITY.SIMPLIFIED
+                            Engineering Intelligence.Complexity Simplified.
                         </p>
 
                         {/* Contact Information */}
