@@ -14,13 +14,13 @@ const Footer = () => {
                     {/* Brand & Contact */}
                     <div className="space-y-6 md:col-span-2">
                         <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center cursor-pointer group">
-                            <div className="relative h-40 w-auto">
+                            <div className="relative h-24 w-auto">
                                 <img src="/logo-light.png" alt="RootedAI" className="h-full w-auto object-contain dark:hidden" />
                                 <img src="/logo-dark.png" alt="RootedAI" className="hidden dark:block h-full w-auto object-contain" />
                             </div>
                         </Link>
                         <p className="text-muted-foreground text-sm leading-relaxed">
-                            Automating logistics, hiring, and support for Indian SMEs and fast-growing teams.
+                            Engineering Intelligence.COMPLEXITY.SIMPLIFIED
                         </p>
 
                         {/* Contact Information */}
