@@ -66,7 +66,18 @@ const Pricing = () => {
       <Seo
         title="Pricing Plans"
         description="Transparent pricing for AI solutions. Choose from Starter, Professional, or Enterprise plans tailored to your business needs."
-        keywords={["AI pricing", "software plans", "enterprise AI cost", "chatbot pricing", "automation costs"]}
+        keywords={[
+          "AI pricing",
+          "software plans",
+          "enterprise AI cost",
+          "chatbot pricing",
+          "automation costs",
+          "affordable AI solutions",
+          "software development rates",
+          "hiring developers cost",
+          "AI consulting fees",
+          "custom software pricing"
+        ]}
         canonical="https://rootedai.com/pricing"
       />
       <Navigation />

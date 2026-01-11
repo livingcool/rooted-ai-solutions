@@ -6,6 +6,7 @@ import { Cpu, CheckCircle, ArrowRight, Workflow, Gauge, BarChart3, Timer, Lock, 
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const ProcessAutomation = () => {
     useEffect(() => {
@@ -157,8 +158,42 @@ const ProcessAutomation = () => {
             <Seo
                 title="Business Process Automation Solutions"
                 description="End-to-end process automation services. Save time and costs by automating repetitive tasks with RPA and intelligent workflows."
-                keywords={["process automation", "RPA", "workflow automation", "business efficiency", "cost reduction"]}
+                keywords={[
+                    "process automation",
+                    "RPA",
+                    "workflow automation",
+                    "business efficiency",
+                    "cost reduction",
+                    "intelligent document processing",
+                    "IDP",
+                    "automated data entry",
+                    "business process management",
+                    "BPM",
+                    "operational excellence",
+                    "legacy system integration"
+                ]}
                 canonical="https://rootedai.com/services/process-automation"
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "Service",
+                    "name": "Business Process Automation",
+                    "provider": {
+                        "@type": "Organization",
+                        "name": "RootedAI",
+                        "url": "https://rootedai.com"
+                    },
+                    "description": "End-to-end process automation utilizing RPA and intelligent workflows to reduce manual effort.",
+                    "areaServed": "Global",
+                    "catalogue": {
+                        "@type": "OfferCatalog",
+                        "name": "Automation Services",
+                        "itemListElement": [
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Expert Automation Consulting" } },
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "RPA Implementation" } },
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Document Processing Automation" } }
+                        ]
+                    }
+                }}
             />
             <div className="relative z-10">
                 <Navigation />
@@ -166,6 +201,9 @@ const ProcessAutomation = () => {
                 {/* Hero Section */}
                 <section className="pt-32 pb-20 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
+                        <div className="mb-8 flex justify-center">
+                            <Breadcrumbs />
+                        </div>
                         <div className="max-w-4xl mx-auto text-center space-y-6">
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 mb-4">
                                 <Cpu className="w-4 h-4 text-black dark:text-white" />

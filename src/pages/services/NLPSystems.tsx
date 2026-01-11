@@ -6,6 +6,7 @@ import { MessageSquare, ArrowRight, FileText, Languages, TrendingUp, BarChart, B
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const NLPSystems = () => {
     useEffect(() => {
@@ -86,14 +87,51 @@ const NLPSystems = () => {
             <Seo
                 title="NLP Systems & Sentiment Analysis Services"
                 description="Advanced Natural Language Processing solutions. Sentiment analysis, document processing, and automated reporting for your business."
-                keywords={["NLP", "sentiment analysis", "document processing", "text analysis", "AI reporting"]}
+                keywords={[
+                    "NLP",
+                    "sentiment analysis",
+                    "document processing",
+                    "text analysis",
+                    "AI reporting",
+                    "natural language processing",
+                    "chatbot development",
+                    "conversational AI",
+                    "unstructured data analysis",
+                    "text classification",
+                    "LLM fine-tuning",
+                    "automated insights"
+                ]}
                 canonical="https://rootedai.com/services/nlp-systems"
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "Service",
+                    "name": "Natural Language Processing Systems",
+                    "provider": {
+                        "@type": "Organization",
+                        "name": "RootedAI",
+                        "url": "https://rootedai.com"
+                    },
+                    "description": "Advanced NLP solutions including sentiment analysis, document processing, and automated reporting.",
+                    "areaServed": "Global",
+                    "catalogue": {
+                        "@type": "OfferCatalog",
+                        "name": "NLP Services",
+                        "itemListElement": [
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sentiment Analysis" } },
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Document Processing" } },
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Chatbot Development" } }
+                        ]
+                    }
+                }}
             />
             <div className="relative z-10">
                 <Navigation />
 
                 <section className="pt-32 pb-20 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
+                        <div className="mb-8 flex justify-center">
+                            <Breadcrumbs />
+                        </div>
                         <div className="max-w-4xl mx-auto text-center space-y-6">
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 mb-4">
                                 <MessageSquare className="w-4 h-4 text-black dark:text-white" />

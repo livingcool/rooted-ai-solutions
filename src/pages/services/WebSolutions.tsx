@@ -6,6 +6,7 @@ import { Globe, ArrowRight, Code, Smartphone, Database, Cloud, LineChart, Lock }
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const WebSolutions = () => {
     useEffect(() => {
@@ -73,14 +74,50 @@ const WebSolutions = () => {
             <Seo
                 title="AI-Integrated Web Solutions & Development"
                 description="Custom web development with AI integration. Scalable web apps, dashboards, and PWAs built with modern tech stacks."
-                keywords={["web development", "AI web apps", "custom dashboards", "PWA", "Next.js", "modern web solutions"]}
+                keywords={[
+                    "web development",
+                    "AI web apps",
+                    "custom dashboards",
+                    "PWA",
+                    "Next.js",
+                    "modern web solutions",
+                    "AI-integrated websites",
+                    "scalable cloud architecture",
+                    "React development services",
+                    "enterprise web portals",
+                    "full-stack development"
+                ]}
                 canonical="https://rootedai.com/services/web-solutions"
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "Service",
+                    "name": "AI Integrated Web Solutions",
+                    "provider": {
+                        "@type": "Organization",
+                        "name": "RootedAI",
+                        "url": "https://rootedai.com"
+                    },
+                    "description": "Custom web development with AI integration. Scalable web apps, dashboards, and PWAs.",
+                    "areaServed": "Global",
+                    "hasOfferCatalog": {
+                        "@type": "OfferCatalog",
+                        "name": "Web Development Services",
+                        "itemListElement": [
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Web Application Development" } },
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Custom Dashboard Creation" } },
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "PWA Development" } }
+                        ]
+                    }
+                }}
             />
             <div className="relative z-10">
                 <Navigation />
 
                 <section className="pt-32 pb-20 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
+                        <div className="mb-8 flex justify-center">
+                            <Breadcrumbs />
+                        </div>
                         <div className="max-w-4xl mx-auto text-center space-y-6">
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 mb-4">
                                 <Globe className="w-4 h-4 text-black dark:text-white" />

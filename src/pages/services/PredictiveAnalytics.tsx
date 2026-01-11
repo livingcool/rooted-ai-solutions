@@ -6,6 +6,7 @@ import { Zap, ArrowRight, TrendingUp, ShoppingCart, Users2, Factory, DollarSign,
 import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const PredictiveAnalytics = () => {
     useEffect(() => {
@@ -105,14 +106,50 @@ const PredictiveAnalytics = () => {
             <Seo
                 title="Predictive Analytics & Forecasting Services"
                 description="Data-driven predictive analytics for demand forecasting, churn prediction, and risk assessment. Optimize decisions with AI."
-                keywords={["predictive analytics", "demand forecasting", "churn prediction", "business intelligence", "data insights"]}
+                keywords={[
+                    "predictive analytics",
+                    "demand forecasting",
+                    "churn prediction",
+                    "business intelligence",
+                    "data insights",
+                    "machine learning consulting",
+                    "sales forecasting AI",
+                    "risk assessment models",
+                    "inventory optimization",
+                    "data-driven decision making",
+                    "trend analysis"
+                ]}
                 canonical="https://rootedai.com/services/predictive-analytics"
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "Service",
+                    "name": "Predictive Analytics Services",
+                    "provider": {
+                        "@type": "Organization",
+                        "name": "RootedAI",
+                        "url": "https://rootedai.com"
+                    },
+                    "description": "Data-driven predictive analytics for demand forecasting, churn prediction, and risk assessment.",
+                    "areaServed": "Global",
+                    "catalogue": {
+                        "@type": "OfferCatalog",
+                        "name": "Analytics Services",
+                        "itemListElement": [
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Demand Forecasting" } },
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Churn Prediction" } },
+                            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Risk Assessment Models" } }
+                        ]
+                    }
+                }}
             />
             <div className="relative z-10">
                 <Navigation />
 
                 <section className="pt-32 pb-20 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
+                        <div className="mb-8 flex justify-center">
+                            <Breadcrumbs />
+                        </div>
                         <div className="max-w-4xl mx-auto text-center space-y-6">
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 mb-4">
                                 <Zap className="w-4 h-4 text-black dark:text-white" />

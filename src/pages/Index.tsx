@@ -34,9 +34,20 @@ const Index = () => {
   return (
     <div className="min-h-screen relative">
       <Seo
-        title="Enterprise AI Automation & Neural Architectures"
-        description="RootedAI delivers custom AI solutions for logistics, hiring, and predictive analytics. We build code-first agents and neural architectures for enterprise automation."
-        keywords={["AI automation", "neural architectures", "logistics AI", "hiring automation", "enterprise AI", "RootedAI India"]}
+        title="RootedAI - Intelligent AI Solutions & Automation"
+        description="RootedAI empowers businesses with cutting-edge Artificial Intelligence, Process Automation, and Web Solutions. Transform your operations today."
+        keywords={[
+          "AI software development company",
+          "enterprise AI solutions",
+          "custom AI integration",
+          "digital transformation agency",
+          "generative AI services",
+          "LLM development",
+          "business process automation",
+          "AI consulting firm",
+          "RootedAI",
+          "cognitive computing"
+        ]}
         canonical="https://rootedai.com"
       />
       <div className="relative z-10">

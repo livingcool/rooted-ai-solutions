@@ -121,7 +121,19 @@ const AIAgents = () => {
             <Seo
                 title="AI Agents Development Services"
                 description="Custom AI agent development, consulting, and multi-agent systems. Automate workflows with autonomous AI agents."
-                keywords={["AI agents", "autonomous agents", "AI consulting", "multi-agent systems", "business automation"]}
+                keywords={[
+                    "AI agents",
+                    "autonomous agents",
+                    "AI consulting",
+                    "multi-agent systems",
+                    "business automation",
+                    "smart AI assistants",
+                    "agentic workflows",
+                    "LLM agents",
+                    "LangChain development",
+                    "custom AI workforce",
+                    "task automation agents"
+                ]}
                 canonical="https://rootedai.com/services/ai-agents"
                 structuredData={{
                     "@context": "https://schema.org",
