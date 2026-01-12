@@ -25,13 +25,20 @@ const Seo = ({
     return (
         <Helmet>
             {/* Basic Meta Tags */}
-            <title>{title} | RootedAI</title>
+            <title>{title.includes('RootedAI') ? title : `${title} | RootedAI`}</title>
             <meta name="description" content={description} />
             {keywords && <meta name="keywords" content={keywords.join(', ')} />}
             <link rel="canonical" href={fullUrl} />
 
+            {/* Geo Tags */}
+            <meta name="geo.region" content="IN-TN" />
+            <meta name="geo.placename" content="Hosur" />
+            <meta name="geo.position" content="12.7409;77.8253" />
+            <meta name="ICBM" content="12.7409, 77.8253" />
+
             {/* Open Graph Tags */}
             <meta property="og:title" content={title} />
+            <meta property="og:site_name" content="RootedAI" />
             <meta property="og:description" content={description} />
             <meta property="og:image" content={siteUrl + ogImage} />
             <meta property="og:url" content={fullUrl} />

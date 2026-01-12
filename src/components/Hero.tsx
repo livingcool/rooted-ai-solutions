@@ -9,9 +9,9 @@ const Hero = () => {
 
   const slides = [
     {
-      headline: "Customized Software",
-      subheadline: "Built for Your Business",
-      description: "Enterprise-grade solutions tailored to your unique needs. From concept to deployment, we build software that grows with you.",
+      headline: "Engineering",
+      subheadline: "Intelligence",
+      description: "COMPLEXITY. SIMPLIFIED. We automate logistics, hiring, and support for Indian SMEs and scaling enterprises with autonomous agents.",
       cta: "Get Custom Solution",
       ctaMessage: "Hi, I'd like a customized software solution from RootedAI",
       stats: [

@@ -34,44 +34,61 @@ const Index = () => {
   return (
     <div className="min-h-screen relative">
       <Seo
-        title="RootedAI - Intelligent AI Solutions & Automation"
-        description="RootedAI empowers businesses with cutting-edge Artificial Intelligence, Process Automation, and Web Solutions. Transform your operations today."
+        title="RootedAI - Engineering Intelligence & Enterprise Automation"
+        description="Engineering Intelligence. COMPLEXITY. SIMPLIFIED. RootedAI delivers autonomous agents, logistics automation, and hiring solutions for scaling enterprises."
         keywords={[
-          "AI software development company",
-          "enterprise AI solutions",
-          "custom AI integration",
-          "digital transformation agency",
-          "generative AI services",
-          "LLM development",
-          "business process automation",
-          "AI consulting firm",
           "RootedAI",
-          "cognitive computing"
+          "Engineering Intelligence",
+          "AI agents",
+          "hiring automation",
+          "logistics AI",
+          "process automation",
+          "enterprise AI solutions",
+          "generative AI services",
+          "custom LLM development",
+          "scale",
+          "business intelligence"
         ]}
         canonical="https://rootedai.com"
         structuredData={{
           "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "RootedAI",
-          "url": "https://rootedai.com",
-          "logo": "https://rootedai.com/logo.png",
-          "sameAs": [
-            "https://www.linkedin.com/company/rootedai",
-            "https://twitter.com/rootedai",
-            "https://github.com/rootedai"
-          ],
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+91-7904168521",
-            "contactType": "customer service",
-            "areaServed": "Global",
-            "availableLanguage": ["English"]
-          },
-          "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "IN"
-          },
-          "description": "RootedAI is a premier AI software development company specializing in autonomous agents, process automation, and enterprise web solutions."
+          "@graph": [
+            {
+              "@type": "Organization",
+              "name": "RootedAI",
+              "url": "https://rootedai.com",
+              "logo": "https://rootedai.com/logo.png",
+              "slogan": "Engineering Intelligence. COMPLEXITY. SIMPLIFIED.",
+              "sameAs": [
+                "https://www.linkedin.com/company/rootdai",
+                "https://twitter.com/rootedai",
+                "https://www.instagram.com/rootedai_official/"
+              ],
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+91-7904168521",
+                "contactType": "sales",
+                "areaServed": "Global",
+                "availableLanguage": ["English"]
+              },
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "IN",
+                "addressRegion": "TN",
+                "addressLocality": "Hosur"
+              }
+            },
+            {
+              "@type": "WebSite",
+              "name": "RootedAI",
+              "url": "https://rootedai.com",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://rootedai.com/?s={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            }
+          ]
         }}
       />
       <div className="relative z-10">
