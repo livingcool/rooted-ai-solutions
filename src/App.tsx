@@ -4,37 +4,47 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import Index from "./pages/Index";
-
-import Pricing from "./pages/Pricing";
-import NotFound from "./pages/NotFound";
-import AdminHiringDashboard from "./pages/AdminHiringDashboard";
-import AdminPassSet from "./pages/AdminPassSet";
-import Login from "./pages/Login";
-import Interview from "./pages/Interview";
-import CandidateLogin from "./pages/CandidateLogin";
-import JobDetails from "./pages/JobDetails";
-import TechnicalAssessment from "./pages/TechnicalAssessment";
-import CandidateStatus from "./pages/CandidateStatus";
-import FinalInterviewLogin from './pages/FinalInterviewLogin';
-import AIInterviewRoom from "./pages/AIInterviewRoom";
-
-// Service Pages
-import AIAgents from "./pages/services/AIAgents";
-import ProcessAutomation from "./pages/services/ProcessAutomation";
-import WebSolutions from "./pages/services/WebSolutions";
-import NLPSystems from "./pages/services/NLPSystems";
-import PredictiveAnalytics from "./pages/services/PredictiveAnalytics";
-import EnterpriseSecurity from "./pages/services/EnterpriseSecurity";
-import Outsourcing from "./pages/services/Outsourcing";
-
+import { Suspense, lazy } from "react";
 import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import GlobalBackground from "@/components/GlobalBackground";
 import SectionIndicator from "@/components/SectionIndicator";
 
+// Lazy Load Pages
+const Index = lazy(() => import("./pages/Index"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const AdminHiringDashboard = lazy(() => import("./pages/AdminHiringDashboard"));
+const AdminPassSet = lazy(() => import("./pages/AdminPassSet"));
+const Login = lazy(() => import("./pages/Login"));
+const Interview = lazy(() => import("./pages/Interview"));
+const CandidateLogin = lazy(() => import("./pages/CandidateLogin"));
+const JobDetails = lazy(() => import("./pages/JobDetails"));
+const TechnicalAssessment = lazy(() => import("./pages/TechnicalAssessment"));
+const CandidateStatus = lazy(() => import("./pages/CandidateStatus"));
+const FinalInterviewLogin = lazy(() => import("./pages/FinalInterviewLogin"));
+const AIInterviewRoom = lazy(() => import("./pages/AIInterviewRoom"));
+
+// Service Pages
+const AIAgents = lazy(() => import("./pages/services/AIAgents"));
+const ProcessAutomation = lazy(() => import("./pages/services/ProcessAutomation"));
+const WebSolutions = lazy(() => import("./pages/services/WebSolutions"));
+const NLPSystems = lazy(() => import("./pages/services/NLPSystems"));
+const PredictiveAnalytics = lazy(() => import("./pages/services/PredictiveAnalytics"));
+const EnterpriseSecurity = lazy(() => import("./pages/services/EnterpriseSecurity"));
+const Outsourcing = lazy(() => import("./pages/services/Outsourcing"));
+
 const queryClient = new QueryClient();
+
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-muted-foreground animate-pulse">Loading RootedAI...</p>
+    </div>
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -48,34 +58,35 @@ const App = () => (
           <ScrollProgress />
           <ScrollToHash />
           <SectionIndicator />
-          <Routes>
-            <Route path="/" element={<Index />} />
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/admin-hiring" element={<AdminHiringDashboard />} />
+              <Route path="/:orgSlug/admin-pass-set" element={<AdminPassSet />} />
+              <Route path="/:orgSlug" element={<AdminHiringDashboard />} />
+              <Route path="/candidate-login" element={<CandidateLogin />} />
+              <Route path="/assessment" element={<Interview />} />
+              <Route path="/jobs/:id" element={<JobDetails />} />
+              <Route path="/technical-assessment" element={<TechnicalAssessment />} />
+              <Route path="/candidate-status" element={<CandidateStatus />} />
+              <Route path="/final-login" element={<FinalInterviewLogin />} />
+              <Route path="/final-interview" element={<AIInterviewRoom />} />
 
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/admin-hiring" element={<AdminHiringDashboard />} />
-            <Route path="/:orgSlug/admin-pass-set" element={<AdminPassSet />} />
-            <Route path="/:orgSlug" element={<AdminHiringDashboard />} />
-            <Route path="/candidate-login" element={<CandidateLogin />} />
-            <Route path="/assessment" element={<Interview />} />
-            <Route path="/jobs/:id" element={<JobDetails />} />
-            <Route path="/technical-assessment" element={<TechnicalAssessment />} />
-            <Route path="/candidate-status" element={<CandidateStatus />} />
-            <Route path="/final-login" element={<FinalInterviewLogin />} />
-            <Route path="/final-interview" element={<AIInterviewRoom />} />
+              {/* Service Detail Pages */}
+              <Route path="/services/ai-agents" element={<AIAgents />} />
+              <Route path="/services/process-automation" element={<ProcessAutomation />} />
+              <Route path="/services/web-solutions" element={<WebSolutions />} />
+              <Route path="/services/nlp-systems" element={<NLPSystems />} />
+              <Route path="/services/predictive-analytics" element={<PredictiveAnalytics />} />
+              <Route path="/services/enterprise-security" element={<EnterpriseSecurity />} />
+              <Route path="/services/outsourcing" element={<Outsourcing />} />
 
-            {/* Service Detail Pages */}
-            <Route path="/services/ai-agents" element={<AIAgents />} />
-            <Route path="/services/process-automation" element={<ProcessAutomation />} />
-            <Route path="/services/web-solutions" element={<WebSolutions />} />
-            <Route path="/services/nlp-systems" element={<NLPSystems />} />
-            <Route path="/services/predictive-analytics" element={<PredictiveAnalytics />} />
-            <Route path="/services/enterprise-security" element={<EnterpriseSecurity />} />
-            <Route path="/services/outsourcing" element={<Outsourcing />} />
-
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>
