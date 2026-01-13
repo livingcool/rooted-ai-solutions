@@ -35,6 +35,10 @@ const PredictiveAnalytics = lazy(() => import("./pages/services/PredictiveAnalyt
 const EnterpriseSecurity = lazy(() => import("./pages/services/EnterpriseSecurity"));
 const Outsourcing = lazy(() => import("./pages/services/Outsourcing"));
 
+// Blog
+const BlogListing = lazy(() => import("./pages/BlogListing"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+
 const queryClient = new QueryClient();
 
 const LoadingFallback = () => (
@@ -61,6 +65,14 @@ const App = () => (
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/blog" element={<BlogListing />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/about" element={<Index />} />
+              <Route path="/services" element={<Index />} />
+              <Route path="/case-studies" element={<Index />} />
+              <Route path="/products" element={<Index />} />
+              <Route path="/careers" element={<Index />} />
+              <Route path="/contact" element={<Index />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/admin-hiring" element={<AdminHiringDashboard />} />

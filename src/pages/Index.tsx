@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -14,22 +15,39 @@ import TechStackMarquee from "@/components/TechStackMarquee";
 import Seo from "@/components/Seo";
 
 const Index = () => {
+  const location = useLocation();
+
   useEffect(() => {
-    // Prevent browser from restoring scroll position
+    // Prevent browser from restoring scroll position automatically
     if (history.scrollRestoration) {
       history.scrollRestoration = "manual";
     }
 
-    // Force scroll to top
-    window.scrollTo(0, 0);
+    const scrollToSection = () => {
+      const path = location.pathname.replace(/^\//, ""); // Remove leading slash
+      if (path && document.getElementById(path)) {
+        // Scroll to section matches path (e.g. /services -> id="services")
+        const el = document.getElementById(path);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      } else if (location.hash) {
+        // Fallback to hash if present
+        const id = location.hash.replace("#", "");
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      } else {
+        // Default to top if root
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    };
 
-    // Backup scroll to top after a small delay to ensure it overrides any async behavior
-    const timer = setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 100);
-
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(scrollToSection, 100);
     return () => clearTimeout(timer);
-  }, []);
+  }, [location]);
 
   return (
     <div className="min-h-screen relative">

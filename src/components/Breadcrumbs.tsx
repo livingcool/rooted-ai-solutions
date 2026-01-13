@@ -14,12 +14,18 @@ const Breadcrumbs = () => {
                     </Link>
                 </li>
                 {pathnames.map((value, index) => {
-                    const to = `/${pathnames.slice(0, index + 1).join("/")}`;
+                    let to = `/${pathnames.slice(0, index + 1).join("/")}`;
+
+                    // Redirect 'Services' breadcrumb to the landing page section
+                    if (value === "services") {
+                        to = "/services";
+                    }
+
                     const isLast = index === pathnames.length - 1;
                     const label = value.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
                     return (
-                        <li key={to} className="flex items-center space-x-2">
+                        <li key={index} className="flex items-center space-x-2">
                             <ChevronRight className="w-4 h-4" />
                             {isLast ? (
                                 <span className="font-medium text-foreground">{label}</span>

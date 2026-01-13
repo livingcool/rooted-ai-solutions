@@ -7,6 +7,7 @@ import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import InventorySimulator from "@/components/InventorySimulator";
 
 const PredictiveAnalytics = () => {
     useEffect(() => {
@@ -233,6 +234,12 @@ const PredictiveAnalytics = () => {
                                 </TiltCard>
                             ))}
                         </div>
+                    </div>
+                </section>
+
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10 bg-zinc-950 dark:bg-black">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <InventorySimulator />
                     </div>
                 </section>
 

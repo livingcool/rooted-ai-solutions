@@ -7,6 +7,7 @@ import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import AgentEfficiencySimulator from "@/components/AgentEfficiencySimulator";
 
 const AIAgents = () => {
     useEffect(() => {
@@ -301,6 +302,13 @@ const AIAgents = () => {
                                 </TiltCard>
                             ))}
                         </div>
+                    </div>
+                </section>
+
+                {/* Efficiency Simulator Section */}
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <AgentEfficiencySimulator />
                     </div>
                 </section>
 

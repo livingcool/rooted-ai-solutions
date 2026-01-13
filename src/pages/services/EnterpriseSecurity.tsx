@@ -7,6 +7,7 @@ import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import SecurityRiskSimulator from "@/components/SecurityRiskSimulator";
 
 const EnterpriseSecurity = () => {
     useEffect(() => {
@@ -219,6 +220,12 @@ const EnterpriseSecurity = () => {
                                 </TiltCard>
                             ))}
                         </div>
+                    </div>
+                </section>
+
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10 dark:bg-white/5 bg-black/5">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <SecurityRiskSimulator />
                     </div>
                 </section>
 

@@ -7,6 +7,7 @@ import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import WebProjectEstimator from "@/components/WebProjectEstimator";
 
 const WebSolutions = () => {
     useEffect(() => {
@@ -201,6 +202,20 @@ const WebSolutions = () => {
                                 </TiltCard>
                             ))}
                         </div>
+                    </div>
+                </section>
+
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="text-center mb-16 space-y-4">
+                            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
+                                Project Estimator
+                            </h2>
+                            <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light">
+                                Configure your ideal solution to get an instant timeline estimate
+                            </p>
+                        </div>
+                        <WebProjectEstimator />
                     </div>
                 </section>
 

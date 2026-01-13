@@ -7,6 +7,7 @@ import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import OutsourcingCalculator from "@/components/OutsourcingCalculator";
 
 const OutsourcingServicePage = () => {
     useEffect(() => {
@@ -308,6 +309,13 @@ const OutsourcingServicePage = () => {
                                 </TiltCard>
                             ))}
                         </div>
+                    </div>
+                </section>
+
+                {/* Cost Calculator Section */}
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <OutsourcingCalculator />
                     </div>
                 </section>
 
