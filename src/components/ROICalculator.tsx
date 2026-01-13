@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calculator, IndianRupee, Clock } from "lucide-react";
-import TiltCard from "@/components/ui/TiltCard";
 
 const ROICalculator = () => {
     // State for inputs
@@ -45,7 +44,7 @@ const ROICalculator = () => {
     };
 
     return (
-        <TiltCard className="bw-card p-8 md:p-12 w-full max-w-5xl mx-auto bg-gradient-to-b from-black/5 to-transparent dark:from-white/5 border border-black/10 dark:border-white/10">
+        <div className="bw-card p-8 md:p-12 w-full max-w-5xl mx-auto bg-gradient-to-b from-black/5 to-transparent dark:from-white/5 border border-black/10 dark:border-white/10 rounded-2xl shadow-xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 {/* Input Section */}
                 <div className="space-y-8">
@@ -75,7 +74,7 @@ const ROICalculator = () => {
                                 max={50}
                                 min={1}
                                 step={1}
-                                className="py-2"
+                                className="py-2 cursor-pointer"
                             />
                             <p className="text-xs text-muted-foreground">Data entry, report generation, email responses, etc.</p>
                         </div>
@@ -94,7 +93,7 @@ const ROICalculator = () => {
                                 max={8}
                                 min={0.5}
                                 step={0.5}
-                                className="py-2"
+                                className="py-2 cursor-pointer"
                             />
                         </div>
 
@@ -112,7 +111,7 @@ const ROICalculator = () => {
                                 max={5000}
                                 min={100}
                                 step={100}
-                                className="py-2"
+                                className="py-2 cursor-pointer"
                             />
                             <p className="text-xs text-muted-foreground">Includes salary, benefits, and overhead.</p>
                         </div>
@@ -171,10 +170,15 @@ const ROICalculator = () => {
                             Start Saving Now
                             <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Button>
+
+                        <p className="text-[10px] text-muted-foreground text-center italic mt-4">
+                            Note: This is an estimated approximation based on standard industry metrics.
+                            To get a precise analysis tailored to your specific business needs, please contact our team.
+                        </p>
                     </div>
                 </div>
             </div>
-        </TiltCard>
+        </div>
     );
 };
 
