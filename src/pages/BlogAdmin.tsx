@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,19 @@ const BlogAdmin = () => {
     const [coverImage, setCoverImage] = useState("");
     const [content, setContent] = useState(""); // This will hold the HTML
     const [loading, setLoading] = useState(false);
+    const [posts, setPosts] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (isAuthenticated) fetchPosts();
+    }, [isAuthenticated]);
+
+    const fetchPosts = async () => {
+        const { data } = await supabase
+            .from('blog_posts' as any)
+            .select('*')
+            .order('published_at', { ascending: false });
+        if (data) setPosts(data);
+    };
 
     const handleLogin = () => {
         if (password === "G22a05n@03") { // Simple hardcoded secret for the "secret url"
@@ -60,6 +73,7 @@ const BlogAdmin = () => {
             setTitle("");
             setSlug("");
             setContent("");
+            fetchPosts();
         } catch (error: any) {
             toast.error(`Error: ${error.message}`);
         } finally {
@@ -87,6 +101,7 @@ const BlogAdmin = () => {
                 if (error) console.error("Error seeding post:", post.title, error);
             }
             toast.success("Initial data seeded!");
+            fetchPosts();
         } catch (e) {
             toast.error("Seeding failed");
         } finally {
@@ -227,6 +242,83 @@ const BlogAdmin = () => {
                     <Button onClick={handlePublish} disabled={loading} className="w-full text-lg h-12">
                         {loading ? "Publishing..." : "Publish Post"}
                     </Button>
+                </div>
+
+                <div className="mt-20">
+                    <h2 className="text-2xl font-bold mb-8">Manage Existing Posts</h2>
+                    <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-zinc-50 dark:bg-zinc-950 text-zinc-500 uppercase font-bold text-xs">
+                                    <tr>
+                                        <th className="px-6 py-4">Title</th>
+                                        <th className="px-6 py-4">Status</th>
+                                        <th className="px-6 py-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                                    {posts.map((post) => (
+                                        <tr key={post.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
+                                            <td className="px-6 py-4 font-medium">{post.title}</td>
+                                            <td className="px-6 py-4">
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                                    Published
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-right space-x-2">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        setTitle(post.title);
+                                                        setSlug(post.slug);
+                                                        setExcerpt(post.excerpt || "");
+                                                        setAuthor(post.author || "RootedAI Team");
+                                                        setCategory(post.category || "Technology");
+                                                        setReadTime(post.read_time || "5 min read");
+                                                        setCoverImage(post.cover_image || "");
+                                                        setContent(post.content || "");
+                                                        window.scrollTo(0, 0);
+                                                        toast.info("Loaded into editor. Click Publish to update.");
+                                                    }}
+                                                >
+                                                    Edit
+                                                </Button>
+                                                <Button
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    onClick={async () => {
+                                                        if (!confirm("Are you sure you want to delete this post?")) return;
+
+                                                        const { error } = await supabase
+                                                            .from('blog_posts' as any)
+                                                            .delete()
+                                                            .eq('id', post.id);
+
+                                                        if (error) {
+                                                            toast.error("Failed to delete");
+                                                        } else {
+                                                            toast.success("Post deleted");
+                                                            fetchPosts();
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {posts.length === 0 && (
+                                        <tr>
+                                            <td colSpan={3} className="px-6 py-8 text-center text-muted-foreground">
+                                                No posts found.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             <Footer />
