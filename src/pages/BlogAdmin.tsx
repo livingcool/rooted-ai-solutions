@@ -23,6 +23,7 @@ const BlogAdmin = () => {
     const [content, setContent] = useState(""); // This will hold the HTML
     const [loading, setLoading] = useState(false);
     const [posts, setPosts] = useState<any[]>([]);
+    const [extractedLinks, setExtractedLinks] = useState<any[]>([]);
 
     useEffect(() => {
         if (isAuthenticated) fetchPosts();
