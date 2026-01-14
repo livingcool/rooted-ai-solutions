@@ -161,7 +161,30 @@ const BlogAdmin = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium">HTML Content</label>
+                        <div className="flex justify-between items-center">
+                            <label className="text-sm font-medium">HTML Content</label>
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-muted-foreground">Or upload .html file:</span>
+                                <Input
+                                    type="file"
+                                    accept=".html"
+                                    className="h-8 text-xs w-48"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            const reader = new FileReader();
+                                            reader.onload = (event) => {
+                                                if (event.target?.result) {
+                                                    setContent(event.target.result as string);
+                                                    toast.success("HTML file loaded!");
+                                                }
+                                            };
+                                            reader.readAsText(file);
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
                         <Textarea
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
