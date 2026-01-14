@@ -240,6 +240,76 @@ const BlogAdmin = () => {
                         </p>
                     </div>
 
+                    {/* Links Manager */}
+                    <div className="space-y-4 border rounded-xl p-4 bg-zinc-50 dark:bg-zinc-800/50">
+                        <div className="flex justify-between items-center">
+                            <h3 className="font-semibold text-sm">Links Manager</h3>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    const parser = new DOMParser();
+                                    const doc = parser.parseFromString(content, 'text/html');
+                                    const anchors = doc.querySelectorAll('a');
+                                    const links: any[] = [];
+                                    anchors.forEach((a, i) => {
+                                        links.push({ id: i, text: a.textContent, href: a.getAttribute('href') || '' });
+                                    });
+                                    setExtractedLinks(links);
+                                    if (links.length === 0) toast.info("No links found in HTML.");
+                                    else toast.success(`Found ${links.length} links.`);
+                                }}
+                            >
+                                Scan for Links
+                            </Button>
+                        </div>
+
+                        {extractedLinks.length > 0 && (
+                            <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                                {extractedLinks.map((link, idx) => (
+                                    <div key={idx} className="grid grid-cols-[1fr,2fr] gap-2 items-center bg-white dark:bg-black p-2 rounded border border-zinc-200 dark:border-zinc-800">
+                                        <div className="text-xs font-mono text-muted-foreground truncate" title={link.text}>
+                                            "{link.text}"
+                                        </div>
+                                        <Input
+                                            value={link.href}
+                                            className="h-7 text-xs"
+                                            onChange={(e) => {
+                                                const newLinks = [...extractedLinks];
+                                                newLinks[idx].href = e.target.value;
+                                                setExtractedLinks(newLinks);
+                                            }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {extractedLinks.length > 0 && (
+                            <Button
+                                className="w-full"
+                                size="sm"
+                                onClick={() => {
+                                    const parser = new DOMParser();
+                                    const doc = parser.parseFromString(content, 'text/html');
+                                    const anchors = doc.querySelectorAll('a');
+
+                                    // Replace hrefs
+                                    anchors.forEach((a, i) => {
+                                        if (extractedLinks[i]) {
+                                            a.setAttribute('href', extractedLinks[i].href);
+                                        }
+                                    });
+
+                                    setContent(doc.body.innerHTML);
+                                    toast.success("Links updated in HTML content!");
+                                }}
+                            >
+                                Apply Link Changes to HTML
+                            </Button>
+                        )}
+                    </div>
+
                     <Button onClick={handlePublish} disabled={loading} className="w-full text-lg h-12">
                         {loading ? "Publishing..." : "Publish Post"}
                     </Button>
