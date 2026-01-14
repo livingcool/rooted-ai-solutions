@@ -60,4 +60,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  </url>
+  <url>
+    <loc>https://rootedai.com/llms.txt</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>

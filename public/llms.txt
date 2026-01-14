@@ -1,0 +1,32 @@
+# RootedAI
+
+> Engineering Intelligence. COMPLEXITY. SIMPLIFIED.
+
+RootedAI helps businesses scale efficiently through autonomous AI agents and intelligent process automation. We specialize in transforming manual, complex workflows into streamlined, self-running systems.
+
+## Core Identity
+- **Company Name**: RootedAI
+- **Tagline**: Engineering Intelligence. COMPLEXITY. SIMPLIFIED.
+- **Website**: https://www.rootedai.co.in
+- **Contact**: info@rootedai.co.in
+- **Location**: Hosur, Tamil Nadu, India
+
+## Key Offerings
+1. **AI Agents**: Digital workers that handle repetitive tasks like data entry, L1 support, and invoicing 24/7.
+2. **Onboarding Automation**: Reducing hiring costs by 30% through AI-driven candidate screening and onboarding workflows.
+3. **Logistics Optimization**: Intelligent routing and inventory management systems.
+4. **Custom Enterprise Solutions**: Bespoke AI "brains" that consolidate fragmented SaaS tools into a single dashboard.
+
+## Value Proposition
+- **For CEOs**: Reduce overheads and break the "hiring freeze" cycle.
+- **For CTOs**: Eliminate "SaaS Sprawl" with owned, custom infrastructure.
+- **For Operations**: Achieve 24/7 operational capability without adding headcount.
+
+## Technical Expertise
+- **RAG (Retrieval-Augmented Generation)**: Context-aware AI that knows your business data.
+- **Multi-Agent Systems**: Coordinating specialized agents for complex problem solving.
+- **Process Automation**: End-to-end workflow execution.
+
+## Connect
+- **LinkedIn**: https://www.linkedin.com/company/rootedai
+- **Book a Strategy Call**: https://wa.me/917904168521
