@@ -290,13 +290,16 @@ const BlogAdmin = () => {
                                                     onClick={async () => {
                                                         if (!confirm("Are you sure you want to delete this post?")) return;
 
-                                                        const { error } = await supabase
+                                                        const { error, data } = await supabase
                                                             .from('blog_posts' as any)
                                                             .delete()
-                                                            .eq('id', post.id);
+                                                            .eq('id', post.id)
+                                                            .select();
 
                                                         if (error) {
-                                                            toast.error("Failed to delete");
+                                                            toast.error("Failed to delete: " + error.message);
+                                                        } else if (!data || data.length === 0) {
+                                                            toast.error("Failed to delete. Please run the new migration to enable delete permissions.");
                                                         } else {
                                                             toast.success("Post deleted");
                                                             fetchPosts();
