@@ -105,9 +105,17 @@ const BlogListing = () => {
 
                                                 <div className="flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800 pt-4 mt-auto">
                                                     <div className="flex items-center gap-2 text-sm font-medium">
-                                                        <span className="w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
-                                                            <User className="w-3 h-3" />
-                                                        </span>
+                                                        {post.author_image ? (
+                                                            <img
+                                                                src={post.author_image}
+                                                                alt={post.author}
+                                                                className="w-6 h-6 rounded-full object-cover border border-zinc-200 dark:border-zinc-800"
+                                                            />
+                                                        ) : (
+                                                            <span className="w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                                                <User className="w-3 h-3" />
+                                                            </span>
+                                                        )}
                                                         {post.author}
                                                     </div>
                                                     <span className="flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform">
