@@ -103,35 +103,35 @@ const BlogPost = () => {
 
                 {/* Hero / Header */}
                 {/* Hero / Header */}
-                <header className="pt-32 pb-20 relative bg-[#0B1C2E] text-white">
+                <header className="pt-32 pb-20 relative bg-white dark:bg-zinc-950 text-foreground border-b border-zinc-100 dark:border-zinc-800">
                     <div className="container mx-auto px-4 md:px-6 max-w-7xl">
-                        <Link to="/blog" className="inline-flex items-center text-sm text-blue-200 hover:text-white transition-colors mb-8 group">
+                        <Link to="/blog" className="inline-flex items-center text-sm text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors mb-8 group">
                             <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                             Back to Insights
                         </Link>
 
                         <div className="space-y-6 max-w-4xl">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-200 border border-blue-500/30 text-xs font-bold uppercase tracking-wider">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800 text-xs font-bold uppercase tracking-wider">
                                 {post.category || "Artificial Intelligence"}
                             </div>
 
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight leading-tight">
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight leading-tight text-zinc-900 dark:text-white">
                                 {post.title}
                             </h1>
 
-                            <div className="flex flex-wrap items-center gap-6 pt-6 mt-6 border-t border-white/10">
+                            <div className="flex flex-wrap items-center gap-6 pt-6 mt-6 border-t border-zinc-100 dark:border-zinc-900">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center overflow-hidden">
+                                    <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center overflow-hidden">
                                         {/* Placeholder for author image */}
-                                        <User className="w-6 h-6 text-blue-200" />
+                                        <User className="w-6 h-6 text-zinc-400 dark:text-zinc-600" />
                                     </div>
                                     <div>
-                                        <div className="font-bold text-base text-white leading-none mb-1">
+                                        <div className="font-bold text-base text-zinc-900 dark:text-white leading-none mb-1">
                                             {post.author || "RootedAI Team"}
                                         </div>
-                                        <div className="flex items-center gap-3 text-xs text-blue-200/70">
+                                        <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
                                             <span>{new Date(post.published_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                            <span className="w-1 h-1 rounded-full bg-blue-200/40" />
+                                            <span className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
                                             <span>{post.read_time}</span>
                                         </div>
                                     </div>
