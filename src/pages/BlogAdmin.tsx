@@ -17,6 +17,9 @@ const BlogAdmin = () => {
     const [slug, setSlug] = useState("");
     const [excerpt, setExcerpt] = useState("");
     const [author, setAuthor] = useState("RootedAI Team");
+    const [authorRole, setAuthorRole] = useState("");
+    const [authorImage, setAuthorImage] = useState("");
+    const [authorLinkedin, setAuthorLinkedin] = useState("");
     const [category, setCategory] = useState("Technology");
     const [readTime, setReadTime] = useState("5 min read");
     const [coverImage, setCoverImage] = useState("");
@@ -61,6 +64,9 @@ const BlogAdmin = () => {
                     slug,
                     excerpt,
                     author,
+                    author_image: authorImage,
+                    author_linkedin: authorLinkedin,
+                    author_role: authorRole,
                     category,
                     read_time: readTime,
                     cover_image: coverImage,
@@ -74,6 +80,9 @@ const BlogAdmin = () => {
             setTitle("");
             setSlug("");
             setContent("");
+            setAuthorImage("");
+            setAuthorLinkedin("");
+            setAuthorRole("");
             fetchPosts();
         } catch (error: any) {
             toast.error(`Error: ${error.message}`);
@@ -151,11 +160,26 @@ const BlogAdmin = () => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Author</label>
+                            <label className="text-sm font-medium">Author Name</label>
                             <Input value={author} onChange={(e) => setAuthor(e.target.value)} />
                         </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Author Role</label>
+                            <Input value={authorRole} onChange={(e) => setAuthorRole(e.target.value)} placeholder="e.g. CEO, Lead Engineer" />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Author Image URL</label>
+                            <Input value={authorImage} onChange={(e) => setAuthorImage(e.target.value)} placeholder="https://..." />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Author LinkedIn</label>
+                            <Input value={authorLinkedin} onChange={(e) => setAuthorLinkedin(e.target.value)} placeholder="https://linkedin.com/in/..." />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Category</label>
                             <Input value={category} onChange={(e) => setCategory(e.target.value)} />
@@ -215,6 +239,16 @@ const BlogAdmin = () => {
                                                     // Author
                                                     const metaAuthor = doc.querySelector('meta[name="author"]')?.getAttribute("content");
                                                     if (metaAuthor) setAuthor(metaAuthor);
+
+                                                    // Author Extras
+                                                    const metaAuthorImg = doc.querySelector('meta[name="author_image"]')?.getAttribute("content");
+                                                    if (metaAuthorImg) setAuthorImage(metaAuthorImg);
+
+                                                    const metaAuthorLi = doc.querySelector('meta[name="author_linkedin"]')?.getAttribute("content");
+                                                    if (metaAuthorLi) setAuthorLinkedin(metaAuthorLi);
+
+                                                    const metaAuthorRole = doc.querySelector('meta[name="author_role"]')?.getAttribute("content");
+                                                    if (metaAuthorRole) setAuthorRole(metaAuthorRole);
 
                                                     // Category
                                                     const metaCategory = doc.querySelector('meta[name="category"]')?.getAttribute("content");
