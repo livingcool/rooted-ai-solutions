@@ -58,9 +58,14 @@ const BlogPost = () => {
             heading.id = id;
             // Add scroll margin to account for sticky header if needed, mainly done via CSS scroll-mt
             heading.classList.add('scroll-mt-32');
+
+            const fullText = heading.textContent || "";
+            // Truncate to ~50 chars (~1.5 sentences worth of visuals)
+            const text = fullText.length > 50 ? fullText.substring(0, 50) + "..." : fullText;
+
             tocItems.push({
                 id,
-                text: heading.textContent,
+                text,
                 level: heading.tagName.toLowerCase()
             });
         });
@@ -97,36 +102,39 @@ const BlogPost = () => {
                 <Navigation />
 
                 {/* Hero / Header */}
-                <header className="pt-32 pb-16 relative border-b border-black/5 dark:border-white/5 bg-zinc-50/50 dark:bg-zinc-900/20 backdrop-blur-sm">
-                    <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-                        <Link to="/blog" className="inline-flex items-center text-sm text-muted-foreground hover:text-black dark:hover:text-white transition-colors mb-8 group">
+                {/* Hero / Header */}
+                <header className="pt-32 pb-20 relative bg-[#0B1C2E] text-white">
+                    <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+                        <Link to="/blog" className="inline-flex items-center text-sm text-blue-200 hover:text-white transition-colors mb-8 group">
                             <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                             Back to Insights
                         </Link>
 
-                        <div className="space-y-6">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-bold uppercase tracking-wider">
-                                {post.category}
+                        <div className="space-y-6 max-w-4xl">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-200 border border-blue-500/30 text-xs font-bold uppercase tracking-wider">
+                                {post.category || "Artificial Intelligence"}
                             </div>
 
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-black dark:text-white leading-tight">
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight leading-tight">
                                 {post.title}
                             </h1>
 
-                            <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground border-t border-black/10 dark:border-white/10 pt-6 mt-6">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center">
-                                        <User className="w-4 h-4 text-black dark:text-white" />
+                            <div className="flex flex-wrap items-center gap-6 pt-6 mt-6 border-t border-white/10">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center overflow-hidden">
+                                        {/* Placeholder for author image */}
+                                        <User className="w-6 h-6 text-blue-200" />
                                     </div>
-                                    <span className="font-medium text-black dark:text-white">{post.author}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="w-4 h-4" />
-                                    {new Date(post.published_at).toLocaleDateString()}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Clock className="w-4 h-4" />
-                                    {post.read_time}
+                                    <div>
+                                        <div className="font-bold text-base text-white leading-none mb-1">
+                                            {post.author || "RootedAI Team"}
+                                        </div>
+                                        <div className="flex items-center gap-3 text-xs text-blue-200/70">
+                                            <span>{new Date(post.published_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                            <span className="w-1 h-1 rounded-full bg-blue-200/40" />
+                                            <span>{post.read_time}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
