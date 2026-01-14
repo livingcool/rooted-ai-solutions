@@ -175,8 +175,36 @@ const BlogAdmin = () => {
                                             const reader = new FileReader();
                                             reader.onload = (event) => {
                                                 if (event.target?.result) {
-                                                    setContent(event.target.result as string);
-                                                    toast.success("HTML file loaded!");
+                                                    const text = event.target.result as string;
+                                                    setContent(text);
+
+                                                    // Auto-fill metadata
+                                                    const parser = new DOMParser();
+                                                    const doc = parser.parseFromString(text, 'text/html');
+
+                                                    // Title
+                                                    const extractedTitle = doc.title || doc.querySelector('h1')?.textContent || "";
+                                                    if (extractedTitle) setTitle(extractedTitle);
+
+                                                    // Slug (simple sanitize)
+                                                    if (extractedTitle && !slug) {
+                                                        const cleanSlug = extractedTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                                                        setSlug(cleanSlug);
+                                                    }
+
+                                                    // Excerpt
+                                                    const metaDesc = doc.querySelector('meta[name="description"]')?.getAttribute("content");
+                                                    if (metaDesc) setExcerpt(metaDesc);
+
+                                                    // Author
+                                                    const metaAuthor = doc.querySelector('meta[name="author"]')?.getAttribute("content");
+                                                    if (metaAuthor) setAuthor(metaAuthor);
+
+                                                    // Category
+                                                    const metaCategory = doc.querySelector('meta[name="category"]')?.getAttribute("content");
+                                                    if (metaCategory) setCategory(metaCategory);
+
+                                                    toast.success("HTML loaded & metadata auto-filled!");
                                                 }
                                             };
                                             reader.readAsText(file);
