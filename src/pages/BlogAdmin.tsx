@@ -175,7 +175,38 @@ const BlogAdmin = () => {
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Author LinkedIn</label>
-                            <Input value={authorLinkedin} onChange={(e) => setAuthorLinkedin(e.target.value)} placeholder="https://linkedin.com/in/..." />
+                            <div className="relative">
+                                <Input
+                                    value={authorLinkedin}
+                                    onChange={(e) => setAuthorLinkedin(e.target.value)}
+                                    placeholder="https://linkedin.com/in/..."
+                                    onBlur={async () => {
+                                        if (!authorLinkedin || authorImage) return; // Don't fetch if empty or image already set
+
+                                        const toastId = toast.loading("Fetching LinkedIn profile image...");
+                                        try {
+                                            const { data, error } = await supabase.functions.invoke('fetch-url-metadata', {
+                                                body: { url: authorLinkedin }
+                                            });
+
+                                            if (error) throw error;
+
+                                            if (data?.image) {
+                                                setAuthorImage(data.image);
+                                                toast.success("Profile image found!", { id: toastId });
+                                            } else {
+                                                toast.info("Could not find a public profile image.", { id: toastId });
+                                            }
+                                        } catch (e) {
+                                            console.error(e);
+                                            toast.error("Failed to fetch profile metadata.", { id: toastId });
+                                        }
+                                    }}
+                                />
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground pointer-events-none bg-white dark:bg-zinc-900 px-1">
+                                    Auto-fetch on blur
+                                </div>
+                            </div>
                         </div>
                     </div>
 
