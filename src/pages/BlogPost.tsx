@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { blogPosts } from "@/data/blogPosts";
+// import { blogPosts } from "@/data/blogPosts"; // Deprecated
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin, Copy } from "lucide-react";
 import Seo from "@/components/Seo";
 import { Button } from "@/components/ui/button";
@@ -10,11 +11,38 @@ import { toast } from "sonner";
 
 const BlogPost = () => {
     const { slug } = useParams();
-    const post = blogPosts.find((p) => p.slug === slug);
+    const [post, setPost] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        if (slug) fetchPost();
     }, [slug]);
+
+    const fetchPost = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('blog_posts' as any)
+                .select('*')
+                .eq('slug', slug)
+                .single();
+
+            if (error) console.error('Error fetching post:', error);
+            else setPost(data);
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white"></div>
+            </div>
+        );
+    }
 
     if (!post) {
         return <Navigate to="/blog" replace />;
@@ -30,7 +58,7 @@ const BlogPost = () => {
             <Seo
                 title={`${post.title} | RootedAI Blog`}
                 description={post.excerpt}
-                ogImage={post.coverImage}
+                ogImage={post.cover_image}
             />
             <div className="relative z-10">
                 <Navigation />
@@ -61,11 +89,11 @@ const BlogPost = () => {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Calendar className="w-4 h-4" />
-                                    {post.date}
+                                    {new Date(post.published_at).toLocaleDateString()}
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Clock className="w-4 h-4" />
-                                    {post.readTime}
+                                    {post.read_time}
                                 </div>
                             </div>
                         </div>

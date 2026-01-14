@@ -38,6 +38,7 @@ const Outsourcing = lazy(() => import("./pages/services/Outsourcing"));
 // Blog
 const BlogListing = lazy(() => import("./pages/BlogListing"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const BlogAdmin = lazy(() => import("./pages/BlogAdmin"));
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/blog" element={<BlogListing />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/blogpost/adminlogin" element={<BlogAdmin />} />
               <Route path="/about" element={<Index />} />
               <Route path="/services" element={<Index />} />
               <Route path="/case-studies" element={<Index />} />

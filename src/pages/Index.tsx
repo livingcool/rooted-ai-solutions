@@ -49,11 +49,61 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, [location]);
 
+  // Dynamic SEO based on current path
+  const getSeoData = () => {
+    const path = location.pathname;
+
+    if (path.includes("/about")) {
+      return {
+        title: "About Us - RootedAI",
+        description: "Learn about RootedAI's mission to simplify enterprise complexity through engineering intelligence and autonomous agents."
+      };
+    }
+    if (path.includes("/services")) {
+      return {
+        title: "Our Services - RootedAI",
+        description: "From Process Automation to Predictive Analytics. Explore our comprehensive suite of AI solutions for scaling businesses."
+      };
+    }
+    if (path.includes("/case-studies")) {
+      return {
+        title: "Case Studies - RootedAI",
+        description: "See how we've helped SMEs and enterprises save millions and automate workflows. Real results, real data."
+      };
+    }
+    if (path.includes("/products")) {
+      return {
+        title: "Our Products - RootedAI",
+        description: "Discover our flagship AI products designed to streamline your operations and hiring processes."
+      };
+    }
+    if (path.includes("/careers")) {
+      return {
+        title: "Careers - Join RootedAI",
+        description: "Join the team building the future of autonomous work. View open positions and apply today."
+      };
+    }
+    if (path.includes("/contact")) {
+      return {
+        title: "Contact Us - RootedAI",
+        description: "Ready to scale? Get in touch with our team for a custom consultation or quote."
+      };
+    }
+
+    // Default Home
+    return {
+      title: "RootedAI - Engineering Intelligence & Enterprise Automation",
+      description: "Engineering Intelligence. COMPLEXITY. SIMPLIFIED. RootedAI delivers autonomous agents, logistics automation, and hiring solutions for scaling enterprises."
+    };
+  };
+
+  const seoData = getSeoData();
+
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen">
       <Seo
-        title="RootedAI - Engineering Intelligence & Enterprise Automation"
-        description="Engineering Intelligence. COMPLEXITY. SIMPLIFIED. RootedAI delivers autonomous agents, logistics automation, and hiring solutions for scaling enterprises."
+        title={seoData.title}
+        description={seoData.description}
         keywords={[
           "RootedAI",
           "Engineering Intelligence",
@@ -67,7 +117,6 @@ const Index = () => {
           "scale",
           "business intelligence"
         ]}
-        canonical="https://rootedai.com"
         structuredData={{
           "@context": "https://schema.org",
           "@graph": [
@@ -78,22 +127,20 @@ const Index = () => {
               "logo": "https://rootedai.com/logo.png",
               "slogan": "Engineering Intelligence. COMPLEXITY. SIMPLIFIED.",
               "sameAs": [
-                "https://www.linkedin.com/company/rootdai",
-                "https://twitter.com/rootedai",
-                "https://www.instagram.com/rootedai_official/"
+                "https://www.linkedin.com/company/rootedai"
               ],
               "contactPoint": {
                 "@type": "ContactPoint",
-                "telephone": "+91-7904168521",
+                "telephone": "+91-917904168521",
                 "contactType": "sales",
                 "areaServed": "Global",
-                "availableLanguage": ["English"]
+                "availableLanguage": ["English", "Tamil", "Hindi"]
               },
               "address": {
                 "@type": "PostalAddress",
-                "addressCountry": "IN",
-                "addressRegion": "TN",
-                "addressLocality": "Hosur"
+                "addressLocality": "Hosur",
+                "addressRegion": "Tamil Nadu",
+                "addressCountry": "IN"
               }
             },
             {

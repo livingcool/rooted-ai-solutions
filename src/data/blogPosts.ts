@@ -22,7 +22,7 @@ export const blogPosts: BlogPost[] = [
         coverImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop",
         date: "Jan 12, 2026",
         readTime: "5 min read",
-        author: "Ganesh K",
+        author: "RootedAI Advisors",
         category: "Business Strategy",
         content: `
             <div class="blog-content space-y-8">
