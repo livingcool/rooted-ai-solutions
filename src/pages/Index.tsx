@@ -92,8 +92,8 @@ const Index = () => {
 
     // Default Home
     return {
-      title: "RootedAI - Engineering Intelligence & Enterprise Automation",
-      description: "Engineering Intelligence. COMPLEXITY. SIMPLIFIED. RootedAI delivers autonomous agents, logistics automation, and hiring solutions for scaling enterprises."
+      title: "RootedAI - Engineering Intelligence | Top Software Solutions",
+      description: "RootedAI is the top software solutions provider, delivering Engineering Intelligence, AI agents, and enterprise automation. COMPLEXITY. SIMPLIFIED."
     };
   };
 
@@ -106,6 +106,15 @@ const Index = () => {
         description={seoData.description}
         keywords={[
           "RootedAI",
+          "Top Software Solutions Provider in Hosur",
+          "Software Company Hosur",
+          "automations",
+          "ai",
+          "software",
+          "website",
+          "web-app",
+          "application",
+          "erp",
           "Engineering Intelligence",
           "AI agents",
           "hiring automation",
@@ -114,20 +123,32 @@ const Index = () => {
           "enterprise AI solutions",
           "generative AI services",
           "custom LLM development",
-          "scale",
           "business intelligence"
         ]}
         structuredData={{
           "@context": "https://schema.org",
           "@graph": [
             {
-              "@type": "Organization",
-              "name": "RootedAI",
+              "@type": "ProfessionalService",
+              "additionalType": "SoftwareHouse",
+              "name": "RootedAI Solutions",
               "url": "https://rootedai.com",
               "logo": "https://rootedai.com/logo.png",
+              "image": "https://rootedai.com/og-image.png",
+              "description": "RootedAI is the top software solutions provider in Hosur, specializing in AI automation, custom ERP, web apps, and enterprise software.",
               "slogan": "Engineering Intelligence. COMPLEXITY. SIMPLIFIED.",
+              "priceRange": "$$",
+              "foundingDate": "2023",
+              "founders": [
+                {
+                  "@type": "Person",
+                  "name": "RootedAI Team"
+                }
+              ],
               "sameAs": [
-                "https://www.linkedin.com/company/rootedai"
+                "https://www.linkedin.com/company/rootedai",
+                "https://x.com/rootedai2025",
+                "https://www.instagram.com/rootedai_official/"
               ],
               "contactPoint": {
                 "@type": "ContactPoint",
@@ -138,10 +159,22 @@ const Index = () => {
               },
               "address": {
                 "@type": "PostalAddress",
+                "streetAddress": "Hosur",
                 "addressLocality": "Hosur",
                 "addressRegion": "Tamil Nadu",
+                "postalCode": "635109",
                 "addressCountry": "IN"
-              }
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 12.7409,
+                "longitude": 77.8253
+              },
+              "areaServed": {
+                "@type": "City",
+                "name": "Hosur"
+              },
+              "hasMap": "https://maps.google.com/?q=RootedAI+Hosur"
             },
             {
               "@type": "WebSite",
