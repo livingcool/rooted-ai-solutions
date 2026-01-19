@@ -33,7 +33,11 @@ serve(async (req) => {
         });
 
         if (!res.ok) {
-            throw new Error(`Failed to fetch URL: ${res.statusText}`);
+            console.error(`External fetch failed: ${res.status} ${res.statusText}`);
+            return new Response(JSON.stringify({ error: `Could not access URL (Status: ${res.status}). LinkedIn and others often block bots.` }), {
+                headers: { ...corsHeaders, "Content-Type": "application/json" },
+                status: 200,
+            });
         }
 
         const html = await res.text();
@@ -59,7 +63,7 @@ serve(async (req) => {
         console.error("Error fetching metadata:", error);
         return new Response(JSON.stringify({ error: error.message }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
-            status: 500,
+            status: 200,
         });
     }
 });

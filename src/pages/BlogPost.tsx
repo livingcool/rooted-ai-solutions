@@ -121,14 +121,39 @@ const BlogPost = () => {
 
                             <div className="flex flex-wrap items-center gap-6 pt-6 mt-6 border-t border-zinc-100 dark:border-zinc-900">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center overflow-hidden">
-                                        {/* Placeholder for author image */}
-                                        <User className="w-6 h-6 text-zinc-400 dark:text-zinc-600" />
-                                    </div>
-                                    <div>
-                                        <div className="font-bold text-base text-zinc-900 dark:text-white leading-none mb-1">
-                                            {post.author || "RootedAI Team"}
+                                    {post.author_image ? (
+                                        <img
+                                            src={post.author_image}
+                                            alt={post.author}
+                                            className="w-12 h-12 rounded-full object-cover border border-zinc-200 dark:border-zinc-800"
+                                        />
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center overflow-hidden">
+                                            {/* Placeholder for author image */}
+                                            <User className="w-6 h-6 text-zinc-400 dark:text-zinc-600" />
                                         </div>
+                                    )}
+
+                                    <div>
+                                        <div className="mb-0.5">
+                                            {post.author_linkedin ? (
+                                                <a href={post.author_linkedin} target="_blank" rel="noopener noreferrer" className="font-bold text-base text-zinc-900 dark:text-white leading-none hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 group/author">
+                                                    {post.author || "RootedAI Team"}
+                                                    <Linkedin className="w-3 h-3 text-zinc-400 group-hover/author:text-blue-500 transition-colors" />
+                                                </a>
+                                            ) : (
+                                                <div className="font-bold text-base text-zinc-900 dark:text-white leading-none">
+                                                    {post.author || "RootedAI Team"}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {post.author_role && (
+                                            <div className="text-xs text-zinc-500 font-medium mb-1">
+                                                {post.author_role}
+                                            </div>
+                                        )}
+
                                         <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
                                             <span>{new Date(post.published_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                             <span className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />

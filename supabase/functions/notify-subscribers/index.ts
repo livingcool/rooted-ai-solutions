@@ -1,6 +1,7 @@
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import nodemailer from "npm:nodemailer@6.9.13";
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -42,7 +43,7 @@ serve(async (req) => {
         const { data: subscribers, error: subscribersError } = await supabaseClient
             .from("newsletter_subscribers")
             .select("email")
-            .eq("active", true); // Assuming you have an 'active' flag or just delete unsubscribed
+            .eq("active", true);
 
         if (subscribersError) throw subscribersError;
 
@@ -75,48 +76,37 @@ serve(async (req) => {
       </div>
     `;
 
-        // 3. Send Emails (Batching usually required for large lists, simple loop for now)
-        // Using Resend (standard for Supabase) or just logging if no provider set
-        const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+        // 3. Send Emails via Gmail SMTP (matching send-contact-email)
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: Deno.env.get("GMAIL_USER") || "rootedaiofficial@gmail.com",
+                pass: Deno.env.get("GMAIL_APP_PASSWORD"),
+            },
+        });
 
-        if (RESEND_API_KEY) {
-            // Send individually to hide other recipients (BCC style or individual calls)
-            // For mass sending, you'd usually use a 'batch' endpoint or loop
-            const emails = subscribers.map(s => s.email);
+        const subscribersEmails = subscribers.map(s => s.email);
 
-            const res = await fetch("https://api.resend.com/emails", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${RESEND_API_KEY}`,
-                },
-                body: JSON.stringify({
-                    from: "RootedAI Insights <insights@rootedai.co.in>",
-                    to: emails, // Resend handles array as multiple recipients or single? Usually BCC for bulk or single. 
-                    // Note: Passing array to 'to' in Resend makes it visible to all potentially. 
-                    // Better to loop or use 'bcc' or specific batch endpoint.
-                    // For simplicity in this demo:
-                    bcc: emails,
-                    to: ["insights@rootedai.co.in"], // Send to self, bcc others
-                    subject: emailSubject,
-                    html: emailHtml,
-                }),
-            });
+        // Use BCC to send ONE email to admin with all subscribers hidden in BCC
+        await transporter.sendMail({
+            from: `RootedAI Insights <${Deno.env.get("GMAIL_USER") || "rootedaiofficial@gmail.com"}>`,
+            to: [Deno.env.get("GMAIL_USER") || "rootedaiofficial@gmail.com"], // To oneself
+            bcc: subscribersEmails, // Hidden recipients
+            subject: emailSubject,
+            html: emailHtml,
+        });
 
-            const data = await res.json();
-            console.log("Emails sent via Resend:", data);
-        } else {
-            console.log("RESEND_API_KEY not set. Would have sent email to:", subscribers.length, "subscribers.");
-        }
+        console.log("Emails sent via Gmail SMTP to", subscribersEmails.length, "subscribers.");
 
         return new Response(JSON.stringify({ message: "Notifications processed" }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
             status: 200,
         });
     } catch (error) {
+        console.error("Error processing notification:", error);
         return new Response(JSON.stringify({ error: error.message }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
-            status: 400,
+            status: 400, // Client error if bad request, but here likely server error so 500 effectively, but returning JSON
         });
     }
 });

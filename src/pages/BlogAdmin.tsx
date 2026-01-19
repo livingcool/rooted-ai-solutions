@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { blogPosts as initialData } from "@/data/blogPosts";
+import { Upload, Loader2, Image as ImageIcon } from "lucide-react";
 
 const BlogAdmin = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -76,6 +77,26 @@ const BlogAdmin = () => {
             if (error) throw error;
 
             toast.success("Blog post published successfully!");
+
+            // Trigger Newsletter
+            toast.promise(
+                supabase.functions.invoke('notify-subscribers', {
+                    body: {
+                        record: {
+                            title,
+                            slug,
+                            excerpt,
+                            cover_image: coverImage
+                        }
+                    }
+                }),
+                {
+                    loading: 'Sending newsletter to subscribers...',
+                    success: 'Newsletter queued!',
+                    error: 'Failed to trigger newsletter.'
+                }
+            );
+
             // Reset form
             setTitle("");
             setSlug("");
@@ -137,6 +158,46 @@ const BlogAdmin = () => {
         );
     }
 
+    const [uploading, setUploading] = useState(false);
+
+    const handleImageUpload = async (event: any, field: 'cover' | 'author') => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        const toastId = toast.loading("Uploading image...");
+
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `${fileName}`; // Uploading to root of bucket
+
+            // Attempt to upload to 'blog_images' bucket (commonly used, or fallback to 'public' if needed)
+            // Note: If bucket doesn't exist, this will fail. User needs to create 'blog_images' public bucket.
+            const { error: uploadError } = await supabase.storage
+                .from('blog_images')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data } = supabase.storage
+                .from('blog_images')
+                .getPublicUrl(filePath);
+
+            if (field === 'cover') {
+                setCoverImage(data.publicUrl);
+            } else {
+                setAuthorImage(data.publicUrl);
+            }
+            toast.success("Image uploaded!", { id: toastId });
+        } catch (error: any) {
+            console.error("Upload error:", error);
+            toast.error("Upload failed. Ensure 'blog_images' bucket exists and is public.", { id: toastId });
+        } finally {
+            setUploading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-black">
             <Navigation />
@@ -171,7 +232,25 @@ const BlogAdmin = () => {
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Author Image URL</label>
-                            <Input value={authorImage} onChange={(e) => setAuthorImage(e.target.value)} placeholder="https://..." />
+                            <div className="flex gap-2">
+                                <Input value={authorImage} onChange={(e) => setAuthorImage(e.target.value)} placeholder="https://..." className="flex-1 text-xs" />
+                                <input
+                                    type="file"
+                                    id="author-upload"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={(e) => handleImageUpload(e, 'author')}
+                                />
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    title="Upload from computer"
+                                    onClick={() => document.getElementById('author-upload')?.click()}
+                                    disabled={uploading}
+                                >
+                                    {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                                </Button>
+                            </div>
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-medium">Author LinkedIn</label>
@@ -228,7 +307,30 @@ const BlogAdmin = () => {
 
                     <div className="space-y-2">
                         <label className="text-sm font-medium">Cover Image URL</label>
-                        <Input value={coverImage} onChange={(e) => setCoverImage(e.target.value)} placeholder="https://..." />
+                        <div className="flex gap-2">
+                            <Input value={coverImage} onChange={(e) => setCoverImage(e.target.value)} placeholder="https://..." className="flex-1" />
+                            <input
+                                type="file"
+                                id="cover-upload"
+                                className="hidden"
+                                accept="image/*"
+                                onChange={(e) => handleImageUpload(e, 'cover')}
+                            />
+                            <Button
+                                variant="outline"
+                                onClick={() => document.getElementById('cover-upload')?.click()}
+                                disabled={uploading}
+                                className="gap-2"
+                            >
+                                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                                Upload Image
+                            </Button>
+                        </div>
+                        {coverImage && (
+                            <div className="mt-2 relative w-full h-40 bg-zinc-100 dark:bg-zinc-800 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800">
+                                <img src={coverImage} alt="Cover Preview" className="w-full h-full object-cover" />
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-2">
