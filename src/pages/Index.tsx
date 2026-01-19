@@ -59,6 +59,48 @@ const Index = () => {
         description: "Learn about RootedAI's mission to simplify enterprise complexity through engineering intelligence and autonomous agents."
       };
     }
+    if (path.includes("/services/enterprise-security")) {
+      return {
+        title: "Enterprise Security Solutions | RootedAI Security & Compliance",
+        description: "Secure your enterprise with RootedAI's advanced security solutions. We ensure data privacy, compliance, and robust protection against cyber threats."
+      };
+    }
+    if (path.includes("/services/ai-agents")) {
+      return {
+        title: "AI Agents for Business | Autonomous Workflow Automation",
+        description: "Deploy autonomous AI agents to handle customer support, data analysis, and complex workflows. Reduce tickets by 60% with RootedAI."
+      };
+    }
+    if (path.includes("/services/process-automation")) {
+      return {
+        title: "Business Process Automation Services | Save 90% Manual Effort",
+        description: "End-to-end automation for logistics, finance, and operations. Automate invoice reconciliation and order updates with RootedAI."
+      };
+    }
+    if (path.includes("/services/web-solutions")) {
+      return {
+        title: "Custom Web App Development | AI-Integrated Web Solutions",
+        description: "Build dynamic, AI-powered web applications and dashboards. Get custom analytics and predictive insights integrated into your web platform."
+      };
+    }
+    if (path.includes("/services/nlp-systems")) {
+      return {
+        title: "NLP & Sentiment Analysis Services | Document Processing AI",
+        description: "Advanced Natural Language Processing for automated reporting and sentiment analysis. Process thousands of documents in minutes."
+      };
+    }
+    if (path.includes("/services/predictive-analytics")) {
+      return {
+        title: "Predictive Analytics Solutions | Forecast Trends & Demand",
+        description: "Optimize decision-making with data-driven insights. Forecast inventory demand and reduce wastage by 20-30% with RootedAI."
+      };
+    }
+    if (path.includes("/services/outsourcing")) {
+      return {
+        title: "IT Outsourcing Services | Hire Pre-Vetted Developers",
+        description: "Scale your team instantly with elite developers. Hire a full-stack team in 48 hours and save 60% on development costs."
+      };
+    }
     if (path.includes("/services")) {
       return {
         title: "Our Services - RootedAI",
@@ -115,6 +157,11 @@ const Index = () => {
           "web-app",
           "application",
           "erp",
+          "WhatsApp Automation",
+          "ai-powered-ticketing-system-for-logistics",
+          "ticketing-system",
+          "rhizoconnect",
+          "ai-powered-ticket-management-software",
           "Engineering Intelligence",
           "AI agents",
           "hiring automation",

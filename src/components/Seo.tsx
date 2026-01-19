@@ -19,8 +19,12 @@ const Seo = ({
     noIndex = false,
     structuredData
 }: SeoProps) => {
-    const siteUrl = 'https://rootedai.com';
-    const fullUrl = canonical ? canonical : (typeof window !== 'undefined' ? window.location.href : '');
+    const siteUrl = 'https://www.rootedai.co.in';
+    const fullUrl = canonical
+        ? canonical
+        : (typeof window !== 'undefined'
+            ? window.location.href.replace(window.location.origin, siteUrl)
+            : '');
 
     return (
         <Helmet>
