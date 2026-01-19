@@ -28,6 +28,7 @@ const BlogAdmin = () => {
     const [loading, setLoading] = useState(false);
     const [posts, setPosts] = useState<any[]>([]);
     const [extractedLinks, setExtractedLinks] = useState<any[]>([]);
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         if (isAuthenticated) fetchPosts();
@@ -158,7 +159,7 @@ const BlogAdmin = () => {
         );
     }
 
-    const [uploading, setUploading] = useState(false);
+
 
     const handleImageUpload = async (event: any, field: 'cover' | 'author') => {
         const file = event.target.files?.[0];
