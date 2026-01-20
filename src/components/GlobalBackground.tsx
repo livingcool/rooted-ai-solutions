@@ -229,19 +229,22 @@ const GlobalBackground = () => {
             window.removeEventListener("resize", handleResize)
             window.removeEventListener("mousemove", handleMouseMove)
         }
-    }, [theme]) // Re-run effect when theme changes to potentially re-init logic if needed
+    }, [theme])
 
     return (
         <div className="fixed inset-0 -z-10 bg-background transition-colors duration-500 pointer-events-none overflow-hidden">
+            {/* Engineering Grid Overlay */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
             {/* Ambient Background Glows - Adjusted for themes */}
             <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-violet-500/10 dark:bg-violet-900/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
             <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-indigo-500/10 dark:bg-indigo-900/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }} />
 
             {/* The Canvas */}
-            <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-80" />
+            <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-60 dark:opacity-80" />
 
             {/* Overlay Gradient for depth */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/10 dark:via-black/20 dark:to-black/80 transition-colors duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-white/20 dark:via-black/20 dark:to-black/80 transition-colors duration-500" />
         </div>
     )
 }

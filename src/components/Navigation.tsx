@@ -27,45 +27,49 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? "bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-black/10 dark:border-white/10"
-        : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+        ? "bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-white/20 dark:border-white/5 shadow-md py-2"
+        : "bg-transparent py-4"
         }`}
     >
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between py-2">
-          {/* Brand Name Only */}
-          <a href="/" className="flex items-center group">
-            <span className="text-3xl font-bold font-heading tracking-[0.15em] bg-gradient-to-r from-black via-black/95 to-black/80 dark:from-white dark:via-white/95 dark:to-white/80 bg-clip-text text-transparent hover:from-black hover:via-black hover:to-black dark:hover:from-white dark:hover:via-white dark:hover:to-white transition-all duration-300">
-              ROOTEDAI
+        <div className="flex items-center justify-between">
+          {/* Brand Name */}
+          <a href="/" className="flex items-center group relative z-50">
+            <span className="text-2xl md:text-3xl font-bold font-heading tracking-[0.1em] text-black dark:text-white transition-all duration-300">
+              ROOTED<span className="font-light">AI</span>
             </span>
+            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-sm font-medium text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white transition-colors hover-underline-animation"
+                className="text-sm font-medium text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors relative group py-1"
               >
                 {link.name}
+                <span className="absolute bottom-0 left-0 w-full h-[1px] bg-black dark:bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </a>
             ))}
-            <ThemeToggle />
-            <Button
-              className="bw-button text-sm"
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            >
-              Get Started
-            </Button>
+            <div className="flex items-center gap-4 pl-4 border-l border-black/10 dark:border-white/10">
+              <ThemeToggle />
+              <Button
+                className="bw-button text-xs md:text-sm px-6"
+                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                Get Started
+              </Button>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-4">
+          <div className="md:hidden flex items-center gap-4 relative z-50">
             <ThemeToggle />
             <button
-              className="text-black dark:text-white p-2"
+              className="text-black dark:text-white p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -74,22 +78,26 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-black border-b border-black/10 dark:border-white/10 p-4 animate-fade-in shadow-lg">
-          <div className="flex flex-col space-y-4">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white font-medium py-2 transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.name}
-              </a>
-            ))}
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`fixed inset-0 bg-white/95 dark:bg-black/95 backdrop-blur-xl z-40 transition-all duration-500 flex items-center justify-center md:hidden ${isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+      >
+        <div className="flex flex-col items-center space-y-8 p-8 w-full max-w-sm">
+          {navLinks.map((link, idx) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="text-2xl font-light text-black dark:text-white hover:text-black/50 dark:hover:text-white/50 transition-colors tracking-wide"
+              style={{ transitionDelay: `${idx * 50}ms` }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {link.name}
+            </a>
+          ))}
+          <div className="pt-8 w-full">
             <Button
-              className="bw-button w-full"
+              className="bw-button w-full text-lg py-6"
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
@@ -99,7 +107,7 @@ const Navigation = () => {
             </Button>
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };

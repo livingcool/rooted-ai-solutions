@@ -9,6 +9,7 @@ import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import GlobalBackground from "@/components/GlobalBackground";
+import { Preloader } from "@/components/Preloader";
 import SectionIndicator from "@/components/SectionIndicator";
 
 // Lazy Load Pages
@@ -40,6 +41,10 @@ const BlogListing = lazy(() => import("./pages/BlogListing"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const BlogAdmin = lazy(() => import("./pages/BlogAdmin"));
 
+// Locations
+const Hosur = lazy(() => import("./pages/locations/Hosur"));
+const Coimbatore = lazy(() => import("./pages/locations/Coimbatore"));
+
 const queryClient = new QueryClient();
 
 const LoadingFallback = () => (
@@ -54,11 +59,12 @@ const LoadingFallback = () => (
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
-      <GlobalBackground />
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <GlobalBackground />
         <BrowserRouter>
+          <Preloader />
           <CustomCursor />
           <ScrollProgress />
           <ScrollToHash />
@@ -97,6 +103,10 @@ const App = () => (
               <Route path="/services/enterprise-security" element={<EnterpriseSecurity />} />
               <Route path="/services/outsourcing" element={<Outsourcing />} />
 
+              {/* Location Pages */}
+              <Route path="/hosur" element={<Hosur />} />
+              <Route path="/coimbatore" element={<Coimbatore />} />
+
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
@@ -104,7 +114,7 @@ const App = () => (
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>
-  </QueryClientProvider>
+  </QueryClientProvider >
 );
 
 export default App;
