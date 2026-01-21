@@ -23,7 +23,7 @@ const products = [
             { icon: MessageSquare, text: "60% Ticket Deflection" },
             { icon: Zap, text: "Zero Setup Required" },
         ],
-        productUrl: "https://rhizo-connect.vercel.app/",
+        productUrl: "https://rhizoconnect.rootedai.co.in/",
         productHuntUrl: "https://www.producthunt.com/products/rhizoconnect",
         logoUrl: "/rhizoconnect-logo.png",
         images: [
