@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { blogPosts as initialData } from "@/data/blogPosts";
-import { Upload, Loader2, Image as ImageIcon, Bold, Italic, Link as LinkIcon, CheckCircle2, AlertCircle, Info, Zap } from "lucide-react";
+import { Upload, Loader2, Image as ImageIcon, Bold, Italic, Link as LinkIcon, CheckCircle2, AlertCircle, Info, Zap, Plus, Trash2 } from "lucide-react";
 
 const BlogAdmin = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,6 +29,8 @@ const BlogAdmin = () => {
     const [posts, setPosts] = useState<any[]>([]);
     const [extractedLinks, setExtractedLinks] = useState<any[]>([]);
     const [uploading, setUploading] = useState(false);
+    const [newKeyword, setNewKeyword] = useState("");
+    const [newKeywordUrl, setNewKeywordUrl] = useState("");
 
     // CTA State
     const [ctaTitle, setCtaTitle] = useState("");
@@ -548,7 +550,7 @@ const BlogAdmin = () => {
                                             const anchors = doc.querySelectorAll('a');
                                             const links: any[] = [];
                                             anchors.forEach((a, i) => {
-                                                links.push({ id: i, text: a.textContent, href: a.getAttribute('href') || '' });
+                                                links.push({ id: `ext-${i}`, text: a.textContent, href: a.getAttribute('href') || '' });
                                             });
                                             setExtractedLinks(links);
                                             if (links.length === 0) toast.info("No links found in HTML.");
@@ -559,12 +561,42 @@ const BlogAdmin = () => {
                                     </Button>
                                 </div>
 
+                                <div className="flex gap-2 bg-white dark:bg-black p-3 rounded-lg border border-zinc-200 dark:border-zinc-800">
+                                    <Input
+                                        placeholder="Keyword to link"
+                                        value={newKeyword}
+                                        onChange={(e) => setNewKeyword(e.target.value)}
+                                        className="h-9 text-xs"
+                                    />
+                                    <Input
+                                        placeholder="Target URL"
+                                        value={newKeywordUrl}
+                                        onChange={(e) => setNewKeywordUrl(e.target.value)}
+                                        className="h-9 text-xs"
+                                    />
+                                    <Button
+                                        size="sm"
+                                        disabled={!newKeyword || !newKeywordUrl}
+                                        onClick={() => {
+                                            setExtractedLinks(prev => [
+                                                ...prev,
+                                                { id: `kw-${Date.now()}`, text: newKeyword, href: newKeywordUrl, isKeyword: true }
+                                            ]);
+                                            setNewKeyword("");
+                                            setNewKeywordUrl("");
+                                            toast.success("Keyword added to list!");
+                                        }}
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                    </Button>
+                                </div>
+
                                 {extractedLinks.length > 0 && (
                                     <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
                                         {extractedLinks.map((link, idx) => (
-                                            <div key={idx} className="grid grid-cols-[1fr,2fr] gap-2 items-center bg-white dark:bg-black p-2 rounded border border-zinc-200 dark:border-zinc-800">
-                                                <div className="text-xs font-mono text-muted-foreground truncate" title={link.text}>
-                                                    "{link.text}"
+                                            <div key={link.id || idx} className="grid grid-cols-[1fr,2fr,40px] gap-2 items-center bg-white dark:bg-black p-2 rounded border border-zinc-200 dark:border-zinc-800">
+                                                <div className={`text-xs font-mono truncate px-1 rounded ${link.isKeyword ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600' : 'text-muted-foreground'}`} title={link.text}>
+                                                    {link.isKeyword ? "KW: " : ""}"{link.text}"
                                                 </div>
                                                 <Input
                                                     value={link.href}
@@ -575,6 +607,16 @@ const BlogAdmin = () => {
                                                         setExtractedLinks(newLinks);
                                                     }}
                                                 />
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                                    onClick={() => {
+                                                        setExtractedLinks(prev => prev.filter((_, i) => i !== idx));
+                                                    }}
+                                                >
+                                                    <Trash2 className="w-3 h-3" />
+                                                </Button>
                                             </div>
                                         ))}
                                     </div>
@@ -582,22 +624,35 @@ const BlogAdmin = () => {
 
                                 {extractedLinks.length > 0 && (
                                     <Button
-                                        className="w-full"
+                                        className="w-full bg-zinc-950 dark:bg-white dark:text-black hover:scale-[1.02] transition-transform"
                                         size="sm"
                                         onClick={() => {
                                             const parser = new DOMParser();
                                             const doc = parser.parseFromString(content, 'text/html');
-                                            const anchors = doc.querySelectorAll('a');
 
-                                            // Replace hrefs
+                                            // 1. Update existing anchors
+                                            const anchors = doc.querySelectorAll('a');
                                             anchors.forEach((a, i) => {
-                                                if (extractedLinks[i]) {
-                                                    a.setAttribute('href', extractedLinks[i].href);
+                                                // Find the scan-extracted link for this index
+                                                const matchingExtracted = extractedLinks.find(l => l.id === `ext-${i}`);
+                                                if (matchingExtracted) {
+                                                    a.setAttribute('href', matchingExtracted.href);
                                                 }
                                             });
 
-                                            setContent(doc.body.innerHTML);
-                                            toast.success("Links updated in HTML content!");
+                                            let newHtml = doc.body.innerHTML;
+
+                                            // 2. Auto-link keywords
+                                            const keywords = extractedLinks.filter(l => l.isKeyword);
+                                            keywords.forEach(kw => {
+                                                const escapedText = kw.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                                                // Regex to find keyword NOT inside tags
+                                                const regex = new RegExp(`(?<!<[^>]*)(${escapedText})(?![^<]*>)`, 'gi');
+                                                newHtml = newHtml.replace(regex, `<a href="${kw.href}" target="_blank" class="text-blue-600 hover:underline">$1</a>`);
+                                            });
+
+                                            setContent(newHtml);
+                                            toast.success("Applied all link changes and auto-linked keywords!");
                                         }}
                                     >
                                         Apply Link Changes to HTML
