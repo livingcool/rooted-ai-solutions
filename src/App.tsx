@@ -2,8 +2,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AnimatePresence } from "framer-motion";
+import PageTransition from "@/components/PageTransition";
 import { Suspense, lazy } from "react";
 import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
@@ -56,6 +58,55 @@ const LoadingFallback = () => (
   </div>
 );
 
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/blog" element={<PageTransition><BlogListing /></PageTransition>} />
+        <Route path="/blog/adminlogin" element={<PageTransition><BlogAdmin /></PageTransition>} />
+        <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
+        <Route path="/about" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/services" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/case-studies" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/products" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/careers" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
+        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+        <Route path="/admin-hiring" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
+        <Route path="/:orgSlug/admin-pass-set" element={<PageTransition><AdminPassSet /></PageTransition>} />
+        <Route path="/:orgSlug" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
+        <Route path="/candidate-login" element={<PageTransition><CandidateLogin /></PageTransition>} />
+        <Route path="/assessment" element={<PageTransition><Interview /></PageTransition>} />
+        <Route path="/jobs/:id" element={<PageTransition><JobDetails /></PageTransition>} />
+        <Route path="/technical-assessment" element={<PageTransition><TechnicalAssessment /></PageTransition>} />
+        <Route path="/candidate-status" element={<PageTransition><CandidateStatus /></PageTransition>} />
+        <Route path="/final-login" element={<PageTransition><FinalInterviewLogin /></PageTransition>} />
+        <Route path="/final-interview" element={<PageTransition><AIInterviewRoom /></PageTransition>} />
+
+        {/* Service Detail Pages */}
+        <Route path="/services/ai-agents" element={<PageTransition><AIAgents /></PageTransition>} />
+        <Route path="/services/process-automation" element={<PageTransition><ProcessAutomation /></PageTransition>} />
+        <Route path="/services/web-solutions" element={<PageTransition><WebSolutions /></PageTransition>} />
+        <Route path="/services/nlp-systems" element={<PageTransition><NLPSystems /></PageTransition>} />
+        <Route path="/services/predictive-analytics" element={<PageTransition><PredictiveAnalytics /></PageTransition>} />
+        <Route path="/services/enterprise-security" element={<PageTransition><EnterpriseSecurity /></PageTransition>} />
+        <Route path="/services/outsourcing" element={<PageTransition><Outsourcing /></PageTransition>} />
+
+        {/* Location Pages */}
+        <Route path="/hosur" element={<PageTransition><Hosur /></PageTransition>} />
+        <Route path="/coimbatore" element={<PageTransition><Coimbatore /></PageTransition>} />
+
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
@@ -70,46 +121,7 @@ const App = () => (
           <ScrollToHash />
           <SectionIndicator />
           <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/blog" element={<BlogListing />} />
-              <Route path="/blog/adminlogin" element={<BlogAdmin />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/about" element={<Index />} />
-              <Route path="/services" element={<Index />} />
-              <Route path="/case-studies" element={<Index />} />
-              <Route path="/products" element={<Index />} />
-              <Route path="/careers" element={<Index />} />
-              <Route path="/contact" element={<Index />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/admin-hiring" element={<AdminHiringDashboard />} />
-              <Route path="/:orgSlug/admin-pass-set" element={<AdminPassSet />} />
-              <Route path="/:orgSlug" element={<AdminHiringDashboard />} />
-              <Route path="/candidate-login" element={<CandidateLogin />} />
-              <Route path="/assessment" element={<Interview />} />
-              <Route path="/jobs/:id" element={<JobDetails />} />
-              <Route path="/technical-assessment" element={<TechnicalAssessment />} />
-              <Route path="/candidate-status" element={<CandidateStatus />} />
-              <Route path="/final-login" element={<FinalInterviewLogin />} />
-              <Route path="/final-interview" element={<AIInterviewRoom />} />
-
-              {/* Service Detail Pages */}
-              <Route path="/services/ai-agents" element={<AIAgents />} />
-              <Route path="/services/process-automation" element={<ProcessAutomation />} />
-              <Route path="/services/web-solutions" element={<WebSolutions />} />
-              <Route path="/services/nlp-systems" element={<NLPSystems />} />
-              <Route path="/services/predictive-analytics" element={<PredictiveAnalytics />} />
-              <Route path="/services/enterprise-security" element={<EnterpriseSecurity />} />
-              <Route path="/services/outsourcing" element={<Outsourcing />} />
-
-              {/* Location Pages */}
-              <Route path="/hosur" element={<Hosur />} />
-              <Route path="/coimbatore" element={<Coimbatore />} />
-
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AnimatedRoutes />
           </Suspense>
         </BrowserRouter>
       </TooltipProvider>

@@ -4,9 +4,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 // import { blogPosts } from "@/data/blogPosts"; // Deprecated
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin, Copy } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin, Copy, Mail, Send } from "lucide-react";
 import Seo from "@/components/Seo";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 const BlogPost = () => {
@@ -30,7 +31,7 @@ const BlogPost = () => {
             if (error) console.error('Error fetching post:', error);
             else {
                 setPost(data);
-                processContent(data.content);
+                processContent((data as any).content);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -202,6 +203,27 @@ const BlogPost = () => {
                                             </Button>
                                         </div>
                                     </div>
+
+                                    {/* Newsletter Signup */}
+                                    <div className="pt-8 mt-8 border-t border-zinc-200 dark:border-zinc-800">
+                                        <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                                            <h4 className="font-bold mb-2 flex items-center gap-2">
+                                                <Mail className="w-4 h-4 text-blue-600" />
+                                                Stay Updated
+                                            </h4>
+                                            <p className="text-xs text-muted-foreground mb-4">Get the latest AI insights delivered to your inbox.</p>
+                                            <div className="space-y-2">
+                                                <Input
+                                                    placeholder="Enter your email"
+                                                    className="h-9 text-xs bg-white dark:bg-black"
+                                                />
+                                                <Button className="w-full h-9 text-xs gap-2" onClick={() => toast.success("Subscribed successfully!")}>
+                                                    Subscribe
+                                                    <Send className="w-3 h-3" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </aside>
 
@@ -234,16 +256,18 @@ const BlogPost = () => {
                                 {/* CTA Box */}
                                 <div className="mt-20 bg-zinc-950 dark:bg-zinc-900 text-white p-8 md:p-12 rounded-3xl relative overflow-hidden group shadow-2xl">
                                     <div className="relative z-10 space-y-6">
-                                        <h3 className="text-2xl md:text-3xl font-heading font-bold">Ready to stop drowning in manual work?</h3>
+                                        <h3 className="text-2xl md:text-3xl font-heading font-bold">
+                                            {post.cta_title || "Ready to stop drowning in manual work?"}
+                                        </h3>
                                         <p className="text-zinc-400 max-w-lg">
-                                            Book a free strategy session to see which of your workflows can be fully autonomous in just 2 weeks.
+                                            {post.cta_description || "Book a free strategy session to see which of your workflows can be fully autonomous in just 2 weeks."}
                                         </p>
                                         <Button
                                             size="lg"
                                             className="bg-white text-black hover:bg-zinc-200 hover:scale-105 transition-all font-bold px-8 rounded-full"
-                                            onClick={() => window.open("https://wa.me/917904168521", "_blank")}
+                                            onClick={() => window.open(post.cta_link || "https://wa.me/917904168521", "_blank")}
                                         >
-                                            Book Strategy Call
+                                            {post.cta_button_text || "Book Strategy Call"}
                                         </Button>
                                     </div>
                                     <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 blur-3xl rounded-full -mr-16 -mt-16 pointer-events-none" />
