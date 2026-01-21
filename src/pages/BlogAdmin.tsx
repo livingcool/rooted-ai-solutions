@@ -161,26 +161,6 @@ const BlogAdmin = () => {
         }
     };
 
-    if (!isAuthenticated) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-white p-4">
-                <div className="w-full max-w-md space-y-4 text-center">
-                    <h1 className="text-2xl font-bold">Restricted Access</h1>
-                    <Input
-                        type="password"
-                        placeholder="Enter Secret Key"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="bg-zinc-900 border-zinc-800"
-                    />
-                    <Button onClick={handleLogin} className="w-full">Enter</Button>
-                </div>
-            </div>
-        );
-    }
-
-
-
     const handleImageUpload = async (event: any, field: 'cover' | 'author' | 'editor') => {
         const file = event.target.files?.[0];
         if (!file) return;
@@ -293,6 +273,23 @@ const BlogAdmin = () => {
         updateSeoScore();
     }, [title, excerpt, content]);
 
+    if (!isAuthenticated) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-white p-4">
+                <div className="w-full max-w-md space-y-4 text-center">
+                    <h1 className="text-2xl font-bold">Restricted Access</h1>
+                    <Input
+                        type="password"
+                        placeholder="Enter Secret Key"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="bg-zinc-900 border-zinc-800"
+                    />
+                    <Button onClick={handleLogin} className="w-full">Enter</Button>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-black">
             <Navigation />
