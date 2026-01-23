@@ -155,7 +155,7 @@ const OutsourcingServicePage = () => {
 
                 {/* Hero Section */}
                 <section className="pt-32 pb-20 relative overflow-hidden border-b border-black/10 dark:border-white/10">
-                    <div className="container mx-auto px-4 md:px-6">
+                    <div className="container mx-auto px-6 md:px-6">
                         <div className="mb-8 flex justify-center">
                             <Breadcrumbs />
                         </div>
@@ -164,13 +164,13 @@ const OutsourcingServicePage = () => {
                                 <Users className="w-4 h-4 text-black dark:text-white" />
                                 <span className="text-sm text-black/80 dark:text-white/80">Outsourcing Services</span>
                             </div>
-                            <h1 className="text-5xl md:text-7xl font-bold text-black dark:text-white tracking-tight">
+                            <h1 className="text-4xl md:text-7xl font-bold text-black dark:text-white tracking-tight leading-[1.2] md:leading-tight">
                                 Your Extended <br />
                                 <span className="bg-gradient-to-r from-black via-black/90 to-black/70 dark:from-white dark:via-white/90 dark:to-white/70 bg-clip-text text-transparent">
                                     Development Team
                                 </span>
                             </h1>
-                            <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed">
+                            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed px-2">
                                 Stop hiring headaches. Scale instantly with our elite pre-vetted developers. Build faster, ship better, and save up to 60% on development costs.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
@@ -218,7 +218,7 @@ const OutsourcingServicePage = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
                             {engagementModels.map((model, index) => (
                                 <TiltCard key={index} className="bw-card p-8 group hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500 flex flex-col">
                                     <div className="mb-6 inline-block p-4 rounded-lg bg-black/5 dark:bg-white/5 group-hover:bg-black/10 dark:group-hover:bg-white/10 transition-colors w-fit">
@@ -260,7 +260,7 @@ const OutsourcingServicePage = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-8 max-w-5xl mx-auto">
                             {benefits.map((benefit, index) => (
                                 <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
                                     <div className="flex items-start gap-6">
