@@ -91,143 +91,112 @@ const Products = () => {
     };
 
     return (
-        <section id="products" className="py-16 border-t border-black/10 dark:border-white/10">
+        <section id="products" className="py-12 border-t border-black/10 dark:border-white/10">
             <div className="container mx-auto px-4 md:px-6">
                 {/* Header */}
-                <div className="text-center mb-16 space-y-4">
-                    <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
+                <div className="text-center mb-8 space-y-2">
+                    <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight">
                         Our Products
                     </h2>
-                    <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light">
+                    <p className="text-muted-foreground max-w-2xl mx-auto text-base font-light">
                         Enterprise-grade AI solutions built to transform how organizations operate.
                     </p>
                 </div>
 
                 {/* Product Showcase */}
-                <div className="max-w-7xl mx-auto">
+                <div className="max-w-6xl mx-auto">
                     {products.map((product, index) => (
                         <div key={index} className="space-y-8">
                             {/* Main Product Card */}
-                            <TiltCard className="bw-card p-6 md:p-8 group hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
-                                <div className="grid lg:grid-cols-2 gap-8 items-center">
+                            <TiltCard className="bw-card p-4 md:p-6 group hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                <div className="grid lg:grid-cols-2 gap-6 items-center">
                                     {/* Left: Product Info */}
-                                    <div className="space-y-6">
-                                        {/* Logo & Status */}
-                                        <div className="flex items-center gap-6">
-                                            <div className="relative">
-                                                <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-black/5 dark:from-white/20 dark:to-white/5 rounded-2xl blur-xl transition-all duration-500" />
+                                    <div className="space-y-4">
+                                        {/* Header Row: Logo, Status, Title */}
+                                        <div className="flex items-start justify-between gap-4">
+                                            <div className="flex items-center gap-4">
                                                 <img
                                                     src={product.logoUrl}
                                                     alt={`${product.name} Logo`}
-                                                    className="relative w-16 h-16 object-cover rounded-2xl border border-black/10 dark:border-white/10"
+                                                    className="w-12 h-12 object-cover rounded-xl border border-black/10 dark:border-white/10"
                                                 />
-                                            </div>
-                                            <div className="flex items-center gap-2 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-4 py-2 rounded-full">
-                                                <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse" />
-                                                <span className="text-xs text-black/80 dark:text-white/80 font-medium">{product.status}</span>
+                                                <div>
+                                                    <h3 className="text-xl md:text-2xl font-bold text-black dark:text-white leading-tight">
+                                                        {product.name}
+                                                    </h3>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                                                        <span className="text-[10px] uppercase tracking-wider font-semibold text-black/60 dark:text-white/60">{product.status}</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Title & Tagline */}
-                                        <div className="space-y-3">
-                                            <h3 className="text-2xl md:text-4xl font-bold text-black dark:text-white group-hover:translate-x-1 transition-transform duration-300">
-                                                {product.name}
-                                            </h3>
-                                            <p className="text-lg md:text-xl text-black/70 dark:text-white/70 font-medium leading-tight">
+                                        {/* Tagline & Description */}
+                                        <div>
+                                            <p className="text-base font-medium text-black/80 dark:text-white/80 mb-2">
                                                 {product.tagline}
+                                            </p>
+                                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                                                {product.description}
                                             </p>
                                         </div>
 
-                                        {/* Description */}
-                                        <p className="text-muted-foreground leading-relaxed text-base">
-                                            {product.description}
-                                        </p>
-
-                                        {/* Use Cases */}
-                                        <div className="space-y-2">
-                                            <div className="text-sm font-semibold text-black/90 dark:text-white/90">Use Cases:</div>
-                                            <div className="space-y-2">
-                                                {product.useCases.map((useCase, idx) => (
-                                                    <div key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                                        <span className="text-muted-foreground opacity-50">•</span>
-                                                        <span>{useCase}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        {/* Features */}
-                                        <div className="grid grid-cols-1 gap-3">
+                                        {/* Features - Horizontal Grid */}
+                                        <div className="grid grid-cols-3 gap-2">
                                             {product.features.map((feature, idx) => (
                                                 <div
                                                     key={idx}
-                                                    className="flex items-center gap-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg px-4 py-3 group-hover:bg-black/10 dark:group-hover:bg-white/10 transition-colors duration-300"
+                                                    className="flex flex-col items-center justify-center text-center gap-1 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg p-2"
                                                 >
-                                                    <feature.icon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                                                    <span className="text-sm text-black/80 dark:text-white/80 font-medium">
+                                                    <feature.icon className="w-4 h-4 text-black/70 dark:text-white/70" />
+                                                    <span className="text-[10px] font-medium leading-tight text-muted-foreground">
                                                         {feature.text}
                                                     </span>
                                                 </div>
                                             ))}
                                         </div>
 
-                                        {/* Client Quote */}
-                                        <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg p-4">
-                                            <div className="text-2xl text-black/20 dark:text-white/20 mb-2">"</div>
-                                            <p className="text-sm text-black/80 dark:text-white/80 italic mb-3">
-                                                {product.clientQuote.text}
-                                            </p>
-                                            <div className="text-xs text-muted-foreground">
-                                                — {product.clientQuote.author}
-                                            </div>
+                                        {/* Use Cases - Inline */}
+                                        <div className="text-xs text-muted-foreground border-l-2 border-black/10 dark:border-white/10 pl-3">
+                                            <span className="font-semibold text-black/80 dark:text-white/80 mr-1">Best for:</span>
+                                            {product.useCases.map(u => u.split(":")[0]).join(", ")}
+                                        </div>
+
+                                        {/* Quote - Compact */}
+                                        <div className="text-xs italic text-black/60 dark:text-white/60 bg-black/5 dark:bg-white/5 p-3 rounded-lg border border-black/5 dark:border-white/5">
+                                            "{product.clientQuote.text}"
                                         </div>
 
                                         {/* Action Buttons */}
-                                        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                                        <div className="flex gap-3 pt-1">
                                             <a
                                                 href={product.productUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black font-semibold rounded-lg dark:hover:bg-white/90 transition-all duration-300 group/btn"
+                                                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black text-sm font-semibold rounded-lg transition-all"
                                             >
-                                                Launch Product
-                                                <ExternalLink className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-300" />
+                                                Launch
+                                                <ExternalLink className="w-3 h-3" />
                                             </a>
-
                                             <a
                                                 href={product.productHuntUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#ff6154] text-white font-semibold rounded-lg hover:bg-[#ff6154]/90 transition-all duration-300 group/btn"
+                                                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#ff6154] text-white text-sm font-semibold rounded-lg hover:bg-[#ff6154]/90 transition-all"
                                             >
-                                                <svg className="w-5 h-5" viewBox="0 0 40 40" fill="none">
-                                                    <path
-                                                        d="M20 0C8.955 0 0 8.955 0 20s8.955 20 20 20 20-8.955 20-20S31.045 0 20 0zm7.5 21h-5v-5h5v5z"
-                                                        fill="currentColor"
-                                                    />
-                                                </svg>
                                                 Product Hunt
-                                                <ExternalLink className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-300" />
                                             </a>
                                         </div>
                                     </div>
 
-                                    {/* Right: Image Carousel with 3D Animation */}
-                                    <div className="relative">
+                                    {/* Right: Image Carousel */}
+                                    <div className="space-y-3">
                                         <div
-                                            className="relative aspect-video rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-gradient-to-br from-black/5 to-transparent dark:from-white/5 perspective-1000"
-                                            style={{ perspective: '1000px' }}
+                                            className="relative aspect-video rounded-xl overflow-hidden border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5"
                                         >
-                                            {/* Main Image with 3D flip animation */}
                                             <div
-                                                className={`w-full h-full transition-all duration-700 ${isTransitioning
-                                                    ? 'scale-95 opacity-0 rotate-y-90'
-                                                    : 'scale-100 opacity-100 rotate-y-0'
-                                                    }`}
-                                                style={{
-                                                    transformStyle: 'preserve-3d',
-                                                    transform: isTransitioning ? 'rotateY(90deg) scale(0.95)' : 'rotateY(0deg) scale(1)',
-                                                }}
+                                                className={`w-full h-full transition-all duration-500`}
                                             >
                                                 <img
                                                     src={product.images[currentImageIndex].url}
@@ -237,66 +206,24 @@ const Products = () => {
                                             </div>
 
                                             {/* Navigation Overlay */}
-                                            <div className="absolute inset-0 flex items-center justify-between p-4 opacity-0 hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-black/20 via-transparent to-black/20">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={prevImage}
-                                                    className="bg-black/10 dark:bg-white/10 backdrop-blur-sm hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border border-black/20 dark:border-white/20 rounded-full"
-                                                >
-                                                    <ChevronLeft className="w-6 h-6" />
-                                                </Button>
-
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={togglePause}
-                                                    className="bg-black/10 dark:bg-white/10 backdrop-blur-sm hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border border-black/20 dark:border-white/20 rounded-full"
-                                                >
-                                                    {isPaused ? <Play className="w-5 h-5" /> : <Pause className="w-5 h-5" />}
-                                                </Button>
-
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={nextImage}
-                                                    className="bg-black/10 dark:bg-white/10 backdrop-blur-sm hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black border border-black/20 dark:border-white/20 rounded-full"
-                                                >
-                                                    <ChevronRight className="w-6 h-6" />
-                                                </Button>
-                                            </div>
-
-                                            {/* Image Counter */}
-                                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                                                {product.images.map((_, idx) => (
-                                                    <button
-                                                        key={idx}
-                                                        onClick={() => goToImage(idx)}
-                                                        className={`h-2 rounded-full transition-all duration-300 ${idx === currentImageIndex
-                                                            ? "w-8 bg-black dark:bg-white"
-                                                            : "w-2 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60"
-                                                            }`}
-                                                    />
-                                                ))}
+                                            <div className="absolute inset-0 flex items-center justify-between p-2 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                                <Button variant="ghost" size="icon" onClick={prevImage} className="h-8 w-8 bg-black/20 hover:bg-black/40 text-white rounded-full"><ChevronLeft className="w-4 h-4" /></Button>
+                                                <Button variant="ghost" size="icon" onClick={nextImage} className="h-8 w-8 bg-black/20 hover:bg-black/40 text-white rounded-full"><ChevronRight className="w-4 h-4" /></Button>
                                             </div>
                                         </div>
 
-                                        {/* Thumbnail Preview */}
-                                        <div className="grid grid-cols-4 gap-3 mt-4">
+                                        {/* Thumbnails - Smaller */}
+                                        <div className="grid grid-cols-4 gap-2">
                                             {product.images.map((img, idx) => (
                                                 <button
                                                     key={idx}
                                                     onClick={() => goToImage(idx)}
-                                                    className={`aspect-video rounded-lg overflow-hidden border-2 transition-all duration-300 ${idx === currentImageIndex
-                                                        ? "border-black dark:border-white scale-105"
-                                                        : "border-black/20 dark:border-white/20 hover:border-black/50 dark:hover:border-white/50 opacity-60 hover:opacity-100"
+                                                    className={`aspect-video rounded-md overflow-hidden border transition-all duration-300 ${idx === currentImageIndex
+                                                        ? "border-black dark:border-white opacity-100"
+                                                        : "border-transparent opacity-50 hover:opacity-100"
                                                         }`}
                                                 >
-                                                    <img
-                                                        src={img.url}
-                                                        alt={img.alt}
-                                                        className="w-full h-full object-cover"
-                                                    />
+                                                    <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
                                                 </button>
                                             ))}
                                         </div>
