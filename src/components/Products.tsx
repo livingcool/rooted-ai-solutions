@@ -91,7 +91,7 @@ const Products = () => {
     };
 
     return (
-        <section id="products" className="py-24 border-t border-black/10 dark:border-white/10">
+        <section id="products" className="py-16 border-t border-black/10 dark:border-white/10">
             <div className="container mx-auto px-4 md:px-6">
                 {/* Header */}
                 <div className="text-center mb-16 space-y-4">
@@ -108,8 +108,8 @@ const Products = () => {
                     {products.map((product, index) => (
                         <div key={index} className="space-y-8">
                             {/* Main Product Card */}
-                            <TiltCard className="bw-card p-8 md:p-12 group hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
-                                <div className="grid lg:grid-cols-2 gap-12 items-center">
+                            <TiltCard className="bw-card p-6 md:p-8 group hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                <div className="grid lg:grid-cols-2 gap-8 items-center">
                                     {/* Left: Product Info */}
                                     <div className="space-y-6">
                                         {/* Logo & Status */}
@@ -119,7 +119,7 @@ const Products = () => {
                                                 <img
                                                     src={product.logoUrl}
                                                     alt={`${product.name} Logo`}
-                                                    className="relative w-24 h-24 object-cover rounded-2xl border border-black/10 dark:border-white/10"
+                                                    className="relative w-16 h-16 object-cover rounded-2xl border border-black/10 dark:border-white/10"
                                                 />
                                             </div>
                                             <div className="flex items-center gap-2 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 px-4 py-2 rounded-full">
@@ -130,10 +130,10 @@ const Products = () => {
 
                                         {/* Title & Tagline */}
                                         <div className="space-y-3">
-                                            <h3 className="text-3xl md:text-5xl font-bold text-black dark:text-white group-hover:translate-x-1 transition-transform duration-300">
+                                            <h3 className="text-2xl md:text-4xl font-bold text-black dark:text-white group-hover:translate-x-1 transition-transform duration-300">
                                                 {product.name}
                                             </h3>
-                                            <p className="text-xl md:text-2xl text-black/70 dark:text-white/70 font-medium leading-tight">
+                                            <p className="text-lg md:text-xl text-black/70 dark:text-white/70 font-medium leading-tight">
                                                 {product.tagline}
                                             </p>
                                         </div>
@@ -215,7 +215,7 @@ const Products = () => {
                                     {/* Right: Image Carousel with 3D Animation */}
                                     <div className="relative">
                                         <div
-                                            className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-gradient-to-br from-black/5 to-transparent dark:from-white/5 perspective-1000"
+                                            className="relative aspect-video rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 bg-gradient-to-br from-black/5 to-transparent dark:from-white/5 perspective-1000"
                                             style={{ perspective: '1000px' }}
                                         >
                                             {/* Main Image with 3D flip animation */}
