@@ -179,11 +179,20 @@ Provide your analysis in JSON format with these fields:
         const aiContent = chatJson.choices[0].message.content;
         let analysisData;
         try {
-            analysisData = JSON.parse(aiContent);
+            // Sanitize content: remove markdown code blocks if present
+            const cleanContent = aiContent.replace(/```json\n?|\n?```/g, "").trim();
+            analysisData = JSON.parse(cleanContent);
         } catch (e) {
             console.error("JSON Parse Error:", aiContent);
+            console.error(e);
             throw new Error("Failed to parse AI response as JSON");
         }
+
+        // Ensure summary exists
+        if (!analysisData.summary && analysisData.analysis) analysisData.summary = analysisData.analysis;
+        if (!analysisData.summary && analysisData.feedback) analysisData.summary = analysisData.feedback;
+        if (!analysisData.summary) analysisData.summary = "No detailed summary provided by AI.";
+
         console.log("AI Success, Match Score:", analysisData.match_score);
 
         // Log token usage
@@ -202,15 +211,19 @@ Provide your analysis in JSON format with these fields:
         // 6. Save Results
         const status = analysisData.match_score >= 70 ? 'AI Assessed' : 'Rejected';
 
-        await supabaseAdmin
+        const updateResult = await supabaseAdmin
             .from('applications')
             .update({
                 ai_score: analysisData.match_score,
                 ai_feedback: analysisData.summary,
-                nerd_score: analysisData.nerd_score || null,
                 status: status
             })
             .eq('id', applicationId);
+
+        if (updateResult.error) {
+            console.error("Database Update Failed:", updateResult.error);
+            throw new Error(`Database Update Failed: ${updateResult.error.message}`);
+        }
 
         console.log(`Application ${applicationId} updated with status: ${status}`);
 

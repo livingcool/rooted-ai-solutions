@@ -76,6 +76,22 @@ const Footer = () => {
                                 </a>
                             ))}
                         </div>
+
+                        {/* GoodFirms Badge */}
+                        <div className="pt-6">
+                            <a
+                                href="https://www.goodfirms.co/company/rootedai"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-block hover:opacity-80 transition-opacity"
+                            >
+                                <img
+                                    src="/images/goodfirms-badge.png"
+                                    alt="GoodFirms Badge"
+                                    className="h-12 w-auto bg-white/5 rounded-lg p-1"
+                                />
+                            </a>
+                        </div>
                     </div>
 
                     {/* Links */}
