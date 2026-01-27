@@ -35,10 +35,10 @@ const Seo = ({
             <link rel="canonical" href={fullUrl} />
 
             {/* Geo Tags */}
-            <meta name="geo.region" content="IN-TN" />
-            <meta name="geo.placename" content="Hosur" />
-            <meta name="geo.position" content="12.7409;77.8253" />
-            <meta name="ICBM" content="12.7409, 77.8253" />
+            <meta name="geo.region" content={structuredData?.["address"]?.["addressRegion"] || "IN-TN"} />
+            <meta name="geo.placename" content={structuredData?.["address"]?.["addressLocality"] || "Hosur"} />
+            <meta name="geo.position" content={structuredData?.["geo"] ? `${structuredData["geo"]["latitude"]};${structuredData["geo"]["longitude"]}` : "12.7409;77.8253"} />
+            <meta name="ICBM" content={structuredData?.["geo"] ? `${structuredData["geo"]["latitude"]}, ${structuredData["geo"]["longitude"]}` : "12.7409, 77.8253"} />
 
             {/* Open Graph Tags */}
             <meta property="og:title" content={title} />
