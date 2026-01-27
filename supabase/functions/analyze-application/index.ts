@@ -95,7 +95,7 @@ serve(async (req) => {
             .eq('id', applicationId);
 
         // 5. AI Analysis with Groq (Llama 3.3)
-        console.log("Analyzing with Groq (Qwen 3.32B)...");
+        console.log("Analyzing with Groq (Llama 3.3 70B)...");
 
         const groqKey = Deno.env.get('GROQ_API_KEY');
         if (!groqKey) {
@@ -146,7 +146,7 @@ Provide your analysis in JSON format with these fields:
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                model: "qwen/qwen-2.5-72b-instruct",
+                model: "llama-3.3-70b-versatile",
                 messages: [
                     {
                         role: "system",
@@ -190,7 +190,7 @@ Provide your analysis in JSON format with these fields:
         if (chatJson.usage) {
             await supabaseAdmin.from('ai_usage_logs').insert({
                 provider: 'groq',
-                model: 'qwen-2.5-72b-instruct',
+                model: 'llama-3.3-70b-versatile',
                 input_tokens: chatJson.usage.prompt_tokens,
                 output_tokens: chatJson.usage.completion_tokens,
                 total_tokens: chatJson.usage.total_tokens,
@@ -237,7 +237,7 @@ Provide your analysis in JSON format with these fields:
 
             await supabaseAdmin.from('ai_usage_logs').insert({
                 provider: 'groq',
-                model: 'qwen-2.5-72b-instruct',
+                model: 'llama-3.3-70b-versatile',
                 input_tokens: 0,
                 output_tokens: 0,
                 total_tokens: 0,

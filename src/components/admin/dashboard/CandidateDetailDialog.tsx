@@ -645,51 +645,50 @@ export const CandidateDetailDialog = ({
                                             )}
                                         </div>
 
-                                        {(selectedApp.ai_score || selectedApp.ai_feedback) && (
-                                            <div className="bg-white/5 p-4 rounded-lg border border-white/10 space-y-2">
-                                                <div className="flex justify-between items-center">
-                                                    <h4 className="font-semibold text-white">AI Resume Analysis</h4>
-                                                    <Button
-                                                        size="xs"
-                                                        variant="outline"
-                                                        className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
-                                                        disabled={loading}
-                                                        onClick={async () => {
-                                                            if (!confirm("Re-run AI Analysis for Resume?")) return;
-                                                            setLoading(true);
-                                                            try {
-                                                                const { error } = await supabase.functions.invoke('analyze-application', {
-                                                                    body: { applicationId: selectedApp.id },
-                                                                    method: 'POST'
-                                                                });
-                                                                if (error) throw error;
-                                                                toast({ title: "Analysis Queued", description: "Refreshed result." });
-                                                                fetchData();
-                                                            } catch (err: any) {
-                                                                toast({ title: "Error", description: err.message, variant: "destructive" });
-                                                            } finally {
-                                                                setLoading(false);
-                                                            }
-                                                        }}
-                                                    >
-                                                        {loading ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <Sparkles className="w-3 h-3 mr-1" />} Retry
-                                                    </Button>
-                                                </div>
-                                                {selectedApp.ai_score && (
-                                                    <div className="flex items-center gap-2 mb-2">
-                                                        <div className="text-sm text-white/60">Match Score:</div>
-                                                        <div className={`font-bold ${selectedApp.ai_score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>{selectedApp.ai_score}/100</div>
-                                                    </div>
-                                                )}
-                                                {selectedApp.ai_feedback ? (
-                                                    <div className="bg-black/20 p-4 rounded text-sm text-white/80 whitespace-pre-wrap">
-                                                        {selectedApp.ai_feedback}
-                                                    </div>
-                                                ) : (
-                                                    <div className="text-white/40 italic">No feedback text generated.</div>
-                                                )}
+                                        <div className="bg-white/5 p-4 rounded-lg border border-white/10 space-y-2">
+                                            <div className="flex justify-between items-center">
+                                                <h4 className="font-semibold text-white">AI Resume Analysis</h4>
+                                                <Button
+                                                    size="xs"
+                                                    variant="outline"
+                                                    className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
+                                                    disabled={loading}
+                                                    onClick={async () => {
+                                                        if (!confirm("Re-run the entire AI analysis process for this candidate?")) return;
+                                                        setLoading(true);
+                                                        try {
+                                                            const { error } = await supabase.functions.invoke('analyze-application', {
+                                                                body: { applicationId: selectedApp.id },
+                                                                method: 'POST'
+                                                            });
+                                                            if (error) throw error;
+                                                            toast({ title: "Analysis Restarted", description: "The AI is re-evaluating the candidate." });
+                                                            fetchData();
+                                                        } catch (err: any) {
+                                                            toast({ title: "Error", description: err.message, variant: "destructive" });
+                                                        } finally {
+                                                            setLoading(false);
+                                                        }
+                                                    }}
+                                                >
+                                                    {loading ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <RefreshCcw className="w-3 h-3 mr-1" />} Re-run Analysis
+                                                </Button>
                                             </div>
-                                        )}
+                                            {selectedApp.ai_score && (
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <div className="text-sm text-white/60">Match Score:</div>
+                                                    <div className={`font-bold ${selectedApp.ai_score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>{selectedApp.ai_score}/100</div>
+                                                </div>
+                                            )}
+                                            {selectedApp.ai_feedback ? (
+                                                <div className="bg-black/20 p-4 rounded text-sm text-white/80 whitespace-pre-wrap">
+                                                    {selectedApp.ai_feedback}
+                                                </div>
+                                            ) : (
+                                                <div className="text-white/40 italic">No feedback text generated.</div>
+                                            )}
+                                        </div>
+
                                     </div>
                                 </TabsContent>
 
