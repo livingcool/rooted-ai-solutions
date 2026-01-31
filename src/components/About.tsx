@@ -65,14 +65,47 @@ const About = () => {
       </div>
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        {/* Consolidated Header */}
-        <div className="text-center mb-16 md:mb-20">
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold font-heading text-black dark:text-white tracking-tight animate-fade-up">
-            Our Mission & Vision
+        {/* Philosophy Label with Fade-Up Animation */}
+        <div className="text-center mb-12">
+          <div
+            className={`inline-block transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}
+            style={{ letterSpacing: '0.3em' }}
+          >
+            <span className="text-xs uppercase text-muted-foreground font-medium tracking-[0.3em]">
+              RootedAI Philosophy
+            </span>
+          </div>
+
+          {/* Glowing Divider Line */}
+          <div className="relative mt-6 mb-8 h-px max-w-md mx-auto overflow-hidden">
+            <div className="absolute inset-0 bg-black/10 dark:bg-white/10" />
+            <div
+              className={`absolute inset-0 bg-gradient-to-r from-transparent via-black dark:via-white to-transparent transition-all duration-2000 ${isVisible ? 'translate-x-0' : '-translate-x-full'
+                }`}
+              style={{
+                boxShadow: '0 0 20px rgba(255,255,255,0.5)',
+                filter: 'blur(2px)'
+              }}
+            />
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight">
+            Why We Exist
           </h2>
-          <p className="mt-4 text-black/60 dark:text-white/60 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed animate-fade-up" style={{ animationDelay: "0.1s" }}>
-            We don't just build software; we build autonomous systems that think and adapt.
-          </p>
+        </div>
+
+        {/* Engineering Intelligence Tagline with Animation */}
+        <div
+          className={`text-center mb-16 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
+            }`}
+        >
+          <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight max-w-5xl mx-auto">
+            <TextScramble text="Engineering Intelligence. " />
+            <span className="text-muted-foreground">
+              <TextScramble text="COMPLEXITY.SIMPLIFIED" duration={2} />
+            </span>
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch max-w-6xl mx-auto">
@@ -216,6 +249,22 @@ const About = () => {
           </div>
         </div>
 
+        {/* Features Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-16 max-w-4xl mx-auto">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className={`flex items-center space-x-3 group p-3 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
+              style={{
+                transitionDelay: `${800 + index * 100}ms`
+              }}
+            >
+              <CheckCircle2 className="w-5 h-5 text-blue-500 group-hover:text-blue-400 transition-colors flex-shrink-0" />
+              <span className="text-black/80 dark:text-white/80 font-medium text-sm">{feature}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       <style>{`

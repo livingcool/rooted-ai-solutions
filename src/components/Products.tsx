@@ -112,13 +112,7 @@ const Products = () => {
                                 <div className="grid lg:grid-cols-2 gap-6 items-center">
                                     {/* Left: Product Info */}
                                     <div className="space-y-4">
-                                        {/* Mobile: Status Pill above */}
-                                        <div className="md:hidden inline-flex items-center gap-2 px-2 py-1 bg-black/5 dark:bg-white/5 rounded-full border border-black/5 dark:border-white/5 w-fit">
-                                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                            <span className="text-[10px] uppercase tracking-wider font-semibold text-black/60 dark:text-white/60">{product.status}</span>
-                                        </div>
-
-                                        {/* Header Row: Logo, Title */}
+                                        {/* Header Row: Logo, Status, Title */}
                                         <div className="flex items-start justify-between gap-4">
                                             <div className="flex items-center gap-4">
                                                 <img
@@ -130,8 +124,7 @@ const Products = () => {
                                                     <h3 className="text-xl md:text-2xl font-bold text-black dark:text-white leading-tight">
                                                         {product.name}
                                                     </h3>
-                                                    {/* Desktop: Status below */}
-                                                    <div className="hidden md:flex items-center gap-2 mt-1">
+                                                    <div className="flex items-center gap-2 mt-1">
                                                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
                                                         <span className="text-[10px] uppercase tracking-wider font-semibold text-black/60 dark:text-white/60">{product.status}</span>
                                                     </div>

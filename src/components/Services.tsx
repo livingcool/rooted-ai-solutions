@@ -1,5 +1,5 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Brain, Cpu, Globe, MessageSquare, Zap, Shield, Users, CheckCircle2 } from "lucide-react";
+import { Brain, Cpu, Globe, MessageSquare, Zap, Shield, Users } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -75,28 +75,6 @@ const Services = () => {
           <p className="text-black/60 dark:text-white/60 max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed animate-fade-up" style={{ animationDelay: "0.1s" }}>
             From concept to deployment, we build AI solutions that deliver measurable ROI.
           </p>
-        </div>
-
-        {/* Capabilities Checklist - Moved from About */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-6 max-w-4xl mx-auto mb-16 animate-fade-up" style={{ animationDelay: "0.2s" }}>
-          {[
-            "Custom Neural Architectures",
-            "Enterprise-Grade Security",
-            "Seamless API Integration",
-            "Real-time Analytics",
-            "Scalable Infrastructure",
-            "24/7 Automated Support"
-          ].map((feature, index) => (
-            <div
-              key={index}
-              className="flex items-start space-x-3 group p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-300"
-            >
-              <div className="mt-0.5 p-1 bg-primary/10 rounded-full">
-                <CheckCircle2 className="w-4 h-4 text-primary font-bold" />
-              </div>
-              <span className="text-black/80 dark:text-white/80 font-medium text-sm md:text-base leading-tight">{feature}</span>
-            </div>
-          ))}
         </div>
 
         <Carousel
