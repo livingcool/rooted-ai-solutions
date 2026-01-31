@@ -112,13 +112,14 @@ const CaseStudies = () => {
 
                     {/* Metrics & CTA */}
                     <div className="mt-8 pt-6 border-t border-black/10 dark:border-white/10 space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
+                      {/* Stacked on mobile, grid on desktop to prevent overlap */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <div className="text-3xl font-bold text-black dark:text-white">{study.metric}</div>
+                          <div className="text-3xl font-bold text-black dark:text-white break-words">{study.metric}</div>
                           <div className="text-xs text-muted-foreground opacity-60">Key Result</div>
                         </div>
                         <div>
-                          <div className="text-sm font-semibold text-black/80 dark:text-white/80">{study.subMetric}</div>
+                          <div className="text-sm font-semibold text-black/80 dark:text-white/80 leading-tight">{study.subMetric}</div>
                           <div className="text-xs text-muted-foreground mt-1">{study.impact}</div>
                         </div>
                       </div>

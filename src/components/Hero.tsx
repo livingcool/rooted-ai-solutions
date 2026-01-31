@@ -99,7 +99,7 @@ const Hero = () => {
             <div className="relative pl-3 md:pl-6 border-l-2 border-black/10 dark:border-white/10">
               <p
                 key={`desc-${currentSlide}`}
-                className="text-xs xs:text-sm md:text-xl text-black/70 dark:text-white/70 leading-relaxed max-w-xl animate-fade-up line-clamp-3 md:line-clamp-none"
+                className="text-xs xs:text-sm md:text-xl text-black/70 dark:text-white/70 leading-relaxed max-w-xl animate-fade-up"
                 style={{ animationDelay: "0.1s" }}
               >
                 {slides[currentSlide].description}
@@ -119,7 +119,9 @@ const Hero = () => {
                   <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </MagneticButton>
-              <div className="flex gap-2 md:gap-3 items-center mt-1 md:mt-0">
+
+              {/* Desktop Slide Indicators */}
+              <div className="hidden md:flex gap-2 md:gap-3 items-center mt-1 md:mt-0">
                 {slides.map((_, index) => (
                   <button
                     key={index}
@@ -133,13 +135,44 @@ const Hero = () => {
                 ))}
               </div>
             </div>
+
+            {/* Mobile Stats Carousel - Visible only on mobile */}
+            <div className="md:hidden mt-8 w-full overflow-x-auto pb-4 no-scrollbar">
+              <div className="flex gap-3">
+                {slides[currentSlide].stats.map((stat, index) => (
+                  <div
+                    key={index}
+                    className="flex-shrink-0 w-32 glass-premium p-3 rounded-xl border border-white/10 flex flex-col justify-center items-center text-center"
+                  >
+                    <div className="font-bold text-black dark:text-white text-xl leading-tight">
+                      {stat.value}
+                    </div>
+                    <div className="text-[10px] font-medium text-black/50 dark:text-white/50 uppercase tracking-widest mt-1">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+              {/* Mobile Slide Indicators */}
+              <div className="flex justify-center gap-2 mt-4">
+                {slides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`h-1.5 rounded-full transition-all duration-500 ${index === currentSlide
+                      ? "w-6 bg-black dark:bg-white"
+                      : "w-1.5 bg-black/20 dark:bg-white/20"
+                      }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* Right Column - Visual Elements & Stats */}
-          <div className="relative animate-fade-up perspective-1000 flex items-center justify-center h-full" style={{ animationDelay: "0.4s" }}>
+          {/* Right Column - Visual Elements & Stats - HIDDEN ON MOBILE */}
+          <div className="relative animate-fade-up perspective-1000 hidden md:flex items-center justify-center h-full" style={{ animationDelay: "0.4s" }}>
             <div className="relative w-full aspect-square max-w-[500px] flex items-center justify-center scale-90 md:scale-100 origin-right md:origin-center">
 
-              {/* Rotating Rings Background - Hidden on specific internal slides if needed, or kept */}
+              {/* Rotating Rings Background */}
               <div className="absolute inset-0 border border-black/5 dark:border-white/5 rounded-full animate-[spin_60s_linear_infinite]" />
               <div className="absolute inset-4 md:inset-10 border border-black/5 dark:border-white/5 rounded-full animate-[spin_45s_linear_infinite_reverse]" />
               <div className="absolute inset-8 md:inset-20 border border-black/5 dark:border-white/5 rounded-full animate-[spin_30s_linear_infinite]" />

@@ -32,7 +32,7 @@ const GoodFirmsBanner = () => {
                                 <Star className="w-3 h-3 fill-current" />
                             </span>
                             <span>
-                                Recognized as a Top Company on <span className="font-bold underline">GoodFirms</span>
+                                Recognized as a Company on <span className="font-bold underline">GoodFirms</span>
                             </span>
                             <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                         </a>
