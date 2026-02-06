@@ -158,6 +158,30 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 const app = express();
 app.use(cors());
+app.use(express.json()); // Enable JSON body parsing for REST API
+
+// REST API Endpoints for ChatGPT
+app.get("/api/jobs", async (req, res) => {
+    try {
+        const args = GetJobsArgsSchema.parse({
+            active_only: req.query.active_only !== 'false'
+        });
+        const result = await getJobs(args);
+        res.json(result);
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post("/api/contact", async (req, res) => {
+    try {
+        const args = SubmitContactFormArgsSchema.parse(req.body);
+        const result = await submitContactForm(args);
+        res.json(result);
+    } catch (error: any) {
+        res.status(400).json({ error: error.message });
+    }
+});
 
 let transport: SSEServerTransport;
 
@@ -174,7 +198,7 @@ app.post("/messages", async (req, res) => {
     await transport.handlePostMessage(req, res);
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Rooted Recruitment MCP Server running on port ${PORT}`);
 });
