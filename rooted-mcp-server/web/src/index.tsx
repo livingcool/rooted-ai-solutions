@@ -12,20 +12,14 @@ function useToolResult() {
 
     useEffect(() => {
         const onMessage = (event: MessageEvent) => {
-            // Security check: ensure message is from parent
             if (event.source !== window.parent) return;
-
             const message = event.data;
             if (!message || message.jsonrpc !== "2.0") return;
-
-            // Update UI state when we receive a tool result
             if (message.method === "ui/notifications/tool-result") {
                 setToolResult(message.params ?? null);
             }
         };
-
         window.addEventListener("message", onMessage);
-        // Request initial context or signal readiness if needed
         return () => window.removeEventListener("message", onMessage);
     }, []);
 
@@ -47,6 +41,43 @@ function sendHostMessage(text: string) {
 }
 
 // ----------------------------------------------------------------------------
+// Assets (SVG Logo)
+// ----------------------------------------------------------------------------
+
+const RootedLogo = () => (
+    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* 'R' Shape Base */}
+        <path d="M20 10 H55 Q85 10 85 40 Q85 60 65 70 L90 95 H70 L50 70 H40 V95 H20 V10 Z" fill="white" />
+        {/* Cutout for the leaf effect */}
+        <path d="M40 30 H55 Q65 30 65 40 Q65 50 55 50 H40 V30 Z" fill="#0f172a" />
+        {/* Leaf Accent */}
+        <path d="M50 35 Q70 35 70 55 Q50 55 50 35" fill="white" />
+    </svg>
+);
+
+// ----------------------------------------------------------------------------
+// Components
+// ----------------------------------------------------------------------------
+
+const StatCard = ({ value, label }: { value: string, label: string }) => (
+    <div style={{
+        background: 'rgba(255, 255, 255, 0.03)',
+        padding: '24px 16px',
+        borderRadius: '16px',
+        textAlign: 'center',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '4px'
+    }}>
+        <div style={{ fontSize: '28px', fontWeight: '800', color: 'white', lineHeight: '1' }}>{value}</div>
+        <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>{label}</div>
+    </div>
+);
+
+// ----------------------------------------------------------------------------
 // Brand Card UI
 // ----------------------------------------------------------------------------
 
@@ -59,78 +90,113 @@ const BrandCard = () => {
 
     return (
         <div style={{
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-            padding: '24px',
-            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif',
+            padding: '32px',
+            background: '#0f172a', /* Dark Slate/Black Base */
             color: 'white',
-            borderRadius: '16px',
-            border: '1px solid rgba(255,255,255,0.1)',
-            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-            backdropFilter: 'blur(10px)',
+            borderRadius: '24px',
+            border: '1px solid rgba(255,255,255,0.08)',
             maxWidth: '100%',
             margin: '0 auto',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            position: 'relative',
+            overflow: 'hidden',
+            minHeight: '600px',
+            display: 'flex',
+            flexDirection: 'column'
         }}>
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            {/* Ambient Background Gradient */}
+            <div style={{
+                position: 'absolute',
+                top: '-40%',
+                left: '-20%',
+                width: '140%',
+                height: '100%',
+                background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%)',
+                pointerEvents: 'none'
+            }} />
+
+            {/* Header / Logo */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px', position: 'relative', zIndex: 1 }}>
+                <RootedLogo />
+                <span style={{ fontSize: '20px', fontWeight: 'bold', letterSpacing: '0.5px' }}>ROOTEDAI</span>
+            </div>
+
+            {/* Hero Text */}
+            <div style={{ marginBottom: '48px', position: 'relative', zIndex: 1, flex: 1 }}>
                 <h1 style={{
-                    fontSize: '28px',
-                    fontWeight: 'bold',
-                    margin: '0 0 8px 0',
-                    background: 'linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
+                    fontSize: '48px',
+                    lineHeight: '1.05',
+                    fontWeight: '800',
+                    margin: '0 0 16px 0',
+                    color: 'white',
+                    letterSpacing: '-1px'
                 }}>
-                    RootedAI Solutions
+                    Automate &<br />
+                    <span style={{ color: '#94a3b8' }}>Focus on</span><br />
+                    Growth
                 </h1>
                 <p style={{
-                    fontSize: '12px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '2px',
-                    opacity: 0.7,
+                    fontSize: '15px',
+                    lineHeight: '1.6',
+                    color: '#94a3b8',
+                    maxWidth: '95%',
                     margin: 0
                 }}>
-                    Engineering Intelligence
+                    AI-powered automation that handles repetitive tasks. Let intelligent systems do the heavy lifting while your team focuses on innovation.
                 </p>
             </div>
 
+            {/* Stats Grid */}
             <div style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
                 gap: '12px',
-                marginBottom: '24px'
+                marginBottom: '32px',
+                position: 'relative',
+                zIndex: 1
             }}>
                 <StatCard value="90%" label="Time Saved" />
-                <StatCard value="Global" label="Reach" />
-                <StatCard value="2-4 Wk" label="Delivery" />
-                <StatCard value="24/7" label="Support" />
+                <StatCard value="Zero" label="Errors" />
+                <StatCard value="5+" label="Solutions" />
+                <StatCard value="24/7" label="Active" />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <ServiceBadge>AI Agents & Automation</ServiceBadge>
-                <ServiceBadge>Enterprise Security</ServiceBadge>
-                <ServiceBadge>Predictive Analytics</ServiceBadge>
-            </div>
-
+            {/* CTA Button */}
             <button
                 onClick={() => setView('contact')}
                 style={{
-                    marginTop: '24px',
+                    position: 'relative',
                     width: '100%',
-                    padding: '12px',
-                    background: 'rgba(255,255,255,0.1)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    borderRadius: '8px',
-                    color: 'white',
-                    fontWeight: 'bold',
+                    padding: '18px',
+                    background: 'white',
+                    border: 'none',
+                    borderRadius: '12px',
+                    color: 'black',
+                    fontSize: '16px',
+                    fontWeight: '700',
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease',
+                    transition: 'opacity 0.2s ease',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '12px',
+                    zIndex: 1
                 }}
             >
-                Contact Our Team
+                Automate Your Workflow
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
             </button>
         </div>
     );
 };
+
+// ----------------------------------------------------------------------------
+// Contact Form
+// ----------------------------------------------------------------------------
 
 const ContactForm = ({ onBack }: { onBack: () => void }) => {
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -142,38 +208,60 @@ const ContactForm = ({ onBack }: { onBack: () => void }) => {
 
     const inputStyle = {
         width: '100%',
-        padding: '10px',
-        marginBottom: '12px',
+        padding: '16px',
+        marginBottom: '16px',
         background: 'rgba(255,255,255,0.05)',
         border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '6px',
+        borderRadius: '12px',
         color: 'white',
-        fontSize: '14px',
-        boxSizing: 'border-box' as const
+        fontSize: '15px',
+        boxSizing: 'border-box' as const,
+        outline: 'none',
+        transition: 'border-color 0.2s',
+        fontFamily: 'inherit'
     };
 
     return (
         <div style={{
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-            padding: '24px',
-            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif',
+            padding: '32px',
+            background: '#0f172a',
             color: 'white',
-            borderRadius: '16px',
-            border: '1px solid rgba(255,255,255,0.1)',
-            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-            backdropFilter: 'blur(10px)',
+            borderRadius: '24px',
+            border: '1px solid rgba(255,255,255,0.08)',
+            minHeight: '600px',
             maxWidth: '100%',
             margin: '0 auto',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            display: 'flex',
+            flexDirection: 'column'
         }}>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', marginBottom: '16px', fontSize: '14px' }}>
-                ← Back
+            <button onClick={onBack} style={{
+                background: 'none',
+                border: 'none',
+                color: '#94a3b8',
+                cursor: 'pointer',
+                marginBottom: '32px',
+                fontSize: '15px',
+                padding: 0,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                alignSelf: 'flex-start'
+            }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back
             </button>
 
-            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: '#00C9FF' }}>Get in Touch</h2>
-            <p style={{ fontSize: '13px', opacity: 0.7, marginBottom: '20px' }}>Tell us how we can help you.</p>
+            <h2 style={{ fontSize: '28px', fontWeight: '800', marginBottom: '12px', color: 'white' }}>Get in Touch</h2>
+            <p style={{ fontSize: '15px', color: '#94a3b8', marginBottom: '40px', lineHeight: '1.5' }}>
+                Fill out the form below and our AI will help route your request to the right team.
+            </p>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <input
                     placeholder="Your Name"
                     value={formData.name}
@@ -183,30 +271,33 @@ const ContactForm = ({ onBack }: { onBack: () => void }) => {
                 />
                 <input
                     type="email"
-                    placeholder="your@email.com"
+                    placeholder="name@company.com"
                     value={formData.email}
                     onChange={e => setFormData({ ...formData, email: e.target.value })}
                     style={inputStyle}
                     required
                 />
                 <textarea
-                    placeholder="How can we help?"
+                    placeholder="How can we help you automate?"
                     value={formData.message}
                     onChange={e => setFormData({ ...formData, message: e.target.value })}
-                    style={{ ...inputStyle, minHeight: '80px', fontFamily: 'inherit' }}
+                    style={{ ...inputStyle, minHeight: '120px', resize: 'vertical' }}
                     required
                 />
 
+                <div style={{ flex: 1 }}></div>
+
                 <button type="submit" style={{
                     width: '100%',
-                    padding: '12px',
-                    background: 'linear-gradient(90deg, #00C9FF 0%, #0088CC 100%)',
+                    padding: '18px',
+                    background: 'white',
                     border: 'none',
-                    borderRadius: '8px',
-                    color: 'white',
-                    fontWeight: 'bold',
+                    borderRadius: '12px',
+                    color: 'black',
+                    fontWeight: '700',
+                    fontSize: '16px',
                     cursor: 'pointer',
-                    marginTop: '8px'
+                    marginTop: '16px'
                 }}>
                     Send Message
                 </button>
@@ -215,36 +306,8 @@ const ContactForm = ({ onBack }: { onBack: () => void }) => {
     );
 };
 
-const StatCard = ({ value, label }: { value: string, label: string }) => (
-    <div style={{
-        background: 'rgba(255, 255, 255, 0.05)',
-        padding: '12px',
-        borderRadius: '8px',
-        textAlign: 'center',
-        border: '1px solid rgba(255, 255, 255, 0.05)'
-    }}>
-        <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#00C9FF' }}>{value}</div>
-        <div style={{ fontSize: '10px', opacity: 0.6, textTransform: 'uppercase' }}>{label}</div>
-    </div>
-);
-
-const ServiceBadge = ({ children }: { children: React.ReactNode }) => (
-    <div style={{
-        background: 'rgba(255, 255, 255, 0.03)',
-        padding: '8px 12px',
-        borderRadius: '6px',
-        fontSize: '14px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px'
-    }}>
-        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#92FE9D' }}></div>
-        {children}
-    </div>
-);
-
 // ----------------------------------------------------------------------------
-// Entry Point (Dual Mode)
+// Entry Point
 // ----------------------------------------------------------------------------
 
 const rootElement = document.getElementById('root');
