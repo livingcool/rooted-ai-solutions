@@ -159,5 +159,12 @@ const ServiceBadge = ({ children }: { children: React.ReactNode }) => (
     </div>
 );
 
-const root = createRoot(document.getElementById('root')!);
-root.render(<BrandCard />);
+// ... (previous imports and code)
+
+const rootElement = document.getElementById('root');
+if (rootElement) {
+    const root = createRoot(rootElement);
+    root.render(<BrandCard />);
+}
+
+export default BrandCard;
