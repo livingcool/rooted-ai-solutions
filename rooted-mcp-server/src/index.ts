@@ -222,14 +222,19 @@ app.get("/api/me", (req, res) => {
 // Serve React Source Code for Canvas
 app.get("/api/ui/source", (req, res) => {
     try {
-        const sourcePath = resolve(__dirname, '../../web/src/index.tsx');
+        const sourcePath = resolve(__dirname, '../web/src/index.tsx');
+
+        console.log(`[DEBUG] Request for UI source. Computed path: ${sourcePath}`);
+
         // Check if file exists
         if (!fs.existsSync(sourcePath)) {
+            console.error(`[ERROR] Source file missing at: ${sourcePath}`);
             return res.status(404).json({ error: "Source file not found on server." });
         }
         const sourceCode = fs.readFileSync(sourcePath, 'utf-8');
         res.json({ code: sourceCode });
     } catch (error: any) {
+        console.error(`[ERROR] Failed to serve source: ${error.message}`);
         res.status(500).json({ error: error.message });
     }
 });
