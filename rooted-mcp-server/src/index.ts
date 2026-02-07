@@ -207,6 +207,17 @@ app.post("/api/contact", async (req, res) => {
     }
 });
 
+app.get("/api/me", (req, res) => {
+    res.json({
+        content: [{ type: "text", text: "Displaying RootedAI Brand Card..." }],
+        _meta: {
+            ui: {
+                widget: "https://rooted-ai-solutions.onrender.com/widget/index.js"
+            }
+        }
+    });
+});
+
 let transport: SSEServerTransport;
 
 app.get("/sse", async (req, res) => {
