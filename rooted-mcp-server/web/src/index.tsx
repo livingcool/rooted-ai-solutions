@@ -51,9 +51,11 @@ function sendHostMessage(text: string) {
 // ----------------------------------------------------------------------------
 
 const BrandCard = () => {
-    // In a real dynamic tool, we'd use this data:
-    // const result = useToolResult();
-    // const data = result?.structuredContent;
+    const [view, setView] = useState<'card' | 'contact'>('card');
+
+    if (view === 'contact') {
+        return <ContactForm onBack={() => setView('card')} />;
+    }
 
     return (
         <div style={{
@@ -73,11 +75,10 @@ const BrandCard = () => {
                 <h1 style={{
                     fontSize: '28px',
                     fontWeight: 'bold',
-                    marginBottom: '8px',
+                    margin: '0 0 8px 0',
                     background: 'linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                    margin: '0 0 8px 0'
                 }}>
                     RootedAI Solutions
                 </h1>
@@ -111,7 +112,7 @@ const BrandCard = () => {
             </div>
 
             <button
-                onClick={() => sendHostMessage("I want to contact RootedAI")}
+                onClick={() => setView('contact')}
                 style={{
                     marginTop: '24px',
                     width: '100%',
@@ -127,6 +128,89 @@ const BrandCard = () => {
             >
                 Contact Our Team
             </button>
+        </div>
+    );
+};
+
+const ContactForm = ({ onBack }: { onBack: () => void }) => {
+    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        sendHostMessage(`Please submit this contact form:\nName: ${formData.name}\nEmail: ${formData.email}\nMessage: ${formData.message}`);
+    };
+
+    const inputStyle = {
+        width: '100%',
+        padding: '10px',
+        marginBottom: '12px',
+        background: 'rgba(255,255,255,0.05)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: '6px',
+        color: 'white',
+        fontSize: '14px',
+        boxSizing: 'border-box' as const
+    };
+
+    return (
+        <div style={{
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+            padding: '24px',
+            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+            color: 'white',
+            borderRadius: '16px',
+            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            backdropFilter: 'blur(10px)',
+            maxWidth: '100%',
+            margin: '0 auto',
+            boxSizing: 'border-box'
+        }}>
+            <button onClick={onBack} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', marginBottom: '16px', fontSize: '14px' }}>
+                ← Back
+            </button>
+
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: '#00C9FF' }}>Get in Touch</h2>
+            <p style={{ fontSize: '13px', opacity: 0.7, marginBottom: '20px' }}>Tell us how we can help you.</p>
+
+            <form onSubmit={handleSubmit}>
+                <input
+                    placeholder="Your Name"
+                    value={formData.name}
+                    onChange={e => setFormData({ ...formData, name: e.target.value })}
+                    style={inputStyle}
+                    required
+                />
+                <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={formData.email}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                    style={inputStyle}
+                    required
+                />
+                <textarea
+                    placeholder="How can we help?"
+                    value={formData.message}
+                    onChange={e => setFormData({ ...formData, message: e.target.value })}
+                    style={{ ...inputStyle, minHeight: '80px', fontFamily: 'inherit' }}
+                    required
+                />
+
+                <button type="submit" style={{
+                    width: '100%',
+                    padding: '12px',
+                    background: 'linear-gradient(90deg, #00C9FF 0%, #0088CC 100%)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    marginTop: '8px'
+                }}>
+                    Send Message
+                </button>
+            </form>
         </div>
     );
 };
@@ -159,7 +243,9 @@ const ServiceBadge = ({ children }: { children: React.ReactNode }) => (
     </div>
 );
 
-// ... (previous imports and code)
+// ----------------------------------------------------------------------------
+// Entry Point (Dual Mode)
+// ----------------------------------------------------------------------------
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
