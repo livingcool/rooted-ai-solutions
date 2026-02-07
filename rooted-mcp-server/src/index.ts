@@ -160,6 +160,12 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // Enable JSON body parsing for REST API
 
+// Serve MCP App Widget (UI)
+// Resolve to rooted-mcp-server/web/dist
+const widgetPath = resolve(__dirname, '../../web/dist');
+// Serve under /widget
+app.use('/widget', express.static(widgetPath));
+
 // REST API Endpoints for ChatGPT
 app.get("/api/jobs", async (req, res) => {
     try {
