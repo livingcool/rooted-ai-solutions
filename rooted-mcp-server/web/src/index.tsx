@@ -1,7 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
+// ----------------------------------------------------------------------------
+// MCP Apps Bridge
+// ----------------------------------------------------------------------------
+
+type ToolResult = { structuredContent?: any } | null;
+
+function useToolResult() {
+    const [toolResult, setToolResult] = useState<ToolResult>(null);
+
+    useEffect(() => {
+        const onMessage = (event: MessageEvent) => {
+            // Security check: ensure message is from parent
+            if (event.source !== window.parent) return;
+
+            const message = event.data;
+            if (!message || message.jsonrpc !== "2.0") return;
+
+            // Update UI state when we receive a tool result
+            if (message.method === "ui/notifications/tool-result") {
+                setToolResult(message.params ?? null);
+            }
+        };
+
+        window.addEventListener("message", onMessage);
+        // Request initial context or signal readiness if needed
+        return () => window.removeEventListener("message", onMessage);
+    }, []);
+
+    return toolResult;
+}
+
+function sendHostMessage(text: string) {
+    window.parent.postMessage(
+        {
+            jsonrpc: "2.0",
+            method: "ui/message",
+            params: {
+                role: "user",
+                content: [{ type: "text", text }],
+            },
+        },
+        "*"
+    );
+}
+
+// ----------------------------------------------------------------------------
+// Brand Card UI
+// ----------------------------------------------------------------------------
+
 const BrandCard = () => {
+    // In a real dynamic tool, we'd use this data:
+    // const result = useToolResult();
+    // const data = result?.structuredContent;
+
     return (
         <div style={{
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
@@ -12,8 +65,9 @@ const BrandCard = () => {
             border: '1px solid rgba(255,255,255,0.1)',
             boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
             backdropFilter: 'blur(10px)',
-            maxWidth: '400px',
+            maxWidth: '100%',
             margin: '0 auto',
+            boxSizing: 'border-box'
         }}>
             <div style={{ textAlign: 'center', marginBottom: '20px' }}>
                 <h1 style={{
@@ -22,7 +76,8 @@ const BrandCard = () => {
                     marginBottom: '8px',
                     background: 'linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%)',
                     WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent'
+                    WebkitTextFillColor: 'transparent',
+                    margin: '0 0 8px 0'
                 }}>
                     RootedAI Solutions
                 </h1>
@@ -30,7 +85,8 @@ const BrandCard = () => {
                     fontSize: '12px',
                     textTransform: 'uppercase',
                     letterSpacing: '2px',
-                    opacity: 0.7
+                    opacity: 0.7,
+                    margin: 0
                 }}>
                     Engineering Intelligence
                 </p>
@@ -55,7 +111,7 @@ const BrandCard = () => {
             </div>
 
             <button
-                onClick={() => window.parent.postMessage({ type: 'contact_click', message: 'I want to contact RootedAI' }, '*')}
+                onClick={() => sendHostMessage("I want to contact RootedAI")}
                 style={{
                     marginTop: '24px',
                     width: '100%',

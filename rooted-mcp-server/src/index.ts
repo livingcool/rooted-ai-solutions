@@ -122,6 +122,14 @@ const tools: Tool[] = [
             required: ["name", "email", "message"],
         },
     },
+    {
+        name: "get_brand_card",
+        description: "Display the interactive RootedAI Brand Card with company stats and services.",
+        inputSchema: {
+            type: "object",
+            properties: {},
+        },
+    },
 ];
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
@@ -140,6 +148,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             case "submit_contact_form":
                 return {
                     content: [{ type: "text", text: JSON.stringify(await submitContactForm(SubmitContactFormArgsSchema.parse(args)), null, 2) }],
+                };
+            case "get_brand_card":
+                return {
+                    content: [{ type: "text", text: "Displaying RootedAI Brand Card..." }],
+                    // This metadata triggers the widget in compatible MCP clients
+                    _meta: {
+                        ui: {
+                            widget: "https://rooted-ai-solutions.onrender.com/widget/index.js"
+                        }
+                    }
                 };
             default:
                 throw new Error(`Unknown tool: ${name}`);
