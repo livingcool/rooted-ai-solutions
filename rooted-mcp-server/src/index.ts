@@ -185,6 +185,26 @@ const widgetPath = resolve(__dirname, '../../web/dist');
 // Serve under /widget
 app.use('/widget', express.static(widgetPath));
 
+// Privacy Policy Endpoint (Required for ChatGPT)
+app.get("/privacy", (req, res) => {
+    res.send(`
+        <html>
+            <head><title>Privacy Policy</title></head>
+            <body style="font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto;">
+                <h1>Privacy Policy for RootedAI Assistant</h1>
+                <p><strong>Effective Date:</strong> ${new Date().toLocaleDateString()}</p>
+                <p>This AI Assistant and MCP Server are operated by RootedAI Solutions. We value your privacy.</p>
+                <h2>Data Collection</h2>
+                <p>We do not store personal conversation history permanently. Contact form submissions are processed securely and sent directly to our team via email/notification systems.</p>
+                <h2>Third-Party Sharing</h2>
+                <p>We do not share your data with third parties, except as required to fulfill your requests (e.g., job applications).</p>
+                <h2>Contact Us</h2>
+                <p>If you have questions, please contact us at: hello@rootedai.co.in</p>
+            </body>
+        </html>
+    `);
+});
+
 // REST API Endpoints for ChatGPT
 app.get("/api/jobs", async (req, res) => {
     try {
