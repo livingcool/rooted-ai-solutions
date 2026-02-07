@@ -2,6 +2,6 @@
     "name": "rooted-mcp-widget",
     "version": "1.0.0",
     "scripts": {
-        "build": "esbuild src/index.tsx --bundle --format=esm --outfile=dist/index.js"
+        "build": "esbuild src/index.tsx --bundle --format=esm --outfile=dist/index.js && copy index.html dist\\index.html"
     }
 }
