@@ -12,6 +12,7 @@ import { z } from "zod";
 import dotenv from "dotenv";
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
+import fs from 'fs';
 import express from "express";
 import cors from "cors";
 
@@ -216,6 +217,21 @@ app.get("/api/me", (req, res) => {
             }
         }
     });
+});
+
+// Serve React Source Code for Canvas
+app.get("/api/ui/source", (req, res) => {
+    try {
+        const sourcePath = resolve(__dirname, '../../web/src/index.tsx');
+        // Check if file exists
+        if (!fs.existsSync(sourcePath)) {
+            return res.status(404).json({ error: "Source file not found on server." });
+        }
+        const sourceCode = fs.readFileSync(sourcePath, 'utf-8');
+        res.json({ code: sourceCode });
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 let transport: SSEServerTransport;
