@@ -35,7 +35,7 @@ const About = () => {
           setTimeout(() => setHighlightExtraordinary(true), 1800);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
