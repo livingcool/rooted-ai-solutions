@@ -21,8 +21,8 @@ const RootScrollHero = () => {
 
     // Smooth scroll progress for smoother animation
     const smoothProgress = useSpring(scrollYProgress, {
-        stiffness: 40,
-        damping: 20,
+        stiffness: 30, // Reduced from 40 for lighter feel
+        damping: 25,   // Increased from 20 for less oscillation
         restDelta: 0.001,
     });
 
@@ -83,11 +83,49 @@ const RootScrollHero = () => {
 
             if (!imgPrev) return;
 
-            // Calculate scaling to "cover" viewport
-            const scale = Math.max(
-                canvas.width / imgPrev.width,
-                canvas.height / imgPrev.height
-            );
+            // Mobile: use "contain" logic to show full width (Math.min behavior-ish, or just limit scale)
+            // Desktop: use "cover" logic (Math.max)
+            const isMobile = window.innerWidth <= 768;
+
+            let scale;
+            if (isMobile) {
+                // For mobile, we want to ensure the tree width fits or isn't too zoomed. 
+                // Using Math.max might zooom in if image is landscape and screen is portrait.
+                // Let's try to fit width primarily, but ensure it covers height if possible, or just standard object-cover but maybe less aggressive?
+                // Actually user wants "full look", implying they see cropped sides. 
+                // If we use scaling based on WIDTH, it fits the width.
+                const scaleWidth = canvas.width / imgPrev.width;
+                const scaleHeight = canvas.height / imgPrev.height;
+
+                // If we use the smaller scale, we fit the whole image (contain). 
+                // Since bg is black, this is safe.
+                scale = Math.max(scaleWidth, scaleHeight * 0.8); // slight hybrid? No, let's trust "contain" concept but maybe ensure it covers enough. 
+                // actually, let's just use scaleWidth to ensure full width is visible.
+                scale = Math.max(scaleWidth, scaleHeight); // Wait, this IS cover. 
+
+                // If image is 1920x1080 (1.77) and screen is 400x800 (0.5), 
+                // scaleWidth = 0.2, scaleHeight = 0.74. 
+                // Math.max picks 0.74. Image width becomes 1920*0.74 = 1420. Screen width 400. 
+                // Cropped huge.
+
+                // If we pick scaleWidth (0.2), Image width = 384. Screen 400. Fits. 
+                // Image height = 1080*0.2 = 216. Screen 800. Black bars top/bottom. 
+                // This preserves "full look".
+                scale = Math.max(scaleWidth, scaleHeight * 0.5); // Ensure it doesn't get TOO small? 
+                // Let's try purely fitting width for "full look". 
+                scale = Math.max(scaleWidth, canvas.height / imgPrev.height * 0.6); // Compromise? 
+                // Let's just try to prioritize width on mobile.
+                if (canvas.height > canvas.width) { // Portrait
+                    scale = Math.max(scaleWidth, scaleHeight * 0.6);
+                } else {
+                    scale = Math.max(scaleWidth, scaleHeight);
+                }
+            } else {
+                scale = Math.max(
+                    canvas.width / imgPrev.width,
+                    canvas.height / imgPrev.height
+                );
+            }
 
             const w = imgPrev.width * scale;
             const h = imgPrev.height * scale;
@@ -99,7 +137,7 @@ const RootScrollHero = () => {
             ctx.drawImage(imgPrev, x, y, w, h);
 
             // Draw Next Frame (blended overlay)
-            if (imgNext && prevIndex !== nextIndex) {
+            if (imgNext && prevIndex !== nextIndex && !isMobile) {
                 ctx.globalAlpha = alpha;
                 ctx.drawImage(imgNext, x, y, w, h);
             }
@@ -178,7 +216,7 @@ const RootScrollHero = () => {
             <div className={`sticky top-0 h-screen w-full overflow-hidden z-0 transition-opacity duration-700 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
                 <canvas
                     ref={canvasRef}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover will-change-transform"
                 />
             </div>
 
