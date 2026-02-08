@@ -157,7 +157,7 @@ const RootScrollHero = () => {
 
 
     return (
-        <section ref={containerRef} className="relative h-[500vh] bg-black">
+        <section ref={containerRef} className="relative h-[500vh] bg-black overflow-hidden">
             {/* Loading Overlay */}
             {isLoading && (
                 <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white">

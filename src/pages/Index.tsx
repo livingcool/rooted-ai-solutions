@@ -143,7 +143,7 @@ const Index = () => {
   const seoData = getSeoData();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden max-w-[100vw]">
       <Seo
         title={seoData.title}
         description={seoData.description}
