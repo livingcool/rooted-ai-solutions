@@ -45,7 +45,7 @@ const participants = [
 
 const Team = () => {
     return (
-        <div className="py-24 relative">
+        <div className="py-24 relative overflow-hidden">
             <div className="text-center mb-16">
                 <h3 className="text-3xl md:text-5xl font-bold font-heading text-black dark:text-white tracking-tight mb-6">
                     Meet the Builders

@@ -91,7 +91,7 @@ const Products = () => {
     };
 
     return (
-        <section id="products" className="py-12 border-t border-black/10 dark:border-white/10">
+        <section id="products" className="py-12 border-t border-black/10 dark:border-white/10 overflow-hidden">
             <div className="container mx-auto px-4 md:px-6">
                 {/* Header */}
                 <div className="text-center mb-8 space-y-2">
