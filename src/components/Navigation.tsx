@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-import GoodFirmsBanner from "./GoodFirmsBanner";
+
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,19 +32,18 @@ const Navigation = () => {
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-[120] transition-all duration-500 flex flex-col ${isScrolled
-          ? "bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-white/20 dark:border-white/5 shadow-md"
+          ? "bg-black/70 backdrop-blur-xl border-b border-white/10 shadow-md"
           : "bg-transparent"
           }`}
       >
-        <GoodFirmsBanner />
-        <div className={`w-full md:container mx-auto px-4 md:px-6 ${!isScrolled ? "py-4" : "py-2"}`}>
-          <div className="flex items-center justify-between">
+        <div className={`w-full md:container mx-auto px-4 md:px-6 transition-all duration-300 ${!isScrolled ? "py-4" : "py-2"}`}>
+          <div className="flex items-center justify-between relative">
             {/* Brand Name */}
             <a href="/" className="flex items-center group relative z-50">
-              <span className="text-2xl md:text-3xl font-bold font-heading tracking-[0.1em] text-black dark:text-white transition-all duration-300">
+              <span className="text-2xl md:text-3xl font-bold font-heading tracking-[0.1em] text-white transition-all duration-300">
                 ROOTED<span className="font-light">AI</span>
               </span>
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
             </a>
 
             {/* Desktop Navigation */}
@@ -53,13 +52,13 @@ const Navigation = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-sm font-medium text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors relative group py-1"
+                  className="text-sm font-medium text-white/70 hover:text-white transition-colors relative group py-1"
                 >
                   {link.name}
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-black dark:bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                 </a>
               ))}
-              <div className="flex items-center gap-4 pl-4 border-l border-black/10 dark:border-white/10">
+              <div className="flex items-center gap-4 pl-4 border-l border-white/10">
                 <ThemeToggle />
                 <Button
                   className="bw-button text-xs md:text-sm px-6"
@@ -74,7 +73,7 @@ const Navigation = () => {
             <div className="md:hidden flex items-center gap-4 relative z-50">
               <ThemeToggle />
               <button
-                className="text-black dark:text-white p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
+                className="text-white p-2 hover:bg-white/10 rounded-full transition-colors"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

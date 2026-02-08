@@ -137,9 +137,16 @@ const Products = () => {
                                             <p className="text-base font-medium text-black/80 dark:text-white/80 mb-2">
                                                 {product.tagline}
                                             </p>
-                                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                                                {product.description}
-                                            </p>
+                                            <div className="text-sm text-muted-foreground leading-relaxed space-y-2">
+                                                <p>
+                                                    An intelligent internal ticketing system that leverages AI to provide instant solutions to common workplace queries.
+                                                </p>
+                                                <ul className="space-y-1 list-disc pl-4 marker:text-black/50 dark:marker:text-white/50">
+                                                    <li>Uses natural language processing & knowledge graphs.</li>
+                                                    <li>Deflects tickets before they reach your support team.</li>
+                                                    <li>Dramatically reduces response times & improves productivity.</li>
+                                                </ul>
+                                            </div>
                                         </div>
 
                                         {/* Features - Horizontal Grid */}
@@ -242,12 +249,12 @@ const Products = () => {
                         <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
                             Let's discuss how RootedAI can create custom enterprise solutions tailored to your organization's needs.
                         </p>
-                        <button
+                        <Button
                             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-                            className="px-8 py-3 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black font-semibold rounded-lg dark:hover:bg-white/90 transition-all duration-300"
+                            className="bw-button text-base px-8 py-6 h-auto"
                         >
                             Get in Touch
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>

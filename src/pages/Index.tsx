@@ -10,6 +10,7 @@ import Careers from "@/components/Careers";
 import Contact from "@/components/Contact";
 
 import Footer from "@/components/Footer";
+import RootScrollHero from "@/components/RootScrollHero";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import TechStackMarquee from "@/components/TechStackMarquee";
 import Seo from "@/components/Seo";
@@ -238,8 +239,10 @@ const Index = () => {
       />
       <div className="relative z-10">
         <Navigation />
+
+        {/* Replacing Custom Hero with Scrollytelling Hero */}
         <div id="hero">
-          <Hero />
+          <RootScrollHero />
         </div>
 
         <RevealOnScroll delay={0.2}>

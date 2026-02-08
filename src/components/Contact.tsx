@@ -89,6 +89,8 @@ const Contact = () => {
                 required
                 className="bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-black dark:text-white placeholder:text-muted-foreground focus:border-black/40 dark:focus:border-white/40 focus:bg-black/10 dark:focus:bg-white/10 focus:ring-1 focus:ring-black/20 dark:focus:ring-white/20 transition-all duration-300 h-12"
                 placeholder="Enter your email"
+                pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                title="Please enter a valid email address"
               />
             </div>
 

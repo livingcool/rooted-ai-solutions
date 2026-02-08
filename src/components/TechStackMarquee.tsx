@@ -20,23 +20,15 @@ import supabaseLogo from "../assets/supabase.svg";
 const TechStackMarquee = () => {
     const technologies = [
         { name: "Python", logo: pythonLogo },
-        { name: "LangChain", logo: langchainLogo },
-        { name: "LangFlow", logo: langflowLogo },
-        { name: "LangGraph", logo: langgraphLogo },
+        { name: "React", logo: reactLogo },
         { name: "PostgreSQL", logo: postgresqlLogo },
-        { name: "Supabase", logo: supabaseLogo },
+        { name: "Docker", logo: dockerLogo },
+        { name: "TensorFlow", logo: tensorflowLogo },
+        { name: "PyTorch", logo: pytorchLogo },
         { name: "Gemini", logo: googleGeminiLogo },
         { name: "Claude", logo: claudeLogo },
         { name: "Meta AI", logo: metaLogo },
-        { name: "Mistral", logo: mistralLogo },
-        { name: "Ollama", logo: ollamaLogo },
-        { name: "HuggingFace", logo: huggingfaceLogo },
-        { name: "TensorFlow", logo: tensorflowLogo },
-        { name: "PyTorch", logo: pytorchLogo },
-        { name: "FastAPI", logo: fastapiLogo },
-        { name: "Docker", logo: dockerLogo },
-        { name: "React", logo: reactLogo },
-        { name: "Ngrok", logo: ngrokLogo },
+        { name: "LangChain", logo: langchainLogo },
     ];
 
     return (

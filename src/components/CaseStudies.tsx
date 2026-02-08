@@ -134,8 +134,10 @@ const CaseStudies = () => {
                           <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                         </a>
                       ) : (
-                        <div className="flex items-center justify-center w-full p-3 rounded-lg border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
-                          <span className="text-xs text-muted-foreground opacity-50">Case study coming soon</span>
+                        <div className="flex items-center justify-center w-full p-3">
+                          <span className="text-sm font-medium text-muted-foreground opacity-70 bg-black/5 dark:bg-white/5 px-4 py-1.5 rounded-full">
+                            Case Study Coming Soon
+                          </span>
                         </div>
                       )}
                     </div>
