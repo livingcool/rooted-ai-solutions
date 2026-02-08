@@ -35,14 +35,28 @@ const About = () => {
           setTimeout(() => setHighlightExtraordinary(true), 1800);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0, rootMargin: "0px 0px -100px 0px" } // Trigger when just entering viewport
     );
 
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
 
-    return () => observer.disconnect();
+    // Safety fallback: Ensure visibility on mobile if observer fails or element is already in view
+    const timer = setTimeout(() => {
+      if (!isVisible && window.innerWidth < 768) {
+        setIsVisible(true);
+        setTimeout(() => setTypeMission(true), 300);
+        setTimeout(() => setTypeVision(true), 500);
+        setTimeout(() => setHighlightMundane(true), 1200);
+        setTimeout(() => setHighlightExtraordinary(true), 1800);
+      }
+    }, 1000);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
   }, [isVisible]);
 
   return (

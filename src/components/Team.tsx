@@ -68,16 +68,21 @@ const Team = () => {
                                     src={member.image}
                                     alt={member.name}
                                     className="w-full h-full object-cover object-top transition-all duration-500 grayscale group-hover:grayscale-0"
+                                    onError={(e) => {
+                                        // Fallback if image fails to load
+                                        e.currentTarget.style.display = 'none';
+                                        e.currentTarget.parentElement?.classList.add('fallback-active');
+                                    }}
                                 />
-                            ) : (
-                                <>
-                                    <div className="absolute inset-0 bg-black/10 dark:bg-white/10 backdrop-blur-[2px]" />
-                                    <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-white/20 dark:bg-black/20 rounded-full blur-3xl" />
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl font-black text-black/10 dark:text-white/10">
-                                        {member.name.charAt(0)}
-                                    </div>
-                                </>
-                            )}
+                            ) : null}
+
+                            {/* Fallback (shown if no image or error) */}
+                            <div className={`absolute inset-0 bg-black/10 dark:bg-white/10 backdrop-blur-[2px] ${member.image ? 'hidden fallback-active:block' : 'block'}`}>
+                                <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-white/20 dark:bg-black/20 rounded-full blur-3xl" />
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl font-black text-black/10 dark:text-white/10">
+                                    {member.name.charAt(0)}
+                                </div>
+                            </div>
                         </div>
 
                         <div className="p-8 relative">
