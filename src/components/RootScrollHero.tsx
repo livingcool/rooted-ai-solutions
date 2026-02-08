@@ -226,12 +226,12 @@ const RootScrollHero = () => {
                 {/* Section 1: Idea to Production */}
                 <motion.div
                     style={{ opacity: opacity1, y: y1, pointerEvents: pointerEvents1 }}
-                    className="absolute top-[35%] md:top-[40%] left-[5%] md:left-[10vw] max-w-[90%] md:max-w-[600px] text-left"
+                    className="absolute top-[35%] md:top-[40%] left-4 md:left-[10vw] max-w-[calc(100%-2rem)] md:max-w-[600px] text-left"
                 >
-                    <h2 className="text-4xl md:text-7xl font-bold font-heading tracking-tight mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900">
+                    <h2 className="text-4xl md:text-7xl font-bold font-heading tracking-tight mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
                         From Idea to <br /><span className="text-gray-300">Production Ready</span>
                     </h2>
-                    <p className="text-base md:text-xl text-gray-400 font-light leading-relaxed">
+                    <p className="text-base md:text-xl text-gray-400 font-light leading-relaxed max-w-full">
                         Full-stack development expertise. We transform your vision into production-ready software with modern tech and best practices.
                     </p>
                 </motion.div>
@@ -239,16 +239,16 @@ const RootScrollHero = () => {
                 {/* Section 2: Full Stack */}
                 <motion.div
                     style={{ opacity: opacity2, y: y2, pointerEvents: pointerEvents2 }}
-                    className="absolute top-[35%] md:top-[35%] right-[5%] md:right-[10vw] max-w-[90%] md:max-w-[600px] text-right"
+                    className="absolute top-[35%] md:top-[35%] right-4 md:right-[10vw] max-w-[calc(100%-2rem)] md:max-w-[600px] text-right"
                 >
-                    <h2 className="text-4xl md:text-7xl font-bold font-heading tracking-tight mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900">
+                    <h2 className="text-4xl md:text-7xl font-bold font-heading tracking-tight mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
                         Full Stack <br /><span className="text-gray-300">Development</span>
                     </h2>
-                    <div className="flex flex-col items-end gap-2">
-                        <p className="text-lg md:text-2xl text-gray-300 font-medium tracking-wide">
+                    <div className="flex flex-col items-end gap-2 w-full">
+                        <p className="text-lg md:text-2xl text-gray-300 font-medium tracking-wide break-words max-w-full">
                             Modern Tech Stack • Fast Deployment
                         </p>
-                        <p className="text-sm md:text-base text-gray-500 font-mono">
+                        <p className="text-sm md:text-base text-gray-500 font-mono break-all">
                             Python / React / Node / AI-Native
                         </p>
                     </div>
@@ -257,35 +257,35 @@ const RootScrollHero = () => {
                 {/* Section 3: Scalable Solutions */}
                 <motion.div
                     style={{ opacity: opacity3, y: y3, pointerEvents: pointerEvents3 }}
-                    className="absolute top-[30%] left-1/2 -translate-x-1/2 w-full max-w-[90%] md:max-w-[800px] text-center"
+                    className="absolute top-[30%] left-1/2 -translate-x-1/2 w-full max-w-[calc(100%-2rem)] md:max-w-[800px] text-center px-4"
                 >
-                    <h2 className="text-4xl md:text-7xl font-bold font-heading tracking-tight mb-6 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900">
+                    <h2 className="text-4xl md:text-7xl font-bold font-heading tracking-tight mb-6 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
                         Scalable Solutions
                     </h2>
-                    <p className="text-base md:text-2xl text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">
-                        Enterprise-grade infrastructure rooted in <span className="text-gray-300 font-medium">intelligent automation</span>.
+                    <p className="text-base md:text-2xl text-gray-400 font-light max-w-full mx-auto leading-relaxed">
+                        Enterprise-grade infrastructure rooted in <span className="text-gray-300 font-medium whitespace-normal">intelligent automation</span>.
                     </p>
                 </motion.div>
 
                 {/* Section 4: Call to Action */}
                 <motion.div
                     style={{ opacity: opacity4, y: y4, pointerEvents: pointerEvents4 }}
-                    className="absolute top-[40%] left-1/2 -translate-x-1/2 w-full max-w-[90%] md:max-w-[600px] text-center"
+                    className="absolute top-[40%] left-1/2 -translate-x-1/2 w-full max-w-[calc(100%-2rem)] md:max-w-[600px] text-center px-4"
                 >
-                    <h2 className="text-5xl md:text-8xl font-bold font-heading tracking-tighter mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900">
+                    <h2 className="text-5xl md:text-8xl font-bold font-heading tracking-tighter mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
                         Start Building
                     </h2>
-                    <p className="text-lg md:text-xl text-gray-400 mb-8 font-light">
+                    <p className="text-lg md:text-xl text-gray-400 mb-8 font-light max-w-full">
                         Transform your vision into reality with RootedAI
                     </p>
 
                     <Button
                         size="lg"
-                        className="bg-transparent border border-white text-white hover:bg-white hover:text-black transition-all duration-300 rounded-full px-12 py-8 text-xl group"
+                        className="bg-transparent border border-white text-white hover:bg-white hover:text-black transition-all duration-300 rounded-full px-8 md:px-12 py-6 md:py-8 text-lg md:text-xl group max-w-full whitespace-normal h-auto"
                         onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
                     >
                         Get Started
-                        <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="ml-2 w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform flex-shrink-0" />
                     </Button>
                 </motion.div>
 
