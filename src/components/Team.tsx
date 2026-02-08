@@ -23,7 +23,7 @@ const participants = [
         name: "Ajai Senthil",
         role: "CTO",
         bio: "Architecting the neural frameworks that power our intelligence.",
-        image: null,
+        image: "/team/ajai.jpg",
         socials: {
             linkedin: "#",
             twitter: "#",

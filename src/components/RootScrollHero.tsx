@@ -226,29 +226,31 @@ const RootScrollHero = () => {
                 {/* Section 1: Idea to Production */}
                 <motion.div
                     style={{ opacity: opacity1, y: y1, pointerEvents: pointerEvents1 }}
-                    className="absolute top-[35%] md:top-[40%] left-4 md:left-[10vw] max-w-[calc(100%-2rem)] md:max-w-[600px] text-left"
+                    className="absolute top-[35%] md:top-[40%] left-0 w-full px-6 md:px-0 md:left-[10vw] md:max-w-[600px] md:w-auto text-center md:text-left"
                 >
-                    <h2 className="text-4xl md:text-7xl font-bold font-heading tracking-tight mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
-                        From Idea to <br /><span className="text-gray-300">Production Ready</span>
+                    <h2 className="text-3xl md:text-7xl font-bold font-heading tracking-tight mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
+                        From Idea to <br className="hidden md:block" />
+                        <span className="md:text-gray-300 block md:inline mt-2 md:mt-0">Production Ready</span>
                     </h2>
-                    <p className="text-base md:text-xl text-gray-400 font-light leading-relaxed max-w-full">
-                        Full-stack development expertise. We transform your vision into production-ready software with modern tech and best practices.
+                    <p className="text-sm md:text-xl text-gray-400 font-light leading-relaxed max-w-xs mx-auto md:mx-0">
+                        Full-stack development expertise. We transform your vision into production-ready software.
                     </p>
                 </motion.div>
 
                 {/* Section 2: Full Stack */}
                 <motion.div
                     style={{ opacity: opacity2, y: y2, pointerEvents: pointerEvents2 }}
-                    className="absolute top-[35%] md:top-[35%] right-4 md:right-[10vw] max-w-[calc(100%-2rem)] md:max-w-[600px] text-right"
+                    className="absolute top-[35%] md:top-[35%] right-0 w-full px-6 md:px-0 md:right-[10vw] md:max-w-[600px] md:w-auto text-center md:text-right"
                 >
-                    <h2 className="text-4xl md:text-7xl font-bold font-heading tracking-tight mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
-                        Full Stack <br /><span className="text-gray-300">Development</span>
+                    <h2 className="text-3xl md:text-7xl font-bold font-heading tracking-tight mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
+                        Full Stack <br className="hidden md:block" />
+                        <span className="md:text-gray-300 block md:inline mt-2 md:mt-0">Development</span>
                     </h2>
-                    <div className="flex flex-col items-end gap-2 w-full">
-                        <p className="text-lg md:text-2xl text-gray-300 font-medium tracking-wide break-words max-w-full">
-                            Modern Tech Stack • Fast Deployment
+                    <div className="flex flex-col items-center md:items-end gap-2 w-full">
+                        <p className="text-base md:text-2xl text-gray-300 font-medium tracking-wide">
+                            Modern Tech Stack
                         </p>
-                        <p className="text-sm md:text-base text-gray-500 font-mono break-all">
+                        <p className="text-xs md:text-base text-gray-500 font-mono">
                             Python / React / Node / AI-Native
                         </p>
                     </div>
@@ -257,31 +259,33 @@ const RootScrollHero = () => {
                 {/* Section 3: Scalable Solutions */}
                 <motion.div
                     style={{ opacity: opacity3, y: y3, pointerEvents: pointerEvents3 }}
-                    className="absolute top-[30%] left-1/2 -translate-x-1/2 w-full max-w-[calc(100%-2rem)] md:max-w-[800px] text-center px-4"
+                    className="absolute top-[30%] left-0 w-full px-6 md:max-w-[800px] md:left-1/2 md:-translate-x-1/2 text-center"
                 >
-                    <h2 className="text-4xl md:text-7xl font-bold font-heading tracking-tight mb-6 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
+                    <h2 className="text-3xl md:text-7xl font-bold font-heading tracking-tight mb-6 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
                         Scalable Solutions
                     </h2>
-                    <p className="text-base md:text-2xl text-gray-400 font-light max-w-full mx-auto leading-relaxed">
-                        Enterprise-grade infrastructure rooted in <span className="text-gray-300 font-medium whitespace-normal">intelligent automation</span>.
+                    <p className="text-sm md:text-2xl text-gray-400 font-light max-w-xs mx-auto md:max-w-2xl leading-relaxed">
+                        Enterprise-grade infrastructure rooted in <br className="block md:hidden" />
+                        <span className="text-gray-300 font-medium">intelligent automation</span>.
                     </p>
                 </motion.div>
 
                 {/* Section 4: Call to Action */}
                 <motion.div
                     style={{ opacity: opacity4, y: y4, pointerEvents: pointerEvents4 }}
-                    className="absolute top-[40%] left-1/2 -translate-x-1/2 w-full max-w-[calc(100%-2rem)] md:max-w-[600px] text-center px-4"
+                    className="absolute top-[40%] left-0 w-full px-4 md:max-w-[600px] md:left-1/2 md:-translate-x-1/2 text-center"
                 >
-                    <h2 className="text-5xl md:text-8xl font-bold font-heading tracking-tighter mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
-                        Start Building
+                    <h2 className="text-4xl md:text-8xl font-bold font-heading tracking-tighter mb-4 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words flex flex-col items-center gap-2">
+                        <span>Start</span>
+                        <span>Building</span>
                     </h2>
-                    <p className="text-lg md:text-xl text-gray-400 mb-8 font-light max-w-full">
+                    <p className="text-base md:text-xl text-gray-400 mb-8 font-light max-w-xs mx-auto">
                         Transform your vision into reality with RootedAI
                     </p>
 
                     <Button
                         size="lg"
-                        className="bg-transparent border border-white text-white hover:bg-white hover:text-black transition-all duration-300 rounded-full px-8 md:px-12 py-6 md:py-8 text-lg md:text-xl group max-w-full whitespace-normal h-auto"
+                        className="bg-transparent border border-white text-white hover:bg-white hover:text-black transition-all duration-300 rounded-full px-8 md:px-12 py-6 md:py-8 text-lg md:text-xl group max-w-full h-auto mx-auto"
                         onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
                     >
                         Get Started
