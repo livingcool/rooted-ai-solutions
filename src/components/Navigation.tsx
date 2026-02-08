@@ -59,7 +59,7 @@ const Navigation = () => {
                 </a>
               ))}
               <div className="flex items-center gap-4 pl-4 border-l border-white/10">
-                <ThemeToggle />
+                <ThemeToggle className="text-white hover:text-white/80 hover:bg-white/10" />
                 <Button
                   className="bw-button text-xs md:text-sm px-6"
                   onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
@@ -71,7 +71,7 @@ const Navigation = () => {
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center gap-4 relative z-50">
-              <ThemeToggle />
+              <ThemeToggle className="text-white hover:text-white/80 hover:bg-white/10" />
               <button
                 className="text-white p-2 hover:bg-white/10 rounded-full transition-colors"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

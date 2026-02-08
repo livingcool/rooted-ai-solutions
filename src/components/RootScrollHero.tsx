@@ -262,7 +262,7 @@ const RootScrollHero = () => {
                     className="absolute top-[30%] left-0 w-full px-6 md:max-w-[800px] md:left-1/2 md:-translate-x-1/2 text-center"
                 >
                     <h2 className="text-3xl md:text-7xl font-bold font-heading tracking-tight mb-6 drop-shadow-2xl bg-clip-text text-transparent bg-gradient-to-br from-gray-100 via-gray-400 to-gray-900 break-words">
-                        Scalable Solutions
+                        Scalable <br className="block md:hidden" /> Solutions
                     </h2>
                     <p className="text-sm md:text-2xl text-gray-400 font-light max-w-xs mx-auto md:max-w-2xl leading-relaxed">
                         Enterprise-grade infrastructure rooted in <br className="block md:hidden" />
