@@ -11,6 +11,7 @@ import Contact from "@/components/Contact";
 
 import Footer from "@/components/Footer";
 import RootScrollHero from "@/components/RootScrollHero";
+import Team from "@/components/Team";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import TechStackMarquee from "@/components/TechStackMarquee";
 import Seo from "@/components/Seo";
@@ -284,6 +285,12 @@ const Index = () => {
         <div id="contact">
           <RevealOnScroll>
             <Contact />
+          </RevealOnScroll>
+        </div>
+
+        <div id="team">
+          <RevealOnScroll>
+            <Team />
           </RevealOnScroll>
         </div>
 

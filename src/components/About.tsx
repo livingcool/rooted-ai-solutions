@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, FileText, MessageSquare, Receipt, Ticket, Check } from "lucide-react";
 import TiltCard from "@/components/ui/TiltCard";
 import TextScramble from "@/components/ui/TextScramble";
-import Team from "@/components/Team";
+
 
 const About = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -282,10 +282,7 @@ const About = () => {
           ))}
         </div>
 
-        {/* Meet the Builders */}
-        <div className={`transition-all duration-1000 delay-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <Team />
-        </div>
+
       </div>
 
       <style>{`
