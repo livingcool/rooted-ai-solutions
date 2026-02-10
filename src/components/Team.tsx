@@ -34,11 +34,11 @@ const participants = [
         name: "Ganesh Kumar S",
         role: "Lead Engineer",
         bio: "Pushing the boundaries of what large language models can achieve.",
-        image: null,
+        image: "/team/ganesh-kumar.jpg",
         socials: {
-            linkedin: "#",
+            linkedin: "https://www.linkedin.com/in/ganeshkumar09",
             twitter: "#",
-            github: "#"
+            github: "https://github.com/Ganeshkumar09092003"
         }
     }
 ];
