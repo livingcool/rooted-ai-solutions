@@ -95,7 +95,11 @@ const Footer = () => {
                             <li><Link to="/services/ai-agents" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">AI Agents</Link></li>
                             <li><Link to="/services/process-automation" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Automation</Link></li>
                             <li><Link to="/services/predictive-analytics" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Analytics</Link></li>
-                            <li><a href="/#case-studies" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Case Studies</a></li>
+                            <li><Link to="/services/web-solutions" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Web Solutions</Link></li>
+                            <li><Link to="/services/nlp-systems" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">NLP Systems</Link></li>
+                            <li><Link to="/services/enterprise-security" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Security</Link></li>
+                            <li><Link to="/services/outsourcing" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Outsourcing</Link></li>
+                            <li><Link to="/case-studies" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Case Studies</Link></li>
                         </ul>
                     </div>
                 </div>

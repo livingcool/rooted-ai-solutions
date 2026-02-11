@@ -67,6 +67,7 @@ const Team = () => {
                                 <img
                                     src={member.image}
                                     alt={member.name}
+                                    loading="lazy"
                                     className="w-full h-full object-cover object-top transition-all duration-500 grayscale group-hover:grayscale-0"
                                     onError={(e) => {
                                         // Fallback if image fails to load

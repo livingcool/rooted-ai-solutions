@@ -98,6 +98,34 @@ const BlogPost = () => {
                 title={`${post.title} | RootedAI Blog`}
                 description={post.excerpt}
                 ogImage={post.cover_image}
+                canonical={`https://www.rootedai.co.in/blog/${slug}`}
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    "headline": post.title,
+                    "description": post.excerpt,
+                    "image": post.cover_image,
+                    "datePublished": post.published_at,
+                    "dateModified": post.updated_at || post.published_at,
+                    "author": {
+                        "@type": "Person",
+                        "name": post.author || "RootedAI Team",
+                        "url": post.author_linkedin || "https://www.rootedai.co.in"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "RootedAI Solutions",
+                        "url": "https://www.rootedai.co.in",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "https://www.rootedai.co.in/logo.png"
+                        }
+                    },
+                    "mainEntityOfPage": {
+                        "@type": "WebPage",
+                        "@id": `https://www.rootedai.co.in/blog/${slug}`
+                    }
+                }}
             />
             <div className="relative z-10">
                 <Navigation />

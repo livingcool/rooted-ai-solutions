@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import OutsourcingCalculator from "@/components/OutsourcingCalculator";
+import RelatedServices from "@/components/RelatedServices";
 
 const OutsourcingServicePage = () => {
     useEffect(() => {
@@ -112,7 +113,7 @@ const OutsourcingServicePage = () => {
                     "custom software teams",
                     "tech talent solutions"
                 ]}
-                canonical="https://rootedai.com/services/outsourcing"
+                canonical="https://www.rootedai.co.in/services/outsourcing"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -122,7 +123,7 @@ const OutsourcingServicePage = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "Flexible software development outsourcing including dedicated teams and staff augmentation.",
                             "areaServed": "Global",
@@ -356,6 +357,7 @@ const OutsourcingServicePage = () => {
                     </div>
                 </section>
 
+                <RelatedServices currentPath="/services/outsourcing" />
                 <Footer />
             </div>
         </div>

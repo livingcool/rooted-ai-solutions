@@ -118,6 +118,7 @@ const Products = () => {
                                                 <img
                                                     src={product.logoUrl}
                                                     alt={`${product.name} Logo`}
+                                                    loading="lazy"
                                                     className="w-12 h-12 object-cover rounded-xl border border-black/10 dark:border-white/10"
                                                 />
                                                 <div>
@@ -208,6 +209,7 @@ const Products = () => {
                                                 <img
                                                     src={product.images[currentImageIndex].url}
                                                     alt={product.images[currentImageIndex].alt}
+                                                    loading="lazy"
                                                     className="w-full h-full object-cover"
                                                 />
                                             </div>
@@ -230,7 +232,7 @@ const Products = () => {
                                                         : "border-transparent opacity-50 hover:opacity-100"
                                                         }`}
                                                 >
-                                                    <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
+                                                    <img src={img.url} alt={img.alt} loading="lazy" className="w-full h-full object-cover" />
                                                 </button>
                                             ))}
                                         </div>

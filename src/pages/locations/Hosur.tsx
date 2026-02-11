@@ -19,6 +19,7 @@ const Hosur = () => {
             <Seo
                 title="Top Software Company in Hosur | Industrial Automation & AI"
                 description="RootedAI is the leading software and industrial automation provider in Hosur SIPCOT, delivering AI agents, ERP systems, and manufacturing intelligence."
+                canonical="https://www.rootedai.co.in/hosur"
                 keywords={[
                     "Software Company in Hosur",
                     "Industrial Automation Hosur",
@@ -32,8 +33,8 @@ const Hosur = () => {
                     "@context": "https://schema.org",
                     "@type": "LocalBusiness",
                     "name": "RootedAI - Hosur",
-                    "image": "https://rootedai.co.in/og-image.png",
-                    "url": "https://rootedai.co.in/locations/hosur",
+                    "image": "https://www.rootedai.co.in/og-image.png",
+                    "url": "https://www.rootedai.co.in/hosur",
                     "telephone": "+91-917904168521",
                     "address": {
                         "@type": "PostalAddress",

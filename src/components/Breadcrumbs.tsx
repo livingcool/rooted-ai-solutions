@@ -1,44 +1,73 @@
 import { ChevronRight, Home } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const Breadcrumbs = () => {
     const location = useLocation();
     const pathnames = location.pathname.split("/").filter((x) => x);
+    const siteUrl = "https://www.rootedai.co.in";
+
+    // Build BreadcrumbList JSON-LD
+    const breadcrumbItems = [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
+        ...pathnames.map((value, index) => {
+            const url = `${siteUrl}/${pathnames.slice(0, index + 1).join("/")}`;
+            const label = value.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+            return {
+                "@type": "ListItem",
+                "position": index + 2,
+                "name": label,
+                "item": url
+            };
+        })
+    ];
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumbItems
+    };
 
     return (
-        <nav aria-label="Breadcrumb" className="py-4 px-4 md:px-6">
-            <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <li>
-                    <Link to="/" className="flex items-center hover:text-primary transition-colors">
-                        <Home className="w-4 h-4" />
-                    </Link>
-                </li>
-                {pathnames.map((value, index) => {
-                    let to = `/${pathnames.slice(0, index + 1).join("/")}`;
+        <>
+            <Helmet>
+                <script type="application/ld+json">
+                    {JSON.stringify(breadcrumbSchema)}
+                </script>
+            </Helmet>
+            <nav aria-label="Breadcrumb" className="py-4 px-4 md:px-6">
+                <ol className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <li>
+                        <Link to="/" className="flex items-center hover:text-primary transition-colors">
+                            <Home className="w-4 h-4" />
+                        </Link>
+                    </li>
+                    {pathnames.map((value, index) => {
+                        let to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
-                    // Redirect 'Services' breadcrumb to the landing page section
-                    if (value === "services") {
-                        to = "/services";
-                    }
+                        if (value === "services") {
+                            to = "/services";
+                        }
 
-                    const isLast = index === pathnames.length - 1;
-                    const label = value.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+                        const isLast = index === pathnames.length - 1;
+                        const label = value.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
-                    return (
-                        <li key={index} className="flex items-center space-x-2">
-                            <ChevronRight className="w-4 h-4" />
-                            {isLast ? (
-                                <span className="font-medium text-foreground">{label}</span>
-                            ) : (
-                                <Link to={to} className="hover:text-primary transition-colors">
-                                    {label}
-                                </Link>
-                            )}
-                        </li>
-                    );
-                })}
-            </ol>
-        </nav>
+                        return (
+                            <li key={index} className="flex items-center space-x-2">
+                                <ChevronRight className="w-4 h-4" />
+                                {isLast ? (
+                                    <span className="font-medium text-foreground">{label}</span>
+                                ) : (
+                                    <Link to={to} className="hover:text-primary transition-colors">
+                                        {label}
+                                    </Link>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ol>
+            </nav>
+        </>
     );
 };
 

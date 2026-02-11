@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import NLPSavingsVisualizer from "@/components/NLPSavingsVisualizer";
+import RelatedServices from "@/components/RelatedServices";
 
 const NLPSystems = () => {
     useEffect(() => {
@@ -125,7 +126,7 @@ const NLPSystems = () => {
                     "LLM fine-tuning",
                     "automated insights"
                 ]}
-                canonical="https://rootedai.com/services/nlp-systems"
+                canonical="https://www.rootedai.co.in/services/nlp-systems"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -135,7 +136,7 @@ const NLPSystems = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "Advanced NLP solutions including sentiment analysis, document processing, and automated reporting.",
                             "areaServed": "Global",
@@ -326,6 +327,7 @@ const NLPSystems = () => {
                     </div>
                 </section>
 
+                <RelatedServices currentPath="/services/nlp-systems" />
                 <Footer />
             </div>
         </div>

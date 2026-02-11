@@ -19,6 +19,7 @@ const Coimbatore = () => {
             <Seo
                 title="Best Software Company in Coimbatore | Manufacturing & Textile ERP"
                 description="RootedAI delivers advanced ERP and AI automation solutions for Coimbatore's textile, foundry, and engineering industries. Scale with Engineering Intelligence."
+                canonical="https://www.rootedai.co.in/coimbatore"
                 keywords={[
                     "Software Company in Coimbatore",
                     "Textile ERP Coimbatore",
@@ -32,8 +33,8 @@ const Coimbatore = () => {
                     "@context": "https://schema.org",
                     "@type": "LocalBusiness",
                     "name": "RootedAI - Coimbatore",
-                    "image": "https://rootedai.co.in/og-image.png",
-                    "url": "https://rootedai.co.in/locations/coimbatore",
+                    "image": "https://www.rootedai.co.in/og-image.png",
+                    "url": "https://www.rootedai.co.in/coimbatore",
                     "telephone": "+91-917904168521",
                     "address": {
                         "@type": "PostalAddress",

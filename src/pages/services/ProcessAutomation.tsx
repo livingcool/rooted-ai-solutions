@@ -9,6 +9,7 @@ import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 import ROICalculator from "@/components/ROICalculator";
+import RelatedServices from "@/components/RelatedServices";
 
 const ProcessAutomation = () => {
     useEffect(() => {
@@ -175,7 +176,7 @@ const ProcessAutomation = () => {
                     "operational excellence",
                     "legacy system integration"
                 ]}
-                canonical="https://rootedai.com/services/process-automation"
+                canonical="https://www.rootedai.co.in/services/process-automation"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -185,7 +186,7 @@ const ProcessAutomation = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "End-to-end process automation utilizing RPA and intelligent workflows to reduce manual effort.",
                             "areaServed": "Global",
@@ -417,6 +418,7 @@ const ProcessAutomation = () => {
                     </div>
                 </section>
 
+                <RelatedServices currentPath="/services/process-automation" />
                 <Footer />
             </div>
         </div>

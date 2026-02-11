@@ -5,28 +5,85 @@
 RootedAI helps businesses scale efficiently through autonomous AI agents and intelligent process automation. We specialize in transforming manual, complex workflows into streamlined, self-running systems.
 
 ## Core Identity
-- **Company Name**: RootedAI
+- **Company Name**: RootedAI Solutions
 - **Tagline**: Engineering Intelligence. COMPLEXITY. SIMPLIFIED.
 - **Website**: https://www.rootedai.co.in
 - **Contact**: info@rootedai.co.in
-- **Location**: Hosur, Tamil Nadu, India
+- **Location**: Hosur, Tamil Nadu, India (serving globally including Singapore, Dubai, Middle East, and Asia)
+
+## Services
+
+### AI Agents
+Custom AI agent development for enterprise automation. We build digital workers that handle repetitive tasks like data entry, L1 support, invoicing, and multi-step workflows 24/7.
+- URL: https://www.rootedai.co.in/services/ai-agents
+
+### Process Automation
+End-to-end business process automation using RPA and intelligent workflows. We reduce manual effort by 60-80% across HR, finance, and operations.
+- URL: https://www.rootedai.co.in/services/process-automation
+
+### Predictive Analytics
+Data-driven analytics for demand forecasting, churn prediction, risk assessment, and trend analysis. Turn your data into actionable insights.
+- URL: https://www.rootedai.co.in/services/predictive-analytics
+
+### NLP Systems
+Advanced Natural Language Processing solutions including sentiment analysis, document processing, automated reporting, and LLM fine-tuning.
+- URL: https://www.rootedai.co.in/services/nlp-systems
+
+### Web Solutions
+Custom web application development with AI integration. Scalable web apps, enterprise dashboards, and progressive web apps (PWAs).
+- URL: https://www.rootedai.co.in/services/web-solutions
+
+### Enterprise Security
+AI-powered threat detection, compliance automation, vulnerability assessment, and zero-trust architecture implementation.
+- URL: https://www.rootedai.co.in/services/enterprise-security
+
+### IT Outsourcing
+Flexible software development outsourcing including dedicated teams, staff augmentation, and project-based engagements.
+- URL: https://www.rootedai.co.in/services/outsourcing
 
 ## Key Offerings
 1. **AI Agents**: Digital workers that handle repetitive tasks like data entry, L1 support, and invoicing 24/7.
 2. **Onboarding Automation**: Reducing hiring costs by 30% through AI-driven candidate screening and onboarding workflows.
-3. **Logistics Optimization**: Intelligent routing and inventory management systems.
+3. **Logistics Optimization**: Intelligent routing and inventory management systems for manufacturing and supply chain.
 4. **Custom Enterprise Solutions**: Bespoke AI "brains" that consolidate fragmented SaaS tools into a single dashboard.
 
 ## Value Proposition
 - **For CEOs**: Reduce overheads and break the "hiring freeze" cycle.
 - **For CTOs**: Eliminate "SaaS Sprawl" with owned, custom infrastructure.
 - **For Operations**: Achieve 24/7 operational capability without adding headcount.
+- **Cost Savings**: Clients typically see 40% reduction in operational costs.
 
 ## Technical Expertise
 - **RAG (Retrieval-Augmented Generation)**: Context-aware AI that knows your business data.
 - **Multi-Agent Systems**: Coordinating specialized agents for complex problem solving.
-- **Process Automation**: End-to-end workflow execution.
+- **Process Automation**: End-to-end workflow execution with RPA integration.
+- **Machine Learning**: Custom ML models for prediction, classification, and anomaly detection.
+- **Computer Vision**: Image/video analysis for quality control and monitoring.
+
+## Case Studies
+- **AI for Manufacturing in Asia**: Predictive maintenance agents for electronics manufacturers in Singapore and Vietnam. 35% downtime reduction, 24/7 autonomous monitoring.
+- **Logistics Automation in Dubai**: Supply chain optimization for a major logistics firm. 20% fuel cost savings, 100% route optimization.
+- URL: https://www.rootedai.co.in/case-studies
+
+## Industries Served
+- Manufacturing & Industrial
+- Logistics & Supply Chain
+- Healthcare & Pharma
+- E-Commerce & Retail
+- Financial Services
+- Education & EdTech
+
+## Geographic Coverage
+- India (Hosur, Coimbatore headquarters)
+- Singapore
+- Dubai & Middle East
+- Asia-Pacific region
+- Global remote delivery
 
 ## Connect
 - **LinkedIn**: https://www.linkedin.com/company/rootedai
+- **Twitter/X**: https://x.com/rootedai2025
+- **Instagram**: https://www.instagram.com/rootedai_official/
 - **Book a Strategy Call**: https://wa.me/917904168521
+- **Blog**: https://www.rootedai.co.in/blog
+- **Pricing**: https://www.rootedai.co.in/pricing

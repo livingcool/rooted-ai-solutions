@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import AgentEfficiencySimulator from "@/components/AgentEfficiencySimulator";
+import RelatedServices from "@/components/RelatedServices";
 
 const AIAgents = () => {
     useEffect(() => {
@@ -135,7 +136,7 @@ const AIAgents = () => {
                     "custom AI workforce",
                     "task automation agents"
                 ]}
-                canonical="https://rootedai.com/services/ai-agents"
+                canonical="https://www.rootedai.co.in/services/ai-agents"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -145,7 +146,7 @@ const AIAgents = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "Custom AI agent development, consulting, and multi-agent systems.",
                             "areaServed": "Global",
@@ -393,6 +394,7 @@ const AIAgents = () => {
                     </div>
                 </section>
 
+                <RelatedServices currentPath="/services/ai-agents" />
                 <Footer />
             </div>
         </div>

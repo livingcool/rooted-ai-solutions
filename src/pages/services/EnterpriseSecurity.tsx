@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SecurityRiskSimulator from "@/components/SecurityRiskSimulator";
+import RelatedServices from "@/components/RelatedServices";
 
 const EnterpriseSecurity = () => {
     useEffect(() => {
@@ -129,7 +130,7 @@ const EnterpriseSecurity = () => {
                     "data privacy solutions",
                     "network security automation"
                 ]}
-                canonical="https://rootedai.com/services/enterprise-security"
+                canonical="https://www.rootedai.co.in/services/enterprise-security"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -139,7 +140,7 @@ const EnterpriseSecurity = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "AI-powered threat detection and enterprise security services.",
                             "areaServed": "Global",
@@ -346,6 +347,7 @@ const EnterpriseSecurity = () => {
                     </div>
                 </section>
 
+                <RelatedServices currentPath="/services/enterprise-security" />
                 <Footer />
             </div>
         </div>

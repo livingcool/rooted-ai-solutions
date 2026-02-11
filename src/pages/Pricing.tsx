@@ -78,7 +78,70 @@ const Pricing = () => {
           "AI consulting fees",
           "custom software pricing"
         ]}
-        canonical="https://rootedai.com/pricing"
+        canonical="https://www.rootedai.co.in/pricing"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Product",
+              "name": "RootedAI AI Solutions",
+              "description": "AI automation solutions for businesses of all sizes",
+              "brand": { "@type": "Brand", "name": "RootedAI" },
+              "offers": [
+                {
+                  "@type": "Offer",
+                  "name": "Starter Plan",
+                  "description": "Perfect for small businesses getting started with AI",
+                  "priceCurrency": "INR",
+                  "availability": "https://schema.org/InStock"
+                },
+                {
+                  "@type": "Offer",
+                  "name": "Professional Plan",
+                  "description": "Ideal for growing teams scaling their AI capabilities",
+                  "priceCurrency": "INR",
+                  "availability": "https://schema.org/InStock"
+                },
+                {
+                  "@type": "Offer",
+                  "name": "Enterprise Plan",
+                  "description": "Complete AI transformation for large organizations",
+                  "priceCurrency": "INR",
+                  "availability": "https://schema.org/InStock"
+                }
+              ]
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What is included in each plan?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Starter includes AI chatbot integration, basic automation, and email support. Professional adds advanced workflows, custom model training, 24/7 support, and API access. Enterprise includes unlimited interactions, a dedicated AI consultant, on-premise deployment, and SLA guarantees."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can I upgrade my plan later?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, you can upgrade your plan at any time. Your data and configurations will seamlessly transfer to the higher tier."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do you offer custom pricing for specific needs?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Absolutely. Book a free consultation call with our AI experts to discuss your specific requirements and get a tailored quote."
+                  }
+                }
+              ]
+            }
+          ]
+        }}
       />
       <Navigation />
 

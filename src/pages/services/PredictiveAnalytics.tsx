@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import InventorySimulator from "@/components/InventorySimulator";
+import RelatedServices from "@/components/RelatedServices";
 
 const PredictiveAnalytics = () => {
     useEffect(() => {
@@ -143,7 +144,7 @@ const PredictiveAnalytics = () => {
                     "data-driven decision making",
                     "trend analysis"
                 ]}
-                canonical="https://rootedai.com/services/predictive-analytics"
+                canonical="https://www.rootedai.co.in/services/predictive-analytics"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -153,7 +154,7 @@ const PredictiveAnalytics = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "Data-driven predictive analytics for demand forecasting, churn prediction, and risk assessment.",
                             "areaServed": "Global",
@@ -370,6 +371,7 @@ const PredictiveAnalytics = () => {
                     </div>
                 </section>
 
+                <RelatedServices currentPath="/services/predictive-analytics" />
                 <Footer />
             </div>
         </div>

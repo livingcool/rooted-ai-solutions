@@ -51,103 +51,12 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, [location]);
 
-  // Dynamic SEO based on current path
-  const getSeoData = () => {
-    const path = location.pathname;
-
-    if (path.includes("/about")) {
-      return {
-        title: "About Us - RootedAI",
-        description: "Learn about RootedAI's mission to simplify enterprise complexity through engineering intelligence and autonomous agents."
-      };
-    }
-    if (path.includes("/services/enterprise-security")) {
-      return {
-        title: "Enterprise Security Solutions | RootedAI Security & Compliance",
-        description: "Secure your enterprise with RootedAI's advanced security solutions. We ensure data privacy, compliance, and robust protection against cyber threats."
-      };
-    }
-    if (path.includes("/services/ai-agents")) {
-      return {
-        title: "AI Agents for Business | Autonomous Workflow Automation",
-        description: "Deploy autonomous AI agents to handle customer support, data analysis, and complex workflows. Reduce tickets by 60% with RootedAI."
-      };
-    }
-    if (path.includes("/services/process-automation")) {
-      return {
-        title: "Business Process Automation Services | Save 90% Manual Effort",
-        description: "End-to-end automation for logistics, finance, and operations. Automate invoice reconciliation and order updates with RootedAI."
-      };
-    }
-    if (path.includes("/services/web-solutions")) {
-      return {
-        title: "Custom Web App Development | AI-Integrated Web Solutions",
-        description: "Build dynamic, AI-powered web applications and dashboards. Get custom analytics and predictive insights integrated into your web platform."
-      };
-    }
-    if (path.includes("/services/nlp-systems")) {
-      return {
-        title: "NLP & Sentiment Analysis Services | Document Processing AI",
-        description: "Advanced Natural Language Processing for automated reporting and sentiment analysis. Process thousands of documents in minutes."
-      };
-    }
-    if (path.includes("/services/predictive-analytics")) {
-      return {
-        title: "Predictive Analytics Solutions | Forecast Trends & Demand",
-        description: "Optimize decision-making with data-driven insights. Forecast inventory demand and reduce wastage by 20-30% with RootedAI."
-      };
-    }
-    if (path.includes("/services/outsourcing")) {
-      return {
-        title: "IT Outsourcing Services | Hire Pre-Vetted Developers",
-        description: "Scale your team instantly with elite developers. Hire a full-stack team in 48 hours and save 60% on development costs."
-      };
-    }
-    if (path.includes("/services")) {
-      return {
-        title: "Our Services - RootedAI",
-        description: "From Process Automation to Predictive Analytics. Explore our comprehensive suite of AI solutions for scaling businesses."
-      };
-    }
-    if (path.includes("/case-studies")) {
-      return {
-        title: "Case Studies - RootedAI",
-        description: "See how we've helped SMEs and enterprises save millions and automate workflows. Real results, real data."
-      };
-    }
-    if (path.includes("/products")) {
-      return {
-        title: "Our Products - RootedAI",
-        description: "Discover our flagship AI products designed to streamline your operations and hiring processes."
-      };
-    }
-    if (path.includes("/careers")) {
-      return {
-        title: "Careers - Join RootedAI",
-        description: "Join the team building the future of autonomous work. View open positions and apply today."
-      };
-    }
-    if (path.includes("/contact")) {
-      return {
-        title: "Contact Us - RootedAI",
-        description: "Ready to scale? Get in touch with our team for a custom consultation or quote."
-      };
-    }
-
-    // Default Home
-    return {
-      title: "RootedAI - Engineering Intelligence | Top Software Solutions",
-      description: "RootedAI is the top software solutions provider, delivering Engineering Intelligence, AI agents, and enterprise automation. COMPLEXITY. SIMPLIFIED."
-    };
-  };
-
-  const seoData = getSeoData();
-
   return (
     <div className="min-h-screen">
       <Seo
-        title={seoData.title}
-        description={seoData.description}
+        title="RootedAI - Engineering Intelligence | Top Software Solutions"
+        description="RootedAI is the top software solutions provider, delivering Engineering Intelligence, AI agents, and enterprise automation. COMPLEXITY. SIMPLIFIED."
+        canonical="https://www.rootedai.co.in/"
         keywords={[
           "RootedAI",
           "Top Software Solutions Provider in Hosur",
@@ -181,9 +90,9 @@ const Index = () => {
               "@type": "ProfessionalService",
               "additionalType": "SoftwareHouse",
               "name": "RootedAI Solutions",
-              "url": "https://rootedai.com",
-              "logo": "https://rootedai.com/logo.png",
-              "image": "https://rootedai.com/og-image.png",
+              "url": "https://www.rootedai.co.in",
+              "logo": "https://www.rootedai.co.in/logo.png",
+              "image": "https://www.rootedai.co.in/og-image.png",
               "description": "RootedAI is the top software solutions provider in Hosur, specializing in AI automation, custom ERP, web apps, and enterprise software.",
               "slogan": "Engineering Intelligence. COMPLEXITY. SIMPLIFIED.",
               "priceRange": "$$",
@@ -228,10 +137,10 @@ const Index = () => {
             {
               "@type": "WebSite",
               "name": "RootedAI",
-              "url": "https://rootedai.com",
+              "url": "https://www.rootedai.co.in",
               "potentialAction": {
                 "@type": "SearchAction",
-                "target": "https://rootedai.com/?s={search_term_string}",
+                "target": "https://www.rootedai.co.in/?s={search_term_string}",
                 "query-input": "required name=search_term_string"
               }
             }

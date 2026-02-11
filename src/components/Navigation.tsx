@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
+import { Link } from "react-router-dom";
 
 
 const Navigation = () => {
@@ -39,24 +39,24 @@ const Navigation = () => {
         <div className={`w-full md:container mx-auto px-4 md:px-6 transition-all duration-300 ${!isScrolled ? "py-4" : "py-2"}`}>
           <div className="flex items-center justify-between relative">
             {/* Brand Name */}
-            <a href="/" className="flex items-center group relative z-50">
+            <Link to="/" className="flex items-center group relative z-50">
               <span className="text-2xl md:text-3xl font-bold font-heading tracking-[0.1em] text-white transition-all duration-300">
                 ROOTED<span className="font-light">AI</span>
               </span>
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full"></span>
-            </a>
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className="text-sm font-medium text-white/70 hover:text-white transition-colors relative group py-1"
                 >
                   {link.name}
                   <span className="absolute bottom-0 left-0 w-full h-[1px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
+                </Link>
               ))}
               <div className="flex items-center gap-4 pl-4 border-l border-white/10">
                 <ThemeToggle className="text-white hover:text-white/80 hover:bg-white/10" />
@@ -99,14 +99,14 @@ const Navigation = () => {
           </button>
           <div className="flex flex-col items-center space-y-8 p-8 w-full max-w-sm relative z-[101]">
             {navLinks.map((link, idx) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className="text-2xl font-light text-black dark:text-white hover:text-black/50 dark:hover:text-white/50 transition-colors tracking-wide"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
             <div className="pt-8 w-full">
               <Button
