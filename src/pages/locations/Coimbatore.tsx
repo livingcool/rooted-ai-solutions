@@ -8,18 +8,34 @@ import Contact from "@/components/Contact";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin, Factory, Settings, Globe } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const Coimbatore = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
+    const faqs = [
+        {
+            question: "Do you offer ERP solutions for textile industries in Coimbatore?",
+            answer: "Yes, we build custom ERPs specifically for the textile and spinning mill sectors in Coimbatore and Tirupur, covering inventory, production planning, and quality control."
+        },
+        {
+            question: "Can you help automate foundry operations?",
+            answer: "Our AI-driven manufacturing solutions are perfect for Coimbatore's foundry and engineering clusters, offering real-time production tracking and predictive maintenance."
+        },
+        {
+            question: "Are your developers available for on-site meetings in Coimbatore?",
+            answer: "Yes, our team frequently travels to Coimbatore for client consultations and implementation support. We ensure seamless communication and successful project delivery."
+        }
+    ];
+
     return (
         <div className="min-h-screen bg-background text-foreground selection:bg-primary/20">
             <Seo
                 title="Best Software Company in Coimbatore | Manufacturing & Textile ERP"
                 description="RootedAI delivers advanced ERP and AI automation solutions for Coimbatore's textile, foundry, and engineering industries. Scale with Engineering Intelligence."
-                canonical="https://www.rootedai.co.in/coimbatore"
+                canonical="https://www.rootedai.co.in/locations/coimbatore-ai-company"
                 keywords={[
                     "Software Company in Coimbatore",
                     "Textile ERP Coimbatore",
@@ -34,7 +50,7 @@ const Coimbatore = () => {
                     "@type": "LocalBusiness",
                     "name": "RootedAI - Coimbatore",
                     "image": "https://www.rootedai.co.in/og-image.png",
-                    "url": "https://www.rootedai.co.in/coimbatore",
+                    "url": "https://www.rootedai.co.in/locations/coimbatore-ai-company",
                     "telephone": "+91-917904168521",
                     "address": {
                         "@type": "PostalAddress",
@@ -47,7 +63,20 @@ const Coimbatore = () => {
                         "latitude": 11.0168,
                         "longitude": 76.9558
                     },
-                    "priceRange": "$$"
+                    "priceRange": "$$",
+                    "openingHoursSpecification": {
+                        "@type": "OpeningHoursSpecification",
+                        "dayOfWeek": [
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday"
+                        ],
+                        "opens": "09:00",
+                        "closes": "18:00"
+                    },
+                    "hasMap": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125322.44173160613!2d76.8848!3d11.0168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859af2f971cb5%3A0x2fc1c81e183ed282!2sCoimbatore%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1707761000000!5m2!1sen!2sin"
                 }}
             />
 
@@ -57,6 +86,9 @@ const Coimbatore = () => {
                 {/* Custom Hero for Coimbatore */}
                 <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5">
                     <div className="container mx-auto px-4 md:px-6 relative z-10">
+                        <div className="mb-8 flex justify-center">
+                            <Breadcrumbs />
+                        </div>
                         <div className="max-w-4xl mx-auto text-center space-y-8">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-500 text-sm font-medium animate-fade-down">
                                 <MapPin className="w-4 h-4" />
@@ -182,6 +214,50 @@ const Coimbatore = () => {
                                         </li>
                                     </ul>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Google Maps Embed */}
+                <section className="py-20 bg-black/5 dark:bg-white/5">
+                    <div className="container mx-auto px-4 md:px-6 text-center">
+                        <div className="mb-12">
+                            <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4">
+                                Serving the Manchester of South India
+                            </h2>
+                            <p className="text-muted-foreground max-w-2xl mx-auto">
+                                Providing software solutions across Coimbatore, Tirupur, and Erode.
+                            </p>
+                        </div>
+                        <div className="w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125322.44173160613!2d76.8848!3d11.0168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859af2f971cb5%3A0x2fc1c81e183ed282!2sCoimbatore%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1707761000000!5m2!1sen!2sin"
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0 }}
+                                allowFullScreen
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                            ></iframe>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Local FAQs */}
+                <section className="py-20">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="max-w-3xl mx-auto">
+                            <h2 className="text-3xl md:text-4xl font-bold font-heading text-center mb-12">
+                                Local FAQs for Coimbatore Enterprises
+                            </h2>
+                            <div className="space-y-8">
+                                {faqs.map((faq, index) => (
+                                    <div key={index} className="bw-card p-6 md:p-8 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+                                        <h3 className="text-xl font-bold mb-3">{faq.question}</h3>
+                                        <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>

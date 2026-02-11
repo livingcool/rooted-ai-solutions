@@ -2,34 +2,30 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import { AnimatePresence } from "framer-motion";
-import PageTransition from "@/components/PageTransition";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Navigation } from "@/components/layout/Navigation";
+import { Footer } from "@/components/layout/Footer";
+import { UnicornScene } from "@/components/animations/UnicornScene";
 import { Suspense, lazy } from "react";
-import ScrollToHash from "@/components/ScrollToHash";
-import CustomCursor from "@/components/ui/CustomCursor";
-import ScrollProgress from "@/components/ui/ScrollProgress";
-import GlobalBackground from "@/components/GlobalBackground";
 import { Preloader } from "@/components/Preloader";
-import SectionIndicator from "@/components/SectionIndicator";
 
 // Lazy Load Pages
 const Index = lazy(() => import("./pages/Index"));
-const Pricing = lazy(() => import("./pages/Pricing"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-const AdminHiringDashboard = lazy(() => import("./pages/AdminHiringDashboard"));
-const AdminPassSet = lazy(() => import("./pages/AdminPassSet"));
-const Login = lazy(() => import("./pages/Login"));
-const Interview = lazy(() => import("./pages/Interview"));
-const CandidateLogin = lazy(() => import("./pages/CandidateLogin"));
-const JobDetails = lazy(() => import("./pages/JobDetails"));
-const TechnicalAssessment = lazy(() => import("./pages/TechnicalAssessment"));
-const CandidateStatus = lazy(() => import("./pages/CandidateStatus"));
-const FinalInterviewLogin = lazy(() => import("./pages/FinalInterviewLogin"));
-const AIInterviewRoom = lazy(() => import("./pages/AIInterviewRoom"));
+const ServicesPage = lazy(() => import("./pages/ServicesPage"));
+const BlogListing = lazy(() => import("./pages/BlogListing"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const CaseStudies = lazy(() => import("./pages/CaseStudies"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const Locations = lazy(() => import("./pages/Locations"));
 
-// Service Pages
+// Locations
+const Hosur = lazy(() => import("./pages/locations/Hosur"));
+const Coimbatore = lazy(() => import("./pages/locations/Coimbatore"));
+const Bangalore = lazy(() => import("./pages/locations/Bangalore"));
+const Chennai = lazy(() => import("./pages/locations/Chennai"));
+
+// Service Detail Pages
 const AIAgents = lazy(() => import("./pages/services/AIAgents"));
 const ProcessAutomation = lazy(() => import("./pages/services/ProcessAutomation"));
 const WebSolutions = lazy(() => import("./pages/services/WebSolutions"));
@@ -38,97 +34,60 @@ const PredictiveAnalytics = lazy(() => import("./pages/services/PredictiveAnalyt
 const EnterpriseSecurity = lazy(() => import("./pages/services/EnterpriseSecurity"));
 const Outsourcing = lazy(() => import("./pages/services/Outsourcing"));
 
-// Blog
-const BlogListing = lazy(() => import("./pages/BlogListing"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
-const BlogAdmin = lazy(() => import("./pages/BlogAdmin"));
-const CaseStudies = lazy(() => import("./pages/CaseStudies"));
-const ServicesPage = lazy(() => import("./pages/ServicesPage"));
-
-// Locations
-const Hosur = lazy(() => import("./pages/locations/Hosur"));
-const Coimbatore = lazy(() => import("./pages/locations/Coimbatore"));
-
 const queryClient = new QueryClient();
-
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-    <div className="flex flex-col items-center gap-4">
-      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      <p className="text-muted-foreground animate-pulse">Loading RootedAI...</p>
-    </div>
-  </div>
-);
-
-const AnimatedRoutes = () => {
-  const location = useLocation();
-
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/blog" element={<PageTransition><BlogListing /></PageTransition>} />
-        <Route path="/blog/adminlogin" element={<PageTransition><BlogAdmin /></PageTransition>} />
-        <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
-        <Route path="/about" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/services" element={<PageTransition><ServicesPage /></PageTransition>} />
-        <Route path="/case-studies" element={<PageTransition><CaseStudies /></PageTransition>} />
-        <Route path="/products" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/careers" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/contact" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
-        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-        <Route path="/admin-hiring" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
-        <Route path="/:orgSlug/admin-pass-set" element={<PageTransition><AdminPassSet /></PageTransition>} />
-        <Route path="/:orgSlug" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
-        <Route path="/candidate-login" element={<PageTransition><CandidateLogin /></PageTransition>} />
-        <Route path="/assessment" element={<PageTransition><Interview /></PageTransition>} />
-        <Route path="/jobs/:id" element={<PageTransition><JobDetails /></PageTransition>} />
-        <Route path="/technical-assessment" element={<PageTransition><TechnicalAssessment /></PageTransition>} />
-        <Route path="/candidate-status" element={<PageTransition><CandidateStatus /></PageTransition>} />
-        <Route path="/final-login" element={<PageTransition><FinalInterviewLogin /></PageTransition>} />
-        <Route path="/final-interview" element={<PageTransition><AIInterviewRoom /></PageTransition>} />
-
-        {/* Service Detail Pages */}
-        <Route path="/services/ai-agents" element={<PageTransition><AIAgents /></PageTransition>} />
-        <Route path="/services/process-automation" element={<PageTransition><ProcessAutomation /></PageTransition>} />
-        <Route path="/services/web-solutions" element={<PageTransition><WebSolutions /></PageTransition>} />
-        <Route path="/services/nlp-systems" element={<PageTransition><NLPSystems /></PageTransition>} />
-        <Route path="/services/predictive-analytics" element={<PageTransition><PredictiveAnalytics /></PageTransition>} />
-        <Route path="/services/enterprise-security" element={<PageTransition><EnterpriseSecurity /></PageTransition>} />
-        <Route path="/services/outsourcing" element={<PageTransition><Outsourcing /></PageTransition>} />
-
-        {/* Location Pages */}
-        <Route path="/hosur" element={<PageTransition><Hosur /></PageTransition>} />
-        <Route path="/coimbatore" element={<PageTransition><Coimbatore /></PageTransition>} />
-
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
-      </Routes>
-    </AnimatePresence>
-  );
-};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <GlobalBackground />
-        <BrowserRouter>
-          <Preloader />
-          <CustomCursor />
-          <ScrollProgress />
-          <ScrollToHash />
-          <SectionIndicator />
-          <Suspense fallback={<LoadingFallback />}>
-            <AnimatedRoutes />
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <UnicornScene projectId="pqwKA5ssKODpjx3JdLPc" />
+        <Navigation />
+        <main className="min-h-screen">
+          <Suspense fallback={<Preloader />}>
+            <Routes>
+              {/* Core Pages */}
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<Index />} />
+              <Route path="/contact" element={<Index />} />
+              <Route path="/careers" element={<Index />} />
+
+              {/* Feature Pages */}
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/blog" element={<BlogListing />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/case-studies" element={<CaseStudies />} />
+              <Route path="/pricing" element={<Pricing />} />
+
+              {/* Service Details */}
+              <Route path="/services/ai-agents" element={<AIAgents />} />
+              <Route path="/services/process-automation" element={<ProcessAutomation />} />
+              <Route path="/services/web-solutions" element={<WebSolutions />} />
+              <Route path="/services/nlp-systems" element={<NLPSystems />} />
+              <Route path="/services/predictive-analytics" element={<PredictiveAnalytics />} />
+              <Route path="/services/enterprise-security" element={<EnterpriseSecurity />} />
+              <Route path="/services/outsourcing" element={<Outsourcing />} />
+
+              {/* Locations */}
+              <Route path="/locations" element={<Locations />} />
+              <Route path="/locations/hosur-ai-company" element={<Hosur />} />
+              <Route path="/locations/coimbatore-ai-company" element={<Coimbatore />} />
+              <Route path="/locations/bangalore" element={<Bangalore />} />
+              <Route path="/locations/chennai" element={<Chennai />} />
+
+              {/* Legacy Location Routes (Redirects or Alias) */}
+              <Route path="/hosur" element={<Hosur />} />
+              <Route path="/coimbatore" element={<Coimbatore />} />
+
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </Suspense>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider >
+        </main>
+        <Footer />
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
 );
 
 export default App;

@@ -8,18 +8,34 @@ import Contact from "@/components/Contact";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin, Factory, Cpu, History } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const Hosur = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
+    const faqs = [
+        {
+            question: "Do you provide on-site IT support in SIPCOT Hosur?",
+            answer: "Yes, our team is based locally and provides on-site IT consulting, software deployment, and maintenance for businesses in SIPCOT Phase I & II, Zuzuvadi, and surrounding industrial areas."
+        },
+        {
+            question: "What industries in Hosur do you serve?",
+            answer: "We specialize in manufacturing, automotive ancillaries, logistics, and engineering firms. Our ERP and AI solutions are tailored for Hosur's industrial ecosystem."
+        },
+        {
+            question: "Can you integrate AI with our existing legacy machines?",
+            answer: "Absolutely. We specialize in IoT and AI integration for legacy manufacturing setups, enabling predictive maintenance and real-time monitoring without replacing expensive machinery."
+        }
+    ];
+
     return (
         <div className="min-h-screen bg-background text-foreground selection:bg-primary/20">
             <Seo
                 title="Top Software Company in Hosur | Industrial Automation & AI"
                 description="RootedAI is the leading software and industrial automation provider in Hosur SIPCOT, delivering AI agents, ERP systems, and manufacturing intelligence."
-                canonical="https://www.rootedai.co.in/hosur"
+                canonical="https://www.rootedai.co.in/locations/hosur-ai-company"
                 keywords={[
                     "Software Company in Hosur",
                     "Industrial Automation Hosur",
@@ -34,7 +50,7 @@ const Hosur = () => {
                     "@type": "LocalBusiness",
                     "name": "RootedAI - Hosur",
                     "image": "https://www.rootedai.co.in/og-image.png",
-                    "url": "https://www.rootedai.co.in/hosur",
+                    "url": "https://www.rootedai.co.in/locations/hosur-ai-company",
                     "telephone": "+91-917904168521",
                     "address": {
                         "@type": "PostalAddress",
@@ -61,7 +77,8 @@ const Hosur = () => {
                         "opens": "09:00",
                         "closes": "18:00"
                     },
-                    "priceRange": "$$"
+                    "priceRange": "$$",
+                    "hasMap": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31107.576783935633!2d77.8073!3d12.7409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae7113e634bc3d%3A0x7052994c6328373!2sSIPCOT%20Industrial%20Complex%2C%20Hosur%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1707761000000!5m2!1sen!2sin"
                 }}
             />
 
@@ -71,6 +88,9 @@ const Hosur = () => {
                 {/* Custom Hero for Hosur */}
                 <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5">
                     <div className="container mx-auto px-4 md:px-6 relative z-10">
+                        <div className="mb-8 flex justify-center">
+                            <Breadcrumbs />
+                        </div>
                         <div className="max-w-4xl mx-auto text-center space-y-8">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium animate-fade-down">
                                 <MapPin className="w-4 h-4" />
@@ -200,6 +220,50 @@ const Hosur = () => {
                                     title="RootedAI Hosur Location"
                                     className="group-hover:filter-none transition-all duration-500"
                                 ></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Google Maps Embed */}
+                <section className="py-20 bg-black/5 dark:bg-white/5">
+                    <div className="container mx-auto px-4 md:px-6 text-center">
+                        <div className="mb-12">
+                            <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4">
+                                Located at the Heart of Hosur
+                            </h2>
+                            <p className="text-muted-foreground max-w-2xl mx-auto">
+                                Serving SIPCOT Phase I & II, Zuzuvadi, and the greater Krishnagiri district.
+                            </p>
+                        </div>
+                        <div className="w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31107.576783935633!2d77.8073!3d12.7409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae7113e634bc3d%3A0x7052994c6328373!2sSIPCOT%20Industrial%20Complex%2C%20Hosur%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1707761000000!5m2!1sen!2sin"
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0 }}
+                                allowFullScreen
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                            ></iframe>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Local FAQs */}
+                <section className="py-20">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="max-w-3xl mx-auto">
+                            <h2 className="text-3xl md:text-4xl font-bold font-heading text-center mb-12">
+                                Common Questions from Hosur Businesses
+                            </h2>
+                            <div className="space-y-8">
+                                {faqs.map((faq, index) => (
+                                    <div key={index} className="bw-card p-6 md:p-8 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+                                        <h3 className="text-xl font-bold mb-3">{faq.question}</h3>
+                                        <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>

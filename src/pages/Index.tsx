@@ -1,212 +1,77 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Navigation from "@/components/Navigation";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Services from "@/components/Services";
-import CaseStudies from "@/components/CaseStudies";
-import Products from "@/components/Products";
-import Careers from "@/components/Careers";
-import Contact from "@/components/Contact";
-
-import Footer from "@/components/Footer";
-import RootScrollHero from "@/components/RootScrollHero";
-import Team from "@/components/Team";
-import RevealOnScroll from "@/components/ui/RevealOnScroll";
-import TechStackMarquee from "@/components/TechStackMarquee";
 import Seo from "@/components/Seo";
+import { Hero } from "@/components/sections/Hero";
+
+// Placeholder components until full refactor
+const SectionPlaceholder = ({ title, id }: { title: string, id: string }) => (
+  <section id={id} className="min-h-[80vh] flex items-center justify-center border-t border-white/5 relative">
+    <div className="text-center">
+      <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40 mb-4">{title}</h2>
+      <p className="text-neutral-500">Section Refactoring in Progress...</p>
+    </div>
+  </section>
+);
 
 const Index = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Prevent browser from restoring scroll position automatically
+    // Scroll handling (kept from original)
     if (history.scrollRestoration) {
       history.scrollRestoration = "manual";
     }
 
     const scrollToSection = () => {
-      const path = location.pathname.replace(/^\//, ""); // Remove leading slash
+      const path = location.pathname.replace(/^\//, "");
       if (path && document.getElementById(path)) {
-        // Scroll to section matches path (e.g. /services -> id="services")
         const el = document.getElementById(path);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
-        }
+        if (el) el.scrollIntoView({ behavior: "smooth" });
       } else if (location.hash) {
-        // Fallback to hash if present
         const id = location.hash.replace("#", "");
         const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
-        }
+        if (el) el.scrollIntoView({ behavior: "smooth" });
       } else {
-        // Default to top if root
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     };
 
-    // Small delay to ensure DOM is ready
-    const timer = setTimeout(scrollToSection, 100);
-    return () => clearTimeout(timer);
+    setTimeout(scrollToSection, 100);
   }, [location]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-transparent relative">
       <Seo
         title="RootedAI - Engineering Intelligence | Top Software Solutions"
         description="RootedAI is the top software solutions provider, delivering Engineering Intelligence, AI agents, and enterprise automation. COMPLEXITY. SIMPLIFIED."
         canonical="https://www.rootedai.co.in/"
         keywords={[
           "RootedAI",
-          "Top Software Solutions Provider in Hosur",
-          "Software Company Hosur",
-          "automations",
-          "ai",
-          "software",
-          "website",
-          "web-app",
-          "application",
-          "erp",
-          "WhatsApp Automation",
-          "ai-powered-ticketing-system-for-logistics",
-          "ticketing-system",
-          "rhizoconnect",
-          "ai-powered-ticket-management-software",
           "Engineering Intelligence",
           "AI agents",
-          "hiring automation",
-          "logistics AI",
-          "process automation",
-          "enterprise AI solutions",
-          "generative AI services",
-          "custom LLM development",
-          "business intelligence"
+          "enterprise automation",
+          "logistics AI"
         ]}
         structuredData={{
           "@context": "https://schema.org",
           "@graph": [
             {
-              "@type": "ProfessionalService",
-              "additionalType": "SoftwareHouse",
-              "name": "RootedAI Solutions",
-              "url": "https://www.rootedai.co.in",
-              "logo": "https://www.rootedai.co.in/logo.png",
-              "image": "https://www.rootedai.co.in/og-image.png",
-              "description": "RootedAI is the top software solutions provider in Hosur, specializing in AI automation, custom ERP, web apps, and enterprise software.",
-              "slogan": "Engineering Intelligence. COMPLEXITY. SIMPLIFIED.",
-              "priceRange": "$$",
-              "foundingDate": "2023",
-              "founders": [
-                {
-                  "@type": "Person",
-                  "name": "RootedAI Team"
-                }
-              ],
-              "sameAs": [
-                "https://www.linkedin.com/company/rootedai",
-                "https://x.com/rootedai2025",
-                "https://www.instagram.com/rootedai_official/"
-              ],
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+91-917904168521",
-                "contactType": "sales",
-                "areaServed": "Global",
-                "availableLanguage": ["English", "Tamil", "Hindi"]
-              },
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Hosur",
-                "addressLocality": "Hosur",
-                "addressRegion": "Tamil Nadu",
-                "postalCode": "635109",
-                "addressCountry": "IN"
-              },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": 12.7409,
-                "longitude": 77.8253
-              },
-              "areaServed": {
-                "@type": "City",
-                "name": "Hosur"
-              },
-              "hasMap": "https://maps.google.com/?q=RootedAI+Hosur"
-            },
-            {
               "@type": "WebSite",
               "name": "RootedAI",
-              "url": "https://www.rootedai.co.in",
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": "https://www.rootedai.co.in/?s={search_term_string}",
-                "query-input": "required name=search_term_string"
-              }
+              "url": "https://www.rootedai.co.in"
             }
           ]
         }}
       />
-      <div className="relative z-10">
-        <Navigation />
 
-        {/* Replacing Custom Hero with Scrollytelling Hero */}
-        <div id="hero">
-          <RootScrollHero />
-        </div>
+      <Hero />
 
-        <RevealOnScroll delay={0.2}>
-          <TechStackMarquee />
-        </RevealOnScroll>
+      <SectionPlaceholder id="services" title="Services" />
+      <SectionPlaceholder id="tech" title="Technology" />
+      <SectionPlaceholder id="projects" title="Showcase" />
+      <SectionPlaceholder id="about" title="Company" />
+      <SectionPlaceholder id="contact" title="Contact" />
 
-        <div id="about">
-          <RevealOnScroll>
-            <About />
-          </RevealOnScroll>
-        </div>
-
-        <div id="services">
-          <RevealOnScroll>
-            <Services />
-          </RevealOnScroll>
-        </div>
-
-
-
-        <div id="case-studies">
-          <RevealOnScroll>
-            <CaseStudies />
-          </RevealOnScroll>
-        </div>
-
-        <div id="products">
-          <RevealOnScroll>
-            <Products />
-          </RevealOnScroll>
-        </div>
-
-        <div id="careers">
-          <RevealOnScroll>
-            <Careers />
-          </RevealOnScroll>
-        </div>
-
-        <div id="contact">
-          <RevealOnScroll>
-            <Contact />
-          </RevealOnScroll>
-        </div>
-
-        <div id="team">
-          <RevealOnScroll>
-            <Team />
-          </RevealOnScroll>
-        </div>
-
-        <RevealOnScroll>
-          <Footer />
-        </RevealOnScroll>
-      </div>
     </div>
   );
 };
