@@ -63,6 +63,19 @@ const HeroBackground = () => {
             update() {
                 const dx = mouse.x - this.x;
                 const dy = mouse.y - this.y;
+                // Quick check for mouse interaction distance
+                if (Math.abs(dx) > 300 || Math.abs(dy) > 300) {
+                    if (this.x !== this.baseX) {
+                        const dx = this.x - this.baseX;
+                        this.x -= dx / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        const dy = this.y - this.baseY;
+                        this.y -= dy / 10;
+                    }
+                    return;
+                }
+
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 const forceDirectionX = dx / distance;
                 const forceDirectionY = dy / distance;
@@ -92,7 +105,9 @@ const HeroBackground = () => {
         const initParticles = () => {
             particles = [];
             // Create a grid of particles
-            const spacing = 40; // Space between dots
+            const isMobile = window.innerWidth < 768;
+            const spacing = isMobile ? 60 : 40; // Increased spacing on mobile for fewer particles
+
             for (let y = 0; y < canvas.height; y += spacing) {
                 for (let x = 0; x < canvas.width; x += spacing) {
                     particles.push(new Particle(x, y));
@@ -106,6 +121,10 @@ const HeroBackground = () => {
                 for (let b = a; b < particles.length; b++) {
                     const dx = particles[a].x - particles[b].x;
                     const dy = particles[a].y - particles[b].y;
+
+                    // Quick check - significantly improves performance by avoiding sqrt and further calcs
+                    if (Math.abs(dx) > 60 || Math.abs(dy) > 60) continue;
+
                     const distance = dx * dx + dy * dy; // optimization (squared distance)
 
                     if (distance < 3600) { // 60 * 60 = 3600 (connection distance)

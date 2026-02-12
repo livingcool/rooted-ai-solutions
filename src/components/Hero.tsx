@@ -24,7 +24,7 @@ const Hero = () => {
         {/* Main Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-8xl font-bold font-heading text-black dark:text-white tracking-tight leading-tight flex flex-row items-center justify-center gap-x-2 md:gap-x-4 mb-16">
           <span className="shrink-0">Engineering</span>
-          <span className="relative inline-block text-left min-w-[fit-content]">
+          <span className="relative inline-block text-left min-w-[320px] md:min-w-[500px]"> {/* Fixed width container to prevent layout shift */}
             <AnimatePresence mode="wait">
               <motion.span
                 key={words[index]}

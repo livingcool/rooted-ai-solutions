@@ -8,11 +8,7 @@ import PageTransition from "@/components/PageTransition";
 import { Suspense, lazy } from "react";
 import ScrollToHash from "@/components/ScrollToHash";
 import ScrollProgress from "@/components/ui/ScrollProgress";
-import GlobalBackground from "@/components/GlobalBackground";
-
 import SectionIndicator from "@/components/SectionIndicator";
-
-// Lazy Load Pages
 const Index = lazy(() => import("./pages/Index"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -124,7 +120,6 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <GlobalBackground />
         <BrowserRouter>
 
 
