@@ -77,8 +77,8 @@
     --popover: #0a0a0a;
     --popover-foreground: oklch(0.98 0 0);
 
-    --primary: oklch(0.65 0.2 200);
-    /* Electric Cyan/Blue - Technical Accent */
+    --primary: oklch(0.92 0.01 240);
+    /* Premium Silver/White - Technical Accent */
     --primary-foreground: #050505;
 
     --secondary: oklch(0.2 0.02 240);
@@ -154,20 +154,100 @@
     overflow: hidden;
   }
 
-  /* Premium Glass Effect */
-  .glass-premium {
-    @apply bg-white/10 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  /* Premium Glass Effect - Liquid Metal Style */
+  .text-gradient-silver {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gray-600 via-gray-900 to-black dark:from-gray-100 dark:via-gray-300 dark:to-gray-500;
   }
 
-  /* Minimalist Utilities */
+  .glass-premium {
+    @apply bg-white/5 dark:bg-black/20 backdrop-blur-3xl border-t border-l border-white/20 dark:border-white/10 shadow-none dark:shadow-2xl;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    background-image:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dark .glass-premium {
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.3),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  /* Liquid Metal Gloss Overlay */
+  .glass-premium::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.05) 40%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.05) 60%,
+        transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+    pointer-events: none;
+  }
+
+  .glass-premium:hover::before {
+    transform: translateX(100%);
+    transition: transform 0.8s;
+  }
+
+  /* Minimalist Utilities with Liquid Metal Twist */
   .bw-card {
-    @apply bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl transition-all duration-500 hover:border-black/20 dark:hover:border-white/20 hover:bg-white/80 dark:hover:bg-black/80 shadow-sm hover:shadow-xl hover:-translate-y-1;
-    background-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+    @apply relative overflow-hidden rounded-2xl transition-all duration-500 shadow-none;
+    background: rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .bw-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+
+  .bw-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    padding: 1px;
+    background: linear-gradient(145deg,
+        rgba(255, 255, 255, 0.4),
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.05));
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .bw-card:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px);
+    @apply shadow-none;
+  }
+
+  .dark .bw-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow:
+      0 12px 40px 0 rgba(0, 0, 0, 0.45),
+      0 0 20px rgba(255, 255, 255, 0.1);
+    /* Glow */
   }
 
   .bw-button {
-    @apply relative overflow-hidden bg-black dark:bg-white text-white dark:text-black transition-all duration-300 px-8 py-3 rounded-full hover:scale-105 active:scale-95 font-medium tracking-wide;
+    @apply relative overflow-hidden bg-black dark:bg-white text-white dark:text-black transition-all duration-300 px-8 py-3 rounded-full hover:scale-105 active:scale-95 font-medium tracking-wide shadow-none;
+  }
+
+  .dark .bw-button {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
 
@@ -294,9 +374,7 @@
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.06),
-      0 1px 4px rgba(0, 0, 0, 0.04);
+    box-shadow: none;
   }
 
   .dark .spotlight-nav {
@@ -318,5 +396,74 @@
     100% {
       transform: translateX(-100%);
     }
+  }
+
+  .logo-slider {
+    position: relative;
+    padding: 2rem 0;
+  }
+
+  .logo-slider__container {
+    mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    overflow: hidden;
+  }
+
+  .logo-slider__track {
+    display: flex;
+    white-space: nowrap;
+    animation: logo-slide 40s linear infinite;
+  }
+
+  .logo-slider:hover .logo-slider__track {
+    animation-play-state: paused;
+  }
+
+  .logo-slider__item {
+    flex: 0 0 auto;
+    width: 200px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem;
+  }
+
+  .logo-slider__item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: grayscale(1) opacity(0.5);
+    transition: all 0.3s;
+  }
+
+  .logo-slider__item:hover img {
+    filter: grayscale(0) opacity(1);
+  }
+
+  /* ===== Glow Border Card ===== */
+  @keyframes glow-conic-spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .glow-conic {
+    position: absolute;
+    background: conic-gradient(from 0deg,
+        var(--glow-color-1, #669900),
+        var(--glow-color-2, #88bb22),
+        var(--glow-color-3, #99cc33),
+        var(--glow-color-4, #aaddaa),
+        var(--glow-color-5, #ccee66),
+        var(--glow-color-6, #006699),
+        var(--glow-color-7, #228888),
+        var(--glow-color-8, #3399cc),
+        var(--glow-color-9, #55aacc),
+        var(--glow-color-10, #669900));
+    animation: glow-conic-spin var(--glow-animation-duration, 4s) linear infinite;
   }
 }

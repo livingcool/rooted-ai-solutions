@@ -1,121 +1,159 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+"use client";
 
-interface Item {
-    id: number;
+import React, { useState, useMemo, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
+interface TestimonialItem {
+    id: string | number;
     title: string;
     description: string;
     image: string;
-    role?: string;
 }
 
 interface TestimonialsCardProps {
-    items: Item[];
-    onChange?: (index: number) => void;
+    items: TestimonialItem[];
     className?: string;
+    width?: number;
+    showNavigation?: boolean;
+    showCounter?: boolean;
+    autoPlay?: boolean;
+    autoPlayInterval?: number;
+    onChange?: (index: number) => void;
 }
 
-export const TestimonialsCard = ({ items, onChange, className }: TestimonialsCardProps) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
+export function TestimonialsCard({
+    items,
+    className,
+    width = 400,
+    showNavigation = true,
+    showCounter = true,
+    autoPlay = false,
+    autoPlayInterval = 3000,
+    onChange,
+}: TestimonialsCardProps) {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [direction, setDirection] = useState(1);
+    const activeItem = items[activeIndex];
+
+    // Notify parent of index changes
+    useEffect(() => {
+        onChange?.(activeIndex);
+    }, [activeIndex, onChange]);
+
+    useEffect(() => {
+        if (!autoPlay || items.length <= 1) return;
+        const interval = setInterval(() => {
+            setDirection(1);
+            setActiveIndex((prev) => (prev + 1) % items.length);
+        }, autoPlayInterval);
+        return () => clearInterval(interval);
+    }, [autoPlay, autoPlayInterval, items.length]);
 
     const handleNext = () => {
-        setCurrentIndex((prev) => {
-            const newIndex = (prev + 1) % items.length;
-            onChange?.(newIndex);
-            return newIndex;
-        });
+        if (activeIndex < items.length - 1) {
+            setDirection(1);
+            setActiveIndex(activeIndex + 1);
+        }
     };
 
     const handlePrev = () => {
-        setCurrentIndex((prev) => {
-            const newIndex = (prev - 1 + items.length) % items.length;
-            onChange?.(newIndex);
-            return newIndex;
-        });
+        if (activeIndex > 0) {
+            setDirection(-1);
+            setActiveIndex(activeIndex - 1);
+        }
     };
 
-    useEffect(() => {
-        // Notify parent of initial index
-        onChange?.(currentIndex);
-    }, []);
+    const rotations = useMemo(() => [4, -2, -9, 7], []);
 
     if (!items || items.length === 0) return null;
 
-    const currentItem = items[currentIndex];
-
     return (
-        <div className={cn("relative w-full max-w-4xl mx-auto px-4", className)}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white dark:bg-neutral-900/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-800 rounded-3xl p-6 md:p-12 shadow-xl">
+        <div className={cn("flex items-center justify-center p-8", className)}>
+            <div
+                className="relative grid grid-cols-1 md:grid-cols-[1fr_1fr] grid-rows-[auto_auto_auto] gap-x-8 gap-y-2 w-full"
+                style={{ perspective: "1400px", maxWidth: `${width}px` }}
+            >
+                {showCounter && (
+                    <div className="col-start-1 md:col-start-2 row-start-1 text-right font-mono text-sm text-neutral-500">
+                        {activeIndex + 1} / {items.length}
+                    </div>
+                )}
 
-                {/* Left: Image */}
-                <div className="relative h-64 md:h-80 w-full rounded-2xl overflow-hidden shadow-lg bg-neutral-100 dark:bg-neutral-800">
-                    <AnimatePresence mode="wait">
-                        <motion.img
-                            key={currentItem.id} // Re-render image on change
-                            src={currentItem.image}
-                            alt={currentItem.title}
-                            initial={{ opacity: 0, scale: 1.1 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }} // Fade out slightly smaller
-                            transition={{ duration: 0.5 }}
-                            className="absolute inset-0 w-full h-full object-cover object-center"
-                            onError={(e) => {
-                                // Fallback for missing images
-                                e.currentTarget.style.display = 'none';
-                                e.currentTarget.parentElement?.classList.add('fallback-active');
-                            }}
-                        />
-                        {/* Fallback Initial */}
-                        <div className={`absolute inset-0 flex items-center justify-center bg-neutral-200 dark:bg-neutral-800 text-4xl font-bold text-neutral-400 dark:text-neutral-600 -z-10`}>
-                            {currentItem.title.charAt(0)}
-                        </div>
+                <div className="col-start-1 row-start-1 md:row-span-3 relative w-full aspect-square mb-6 md:mb-0">
+                    <AnimatePresence custom={direction}>
+                        {items.map((item, index) => {
+                            const isActive = index === activeIndex;
+                            const offset = index - activeIndex;
+                            return (
+                                <motion.div
+                                    key={item.id}
+                                    className="absolute inset-0 w-full h-full overflow-hidden border-[6px] bg-neutral-200 dark:bg-neutral-800 border-white dark:border-neutral-700 shadow-2xl rounded-lg"
+                                    initial={{
+                                        x: offset * 15, y: Math.abs(offset) * 6,
+                                        z: -150 * Math.abs(offset),
+                                        scale: 0.85 - Math.abs(offset) * 0.04,
+                                        rotateZ: rotations[index % 4],
+                                        opacity: isActive ? 1 : 0.5,
+                                        zIndex: 10 - Math.abs(offset),
+                                    }}
+                                    animate={isActive ? {
+                                        x: [offset * 15, direction === 1 ? -200 : 200, 0],
+                                        y: [Math.abs(offset) * 6, 0, 0],
+                                        z: [-200, 150, 250],
+                                        scale: [0.85, 1.05, 1],
+                                        rotateZ: [rotations[index % 4], -5, 0],
+                                        opacity: 1, zIndex: 100,
+                                    } : {
+                                        x: offset * 15, y: Math.abs(offset) * 6,
+                                        z: -150 * Math.abs(offset),
+                                        rotateZ: rotations[index % 4],
+                                        scale: 0.85 - Math.abs(offset) * 0.04,
+                                        opacity: 0.55, zIndex: 10 - Math.abs(offset),
+                                    }}
+                                    transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                                >
+                                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                                </motion.div>
+                            );
+                        })}
                     </AnimatePresence>
                 </div>
 
-                {/* Right: Content */}
-                <div className="flex flex-col justify-center space-y-6">
+                <div className="col-start-1 md:col-start-2 row-start-2 flex flex-col justify-center min-h-[120px]">
                     <AnimatePresence mode="wait">
-                        <motion.div
-                            key={currentIndex}
-                            initial={{ opacity: 0, y: 20 }}
+                        <motion.div key={activeItem.id}
+                            initial={{ opacity: 0, y: 25 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.3 }}
-                            className="space-y-4"
+                            exit={{ opacity: 0, y: -25 }}
+                            transition={{ duration: 0.35 }}
                         >
-                            <h3 className="text-3xl md:text-4xl font-bold text-black dark:text-white font-heading">
-                                {currentItem.title}
-                            </h3>
-                            {currentItem.role && (
-                                <p className="text-sm font-medium text-primary uppercase tracking-wider">
-                                    {currentItem.role}
-                                </p>
-                            )}
-                            <p className="text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed font-light">
-                                "{currentItem.description}"
-                            </p>
+                            <h3 className="text-xl font-bold text-black dark:text-white">{activeItem.title}</h3>
+                            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-2">{activeItem.description}</p>
                         </motion.div>
                     </AnimatePresence>
+                </div>
 
-                    {/* Navigation Controls */}
-                    <div className="flex items-center gap-4 pt-4">
-                        <button
-                            onClick={handlePrev}
-                            className="p-3 rounded-full bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-black dark:text-white transition-colors"
-                        >
-                            <ArrowLeft size={20} />
+                {showNavigation && items.length > 1 && (
+                    <div className="col-start-1 md:col-start-2 row-start-3 flex gap-2 mt-4">
+                        <button disabled={activeIndex === 0} onClick={handlePrev}
+                            className={cn("flex items-center justify-center w-10 h-10 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-all",
+                                activeIndex === 0 ? "opacity-30 cursor-not-allowed" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:scale-105"
+                            )}>
+                            <ArrowLeft className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                         </button>
-                        <button
-                            onClick={handleNext}
-                            className="p-3 rounded-full bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-black transition-colors"
-                        >
-                            <ArrowRight size={20} />
+                        <button disabled={activeIndex === items.length - 1} onClick={handleNext}
+                            className={cn("flex items-center justify-center w-10 h-10 rounded-full border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 transition-all",
+                                activeIndex === items.length - 1 ? "opacity-30 cursor-not-allowed" : "hover:bg-neutral-100 dark:hover:bg-neutral-700 hover:scale-105"
+                            )}>
+                            <ArrowRight className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
                         </button>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );
-};
+}
+
+export default TestimonialsCard;

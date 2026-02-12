@@ -108,7 +108,7 @@ const Products = () => {
                     {products.map((product, index) => (
                         <div key={index} className="space-y-8">
                             {/* Main Product Card */}
-                            <TiltCard className="bw-card p-4 md:p-6 group hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                            <TiltCard className="glass-premium p-4 md:p-6 group transition-all duration-500">
                                 <div className="grid lg:grid-cols-2 gap-6 items-center">
                                     {/* Left: Product Info */}
                                     <div className="space-y-4">
@@ -235,7 +235,7 @@ const Products = () => {
                 </div>
 
                 <div className="mt-16 text-center">
-                    <div className="bw-card p-8 md:p-12 max-w-3xl mx-auto bg-gradient-to-b from-black/5 to-transparent dark:from-white/5">
+                    <div className="glass-premium p-8 md:p-12 max-w-3xl mx-auto">
                         <h3 className="text-2xl md:text-3xl font-bold text-black dark:text-white mb-4">
                             Want to build your own AI-powered solution?
                         </h3>

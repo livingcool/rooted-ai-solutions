@@ -6,7 +6,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import GlobalBackground from "@/components/GlobalBackground";
 import PageTransition from "@/components/PageTransition";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
+import RevealLoader from "@/components/ui/RevealLoader";
 import ScrollToHash from "@/components/ScrollToHash";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import SectionIndicator from "@/components/SectionIndicator";
@@ -115,26 +116,53 @@ const AnimatedRoutes = () => {
   );
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
-      <TooltipProvider>
-        <GlobalBackground />
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+const App = () => {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      // Show preloader ONLY on home page and ONLY once per session
+      const path = window.location.pathname;
+      const isHome = path === "/" || path === "/index.html" || path.endsWith("/rooted-ai-solutions/");
+      const hasSeenLoader = sessionStorage.getItem("rooted-loader-shown");
+
+      if (isHome && !hasSeenLoader) {
+        setLoading(true);
+        sessionStorage.setItem("rooted-loader-shown", "true");
+      }
+    } catch (e) {
+      console.warn("Session storage not available:", e);
+    }
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
+        <TooltipProvider>
+          {loading && (
+            <RevealLoader
+              text="ROOTED AI"
+              bgColors={["#000000"]}
+              onComplete={() => setLoading(false)}
+            />
+          )}
+          <GlobalBackground paused={loading} />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
 
 
-          <ScrollProgress />
-          <ScrollToHash />
-          <SectionIndicator />
-          <Suspense fallback={<LoadingFallback />}>
-            <AnimatedRoutes />
-          </Suspense>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider >
-);
+            <ScrollProgress />
+            <ScrollToHash />
+            <SectionIndicator />
+            <Suspense fallback={<LoadingFallback />}>
+              <AnimatedRoutes />
+            </Suspense>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider >
+  );
+};
 
 export default App;

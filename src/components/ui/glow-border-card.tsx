@@ -1,84 +1,93 @@
-import React from "react";
-import { cn } from "@/lib/utils";
+'use client';
 
-type ColorPreset = "aurora" | "blue" | "danger" | "success";
+import React from 'react';
+import { cn } from '@/lib/utils';
 
-interface GlowBorderCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface GlowBorderCardProps extends React.HTMLAttributes<HTMLDivElement> {
+    children?: React.ReactNode;
     width?: string;
     height?: string;
-    aspectRatio?: string | number;
-    colorPreset?: ColorPreset;
+    aspectRatio?: string;
+    borderRadius?: string;
     animationDuration?: number;
-    borderWidth?: number;
-    children?: React.ReactNode;
+    gradientColors?: string[];
+    borderWidth?: string;
+    blurAmount?: string;
+    inset?: string;
+    colorPreset?: 'nature' | 'ocean' | 'sunset' | 'aurora' | 'custom';
+    paused?: boolean;
 }
 
-const presets = {
-    aurora: "from-white via-slate-200 to-neutral-400", // Changed to metallic/silver
-    blue: "from-cyan-400 via-blue-500 to-indigo-600",
-    danger: "from-red-400 via-orange-500 to-yellow-600",
-    success: "from-green-400 via-emerald-500 to-teal-600",
-} as const;
+const colorPresets: Record<string, string[]> = {
+    nature: ['#669900', '#88bb22', '#99cc33', '#aaddaa', '#ccee66', '#006699', '#228888', '#3399cc', '#55aacc', '#669900'],
+    ocean: ['#006699', '#1177aa', '#2288bb', '#3399cc', '#44aadd', '#55bbee', '#66ccff', '#44bbee', '#2299cc', '#006699'],
+    sunset: ['#ff6600', '#ff7711', '#ff8822', '#ff9900', '#ffaa22', '#ffbb44', '#ffcc00', '#ff9933', '#ff7722', '#ff6600'],
+    aurora: ['#00ff87', '#22ffaa', '#44ffcc', '#60efff', '#88ddff', '#bb99ff', '#dd77ee', '#ff68f0', '#ff55cc', '#00ff87'],
+    custom: ['#669900', '#99cc33', '#ccee66', '#006699', '#3399cc', '#990066', '#cc3399', '#ff6600', '#ff9900', '#ffcc00'],
+};
 
-export function GlowBorderCard({
-    width = "100%",
-    height = "100%",
-    aspectRatio,
-    colorPreset = "aurora",
-    animationDuration = 4,
-    borderWidth = 2,
-    className,
-    children,
-    ...props
-}: GlowBorderCardProps) {
-    return (
-        <div
-            className={cn("relative group rounded-xl overflow-hidden bg-white dark:bg-black", className)}
-            style={{
-                width,
-                height,
-                aspectRatio: aspectRatio ? String(aspectRatio) : undefined,
-            }}
-            {...props}
-        >
-            {/* Animated Border Gradient */}
+export const GlowBorderCard = React.forwardRef<HTMLDivElement, GlowBorderCardProps>(
+    (
+        {
+            children,
+            className,
+            width = '320px',
+            height,
+            aspectRatio = '1',
+            borderRadius = '0.75rem',
+            animationDuration = 4,
+            gradientColors,
+            borderWidth = '1.25em',
+            blurAmount = '0.75em',
+            inset = '-1em',
+            colorPreset = 'custom',
+            paused = false,
+            style,
+            ...props
+        },
+        ref
+    ) => {
+        const colors = gradientColors || colorPresets[colorPreset] || colorPresets.custom;
+
+        const colorVars: Record<string, string> = {};
+        for (let i = 0; i < 10; i++) {
+            colorVars[`--glow-color-${i + 1}`] = colors[i % colors.length];
+        }
+
+        return (
             <div
-                className="absolute inset-0 z-0 overflow-hidden"
-                style={{ margin: -borderWidth }}
+                ref={ref}
+                className={cn(
+                    "relative overflow-hidden grid place-content-center isolate",
+                    "bg-zinc-50/50 dark:bg-neutral-900/60 backdrop-blur-md",
+                    className
+                )}
+                style={{
+                    width,
+                    height: height || 'auto',
+                    aspectRatio: height ? 'unset' : aspectRatio,
+                    borderRadius,
+                    '--glow-animation-duration': `${animationDuration}s`,
+                    ...colorVars,
+                    ...style,
+                } as React.CSSProperties}
+                {...props}
             >
                 <div
                     className={cn(
-                        "absolute inset-[-100%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_340deg,white_360deg)] opacity-0 group-hover:opacity-100 transition-opacity duration-500",
-                        // We use a conic gradient mask or similar technique usually, but for a simple "glow border" 
-                        // typically we rotate a conic gradient behind.
-                        // Let's us a simple rotating gradient approach.
+                        "absolute -z-10 border-solid rounded-[inherit] glow-conic",
+                        paused && "[animation-play-state:paused]"
                     )}
-                    style={{
-                        animationDuration: `${animationDuration}s`,
-                        background: `conic-gradient(from 0deg at 50% 50%, transparent 0deg, transparent 270deg, var(--glow-color) 360deg)`
-                    }}
+                    style={{ inset, borderWidth, filter: `blur(${blurAmount})` }}
                 />
-                {/* Using a simpler approach: A rotating gradient blob behind */}
-                <div
-                    className={cn(
-                        "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-gradient-to-r skew-y-12 animate-[spin_4s_linear_infinite] opacity-100",
-                        presets[colorPreset]
-                    )}
-                    style={{
-                        animationDuration: `${animationDuration}s`,
-                    }}
-                />
-            </div>
-
-            {/* Inner Content Mask */}
-            <div
-                className="relative z-10 h-full w-full bg-white dark:bg-black rounded-[inherit]"
-                style={{ margin: borderWidth }}
-            >
-                <div className="h-full w-full rounded-[inherit] overflow-hidden">
+                <div className="relative z-10 w-full h-full bg-transparent flex items-center justify-center p-4">
                     {children}
                 </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
+);
+
+GlowBorderCard.displayName = 'GlowBorderCard';
+
+export default GlowBorderCard;

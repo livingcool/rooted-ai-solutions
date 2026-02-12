@@ -71,7 +71,7 @@ const CaseStudies = () => {
             {caseStudies.map((study, index) => (
               <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
                 <div className="h-full">
-                  <TiltCard className="bw-card h-full p-6 md:p-8 flex flex-col justify-between group hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-500">
+                  <TiltCard className="glass-premium h-full p-6 md:p-8 flex flex-col justify-between group transition-colors duration-500">
                     <div className="space-y-6">
                       {/* Tags */}
                       <div className="flex flex-wrap gap-2">
@@ -152,7 +152,7 @@ const CaseStudies = () => {
 
         {/* CTA Section */}
         <div className="mt-16 text-center">
-          <div className="bw-card p-8 md:p-12 max-w-3xl mx-auto bg-gradient-to-b from-black/5 to-transparent dark:from-white/5">
+          <div className="glass-premium p-8 md:p-12 max-w-3xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-bold text-black dark:text-white mb-4">
               See if we can automate your process in 7 days
             </h3>

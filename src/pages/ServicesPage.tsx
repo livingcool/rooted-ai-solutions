@@ -174,13 +174,13 @@ const ServicesPage = () => {
                 <section className="px-4 md:px-8 max-w-7xl mx-auto text-center py-16 md:py-24 relative">
                     <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-3xl pointer-events-none" />
                     <div className="relative z-10">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-sm font-medium mb-8">
-                            <Sparkles className="w-4 h-4" />
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 dark:bg-white/5 text-black/80 dark:text-white/80 border border-black/10 dark:border-white/10 text-sm font-medium mb-8 backdrop-blur-sm">
+                            <Sparkles className="w-4 h-4 text-amber-500" />
                             <span>7 Specialized AI Services</span>
                         </div>
                         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
                             AI Solutions for the <br />
-                            <span className="text-primary">Modern Enterprise</span>
+                            <span className="text-gradient-silver">Modern Enterprise</span>
                         </h1>
                         <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
                             From autonomous agents to predictive analytics, we build the intelligent infrastructure

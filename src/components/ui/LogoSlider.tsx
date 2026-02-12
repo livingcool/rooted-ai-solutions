@@ -1,55 +1,75 @@
-import React from "react";
+"use client";
+
+import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export interface LogoSliderProps {
     logos: React.ReactNode[];
     speed?: number;
     direction?: "left" | "right";
+    showBlur?: boolean;
+    blurLayers?: number;
+    blurIntensity?: number;
     className?: string;
+    pauseOnHover?: boolean;
 }
 
-export function LogoSlider({
+export const LogoSlider = ({
     logos,
     speed = 60,
     direction = "left",
+    showBlur = true,
+    blurLayers = 8,
+    blurIntensity = 1,
     className,
-}: LogoSliderProps) {
-    // Duration = total width / speed. We approximate total width ~ logos.length * 120px per logo
-    // The CSS animation uses percentage-based translateX, so duration just controls pace.
-    const duration = Math.max(10, (logos.length * 120) / speed);
-
+    pauseOnHover = false,
+}: LogoSliderProps) => {
     return (
         <div
-            className={cn(
-                "relative flex items-center overflow-hidden h-20",
-                className
-            )}
+            className={cn("logo-slider w-full overflow-hidden", className)}
+            style={{
+                "--speed": speed,
+                "--count": logos.length,
+                "--blurs": blurLayers,
+                "--blur": blurIntensity,
+            } as React.CSSProperties}
         >
-            {/* Edge fade gradients */}
-            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white dark:from-[#050505] to-transparent z-20 pointer-events-none" />
-            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white dark:from-[#050505] to-transparent z-20 pointer-events-none" />
-
-            {/* Scrolling track — 3 copies for seamless loop */}
-            {[0, 1, 2].map((copyIndex) => (
-                <div
-                    key={copyIndex}
-                    className="flex shrink-0 items-center gap-12 px-6"
-                    style={{
-                        animation: `logo-slide ${duration}s linear infinite`,
-                        animationDirection: direction === "right" ? "reverse" : "normal",
-                    }}
-                    aria-hidden={copyIndex > 0}
-                >
-                    {logos.map((logo, idx) => (
-                        <div
-                            key={`${copyIndex}-${idx}`}
-                            className="flex items-center justify-center p-2 transition-transform duration-300 hover:scale-110 cursor-pointer shrink-0"
+            <div
+                className={cn("logo-slider__container", "relative w-full min-h-[80px] grid")}
+                data-direction={direction}
+                data-pause-on-hover={pauseOnHover}
+            >
+                {showBlur && (
+                    <div className="logo-slider__blur logo-slider__blur--left absolute top-0 bottom-0 left-0 w-1/4 z-10 pointer-events-none rotate-180">
+                        {Array.from({ length: blurLayers }).map((_, i) => (
+                            <div key={i} className="absolute inset-0" style={{ "--blur-index": i } as React.CSSProperties} />
+                        ))}
+                    </div>
+                )}
+                {showBlur && (
+                    <div className="logo-slider__blur logo-slider__blur--right absolute top-0 bottom-0 right-0 w-1/4 z-10 pointer-events-none">
+                        {Array.from({ length: blurLayers }).map((_, i) => (
+                            <div key={i} className="absolute inset-0" style={{ "--blur-index": i } as React.CSSProperties} />
+                        ))}
+                    </div>
+                )}
+                <ul className="logo-slider__track flex items-center h-full w-fit m-0 p-0 list-none">
+                    {logos.map((logo, index) => (
+                        <li
+                            key={index}
+                            className="logo-slider__item h-4/5 w-[120px] sm:w-[140px] lg:w-[160px] aspect-video grid place-items-center shrink-0"
+                            style={{ "--item-index": index } as React.CSSProperties}
                         >
-                            {logo}
-                        </div>
+                            <div className="w-full h-full flex items-center justify-center [&>svg]:h-[65%] [&>svg]:w-auto [&>svg]:fill-zinc-800 dark:[&>svg]:fill-zinc-200 [&>img]:h-[65%] [&>img]:w-auto [&>img]:object-contain [&>img]:grayscale [&>img]:brightness-50 dark:[&>img]:brightness-125">
+                                {logo}
+                            </div>
+                        </li>
                     ))}
-                </div>
-            ))}
+                </ul>
+            </div>
         </div>
     );
-}
+};
+
+LogoSlider.displayName = "LogoSlider";
+export default LogoSlider;

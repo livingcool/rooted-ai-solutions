@@ -88,7 +88,7 @@ const Services = () => {
             {services.map((service, index) => (
               <CarouselItem key={index} className="pl-4 md:pl-6 md:basis-1/2 lg:basis-1/3">
                 <div className="p-1 h-full animate-fade-up" style={{ animationDelay: `${index * 100}ms` }}>
-                  <TiltCard className="glass-premium h-full p-8 md:p-10 group hover:bg-white/40 dark:hover:bg-black/40 transition-all duration-500 flex flex-col rounded-3xl border border-white/20 dark:border-white/10">
+                  <TiltCard className="glass-premium h-full p-8 md:p-10 group transition-all duration-500 flex flex-col rounded-3xl">
                     <div className="mb-8 inline-flex items-center justify-center p-4 rounded-2xl bg-black/5 dark:bg-white/5 group-hover:bg-black/10 dark:group-hover:bg-white/10 transition-colors w-fit shadow-inner">
                       <service.icon className="w-8 h-8 text-black dark:text-white" />
                     </div>
