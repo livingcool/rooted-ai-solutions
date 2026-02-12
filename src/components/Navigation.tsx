@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SpotlightNavbar } from "@/components/ui/SpotlightNavbar";
 import type { NavItem } from "@/components/ui/SpotlightNavbar";
+import BottomNavigation from "@/components/BottomNavigation";
 
 
 const Navigation = () => {
@@ -105,15 +106,10 @@ const Navigation = () => {
               </Button>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Header Controls */}
             <div className="md:hidden flex items-center gap-4 relative z-50">
               <ThemeToggle />
-              <button
-                className="text-black dark:text-white p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
+              {/* Hamburger moved to Bottom Bar */}
             </div>
           </div>
         </div>
@@ -151,12 +147,6 @@ const Navigation = () => {
             </a>
             <div className="flex items-center gap-4">
               <ThemeToggle />
-              <button
-                className="text-black dark:text-white p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                <Menu size={24} />
-              </button>
             </div>
           </div>
         </div>
@@ -199,6 +189,9 @@ const Navigation = () => {
         </div>,
         document.body
       )}
+
+      {/* ===== BOTTOM NAVIGATION (Mobile Only) ===== */}
+      <BottomNavigation onMenuClick={() => setIsMobileMenuOpen(true)} />
     </>
   );
 };

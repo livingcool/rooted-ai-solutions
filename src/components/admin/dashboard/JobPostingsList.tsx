@@ -22,7 +22,7 @@ export const JobPostingsList = ({
     return (
         <div className="grid gap-4">
             {jobs.map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10">
+                <div key={job.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10 gap-4 md:gap-0">
                     <div>
                         <h4 className="font-bold text-lg">{job.title}</h4>
                         <div className="flex gap-2 mt-1">
@@ -35,11 +35,10 @@ export const JobPostingsList = ({
                             )}
                         </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 w-full md:w-auto mt-2 md:mt-0">
                         <Button
                             variant="outline"
-                            size="sm"
-                            className="border-white/10 hover:bg-white/10"
+                            className="border-white/10 hover:bg-white/10 h-11 md:h-9 flex-1 md:flex-none"
                             onClick={() => {
                                 setEditingJob(job);
                                 setNewJob({
@@ -58,8 +57,7 @@ export const JobPostingsList = ({
                         </Button>
                         <Button
                             variant="ghost"
-                            size="sm"
-                            className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                            className="text-red-400 hover:bg-red-500/10 hover:text-red-300 h-11 md:h-9 flex-1 md:flex-none"
                             onClick={() => handleCloseJob(job.id)}
                             disabled={!job.is_active}
                         >
@@ -67,8 +65,7 @@ export const JobPostingsList = ({
                         </Button>
                         <Button
                             variant="ghost"
-                            size="sm"
-                            className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                            className="text-red-400 hover:bg-red-500/10 hover:text-red-300 h-11 md:h-9 flex-1 md:flex-none"
                             onClick={() => handleDeleteJob(job.id)}
                         >
                             Delete
