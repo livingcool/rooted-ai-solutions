@@ -1,55 +1,74 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const CustomCursor = () => {
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isHovering, setIsHovering] = useState(false);
+    const cursorRef = useRef<HTMLDivElement>(null);
+    const trailerRef = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(false);
+    const [isHovering, setIsHovering] = useState(false);
 
     useEffect(() => {
-        const updatePosition = (e: MouseEvent) => {
-            setPosition({ x: e.clientX, y: e.clientY });
+        const cursor = cursorRef.current;
+        const trailer = trailerRef.current;
+
+        if (!cursor || !trailer) return;
+
+        const onMouseMove = (e: MouseEvent) => {
             if (!isVisible) setIsVisible(true);
+
+            // Direct DOM manipulation for performance
+            cursor.style.transform = `translate(${e.clientX - 8}px, ${e.clientY - 8}px) scale(${isHovering ? 1.5 : 1})`;
+            trailer.style.transform = `translate(${e.clientX - 16}px, ${e.clientY - 16}px) scale(${isHovering ? 2 : 1})`;
         };
 
-        const handleMouseEnter = () => setIsHovering(true);
-        const handleMouseLeave = () => setIsHovering(false);
+        const onMouseEnter = () => setIsHovering(true);
+        const onMouseLeave = () => setIsHovering(false);
 
-        window.addEventListener("mousemove", updatePosition);
+        window.addEventListener("mousemove", onMouseMove);
 
         // Add hover listeners to interactive elements
-        const interactiveElements = document.querySelectorAll("a, button, input, textarea, select, [role='button']");
-        interactiveElements.forEach((el) => {
-            el.addEventListener("mouseenter", handleMouseEnter);
-            el.addEventListener("mouseleave", handleMouseLeave);
-        });
+        const addListeners = () => {
+            const interactiveElements = document.querySelectorAll("a, button, input, textarea, select, [role='button']");
+            interactiveElements.forEach((el) => {
+                el.addEventListener("mouseenter", onMouseEnter);
+                el.addEventListener("mouseleave", onMouseLeave);
+            });
+            return interactiveElements; // Return for cleanup
+        };
+
+        let interactiveEls = addListeners();
 
         // MutationObserver to handle dynamically added elements
         const observer = new MutationObserver((mutations) => {
+            let shouldUpdate = false;
             mutations.forEach((mutation) => {
                 if (mutation.addedNodes.length) {
-                    const newInteractiveElements = document.querySelectorAll("a, button, input, textarea, select, [role='button']");
-                    newInteractiveElements.forEach((el) => {
-                        el.removeEventListener("mouseenter", handleMouseEnter);
-                        el.removeEventListener("mouseleave", handleMouseLeave);
-                        el.addEventListener("mouseenter", handleMouseEnter);
-                        el.addEventListener("mouseleave", handleMouseLeave);
-                    });
+                    shouldUpdate = true;
                 }
             });
+
+            if (shouldUpdate) {
+                // Clean up old listeners on previously found elements isn't strictly necessary 
+                // if we just re-query and re-bind, but to be clean/efficient:
+                interactiveEls.forEach(el => {
+                    el.removeEventListener("mouseenter", onMouseEnter);
+                    el.removeEventListener("mouseleave", onMouseLeave);
+                });
+                interactiveEls = addListeners();
+            }
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
 
         return () => {
-            window.removeEventListener("mousemove", updatePosition);
-            interactiveElements.forEach((el) => {
-                el.removeEventListener("mouseenter", handleMouseEnter);
-                el.removeEventListener("mouseleave", handleMouseLeave);
+            window.removeEventListener("mousemove", onMouseMove);
+            interactiveEls.forEach((el) => {
+                el.removeEventListener("mouseenter", onMouseEnter);
+                el.removeEventListener("mouseleave", onMouseLeave);
             });
             observer.disconnect();
         };
-    }, [isVisible]);
+    }, [isVisible, isHovering]);
 
     if (typeof window === "undefined") return null;
 
@@ -57,26 +76,24 @@ const CustomCursor = () => {
         <>
             {/* Main Dot */}
             <div
+                ref={cursorRef}
                 className={cn(
-                    "fixed top-0 left-0 z-[9999] w-4 h-4 rounded-full bg-primary pointer-events-none mix-blend-difference transition-transform duration-100 ease-out hidden md:block",
-                    isHovering ? "scale-150" : "scale-100",
+                    "fixed top-0 left-0 z-[9999] w-4 h-4 rounded-full bg-primary pointer-events-none mix-blend-difference transition-opacity duration-300 ease-out hidden md:block",
                     !isVisible && "opacity-0"
                 )}
-                style={{
-                    transform: `translate(${position.x - 8}px, ${position.y - 8}px) scale(${isHovering ? 1.5 : 1})`,
-                }}
+                // Initial style to avoid jumping if possible, though mostly handled by JS
+                style={{ transform: 'translate(-100px, -100px)' }}
             />
 
             {/* Trailing Glow */}
             <div
+                ref={trailerRef}
                 className={cn(
-                    "fixed top-0 left-0 z-[9998] w-8 h-8 rounded-full border border-primary/50 pointer-events-none transition-all duration-300 ease-out hidden md:block",
-                    isHovering ? "scale-150 bg-primary/10 border-primary" : "scale-100",
+                    "fixed top-0 left-0 z-[9998] w-8 h-8 rounded-full border border-primary/50 pointer-events-none transition-[opacity,background-color,border-color] duration-300 ease-out hidden md:block",
+                    isHovering ? "bg-primary/10 border-primary" : "",
                     !isVisible && "opacity-0"
                 )}
-                style={{
-                    transform: `translate(${position.x - 16}px, ${position.y - 16}px) scale(${isHovering ? 2 : 1})`,
-                }}
+                style={{ transform: 'translate(-100px, -100px)' }}
             />
         </>
     );

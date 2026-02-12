@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import PageTransition from "@/components/PageTransition";
 import { Suspense, lazy } from "react";
 import ScrollToHash from "@/components/ScrollToHash";
-import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import GlobalBackground from "@/components/GlobalBackground";
 
@@ -128,7 +127,7 @@ const App = () => (
         <GlobalBackground />
         <BrowserRouter>
 
-          <CustomCursor />
+
           <ScrollProgress />
           <ScrollToHash />
           <SectionIndicator />

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { motion, type HTMLMotionProps } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -9,12 +10,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-white text-black hover:bg-neutral-200 dark:bg-white dark:text-black dark:hover:bg-neutral-200 shadow-sm", // Changed to White/Black
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        glow: "relative overflow-hidden bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)] transition-shadow duration-300 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-neutral-400/20 before:to-transparent before:-translate-x-full hover:before:animate-[shimmer_1.5s_infinite] dark:bg-white dark:text-black", // Changed to White Glow / Silver Shimmer
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -30,16 +32,33 @@ const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-}
+// Define motion button props type
+type MotionButtonProps = HTMLMotionProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  };
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement, MotionButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+    // If asChild is true, we render Slot (no motion props passed to it to avoid conflicts with child)
+    // If you want standard buttons to animate, you generally don't use asChild
+    const Comp = (asChild ? Slot : motion.button) as any;
+
+    // Animation props only applied if NOT using asChild
+    const motionProps = !asChild ? {
+      whileHover: { scale: 1.05 },
+      whileTap: { scale: 0.95 },
+      transition: { type: "spring", stiffness: 400, damping: 10 }
+    } : {};
+
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...motionProps}
+        {...props}
+      />
+    );
   },
 );
 Button.displayName = "Button";

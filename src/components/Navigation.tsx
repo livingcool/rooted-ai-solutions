@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,16 +8,37 @@ import type { NavItem } from "@/components/ui/SpotlightNavbar";
 
 
 const Navigation = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Scroll tracking
+  const [isInHero, setIsInHero] = useState(true);       // true when in the hero section (top of page)
+  const [scrollingUp, setScrollingUp] = useState(false); // true when user is scrolling up
+  const lastScrollY = useRef(0);
+
   useEffect(() => {
+    const HERO_HEIGHT = window.innerHeight; // hero is roughly 1 viewport height
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const currentY = window.scrollY;
+      const goingUp = currentY < lastScrollY.current;
+
+      setIsInHero(currentY < HERO_HEIGHT * 0.5); // within top half of hero
+      setScrollingUp(goingUp && currentY > 80);    // scrolling up & past a small threshold
+
+      lastScrollY.current = currentY;
     };
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Decide visibility states
+  // Full bar (logo + nav + CTA): only in hero section
+  // Nav-only pill: when scrolling up (outside hero)
+  // Hidden: when scrolling down past hero
+  const showFullBar = isInHero;
+  const showNavOnly = !isInHero && scrollingUp;
+  const isHidden = !showFullBar && !showNavOnly;
 
   const navLinks = [
     { name: "About", href: "/about" },
@@ -46,14 +67,14 @@ const Navigation = () => {
 
   return (
     <>
+      {/* ===== FULL NAV BAR (hero only) ===== */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-[120] transition-all duration-500 flex flex-col ${isScrolled
-          ? "bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-white/20 dark:border-white/5 shadow-md"
-          : "bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-[120] transition-all duration-500 flex flex-col bg-transparent ${showFullBar
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 -translate-y-full pointer-events-none"
           }`}
       >
-
-        <div className={`w-full md:container mx-auto px-4 md:px-6 ${!isScrolled ? "py-4" : "py-2"}`}>
+        <div className="w-full md:container mx-auto px-4 md:px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Brand Name */}
             <a href="/" className="flex items-center group relative z-50">
@@ -76,7 +97,8 @@ const Navigation = () => {
             <div className="hidden md:flex items-center gap-4">
               <ThemeToggle />
               <Button
-                className="bw-button text-xs md:text-sm px-6"
+                variant="glow"
+                className="text-xs md:text-sm px-6"
                 onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
               >
                 Get Started
@@ -95,9 +117,50 @@ const Navigation = () => {
             </div>
           </div>
         </div>
-
-
       </nav>
+
+      {/* ===== NAV-ONLY PILL (scroll-up, outside hero) ===== */}
+      <div
+        className={`fixed top-4 left-0 right-0 z-[120] hidden md:flex justify-center transition-all duration-400 ${showNavOnly
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 -translate-y-8 pointer-events-none"
+          }`}
+      >
+        <SpotlightNavbar
+          items={spotlightItems}
+          defaultActiveIndex={defaultActiveIndex}
+          onItemClick={handleNavItemClick}
+        />
+      </div>
+
+      {/* ===== MOBILE: sticky floating bar that shows on scroll-up ===== */}
+      <div
+        className={`fixed top-0 left-0 right-0 z-[120] md:hidden transition-all duration-400 ${showNavOnly
+          ? "opacity-100 translate-y-0"
+          : isHidden
+            ? "opacity-0 -translate-y-full pointer-events-none"
+            : "opacity-0 -translate-y-full pointer-events-none"
+          }`}
+      >
+        <div className="bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-white/20 dark:border-white/5 shadow-md px-4 py-2">
+          <div className="flex items-center justify-between">
+            <a href="/" className="flex items-center">
+              <span className="text-xl font-bold font-heading tracking-[0.1em] text-black dark:text-white">
+                ROOTED<span className="font-light">AI</span>
+              </span>
+            </a>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <button
+                className="text-black dark:text-white p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                <Menu size={24} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && createPortal(

@@ -1,15 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import { useLocation } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Services from "@/components/Services";
-import CaseStudies from "@/components/CaseStudies";
-import Products from "@/components/Products";
-import Careers from "@/components/Careers";
-import Contact from "@/components/Contact";
+// Lazy load non-critical sections
+const About = lazy(() => import("@/components/About"));
+const Services = lazy(() => import("@/components/Services"));
+const CaseStudies = lazy(() => import("@/components/CaseStudies"));
+const Products = lazy(() => import("@/components/Products"));
+const Careers = lazy(() => import("@/components/Careers"));
+const Contact = lazy(() => import("@/components/Contact"));
+const Team = lazy(() => import("@/components/Team"));
+const Footer = lazy(() => import("@/components/Footer"));
 
-import Footer from "@/components/Footer";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import TechStackMarquee from "@/components/TechStackMarquee";
 import Seo from "@/components/Seo";
@@ -261,46 +263,67 @@ const Index = () => {
           <TechStackMarquee />
         </RevealOnScroll>
 
+
         <div id="about">
           <RevealOnScroll>
-            <About />
+            <Suspense fallback={<div className="min-h-[50vh]" />}>
+              <About />
+            </Suspense>
           </RevealOnScroll>
         </div>
 
         <div id="services">
           <RevealOnScroll>
-            <Services />
+            <Suspense fallback={<div className="min-h-[50vh]" />}>
+              <Services />
+            </Suspense>
           </RevealOnScroll>
         </div>
 
-
-
         <div id="case-studies">
           <RevealOnScroll>
-            <CaseStudies />
+            <Suspense fallback={<div className="min-h-[50vh]" />}>
+              <CaseStudies />
+            </Suspense>
           </RevealOnScroll>
         </div>
 
         <div id="products">
           <RevealOnScroll>
-            <Products />
+            <Suspense fallback={<div className="min-h-[50vh]" />}>
+              <Products />
+            </Suspense>
           </RevealOnScroll>
         </div>
 
         <div id="careers">
           <RevealOnScroll>
-            <Careers />
+            <Suspense fallback={<div className="min-h-[50vh]" />}>
+              <Careers />
+            </Suspense>
+          </RevealOnScroll>
+        </div>
+
+        <div id="team">
+          <RevealOnScroll>
+            <Suspense fallback={<div className="min-h-[50vh]" />}>
+              <Team />
+            </Suspense>
           </RevealOnScroll>
         </div>
 
         <div id="contact">
           <RevealOnScroll>
-            <Contact />
+            <Suspense fallback={<div className="min-h-[50vh]" />}>
+              <Contact />
+            </Suspense>
           </RevealOnScroll>
         </div>
 
         <RevealOnScroll>
-          <Footer />
+          <Suspense fallback={<div className="h-20" />}>
+            <Footer />
+          </Suspense>
         </RevealOnScroll>
       </div>
     </div>
