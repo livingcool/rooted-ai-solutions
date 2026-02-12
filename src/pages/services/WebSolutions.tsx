@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import WebProjectEstimator from "@/components/WebProjectEstimator";
-import RelatedServices from "@/components/RelatedServices";
 
 const WebSolutions = () => {
     useEffect(() => {
@@ -112,7 +111,7 @@ const WebSolutions = () => {
                     "enterprise web portals",
                     "full-stack development"
                 ]}
-                canonical="https://www.rootedai.co.in/services/web-solutions"
+                canonical="https://rootedai.com/services/web-solutions"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -122,7 +121,7 @@ const WebSolutions = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://www.rootedai.co.in"
+                                "url": "https://rootedai.com"
                             },
                             "description": "Custom web development with AI integration. Scalable web apps, dashboards, and PWAs.",
                             "areaServed": "Global",
@@ -321,7 +320,6 @@ const WebSolutions = () => {
                     </div>
                 </section>
 
-                <RelatedServices currentPath="/services/web-solutions" />
                 <Footer />
             </div>
         </div>

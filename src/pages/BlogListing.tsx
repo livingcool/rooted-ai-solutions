@@ -38,20 +38,7 @@ const BlogListing = () => {
             <Seo
                 title="RootedAI Insights - Blog"
                 description="Expert insights on AI scaling, automation strategies, and the future of work."
-                canonical="https://www.rootedai.co.in/blog"
                 keywords={["AI Blog", "Automation Insights", "Business Scaling", "Tech Blog"]}
-                structuredData={{
-                    "@context": "https://schema.org",
-                    "@type": "CollectionPage",
-                    "name": "RootedAI Blog - AI & Automation Insights",
-                    "description": "Expert insights on AI scaling, automation strategies, and the future of work.",
-                    "url": "https://www.rootedai.co.in/blog",
-                    "publisher": {
-                        "@type": "Organization",
-                        "name": "RootedAI Solutions",
-                        "url": "https://www.rootedai.co.in"
-                    }
-                }}
             />
             <div className="relative z-10">
                 <Navigation />
@@ -89,7 +76,6 @@ const BlogListing = () => {
                                                 <img
                                                     src={post.cover_image || "/og-image.png"}
                                                     alt={post.title}
-                                                    loading="lazy"
                                                     className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                                                 />
                                                 <div className="absolute top-4 left-4 bg-black/80 dark:bg-white/80 text-white dark:text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">

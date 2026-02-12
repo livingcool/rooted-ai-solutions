@@ -1,4 +1,4 @@
-import { Twitter, Linkedin, Instagram, ArrowUp, Phone, Mail, MapPin } from "lucide-react";
+import { Twitter, Linkedin, Instagram, ArrowUp, Phone, Mail, MapPin, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -95,11 +95,7 @@ const Footer = () => {
                             <li><Link to="/services/ai-agents" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">AI Agents</Link></li>
                             <li><Link to="/services/process-automation" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Automation</Link></li>
                             <li><Link to="/services/predictive-analytics" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Analytics</Link></li>
-                            <li><Link to="/services/web-solutions" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Web Solutions</Link></li>
-                            <li><Link to="/services/nlp-systems" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">NLP Systems</Link></li>
-                            <li><Link to="/services/enterprise-security" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Security</Link></li>
-                            <li><Link to="/services/outsourcing" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Outsourcing</Link></li>
-                            <li><Link to="/case-studies" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Case Studies</Link></li>
+                            <li><a href="/#case-studies" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Case Studies</a></li>
                         </ul>
                     </div>
                 </div>
@@ -109,6 +105,26 @@ const Footer = () => {
                         © {new Date().getFullYear()} RootedAI Solutions. All rights reserved. <br className="hidden md:inline" />
                         Helping businesses save 40% on ops cost through AI automation.
                     </p>
+
+                    {/* GoodFirms Recognition */}
+                    <a
+                        href="https://www.goodfirms.co/company/rootedai"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all group"
+                    >
+                        <span className="flex items-center gap-0.5 text-[#FFD700]">
+                            <Star className="w-3 h-3 fill-current" />
+                            <Star className="w-3 h-3 fill-current" />
+                            <Star className="w-3 h-3 fill-current" />
+                            <Star className="w-3 h-3 fill-current" />
+                            <Star className="w-3 h-3 fill-current" />
+                        </span>
+                        <span className="text-xs text-black/50 dark:text-white/50 group-hover:text-black dark:group-hover:text-white transition-colors font-medium">
+                            Recognized on <span className="font-bold">GoodFirms</span>
+                        </span>
+                    </a>
+
                     <Button
                         variant="ghost"
                         size="icon"

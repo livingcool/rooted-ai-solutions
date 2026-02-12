@@ -13,19 +13,6 @@ const CaseStudies = () => {
                 title="AI Case Studies | RootedAI - Global Success Stories"
                 description="Explore how RootedAI empowers manufacturing in Asia and logistics in the Middle East with cutting-edge AI automation."
                 keywords={["AI case studies", "manufacturing AI Asia", "logistics automation Middle East", "supply chain AI Singapore", "predictive maintenance Dubai"]}
-                canonical="https://www.rootedai.co.in/case-studies"
-                structuredData={{
-                    "@context": "https://schema.org",
-                    "@type": "CollectionPage",
-                    "name": "AI Case Studies - RootedAI",
-                    "description": "Real-world AI automation success stories from manufacturing in Asia and logistics in the Middle East.",
-                    "url": "https://www.rootedai.co.in/case-studies",
-                    "publisher": {
-                        "@type": "Organization",
-                        "name": "RootedAI Solutions",
-                        "url": "https://www.rootedai.co.in"
-                    }
-                }}
             />
             <Navigation />
 

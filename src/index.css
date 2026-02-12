@@ -3,58 +3,286 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --background: 0 0% 100%;
-        --foreground: 222.2 84% 4.9%;
-        --card: 0 0% 100%;
-        --card-foreground: 222.2 84% 4.9%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 222.2 84% 4.9%;
-        --primary: 222.2 47.4% 11.2%;
-        --primary-foreground: 210 40% 98%;
-        --secondary: 210 40% 96.1%;
-        --secondary-foreground: 222.2 47.4% 11.2%;
-        --muted: 210 40% 96.1%;
-        --muted-foreground: 215.4 16.3% 46.9%;
-        --accent: 210 40% 96.1%;
-        --accent-foreground: 222.2 47.4% 11.2%;
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 210 40% 98%;
-        --border: 214.3 31.8% 91.4%;
-        --input: 214.3 31.8% 91.4%;
-        --ring: 222.2 84% 4.9%;
-        --radius: 0.5rem;
-    }
+  :root {
+    /* --- Font Mappings --- */
+    --font-sans: "Inter", sans-serif;
+    --font-heading: "Outfit", sans-serif;
+    --font-mono: "Geist Mono", monospace;
 
-    .dark {
-        --background: 222.2 84% 4.9%;
-        --foreground: 210 40% 98%;
-        --card: 222.2 84% 4.9%;
-        --card-foreground: 210 40% 98%;
-        --popover: 222.2 84% 4.9%;
-        --popover-foreground: 210 40% 98%;
-        --primary: 210 40% 98%;
-        --primary-foreground: 222.2 47.4% 11.2%;
-        --secondary: 217.2 32.6% 17.5%;
-        --secondary-foreground: 210 40% 98%;
-        --muted: 217.2 32.6% 17.5%;
-        --muted-foreground: 215 20.2% 65.1%;
-        --accent: 217.2 32.6% 17.5%;
-        --accent-foreground: 210 40% 98%;
-        --destructive: 0 62.8% 30.6%;
-        --destructive-foreground: 210 40% 98%;
-        --border: 217.2 32.6% 17.5%;
-        --input: 217.2 32.6% 17.5%;
-        --ring: 212.7 26.8% 83.9%;
-    }
+    /* --- Color Variables (Light Mode - Clean Technical) --- */
+    --background: oklch(0.99 0 0);
+    /* Pure white/off-white */
+    --foreground: oklch(0.15 0.02 240);
+    /* Deep navy tint black */
+
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.15 0.02 240);
+
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.15 0.02 240);
+
+    --primary: oklch(0.15 0.02 240);
+    --primary-foreground: oklch(1 0 0);
+
+    --secondary: oklch(0.96 0.01 240);
+    --secondary-foreground: oklch(0.15 0.02 240);
+
+    --muted: oklch(0.96 0.01 240);
+    --muted-foreground: oklch(0.5 0.02 240);
+
+    --accent: oklch(0.96 0.01 240);
+    --accent-foreground: oklch(0.15 0.02 240);
+
+    --destructive: oklch(0.6 0.25 25);
+    --destructive-foreground: oklch(0.98 0 0);
+
+    --border: oklch(0.92 0.01 240);
+    --input: oklch(0.92 0.01 240);
+    --ring: oklch(0.15 0.02 240);
+
+    /* --- Charts --- */
+    --chart-1: oklch(0.65 0.25 25);
+    --chart-2: oklch(0.6 0.2 60);
+    --chart-3: oklch(0.5 0.2 100);
+    --chart-4: oklch(0.4 0.2 200);
+    --chart-5: oklch(0.4 0.2 280);
+
+    --radius: 0.5rem;
+
+    /* --- Sidebar --- */
+    --sidebar: oklch(0.98 0 0);
+    --sidebar-foreground: oklch(0.2 0 0);
+    --sidebar-primary: oklch(0.15 0.02 240);
+    --sidebar-primary-foreground: oklch(0.98 0 0);
+    --sidebar-accent: oklch(0.96 0 0);
+    --sidebar-accent-foreground: oklch(0.15 0.02 240);
+    --sidebar-border: oklch(0.92 0.01 240);
+    --sidebar-ring: oklch(0.8 0 0);
+
+    /* --- Font Definitions --- */
+    --font-geist-mono: "Geist Mono", monospace;
+  }
+
+  .dark {
+    /* --- Color Variables (Dark Mode - Deep Technical) --- */
+    --background: #050505;
+    /* Deep Technical Black */
+    --foreground: oklch(0.98 0 0);
+    /* Near White */
+
+    --card: oklch(0.12 0.01 240 / 0.4);
+    /* Glassy Card */
+    --card-foreground: oklch(0.98 0 0);
+
+    --popover: #0a0a0a;
+    --popover-foreground: oklch(0.98 0 0);
+
+    --primary: oklch(0.65 0.2 200);
+    /* Electric Cyan/Blue - Technical Accent */
+    --primary-foreground: #050505;
+
+    --secondary: oklch(0.2 0.02 240);
+    --secondary-foreground: oklch(0.98 0 0);
+
+    --muted: oklch(0.2 0.02 240);
+    --muted-foreground: oklch(0.7 0.02 240);
+
+    --accent: oklch(0.65 0.2 200);
+    /* Matching primary for consistency */
+    --accent-foreground: #050505;
+
+    --destructive: oklch(0.6 0.25 15);
+    --destructive-foreground: oklch(1 0 0);
+
+    --border: oklch(0.25 0.02 240 / 0.4);
+    --input: oklch(0.25 0.02 240 / 0.4);
+    --ring: oklch(0.65 0.2 200 / 0.5);
+
+    --chart-1: oklch(0.65 0.2 200);
+    --chart-2: oklch(0.7 0.15 160);
+    --chart-3: oklch(0.7 0.15 280);
+    --chart-4: oklch(0.7 0.15 320);
+    --chart-5: oklch(0.7 0.15 30);
+
+    --sidebar: #050505;
+    --sidebar-foreground: oklch(0.98 0 0);
+    --sidebar-primary: oklch(0.65 0.2 200);
+    --sidebar-primary-foreground: #050505;
+    --sidebar-accent: oklch(0.2 0.02 240);
+    --sidebar-accent-foreground: oklch(0.98 0 0);
+    --sidebar-border: oklch(0.25 0.02 240 / 0.4);
+    --sidebar-ring: oklch(0.65 0.2 200 / 0.5);
+  }
 }
 
 @layer base {
-    * {
-        @apply border-border;
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased selection:bg-white selection:text-black;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    /* Using font-heading (Outfit) for headings */
+    @apply font-heading tracking-tight font-bold;
+  }
+}
+
+@layer components {
+
+  /* Global Enhancements */
+  html.lenis {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  /* Premium Glass Effect */
+  .glass-premium {
+    @apply bg-white/10 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  }
+
+  /* Minimalist Utilities */
+  .bw-card {
+    @apply bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-black/5 dark:border-white/10 rounded-2xl transition-all duration-500 hover:border-black/20 dark:hover:border-white/20 hover:bg-white/80 dark:hover:bg-black/80 shadow-sm hover:shadow-xl hover:-translate-y-1;
+    background-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  }
+
+  .bw-button {
+    @apply relative overflow-hidden bg-black dark:bg-white text-white dark:text-black transition-all duration-300 px-8 py-3 rounded-full hover:scale-105 active:scale-95 font-medium tracking-wide;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .bw-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+    transform: skewX(-25deg);
+  }
+
+  .bw-button:hover::before {
+    left: 100%;
+  }
+
+  .dark .bw-button {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+  }
+
+
+  /* Animations */
+  .animate-fade-up {
+    animation: fadeUp 0.8s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .hover-underline-animation {
+    display: inline-block;
+    position: relative;
+  }
+
+  .hover-underline-animation::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: currentColor;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+  }
+
+  .hover-underline-animation:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Voice Wave Animation */
+  @keyframes voice-wave {
+
+    0%,
+    100% {
+      height: 20%;
     }
 
-    body {
-        @apply bg-background text-foreground;
+    50% {
+      height: 100%;
     }
+  }
+
+  .animate-voice-wave {
+    animation: voice-wave 1s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  /* 3D Perspective and Rotation Utilities */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .rotate-y-0 {
+    transform: rotateY(0deg);
+  }
+
+  .rotate-y-90 {
+    transform: rotateY(90deg);
+  }
+
+  @keyframes rotateY {
+    from {
+      transform: rotateY(0deg);
+    }
+
+    to {
+      transform: rotateY(360deg);
+    }
+  }
+
+  .animate-rotate-y {
+    animation: rotateY 1s ease-in-out;
+  }
 }
