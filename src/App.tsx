@@ -11,7 +11,6 @@ import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import GlobalBackground from "@/components/GlobalBackground";
-import { Preloader } from "@/components/Preloader";
 import SectionIndicator from "@/components/SectionIndicator";
 
 // Lazy Load Pages
@@ -117,7 +116,6 @@ const App = () => (
         <Sonner />
         <GlobalBackground />
         <BrowserRouter>
-          <Preloader />
           <CustomCursor />
           <ScrollProgress />
           <ScrollToHash />
