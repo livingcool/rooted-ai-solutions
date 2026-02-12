@@ -2,20 +2,65 @@
 
 > Engineering Intelligence. COMPLEXITY. SIMPLIFIED.
 
-RootedAI helps businesses scale efficiently through autonomous AI agents and intelligent process automation. We specialize in transforming manual, complex workflows into streamlined, self-running systems.
+RootedAI helps businesses scale efficiently through autonomous AI agents and intelligent process automation. We specialize in transforming manual, complex workflows into streamlined, self-running systems. Based in Hosur, Tamil Nadu, India, with active operations across Coimbatore, Bangalore, and Chennai.
 
 ## Core Identity
-- **Company Name**: RootedAI
+- **Company Name**: RootedAI Solutions
 - **Tagline**: Engineering Intelligence. COMPLEXITY. SIMPLIFIED.
 - **Website**: https://www.rootedai.co.in
 - **Contact**: info@rootedai.co.in
-- **Location**: Hosur, Tamil Nadu, India
+- **Phone**: +91-7904168521
+- **Headquarters**: Hosur, Tamil Nadu, India
+- **Service Areas**: Hosur, Coimbatore, Bangalore, Chennai, Singapore, Dubai
 
-## Key Offerings
-1. **AI Agents**: Digital workers that handle repetitive tasks like data entry, L1 support, and invoicing 24/7.
-2. **Onboarding Automation**: Reducing hiring costs by 30% through AI-driven candidate screening and onboarding workflows.
-3. **Logistics Optimization**: Intelligent routing and inventory management systems.
-4. **Custom Enterprise Solutions**: Bespoke AI "brains" that consolidate fragmented SaaS tools into a single dashboard.
+## Services
+
+### 1. AI Agents Development
+Custom autonomous agents that handle repetitive tasks like data entry, L1 support, and invoicing 24/7. We build multi-agent systems using LangChain and custom LLM workflows. Reduce support tickets by 60%.
+- URL: https://www.rootedai.co.in/services/ai-agents
+
+### 2. Process Automation (RPA)
+End-to-end workflow automation for logistics, finance, and operations. Automate invoice reconciliation, order updates, and production scheduling. Save 90% manual effort.
+- URL: https://www.rootedai.co.in/services/process-automation
+
+### 3. Web Solutions & AI-Integrated Apps
+Custom web applications, enterprise dashboards, and PWAs with AI integration. Full-stack development with predictive analytics baked in.
+- URL: https://www.rootedai.co.in/services/web-solutions
+
+### 4. NLP & Sentiment Analysis
+Advanced Natural Language Processing for automated reporting, sentiment analysis, and document processing. Process thousands of documents in minutes.
+- URL: https://www.rootedai.co.in/services/nlp-systems
+
+### 5. Predictive Analytics
+Data-driven forecasting for demand planning, churn prediction, and risk assessment. Reduce inventory wastage by 20-30%.
+- URL: https://www.rootedai.co.in/services/predictive-analytics
+
+### 6. Enterprise Security
+AI-powered threat detection, compliance automation, and data privacy solutions. 24/7 security monitoring and incident response.
+- URL: https://www.rootedai.co.in/services/enterprise-security
+
+### 7. IT Outsourcing
+Dedicated development teams and staff augmentation. Hire a full-stack team in 48 hours and save 60% on development costs. Pre-vetted developers.
+- URL: https://www.rootedai.co.in/services/outsourcing
+
+## Locations
+
+### Hosur (Headquarters)
+- SIPCOT Industrial Complex, Hosur, Tamil Nadu 635126
+- Specialization: Industrial Automation, Manufacturing ERP, AI for SIPCOT Phase I & II
+- URL: https://www.rootedai.co.in/hosur
+
+### Coimbatore
+- Specialization: Textile & Foundry ERP, Manufacturing AI, Process Automation
+- URL: https://www.rootedai.co.in/coimbatore
+
+### Bangalore (Coming Soon)
+- Specialization: AI Agents, Enterprise SaaS, Startup Tech Consulting
+- URL: https://www.rootedai.co.in/locations/bangalore
+
+### Chennai (Coming Soon)
+- Specialization: Enterprise Security, Logistics Automation, SaaS Development
+- URL: https://www.rootedai.co.in/locations/chennai
 
 ## Value Proposition
 - **For CEOs**: Reduce overheads and break the "hiring freeze" cycle.
@@ -25,8 +70,27 @@ RootedAI helps businesses scale efficiently through autonomous AI agents and int
 ## Technical Expertise
 - **RAG (Retrieval-Augmented Generation)**: Context-aware AI that knows your business data.
 - **Multi-Agent Systems**: Coordinating specialized agents for complex problem solving.
-- **Process Automation**: End-to-end workflow execution.
+- **Process Automation**: End-to-end workflow execution from invoice to delivery.
+- **Custom LLM Development**: Fine-tuned models for domain-specific tasks.
+
+## Frequently Asked Questions
+
+**What does RootedAI do?**
+RootedAI is a software solutions company that builds autonomous AI agents and intelligent automation systems for businesses. We help companies reduce manual work, cut operational costs, and scale without increasing headcount.
+
+**Where is RootedAI located?**
+Our headquarters is in Hosur, Tamil Nadu, India (SIPCOT Industrial Complex). We also serve clients in Coimbatore, Bangalore, Chennai, Singapore, and Dubai.
+
+**What industries does RootedAI serve?**
+We serve manufacturing (automotive, electronics, textiles), logistics, finance, and enterprise IT sectors. Our solutions are particularly strong in industrial automation and manufacturing ERP.
+
+**How much do RootedAI services cost?**
+We offer Starter, Professional, and Enterprise plans. Pricing starts at competitive rates for small businesses and scales with custom enterprise solutions. Visit https://www.rootedai.co.in/pricing for details.
+
+**Can RootedAI integrate with existing systems?**
+Yes. Our AI agents and automation solutions integrate with existing ERP systems, SCADA, PLCs, CRM platforms, and legacy databases without disrupting current operations.
 
 ## Connect
 - **LinkedIn**: https://www.linkedin.com/company/rootedai
 - **Book a Strategy Call**: https://wa.me/917904168521
+- **Blog**: https://www.rootedai.co.in/blog

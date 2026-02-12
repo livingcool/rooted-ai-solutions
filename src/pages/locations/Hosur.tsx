@@ -8,6 +8,7 @@ import Contact from "@/components/Contact";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin, Factory, Cpu, History } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const Hosur = () => {
     useEffect(() => {
@@ -19,6 +20,7 @@ const Hosur = () => {
             <Seo
                 title="Top Software Company in Hosur | Industrial Automation & AI"
                 description="RootedAI is the leading software and industrial automation provider in Hosur SIPCOT, delivering AI agents, ERP systems, and manufacturing intelligence."
+                canonical="https://www.rootedai.co.in/hosur"
                 keywords={[
                     "Software Company in Hosur",
                     "Industrial Automation Hosur",
@@ -30,42 +32,71 @@ const Hosur = () => {
                 ]}
                 structuredData={{
                     "@context": "https://schema.org",
-                    "@type": "LocalBusiness",
-                    "name": "RootedAI - Hosur",
-                    "image": "https://rootedai.co.in/og-image.png",
-                    "url": "https://rootedai.co.in/locations/hosur",
-                    "telephone": "+91-917904168521",
-                    "address": {
-                        "@type": "PostalAddress",
-                        "streetAddress": "SIPCOT Industrial Complex",
-                        "addressLocality": "Hosur",
-                        "addressRegion": "Tamil Nadu",
-                        "postalCode": "635126",
-                        "addressCountry": "IN"
-                    },
-                    "geo": {
-                        "@type": "GeoCoordinates",
-                        "latitude": 12.7409,
-                        "longitude": 77.8253
-                    },
-                    "openingHoursSpecification": {
-                        "@type": "OpeningHoursSpecification",
-                        "dayOfWeek": [
-                            "Monday",
-                            "Tuesday",
-                            "Wednesday",
-                            "Thursday",
-                            "Friday"
-                        ],
-                        "opens": "09:00",
-                        "closes": "18:00"
-                    },
-                    "priceRange": "$$"
+                    "@graph": [
+                        {
+                            "@type": "LocalBusiness",
+                            "name": "RootedAI - Hosur",
+                            "image": "https://www.rootedai.co.in/og-image.png",
+                            "url": "https://www.rootedai.co.in/hosur",
+                            "telephone": "+91-917904168521",
+                            "address": {
+                                "@type": "PostalAddress",
+                                "streetAddress": "SIPCOT Industrial Complex",
+                                "addressLocality": "Hosur",
+                                "addressRegion": "Tamil Nadu",
+                                "postalCode": "635126",
+                                "addressCountry": "IN"
+                            },
+                            "geo": {
+                                "@type": "GeoCoordinates",
+                                "latitude": 12.7409,
+                                "longitude": 77.8253
+                            },
+                            "openingHoursSpecification": {
+                                "@type": "OpeningHoursSpecification",
+                                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                                "opens": "09:00",
+                                "closes": "18:00"
+                            },
+                            "priceRange": "$$",
+                            "hasMap": "https://maps.google.com/?q=RootedAI+SIPCOT+Hosur"
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": [
+                                {
+                                    "@type": "Question",
+                                    "name": "Does RootedAI serve SIPCOT Phase I and Phase II in Hosur?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "Yes. We actively serve manufacturing units, automotive suppliers, and electronics companies across both SIPCOT Industrial Park Phase I and Phase II in Hosur."
+                                    }
+                                },
+                                {
+                                    "@type": "Question",
+                                    "name": "What industries in Hosur does RootedAI specialize in?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "We specialize in Industrial Automation, Manufacturing ERP, AI-powered quality control, and supply chain optimization for Hosur's automotive, electronics, and heavy engineering sectors."
+                                    }
+                                },
+                                {
+                                    "@type": "Question",
+                                    "name": "Can RootedAI integrate with legacy systems used in Hosur factories?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "Absolutely. Our AI agents and automation solutions are designed to integrate with existing ERP systems, SCADA, PLCs, and legacy databases without disrupting current operations."
+                                    }
+                                }
+                            ]
+                        }
+                    ]
                 }}
             />
 
             <div className="relative z-10">
                 <Navigation />
+                <Breadcrumbs />
 
                 {/* Custom Hero for Hosur */}
                 <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5">
@@ -200,6 +231,25 @@ const Hosur = () => {
                                     className="group-hover:filter-none transition-all duration-500"
                                 ></iframe>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQ Section */}
+                <section className="py-16 px-4 md:px-6">
+                    <div className="container mx-auto max-w-4xl">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+                        <div className="space-y-6">
+                            {[
+                                { q: "Does RootedAI serve SIPCOT Phase I and Phase II in Hosur?", a: "Yes. We actively serve manufacturing units, automotive suppliers, and electronics companies across both SIPCOT Industrial Park Phase I and Phase II in Hosur." },
+                                { q: "What industries in Hosur does RootedAI specialize in?", a: "We specialize in Industrial Automation, Manufacturing ERP, AI-powered quality control, and supply chain optimization for Hosur's automotive, electronics, and heavy engineering sectors." },
+                                { q: "Can RootedAI integrate with legacy systems used in Hosur factories?", a: "Absolutely. Our AI agents and automation solutions are designed to integrate with existing ERP systems, SCADA, PLCs, and legacy databases without disrupting current operations." }
+                            ].map((faq, i) => (
+                                <div key={i} className="p-6 rounded-2xl border border-white/10 bg-white/5">
+                                    <h3 className="font-semibold text-lg mb-3">{faq.q}</h3>
+                                    <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>

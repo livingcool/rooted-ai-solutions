@@ -143,7 +143,7 @@ const PredictiveAnalytics = () => {
                     "data-driven decision making",
                     "trend analysis"
                 ]}
-                canonical="https://rootedai.com/services/predictive-analytics"
+                canonical="https://www.rootedai.co.in/services/predictive-analytics"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -153,7 +153,7 @@ const PredictiveAnalytics = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "Data-driven predictive analytics for demand forecasting, churn prediction, and risk assessment.",
                             "areaServed": "Global",

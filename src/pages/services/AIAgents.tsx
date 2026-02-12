@@ -135,7 +135,7 @@ const AIAgents = () => {
                     "custom AI workforce",
                     "task automation agents"
                 ]}
-                canonical="https://rootedai.com/services/ai-agents"
+                canonical="https://www.rootedai.co.in/services/ai-agents"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -145,7 +145,7 @@ const AIAgents = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "Custom AI agent development, consulting, and multi-agent systems.",
                             "areaServed": "Global",

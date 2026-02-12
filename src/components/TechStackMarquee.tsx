@@ -16,6 +16,7 @@ import metaLogo from "../assets/meta.svg";
 import ngrokLogo from "../assets/ngrok.svg";
 import reactLogo from "../assets/react.svg";
 import supabaseLogo from "../assets/supabase.svg";
+import { LogoSlider } from "@/components/ui/LogoSlider";
 
 const TechStackMarquee = () => {
     const technologies = [
@@ -39,6 +40,16 @@ const TechStackMarquee = () => {
         { name: "Ngrok", logo: ngrokLogo },
     ];
 
+    const logos = technologies.map((tech) => (
+        <img
+            key={tech.name}
+            src={tech.logo}
+            alt={`${tech.name} logo`}
+            title={tech.name}
+            className="h-12 w-auto object-contain min-w-[32px] block dark:brightness-0 dark:invert"
+        />
+    ));
+
     return (
         <div className="w-full py-12 relative z-10 border-y border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] overflow-hidden">
             <div className="container mx-auto px-4 md:px-6 mb-8">
@@ -47,33 +58,11 @@ const TechStackMarquee = () => {
                 </p>
             </div>
 
-            <div className="relative flex items-center h-20">
-                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white dark:from-black to-transparent z-20" />
-                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white dark:from-black to-transparent z-20" />
-
-                {/* Marquee Animation - Multiple duplicates for seamless loop */}
-                {[...Array(3)].map((_, duplicateIndex) => (
-                    <div
-                        key={duplicateIndex}
-                        className="flex animate-marquee whitespace-nowrap items-center gap-12 px-6"
-                        aria-hidden={duplicateIndex > 0}
-                    >
-                        {technologies.map((tech, index) => (
-                            <div
-                                key={`tech-${duplicateIndex}-${index}`}
-                                className="group relative transition-all duration-300 transform hover:scale-110 cursor-pointer flex items-center justify-center p-2"
-                                title={tech.name}
-                            >
-                                <img
-                                    src={tech.logo}
-                                    alt={`${tech.name} logo`}
-                                    className="h-12 w-auto object-contain min-w-[32px] block dark:brightness-0 dark:invert"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>
+            <LogoSlider
+                logos={logos}
+                speed={60}
+                direction="left"
+            />
         </div>
     );
 };

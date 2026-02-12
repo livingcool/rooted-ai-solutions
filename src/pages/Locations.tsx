@@ -55,6 +55,39 @@ const Locations = () => {
                 description="Find RootedAI offices and service areas. delivering AI and software solutions across South India's key industrial and tech hubs."
                 canonical="https://www.rootedai.co.in/locations"
                 keywords={["RootedAI Locations", "Software Company Hosur", "Software Company Coimbatore", "IT Company Bangalore", "Chennai SaaS"]}
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "ItemList",
+                    "name": "RootedAI Locations",
+                    "description": "AI and software solutions across South India.",
+                    "url": "https://www.rootedai.co.in/locations",
+                    "itemListElement": [
+                        {
+                            "@type": "ListItem",
+                            "position": 1,
+                            "name": "RootedAI Hosur - Industrial Tech Hub",
+                            "url": "https://www.rootedai.co.in/hosur"
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 2,
+                            "name": "RootedAI Coimbatore - Textile & Engineering",
+                            "url": "https://www.rootedai.co.in/coimbatore"
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 3,
+                            "name": "RootedAI Bangalore - Tech Capital",
+                            "url": "https://www.rootedai.co.in/locations/bangalore"
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 4,
+                            "name": "RootedAI Chennai - SaaS & Logistics",
+                            "url": "https://www.rootedai.co.in/locations/chennai"
+                        }
+                    ]
+                }}
             />
 
             <div className="relative z-10">
@@ -87,8 +120,8 @@ const Locations = () => {
                                         />
                                         <div className="absolute top-4 right-4 z-20">
                                             <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${loc.status === "Active"
-                                                    ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                                                    : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
+                                                ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                                                : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
                                                 }`}>
                                                 {loc.status}
                                             </span>

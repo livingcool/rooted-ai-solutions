@@ -285,4 +285,38 @@
   .animate-rotate-y {
     animation: rotateY 1s ease-in-out;
   }
+
+  /* ===== Spotlight Navbar ===== */
+  .spotlight-nav {
+    --spotlight-color: rgba(0, 0, 0, 0.08);
+    --ambience-color: rgba(0, 0, 0, 0.8);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.06),
+      0 1px 4px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark .spotlight-nav {
+    --spotlight-color: rgba(255, 255, 255, 0.15);
+    --ambience-color: rgba(255, 255, 255, 1);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.3),
+      0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* ===== Logo Slider ===== */
+  @keyframes logo-slide {
+    0% {
+      transform: translateX(0%);
+    }
+
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 }

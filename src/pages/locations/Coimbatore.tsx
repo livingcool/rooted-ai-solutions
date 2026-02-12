@@ -8,6 +8,7 @@ import Contact from "@/components/Contact";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin, Factory, Settings, Globe } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const Coimbatore = () => {
     useEffect(() => {
@@ -19,6 +20,7 @@ const Coimbatore = () => {
             <Seo
                 title="Best Software Company in Coimbatore | Manufacturing & Textile ERP"
                 description="RootedAI delivers advanced ERP and AI automation solutions for Coimbatore's textile, foundry, and engineering industries. Scale with Engineering Intelligence."
+                canonical="https://www.rootedai.co.in/coimbatore"
                 keywords={[
                     "Software Company in Coimbatore",
                     "Textile ERP Coimbatore",
@@ -30,28 +32,69 @@ const Coimbatore = () => {
                 ]}
                 structuredData={{
                     "@context": "https://schema.org",
-                    "@type": "LocalBusiness",
-                    "name": "RootedAI - Coimbatore",
-                    "image": "https://rootedai.co.in/og-image.png",
-                    "url": "https://rootedai.co.in/locations/coimbatore",
-                    "telephone": "+91-917904168521",
-                    "address": {
-                        "@type": "PostalAddress",
-                        "addressLocality": "Coimbatore",
-                        "addressRegion": "Tamil Nadu",
-                        "addressCountry": "IN"
-                    },
-                    "geo": {
-                        "@type": "GeoCoordinates",
-                        "latitude": 11.0168,
-                        "longitude": 76.9558
-                    },
-                    "priceRange": "$$"
+                    "@graph": [
+                        {
+                            "@type": "LocalBusiness",
+                            "name": "RootedAI - Coimbatore",
+                            "image": "https://www.rootedai.co.in/og-image.png",
+                            "url": "https://www.rootedai.co.in/coimbatore",
+                            "telephone": "+91-917904168521",
+                            "address": {
+                                "@type": "PostalAddress",
+                                "addressLocality": "Coimbatore",
+                                "addressRegion": "Tamil Nadu",
+                                "addressCountry": "IN"
+                            },
+                            "geo": {
+                                "@type": "GeoCoordinates",
+                                "latitude": 11.0168,
+                                "longitude": 76.9558
+                            },
+                            "openingHoursSpecification": {
+                                "@type": "OpeningHoursSpecification",
+                                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                                "opens": "09:00",
+                                "closes": "18:00"
+                            },
+                            "priceRange": "$$",
+                            "hasMap": "https://maps.google.com/?q=RootedAI+Coimbatore"
+                        },
+                        {
+                            "@type": "FAQPage",
+                            "mainEntity": [
+                                {
+                                    "@type": "Question",
+                                    "name": "Does RootedAI provide Textile ERP solutions in Coimbatore?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "Yes. We specialize in building custom ERP solutions for Coimbatore's textile and manufacturing industry, covering production planning, inventory management, and quality control workflows."
+                                    }
+                                },
+                                {
+                                    "@type": "Question",
+                                    "name": "Can RootedAI automate foundry and pump manufacturing processes?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "Absolutely. Our AI-powered process automation handles production scheduling, predictive maintenance, and supply chain optimization for foundries, pump manufacturers, and precision engineering units in Coimbatore."
+                                    }
+                                },
+                                {
+                                    "@type": "Question",
+                                    "name": "Does RootedAI offer on-site support in Coimbatore?",
+                                    "acceptedAnswer": {
+                                        "@type": "Answer",
+                                        "text": "We provide both remote implementation and on-site support for enterprises in Coimbatore. Our team can visit your facility for system integration, training, and ongoing maintenance."
+                                    }
+                                }
+                            ]
+                        }
+                    ]
                 }}
             />
 
             <div className="relative z-10">
                 <Navigation />
+                <Breadcrumbs />
 
                 {/* Custom Hero for Coimbatore */}
                 <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden border-b border-white/5">
@@ -182,6 +225,45 @@ const Coimbatore = () => {
                                     </ul>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Google Map Embed */}
+                <section className="py-16 px-4 md:px-6">
+                    <div className="container mx-auto max-w-5xl">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">Find Us in Coimbatore</h2>
+                        <div className="relative rounded-2xl overflow-hidden border border-white/10 aspect-video group">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125322.48907190884!2d76.88611289045528!3d11.01684135074498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859af2f461b59%3A0x5765cbb21c393ab0!2sCoimbatore%2C%20Tamil%20Nadu!5e1!3m2!1sen!2sin!4v1737400000000!5m2!1sen!2sin"
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0, filter: "grayscale(1) contrast(1.2) opacity(0.8)" }}
+                                allowFullScreen
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                                title="RootedAI Coimbatore Location"
+                                className="group-hover:filter-none transition-all duration-500"
+                            ></iframe>
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQ Section */}
+                <section className="py-16 px-4 md:px-6">
+                    <div className="container mx-auto max-w-4xl">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+                        <div className="space-y-6">
+                            {[
+                                { q: "Does RootedAI provide Textile ERP solutions in Coimbatore?", a: "Yes. We specialize in building custom ERP solutions for Coimbatore's textile and manufacturing industry, covering production planning, inventory management, and quality control workflows." },
+                                { q: "Can RootedAI automate foundry and pump manufacturing processes?", a: "Absolutely. Our AI-powered process automation handles production scheduling, predictive maintenance, and supply chain optimization for foundries, pump manufacturers, and precision engineering units in Coimbatore." },
+                                { q: "Does RootedAI offer on-site support in Coimbatore?", a: "We provide both remote implementation and on-site support for enterprises in Coimbatore. Our team can visit your facility for system integration, training, and ongoing maintenance." }
+                            ].map((faq, i) => (
+                                <div key={i} className="p-6 rounded-2xl border border-white/10 bg-white/5">
+                                    <h3 className="font-semibold text-lg mb-3">{faq.q}</h3>
+                                    <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>

@@ -129,7 +129,7 @@ const EnterpriseSecurity = () => {
                     "data privacy solutions",
                     "network security automation"
                 ]}
-                canonical="https://rootedai.com/services/enterprise-security"
+                canonical="https://www.rootedai.co.in/services/enterprise-security"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -139,7 +139,7 @@ const EnterpriseSecurity = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "AI-powered threat detection and enterprise security services.",
                             "areaServed": "Global",

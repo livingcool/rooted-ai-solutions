@@ -4,14 +4,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { AnimatePresence } from "framer-motion";
 import PageTransition from "@/components/PageTransition";
 import { Suspense, lazy } from "react";
 import ScrollToHash from "@/components/ScrollToHash";
 import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import GlobalBackground from "@/components/GlobalBackground";
-import { Preloader } from "@/components/Preloader";
+
 import SectionIndicator from "@/components/SectionIndicator";
 
 // Lazy Load Pages
@@ -44,9 +43,15 @@ const BlogPost = lazy(() => import("./pages/BlogPost"));
 const BlogAdmin = lazy(() => import("./pages/BlogAdmin"));
 const CaseStudies = lazy(() => import("./pages/CaseStudies"));
 
+// Services Page
+const ServicesPage = lazy(() => import("./pages/ServicesPage"));
+
 // Locations
+const Locations = lazy(() => import("./pages/Locations"));
 const Hosur = lazy(() => import("./pages/locations/Hosur"));
 const Coimbatore = lazy(() => import("./pages/locations/Coimbatore"));
+const Bangalore = lazy(() => import("./pages/locations/Bangalore"));
+const Chennai = lazy(() => import("./pages/locations/Chennai"));
 
 const queryClient = new QueryClient();
 
@@ -63,51 +68,54 @@ const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/blog" element={<PageTransition><BlogListing /></PageTransition>} />
-        <Route path="/blog/adminlogin" element={<PageTransition><BlogAdmin /></PageTransition>} />
-        <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
-        <Route path="/about" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/services" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/about" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/services" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/case-studies" element={<PageTransition><CaseStudies /></PageTransition>} />
-        <Route path="/products" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/products" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/careers" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/contact" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
-        <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
-        <Route path="/admin-hiring" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
-        <Route path="/:orgSlug/admin-pass-set" element={<PageTransition><AdminPassSet /></PageTransition>} />
-        <Route path="/:orgSlug" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
-        <Route path="/candidate-login" element={<PageTransition><CandidateLogin /></PageTransition>} />
-        <Route path="/assessment" element={<PageTransition><Interview /></PageTransition>} />
-        <Route path="/jobs/:id" element={<PageTransition><JobDetails /></PageTransition>} />
-        <Route path="/technical-assessment" element={<PageTransition><TechnicalAssessment /></PageTransition>} />
-        <Route path="/candidate-status" element={<PageTransition><CandidateStatus /></PageTransition>} />
-        <Route path="/final-login" element={<PageTransition><FinalInterviewLogin /></PageTransition>} />
-        <Route path="/final-interview" element={<PageTransition><AIInterviewRoom /></PageTransition>} />
+    <Routes location={location}>
+      {/* Core Pages */}
+      <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+      <Route path="/about" element={<PageTransition><Index /></PageTransition>} />
+      <Route path="/services" element={<PageTransition><ServicesPage /></PageTransition>} />
+      <Route path="/case-studies" element={<PageTransition><CaseStudies /></PageTransition>} />
+      <Route path="/products" element={<PageTransition><Index /></PageTransition>} />
+      <Route path="/careers" element={<PageTransition><Index /></PageTransition>} />
+      <Route path="/contact" element={<PageTransition><Index /></PageTransition>} />
+      <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
 
-        {/* Service Detail Pages */}
-        <Route path="/services/ai-agents" element={<PageTransition><AIAgents /></PageTransition>} />
-        <Route path="/services/process-automation" element={<PageTransition><ProcessAutomation /></PageTransition>} />
-        <Route path="/services/web-solutions" element={<PageTransition><WebSolutions /></PageTransition>} />
-        <Route path="/services/nlp-systems" element={<PageTransition><NLPSystems /></PageTransition>} />
-        <Route path="/services/predictive-analytics" element={<PageTransition><PredictiveAnalytics /></PageTransition>} />
-        <Route path="/services/enterprise-security" element={<PageTransition><EnterpriseSecurity /></PageTransition>} />
-        <Route path="/services/outsourcing" element={<PageTransition><Outsourcing /></PageTransition>} />
+      {/* Blog */}
+      <Route path="/blog" element={<PageTransition><BlogListing /></PageTransition>} />
+      <Route path="/blog/adminlogin" element={<PageTransition><BlogAdmin /></PageTransition>} />
+      <Route path="/blog/:slug" element={<PageTransition><BlogPost /></PageTransition>} />
 
-        {/* Location Pages */}
-        <Route path="/hosur" element={<PageTransition><Hosur /></PageTransition>} />
-        <Route path="/coimbatore" element={<PageTransition><Coimbatore /></PageTransition>} />
+      {/* Hiring System */}
+      <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+      <Route path="/admin-hiring" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
+      <Route path="/:orgSlug/admin-pass-set" element={<PageTransition><AdminPassSet /></PageTransition>} />
+      <Route path="/:orgSlug" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
+      <Route path="/candidate-login" element={<PageTransition><CandidateLogin /></PageTransition>} />
+      <Route path="/assessment" element={<PageTransition><Interview /></PageTransition>} />
+      <Route path="/jobs/:id" element={<PageTransition><JobDetails /></PageTransition>} />
+      <Route path="/technical-assessment" element={<PageTransition><TechnicalAssessment /></PageTransition>} />
+      <Route path="/candidate-status" element={<PageTransition><CandidateStatus /></PageTransition>} />
+      <Route path="/final-login" element={<PageTransition><FinalInterviewLogin /></PageTransition>} />
+      <Route path="/final-interview" element={<PageTransition><AIInterviewRoom /></PageTransition>} />
 
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
-      </Routes>
-    </AnimatePresence>
+      {/* Service Detail Pages */}
+      <Route path="/services/ai-agents" element={<PageTransition><AIAgents /></PageTransition>} />
+      <Route path="/services/process-automation" element={<PageTransition><ProcessAutomation /></PageTransition>} />
+      <Route path="/services/web-solutions" element={<PageTransition><WebSolutions /></PageTransition>} />
+      <Route path="/services/nlp-systems" element={<PageTransition><NLPSystems /></PageTransition>} />
+      <Route path="/services/predictive-analytics" element={<PageTransition><PredictiveAnalytics /></PageTransition>} />
+      <Route path="/services/enterprise-security" element={<PageTransition><EnterpriseSecurity /></PageTransition>} />
+      <Route path="/services/outsourcing" element={<PageTransition><Outsourcing /></PageTransition>} />
+
+      {/* Location Pages */}
+      <Route path="/locations" element={<PageTransition><Locations /></PageTransition>} />
+      <Route path="/hosur" element={<PageTransition><Hosur /></PageTransition>} />
+      <Route path="/coimbatore" element={<PageTransition><Coimbatore /></PageTransition>} />
+      <Route path="/locations/bangalore" element={<PageTransition><Bangalore /></PageTransition>} />
+      <Route path="/locations/chennai" element={<PageTransition><Chennai /></PageTransition>} />
+
+      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+    </Routes>
   );
 };
 
@@ -119,7 +127,7 @@ const App = () => (
         <Sonner />
         <GlobalBackground />
         <BrowserRouter>
-          <Preloader />
+
           <CustomCursor />
           <ScrollProgress />
           <ScrollToHash />

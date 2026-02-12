@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { SpotlightNavbar } from "@/components/ui/SpotlightNavbar";
+import type { NavItem } from "@/components/ui/SpotlightNavbar";
 
 
 const Navigation = () => {
@@ -27,6 +29,21 @@ const Navigation = () => {
     { name: "Contact", href: "/contact" },
   ];
 
+  // Convert navLinks into SpotlightNavbar items
+  const spotlightItems: NavItem[] = navLinks.map((link) => ({
+    label: link.name,
+    href: link.href,
+  }));
+
+  // Detect which nav item matches the current path
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
+  const activeIdx = spotlightItems.findIndex((item) => currentPath.startsWith(item.href));
+  const defaultActiveIndex = activeIdx >= 0 ? activeIdx : -1;
+
+  const handleNavItemClick = (item: NavItem) => {
+    window.location.href = item.href;
+  };
+
   return (
     <>
       <nav
@@ -46,27 +63,24 @@ const Navigation = () => {
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
             </a>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-sm font-medium text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors relative group py-1"
-                >
-                  {link.name}
-                  <span className="absolute bottom-0 left-0 w-full h-[1px] bg-black dark:bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-                </a>
-              ))}
-              <div className="flex items-center gap-4 pl-4 border-l border-black/10 dark:border-white/10">
-                <ThemeToggle />
-                <Button
-                  className="bw-button text-xs md:text-sm px-6"
-                  onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-                >
-                  Get Started
-                </Button>
-              </div>
+            {/* Desktop Navigation — Spotlight Navbar */}
+            <div className="hidden md:flex items-center flex-1 justify-center">
+              <SpotlightNavbar
+                items={spotlightItems}
+                defaultActiveIndex={defaultActiveIndex}
+                onItemClick={handleNavItemClick}
+              />
+            </div>
+
+            {/* Desktop CTA + Theme Toggle */}
+            <div className="hidden md:flex items-center gap-4">
+              <ThemeToggle />
+              <Button
+                className="bw-button text-xs md:text-sm px-6"
+                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                Get Started
+              </Button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -86,7 +100,6 @@ const Navigation = () => {
       </nav>
 
       {/* Mobile Menu Overlay */}
-      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && createPortal(
         <div
           className="fixed inset-0 bg-white dark:bg-black z-[100] flex items-center justify-center md:hidden"
@@ -98,7 +111,7 @@ const Navigation = () => {
             <X size={32} />
           </button>
           <div className="flex flex-col items-center space-y-8 p-8 w-full max-w-sm relative z-[101]">
-            {navLinks.map((link, idx) => (
+            {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}

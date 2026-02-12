@@ -97,7 +97,31 @@ const BlogPost = () => {
             <Seo
                 title={`${post.title} | RootedAI Blog`}
                 description={post.excerpt}
+                canonical={`https://www.rootedai.co.in/blog/${post.slug}`}
                 ogImage={post.cover_image}
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "BlogPosting",
+                    "headline": post.title,
+                    "description": post.excerpt,
+                    "image": post.cover_image,
+                    "url": `https://www.rootedai.co.in/blog/${post.slug}`,
+                    "datePublished": post.created_at,
+                    "author": {
+                        "@type": "Organization",
+                        "name": "RootedAI Solutions",
+                        "url": "https://www.rootedai.co.in"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "RootedAI Solutions",
+                        "url": "https://www.rootedai.co.in",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "https://www.rootedai.co.in/logo.png"
+                        }
+                    }
+                }}
             />
             <div className="relative z-10">
                 <Navigation />

@@ -78,7 +78,7 @@ const Pricing = () => {
           "AI consulting fees",
           "custom software pricing"
         ]}
-        canonical="https://rootedai.com/pricing"
+        canonical="https://www.rootedai.co.in/pricing"
       />
       <Navigation />
 

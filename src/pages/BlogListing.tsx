@@ -38,7 +38,20 @@ const BlogListing = () => {
             <Seo
                 title="RootedAI Insights - Blog"
                 description="Expert insights on AI scaling, automation strategies, and the future of work."
+                canonical="https://www.rootedai.co.in/blog"
                 keywords={["AI Blog", "Automation Insights", "Business Scaling", "Tech Blog"]}
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "Blog",
+                    "name": "RootedAI Insights",
+                    "description": "Expert insights on AI scaling, automation strategies, and the future of work.",
+                    "url": "https://www.rootedai.co.in/blog",
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "RootedAI Solutions",
+                        "url": "https://www.rootedai.co.in"
+                    }
+                }}
             />
             <div className="relative z-10">
                 <Navigation />

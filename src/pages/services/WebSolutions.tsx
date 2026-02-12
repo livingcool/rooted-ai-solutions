@@ -111,7 +111,7 @@ const WebSolutions = () => {
                     "enterprise web portals",
                     "full-stack development"
                 ]}
-                canonical="https://rootedai.com/services/web-solutions"
+                canonical="https://www.rootedai.co.in/services/web-solutions"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -121,7 +121,7 @@ const WebSolutions = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "Custom web development with AI integration. Scalable web apps, dashboards, and PWAs.",
                             "areaServed": "Global",

@@ -175,7 +175,7 @@ const ProcessAutomation = () => {
                     "operational excellence",
                     "legacy system integration"
                 ]}
-                canonical="https://rootedai.com/services/process-automation"
+                canonical="https://www.rootedai.co.in/services/process-automation"
                 structuredData={{
                     "@context": "https://schema.org",
                     "@graph": [
@@ -185,7 +185,7 @@ const ProcessAutomation = () => {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RootedAI",
-                                "url": "https://rootedai.com"
+                                "url": "https://www.rootedai.co.in"
                             },
                             "description": "End-to-end process automation utilizing RPA and intelligent workflows to reduce manual effort.",
                             "areaServed": "Global",
