@@ -22,9 +22,9 @@ const Hero = () => {
       <div className="container mx-auto px-2 relative z-10 text-center">
 
         {/* Main Headline */}
-        <h1 className="text-4xl sm:text-5xl md:text-8xl font-bold font-heading text-black dark:text-white tracking-tight leading-tight flex flex-row items-center justify-center gap-x-2 md:gap-x-4 mb-16">
+        <h1 className="text-4xl sm:text-5xl md:text-8xl font-bold font-heading text-black dark:text-white tracking-tight leading-tight flex flex-col md:flex-row items-center justify-center gap-y-2 md:gap-y-0 gap-x-0 md:gap-x-4 mb-16 px-4">
           <span className="shrink-0">Engineering</span>
-          <span className="relative inline-block text-left min-w-[320px] md:min-w-[500px]"> {/* Fixed width container to prevent layout shift */}
+          <span className="relative inline-block min-w-[280px] md:min-w-[500px] text-center md:text-left"> {/* Fixed width container to prevent layout shift */}
             <AnimatePresence mode="wait">
               <motion.span
                 key={words[index]}
@@ -32,7 +32,7 @@ const Hero = () => {
                 animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
                 exit={{ y: -20, opacity: 0, filter: "blur(10px)" }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className="absolute left-0 top-0 bg-gradient-to-r from-gray-500 via-gray-800 to-black dark:from-gray-100 dark:via-gray-300 dark:to-gray-500 bg-clip-text text-transparent whitespace-nowrap"
+                className="absolute left-0 top-0 w-full md:w-auto text-center md:text-left bg-gradient-to-r from-gray-500 via-gray-800 to-black dark:from-gray-100 dark:via-gray-300 dark:to-gray-500 bg-clip-text text-transparent whitespace-nowrap"
               >
                 {words[index]}
               </motion.span>

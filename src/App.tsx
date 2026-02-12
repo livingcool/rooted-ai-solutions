@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import GlobalBackground from "@/components/GlobalBackground";
 import PageTransition from "@/components/PageTransition";
 import { Suspense, lazy } from "react";
 import ScrollToHash from "@/components/ScrollToHash";
@@ -118,6 +119,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
       <TooltipProvider>
+        <GlobalBackground />
         <Toaster />
         <Sonner />
         <BrowserRouter>
