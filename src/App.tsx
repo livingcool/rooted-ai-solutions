@@ -85,7 +85,7 @@ const AnimatedRoutes = () => {
       <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
       <Route path="/admin-hiring" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
       <Route path="/:orgSlug/admin-pass-set" element={<PageTransition><AdminPassSet /></PageTransition>} />
-      <Route path="/:orgSlug" element={<PageTransition><AdminHiringDashboard /></PageTransition>} />
+
       <Route path="/candidate-login" element={<PageTransition><CandidateLogin /></PageTransition>} />
       <Route path="/assessment" element={<PageTransition><Interview /></PageTransition>} />
       <Route path="/jobs/:id" element={<PageTransition><JobDetails /></PageTransition>} />
@@ -111,6 +111,7 @@ const AnimatedRoutes = () => {
       <Route path="/locations/chennai" element={<PageTransition><Chennai /></PageTransition>} />
 
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="/404" element={<PageTransition><NotFound /></PageTransition>} />
       <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
     </Routes>
   );
