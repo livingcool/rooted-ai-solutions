@@ -11,6 +11,7 @@ import RevealLoader from "@/components/ui/RevealLoader";
 import ScrollToHash from "@/components/ScrollToHash";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import SectionIndicator from "@/components/SectionIndicator";
+import { Analytics } from "@vercel/analytics/react";
 const Index = lazy(() => import("./pages/Index"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -159,6 +160,7 @@ const App = () => {
             <Suspense fallback={<LoadingFallback />}>
               <AnimatedRoutes />
             </Suspense>
+            <Analytics />
           </BrowserRouter>
         </TooltipProvider>
       </ThemeProvider>
