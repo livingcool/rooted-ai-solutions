@@ -2,18 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @layer base {
   :root {
     /* --- Font Mappings --- */
-    --font-sans: "Inter", sans-serif;
-    --font-heading: "Outfit", sans-serif;
+    --font-sans: "Montserrat", sans-serif;
+    --font-heading: "Aquire", sans-serif;
     --font-mono: "Geist Mono", monospace;
 
-    /* --- Color Variables (Light Mode - Clean Technical) --- */
-    --background: oklch(0.99 0 0);
-    /* Pure white/off-white */
-    --foreground: oklch(0.15 0.02 240);
-    /* Deep navy tint black */
+    /* --- Color Variables (Light Mode - Metallic White) --- */
+    --background: oklch(0.97 0.01 260);
+    /* Metallic White (Cool Grey/Silver Tint) */
+    --foreground: oklch(0.15 0.04 260);
+    /* Verbose/Rich Black (Deep Navy Tint) */
 
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.15 0.02 240);
@@ -61,6 +63,30 @@
 
     /* --- Font Definitions --- */
     --font-geist-mono: "Geist Mono", monospace;
+  }
+
+  @font-face {
+    font-family: 'Aquire';
+    src: url('/fonts/Aquire-BW0ox.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Aquire';
+    src: url('/fonts/AquireBold-8Ma60.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Aquire';
+    src: url('/fonts/AquireLight-YzE0o.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
   }
 
   .dark {

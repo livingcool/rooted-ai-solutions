@@ -23,11 +23,13 @@ const envPath = resolve(__dirname, '../../.env');
 
 dotenv.config({ path: envPath });
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+// Support both VITE_ prefixed (frontend) and standard (backend) environment variables
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
     console.error("Error: Missing Supabase credentials in environment variables.");
+    console.error("Required: SUPABASE_URL and (SUPABASE_SERVICE_ROLE_KEY or SUPABASE_KEY or VITE_SUPABASE_PUBLISHABLE_KEY)");
     process.exit(1);
 }
 
@@ -275,6 +277,14 @@ app.post("/messages", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Rooted Recruitment MCP Server running on port ${PORT}`);
-});
+
+// Only start the server if we are running locally (not imported as a module)
+// In Vercel, this file is imported, so we don't want to call listen() automatically.
+if (import.meta.url === `file://${process.argv[1]}`) {
+    app.listen(PORT, () => {
+        console.log(`Rooted Recruitment MCP Server running on port ${PORT}`);
+    });
+}
+
+// Export the Express app for Vercel Serverless Functions
+export default app;

@@ -1,0 +1,8 @@
+web/src
+web/tsconfig.json
+web/package.json
+web/vite.config.ts
+web/index.html
+web/public
+# Do not ignore web/dist if it exists
+!web/dist

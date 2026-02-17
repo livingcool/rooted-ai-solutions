@@ -4,7 +4,6 @@
         "module": "Node16",
         "moduleResolution": "Node16",
         "outDir": "./dist",
-        "rootDir": "./src",
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
@@ -12,9 +11,11 @@
         "resolveJsonModule": true
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "api/**/*"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "web"
     ]
 }
