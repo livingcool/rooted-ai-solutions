@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { motion, AnimatePresence } from "framer-motion";
 import HeroBackground from "@/components/HeroBackground";
+import ParallaxFloating from "@/components/ui/parallax-floating";
 
 const Hero = () => {
   const words = ["Intelligence", "Automation", "The Scale", "The Future"];
@@ -19,6 +20,7 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 pb-16">
       <HeroBackground />
+      <ParallaxFloating />
       <div className="container mx-auto px-2 relative z-10 text-center">
 
         {/* Main Headline */}

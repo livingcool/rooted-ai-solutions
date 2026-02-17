@@ -241,6 +241,21 @@ app.get("/api/me", (req, res) => {
     });
 });
 
+// Root endpoint for health check and user confirmation
+app.get("/", (req, res) => {
+    res.send(`
+        <html>
+            <head><title>RootedAI MCP Server</title></head>
+            <body style="font-family: sans-serif; padding: 20px; text-align: center;">
+                <h1>🟢 RootedAI MCP Server is Running</h1>
+                <p>This is the backend for the RootedAI Assistant.</p>
+                <p>API Endpoint: <a href="/api/me">/api/me</a></p>
+                <p>Privacy Policy: <a href="/privacy">/privacy</a></p>
+            </body>
+        </html>
+    `);
+});
+
 // Serve React Source Code for Canvas
 app.get("/api/ui/source", (req, res) => {
     try {

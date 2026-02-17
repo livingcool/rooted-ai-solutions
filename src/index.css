@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 @layer base {
   :root {
@@ -11,29 +11,30 @@
     --font-heading: "Aquire", sans-serif;
     --font-mono: "Geist Mono", monospace;
 
-    /* --- Color Variables (Light Mode - Metallic White) --- */
-    --background: oklch(0.97 0.01 260);
-    /* Metallic White (Cool Grey/Silver Tint) */
+    /* --- Color Variables (Light Mode - Dull White & Premium Blue) --- */
+    --background: oklch(0.92 0.01 240);
+    /* Dull White (Grey/Blue Tint) */
     --foreground: oklch(0.15 0.04 260);
-    /* Verbose/Rich Black (Deep Navy Tint) */
+    /* Verbose/Rich Black */
 
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.15 0.02 240);
+    --card: oklch(0.98 0.01 240);
+    --card-foreground: oklch(0.15 0.04 260);
 
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.15 0.02 240);
+    --popover: oklch(0.98 0.01 240);
+    --popover-foreground: oklch(0.15 0.04 260);
 
-    --primary: oklch(0.15 0.02 240);
-    --primary-foreground: oklch(1 0 0);
+    --primary: oklch(0.15 0.04 260);
+    --primary-foreground: oklch(0.98 0.01 240);
 
-    --secondary: oklch(0.96 0.01 240);
-    --secondary-foreground: oklch(0.15 0.02 240);
+    --secondary: oklch(0.94 0.02 240);
+    --secondary-foreground: oklch(0.15 0.04 260);
 
-    --muted: oklch(0.96 0.01 240);
-    --muted-foreground: oklch(0.5 0.02 240);
+    --muted: oklch(0.94 0.02 240);
+    --muted-foreground: oklch(0.4 0.04 260);
 
-    --accent: oklch(0.96 0.01 240);
-    --accent-foreground: oklch(0.15 0.02 240);
+    --accent: oklch(0.65 0.2 200);
+    /* Premium Blue Accent */
+    --accent-foreground: oklch(0.98 0.01 240);
 
     --destructive: oklch(0.6 0.25 25);
     --destructive-foreground: oklch(0.98 0 0);
@@ -186,7 +187,7 @@
   }
 
   .glass-premium {
-    @apply bg-white/5 dark:bg-black/20 backdrop-blur-3xl border-t border-l border-white/20 dark:border-white/10 shadow-none dark:shadow-2xl;
+    @apply bg-blue-500/5 dark:bg-black/20 backdrop-blur-3xl border-t border-l border-blue-500/10 dark:border-white/10 shadow-none dark:shadow-2xl;
     box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.05);
     background-image:
@@ -491,5 +492,38 @@
         var(--glow-color-9, #55aacc),
         var(--glow-color-10, #669900));
     animation: glow-conic-spin var(--glow-animation-duration, 4s) linear infinite;
+  }
+
+  /* Creative Motion System */
+  @keyframes scan {
+    0% {
+      transform: translateX(-100%) skewX(12deg);
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateX(200%) skewX(12deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes grow {
+
+    0%,
+    100% {
+      transform: scaleY(1);
+    }
+
+    50% {
+      transform: scaleY(1.4);
+    }
+  }
+
+  .animate-scan {
+    animation: scan 3s linear infinite;
   }
 }

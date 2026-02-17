@@ -34,18 +34,9 @@ const SectionIndicator = () => {
 
     return (
         <div className="fixed left-0 top-0 bottom-0 z-[60] hidden lg:flex flex-col items-start">
-            {/* Logo at Top - Aligned horizontally with Navigation RootedAI text */}
+            {/* Logo at Top - Removed as per request */}
             <div className="h-[60px] flex items-center pl-6">
-                <img
-                    src="/sidebar-logo-light.png"
-                    alt="RootedAI Logo"
-                    className="h-8 w-auto object-contain transition-all duration-300 dark:hidden -translate-y-[2px]"
-                />
-                <img
-                    src="/sidebar-logo-dark.png"
-                    alt="RootedAI Logo"
-                    className="hidden h-8 w-auto object-contain transition-all duration-300 dark:block -translate-y-[2px]"
-                />
+                {/* Logo removed */}
             </div>
 
             {/* Sidebar Content */}

@@ -4,6 +4,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import MagneticButton from "@/components/ui/MagneticButton";
 
 interface TestimonialItem {
     id: string | number;
@@ -89,7 +90,7 @@ export function TestimonialsCard({
                             return (
                                 <motion.div
                                     key={item.id}
-                                    className="absolute inset-0 w-full h-full overflow-hidden border-[6px] bg-neutral-200 dark:bg-neutral-800 border-white dark:border-neutral-700 shadow-2xl rounded-lg"
+                                    className="absolute inset-0 w-full h-full shadow-2xl"
                                     initial={{
                                         x: offset * 15, y: Math.abs(offset) * 6,
                                         z: -150 * Math.abs(offset),
@@ -114,11 +115,22 @@ export function TestimonialsCard({
                                     }}
                                     transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
                                 >
-                                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                                    <MagneticButton className="w-full h-full block">
+                                        <div style={{ borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%", overflow: "hidden", width: "100%", height: "100%", animation: "blob 8s infinite alternate" }}>
+                                            <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                                        </div>
+                                    </MagneticButton>
                                 </motion.div>
                             );
                         })}
                     </AnimatePresence>
+                    <style>{`
+                        @keyframes blob {
+                            0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+                            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+                            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+                        }
+                    `}</style>
                 </div>
 
                 <div className="col-start-1 md:col-start-2 row-start-2 flex flex-col justify-center min-h-[120px]">
