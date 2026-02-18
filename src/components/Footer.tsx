@@ -91,11 +91,25 @@ const Footer = () => {
 
                     <div>
                         <h4 className="text-lg font-bold text-black dark:text-white mb-8">Services</h4>
-                        <ul className="space-y-4 text-sm text-black/60 dark:text-white/60">
+                        <ul className="space-y-3 text-sm text-black/60 dark:text-white/60">
                             <li><Link to="/services/ai-agents" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">AI Agents</Link></li>
-                            <li><Link to="/services/process-automation" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Automation</Link></li>
-                            <li><Link to="/services/predictive-analytics" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Analytics</Link></li>
-                            <li><a href="/#case-studies" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Case Studies</a></li>
+                            <li><Link to="/services/process-automation" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Process Automation</Link></li>
+                            <li><Link to="/services/predictive-analytics" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Predictive Analytics</Link></li>
+                            <li><Link to="/services/nlp-systems" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">NLP Systems</Link></li>
+                            <li><Link to="/services/web-solutions" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Web Solutions</Link></li>
+                            <li><Link to="/services/enterprise-security" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Enterprise Security</Link></li>
+                            <li><Link to="/services/outsourcing" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">IT Outsourcing</Link></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 className="text-lg font-bold text-black dark:text-white mb-8">Locations</h4>
+                        <ul className="space-y-3 text-sm text-black/60 dark:text-white/60">
+                            <li><Link to="/hosur" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Hosur</Link></li>
+                            <li><Link to="/coimbatore" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Coimbatore</Link></li>
+                            <li><Link to="/locations/bangalore" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Bangalore</Link></li>
+                            <li><Link to="/locations/chennai" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Chennai</Link></li>
+                            <li><Link to="/locations" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block font-semibold mt-4">View All Locations</Link></li>
                         </ul>
                     </div>
                 </div>

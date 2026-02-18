@@ -98,7 +98,11 @@ const faqs = [
     },
 ];
 
+import useGeoLocation from "@/hooks/useGeoLocation";
+
 const ServicesPage = () => {
+    const { city, country, loading } = useGeoLocation();
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -179,8 +183,10 @@ const ServicesPage = () => {
                             <span>7 Specialized AI Services</span>
                         </div>
                         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-                            AI Solutions for the <br />
-                            <span className="text-gradient-silver">Modern Enterprise</span>
+                            AI Solutions for <br />
+                            <span className="text-gradient-silver">
+                                {loading ? "Modern Enterprises" : (city ? `Enterprises in ${city}` : (country ? `Enterprises in ${country}` : "Modern Enterprises"))}
+                            </span>
                         </h1>
                         <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
                             From autonomous agents to predictive analytics, we build the intelligent infrastructure
@@ -357,7 +363,7 @@ const ServicesPage = () => {
             </main>
 
             <Footer />
-        </div>
+        </div >
     );
 };
 

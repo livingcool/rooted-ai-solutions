@@ -1,13 +1,27 @@
 import { useState, useEffect } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calculator, IndianRupee, Clock } from "lucide-react";
+import { ArrowRight, Calculator, IndianRupee, Banknote, Clock } from "lucide-react";
+import useGeoLocation from "@/hooks/useGeoLocation";
 
 const ROICalculator = () => {
+    const { city, country, currency } = useGeoLocation();
+    const isINR = currency === 'INR';
+    const currencySymbol = isINR ? '₹' : (currency === 'AED' ? 'AED ' : '$');
+
     // State for inputs
     const [employees, setEmployees] = useState([5]);
     const [hoursPerDay, setHoursPerDay] = useState([2]);
-    const [hourlyWage, setHourlyWage] = useState([500]); // in INR
+    const [hourlyWage, setHourlyWage] = useState([isINR ? 500 : 30]); // Default based on region
+
+    // Update defaults when currency changes (loading finishes)
+    useEffect(() => {
+        if (!isINR) {
+            setHourlyWage([30]); // $30/hr default for international
+        } else {
+            setHourlyWage([500]); // ₹500/hr default for India
+        }
+    }, [isINR]);
 
     // State for results
     const [annualCost, setAnnualCost] = useState(0);
@@ -31,15 +45,20 @@ const ROICalculator = () => {
     }, [employees, hoursPerDay, hourlyWage]);
 
     const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-IN', {
-            style: 'currency',
-            currency: 'INR',
-            maximumFractionDigits: 0
-        }).format(amount);
+        try {
+            return new Intl.NumberFormat(isINR ? 'en-IN' : 'en-US', {
+                style: 'currency',
+                currency: currency || 'USD',
+                maximumFractionDigits: 0
+            }).format(amount);
+        } catch (e) {
+            return `${currencySymbol}${amount.toLocaleString()}`;
+        }
     };
 
     const handleConsult = () => {
-        const message = encodeURIComponent(`Hi, I used your ROI calculator. I could save around ${formatCurrency(savings)} per year. I'd like to discuss automating my workflow.`);
+        const locationStr = city ? ` from ${city}` : (country ? ` from ${country}` : "");
+        const message = encodeURIComponent(`Hi, I'm reaching out${locationStr} after using your ROI calculator. I could save around ${formatCurrency(savings)} per year. I'd like to discuss automating my workflow.`);
         window.open(`https://wa.me/917904168521?text=${message}`, "_blank");
     };
 

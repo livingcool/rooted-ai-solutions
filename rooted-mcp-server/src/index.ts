@@ -256,6 +256,106 @@ app.get("/", (req, res) => {
     `);
 });
 
+const openApiSchema = {
+    "openapi": "3.1.0",
+    "info": {
+        "title": "RootedAI Recruitment API",
+        "description": "API for accessing RootedAI recruitment services, including job listings and contact form submission.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://rootedai-mcp.vercel.app"
+        }
+    ],
+    "paths": {
+        "/api/jobs": {
+            "get": {
+                "operationId": "getJobs",
+                "summary": "List available job openings",
+                "description": "Retrieves a list of active job openings at RootedAI.",
+                "parameters": [
+                    {
+                        "name": "active_only",
+                        "in": "query",
+                        "description": "If true, list only active jobs",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of jobs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": { "type": "string" },
+                                            "title": { "type": "string" },
+                                            "type": { "type": "string" },
+                                            "location": { "type": "string" },
+                                            "salary_range": { "type": "string" }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/contact": {
+            "post": {
+                "operationId": "submitContactForm",
+                "summary": "Submit a contact form",
+                "description": "Sends a message to the RootedAI team.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": { "type": "string" },
+                                    "email": { "type": "string" },
+                                    "message": { "type": "string" }
+                                },
+                                "required": ["name", "email", "message"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Submission successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": { "type": "boolean" },
+                                        "message": { "type": "string" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+
+app.get("/openapi.json", (req, res) => {
+    res.json(openApiSchema);
+});
+
 // Serve React Source Code for Canvas
 app.get("/api/ui/source", (req, res) => {
     try {
@@ -295,7 +395,9 @@ const PORT = process.env.PORT || 3000;
 
 // Only start the server if we are running locally (not imported as a module)
 // In Vercel, this file is imported, so we don't want to call listen() automatically.
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Only start the server if we are NOT in Vercel (Serverless)
+// This avoids the "address in use" error on Vercel while allowing local execution.
+if (!process.env.VERCEL) {
     app.listen(PORT, () => {
         console.log(`Rooted Recruitment MCP Server running on port ${PORT}`);
     });

@@ -1,0 +1,16 @@
+/* TEAM */
+  Founder & CEO: RootedAI
+  Location: Hosur, Tamil Nadu, IN
+  Contact: info@rootedai.co.in
+  Twitter: @RootedAI
+
+/* SITE */
+  Last update: 2026-02-18
+  Standards: HTML5, CSS3, ES6+
+  Components: React, Shadcn/UI, TailwindCSS
+  Software: VS Code
+
+/* SEARCH & AI */
+  Sitemap: https://www.rootedai.co.in/sitemap.xml
+  LLM Context: https://www.rootedai.co.in/llms.txt
+  Keywords: https://www.rootedai.co.in/keywords.txt
