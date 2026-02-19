@@ -7,7 +7,7 @@ import HeroBackground from "@/components/HeroBackground";
 import ParallaxFloating from "@/components/ui/parallax-floating";
 
 const Hero = () => {
-  const words = ["Intelligence", "Automation", "The Scale", "The Future"];
+  const words = ["Intelligence", "Automation", "Safety", "Compliance", "The Scale", "The Future"];
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -46,6 +46,11 @@ const Hero = () => {
 
 
 
+        {/* Subtitle */}
+        <p className="text-lg md:text-xl text-black/60 dark:text-white/60 max-w-2xl mx-auto mb-10 font-light">
+          AI-powered solutions with built-in safety, compliance, and DPDP readiness for the modern enterprise.
+        </p>
+
         {/* Constant CTA */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -61,6 +66,16 @@ const Hero = () => {
             >
               Get Custom Solution
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </MagneticButton>
+          <MagneticButton>
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg font-semibold h-14 px-8 rounded-full ml-4 border-black/20 dark:border-white/20 text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/5"
+              onClick={() => window.location.href = '/services/ai-safety'}
+            >
+              AI Safety Audit
             </Button>
           </MagneticButton>
         </motion.div>

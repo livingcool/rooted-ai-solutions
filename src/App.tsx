@@ -34,6 +34,7 @@ const NLPSystems = lazy(() => import("./pages/services/NLPSystems"));
 const PredictiveAnalytics = lazy(() => import("./pages/services/PredictiveAnalytics"));
 const EnterpriseSecurity = lazy(() => import("./pages/services/EnterpriseSecurity"));
 const Outsourcing = lazy(() => import("./pages/services/Outsourcing"));
+const AISafety = lazy(() => import("./pages/services/AISafety"));
 
 // Blog
 const BlogListing = lazy(() => import("./pages/BlogListing"));
@@ -103,11 +104,12 @@ const AnimatedRoutes = () => {
       <Route path="/services/predictive-analytics" element={<PageTransition><PredictiveAnalytics /></PageTransition>} />
       <Route path="/services/enterprise-security" element={<PageTransition><EnterpriseSecurity /></PageTransition>} />
       <Route path="/services/outsourcing" element={<PageTransition><Outsourcing /></PageTransition>} />
+      <Route path="/services/ai-safety" element={<PageTransition><AISafety /></PageTransition>} />
 
       {/* Location Pages */}
       <Route path="/locations" element={<PageTransition><Locations /></PageTransition>} />
-      <Route path="/hosur" element={<PageTransition><Hosur /></PageTransition>} />
-      <Route path="/coimbatore" element={<PageTransition><Coimbatore /></PageTransition>} />
+      <Route path="/locations/hosur" element={<PageTransition><Hosur /></PageTransition>} />
+      <Route path="/locations/coimbatore" element={<PageTransition><Coimbatore /></PageTransition>} />
       <Route path="/locations/bangalore" element={<PageTransition><Bangalore /></PageTransition>} />
       <Route path="/locations/chennai" element={<PageTransition><Chennai /></PageTransition>} />
 

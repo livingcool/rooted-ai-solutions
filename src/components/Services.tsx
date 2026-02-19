@@ -5,6 +5,15 @@ import { Button } from "@/components/ui/button";
 
 const services = [
   {
+    title: "AI Safety & Compliance",
+    description: "Deploy AI without the risk. Comprehensive safety audits, bias testing, and DPDP compliance.",
+    example: "E.g., Ensure DPDP compliance, eliminate AI bias, maintain 99.8% accuracy",
+    icon: <Shield className="w-12 h-12 text-white" />,
+    metrics: "Zero compliance incidents",
+    route: "/services/ai-safety",
+    color: "#0f4c3a",
+  },
+  {
     title: "AI Agents",
     description: "Autonomous agents that handle complex workflows, from customer support to data analysis.",
     example: "E.g., Auto-respond to 80% of support tickets, route complex queries to humans",
