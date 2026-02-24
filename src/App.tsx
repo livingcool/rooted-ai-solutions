@@ -52,6 +52,8 @@ const Coimbatore = lazy(() => import("./pages/locations/Coimbatore"));
 const Bangalore = lazy(() => import("./pages/locations/Bangalore"));
 const Chennai = lazy(() => import("./pages/locations/Chennai"));
 
+const BusinessCardGenerator = lazy(() => import("./pages/BusinessCardGenerator"));
+
 const queryClient = new QueryClient();
 
 const LoadingFallback = () => (
@@ -112,6 +114,8 @@ const AnimatedRoutes = () => {
       <Route path="/locations/coimbatore" element={<PageTransition><Coimbatore /></PageTransition>} />
       <Route path="/locations/bangalore" element={<PageTransition><Bangalore /></PageTransition>} />
       <Route path="/locations/chennai" element={<PageTransition><Chennai /></PageTransition>} />
+
+      <Route path="/business-card" element={<PageTransition><BusinessCardGenerator /></PageTransition>} />
 
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="/404" element={<PageTransition><NotFound /></PageTransition>} />
