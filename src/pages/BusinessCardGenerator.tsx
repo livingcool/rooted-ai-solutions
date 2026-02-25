@@ -32,12 +32,87 @@ const BusinessCardGenerator = () => {
         if (!cardRef.current) return;
         try {
             setIsDownloading(true);
+
+            // Create a temporary clone to modify for export
+            const clone = cardRef.current.cloneNode(true) as HTMLElement;
+
+            // html2canvas doesn't support oklch yet.
+            // We need to inline fallback colors for elements using CSS variables or oklch directly.
+
+            const stripOklch = (str: string) => {
+                if (!str || typeof str !== 'string') return str;
+                return str.replace(/oklch\([^\)]+\)/g, (match) => {
+                    if (match.includes('0.65 0.2 200')) return '#6366f1';
+                    if (match.includes('0.98 0 0')) return '#ffffff';
+                    if (match.includes('0.25 0.02 240')) return 'rgba(255,255,255,0.1)';
+                    return '#ffffff';
+                });
+            };
+
+            const processNode = (node: HTMLElement) => {
+                // To avoid html2canvas CSS parsing errors with oklch, we explicitly override styles
+                // based on known Tailwind classes.
+
+                // Remove root oklch-related classes that html2canvas will crash when looking up in stylesheets
+                if (node.classList.contains('glass-premium')) {
+                    node.classList.remove('glass-premium');
+                    node.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                    node.style.backdropFilter = 'blur(24px)';
+                    node.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                }
+
+                // Colors
+                if (node.classList.contains('text-primary')) node.style.color = '#6366f1';
+                if (node.classList.contains('text-white')) node.style.color = '#ffffff';
+                if (node.classList.contains('text-gray-300')) node.style.color = '#d1d5db';
+                if (node.classList.contains('text-primary/80')) node.style.color = 'rgba(99, 102, 241, 0.8)';
+
+                // Backgrounds
+                if (node.classList.contains('bg-[#050505]')) node.style.backgroundColor = '#050505';
+                if (node.classList.contains('bg-white/5')) node.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                if (node.classList.contains('bg-primary/20')) node.style.backgroundColor = 'rgba(99, 102, 241, 0.2)';
+                if (node.classList.contains('bg-primary/10')) node.style.backgroundColor = 'rgba(99, 102, 241, 0.1)';
+
+                // Borders
+                if (node.classList.contains('border-white/10')) node.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                if (node.classList.contains('ring-white/10')) node.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+
+                // Gradients & complex backgrounds
+                if (node.classList.contains('from-primary/50')) {
+                    node.style.backgroundImage = 'linear-gradient(to right, transparent, rgba(99, 102, 241, 0.5), #6366f1)';
+                }
+                if (node.classList.contains('from-primary/20')) {
+                    node.style.backgroundImage = 'linear-gradient(to right, rgba(99, 102, 241, 0.2), #6366f1, rgba(99, 102, 241, 0.2))';
+                }
+
+                // Strip OKLCH purely from inline styles if present
+                if (node.getAttribute('style')) {
+                    const styleStr = node.getAttribute('style') || '';
+                    if (styleStr.includes('oklch')) {
+                        node.setAttribute('style', stripOklch(styleStr));
+                    }
+                }
+
+                Array.from(node.children).forEach(child => processNode(child as HTMLElement));
+            };
+
+            processNode(clone);
+
+            // Append clone temporarily
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px';
+            document.body.appendChild(clone);
+
             // Ensure the scale is high for good print/image quality
-            const canvas = await html2canvas(cardRef.current, {
+            const canvas = await html2canvas(clone, {
                 scale: 4, // 4x resolution
                 useCORS: true,
                 backgroundColor: "#050505", // match dark theme background explicitly
+                logging: false, // Turn off logging to reduce console noise
             });
+
+            // Clean up clone
+            document.body.removeChild(clone);
 
             const image = canvas.toDataURL("image/png", 1.0);
             const link = document.createElement("a");
