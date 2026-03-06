@@ -20,10 +20,11 @@ const Seo = ({
     structuredData
 }: SeoProps) => {
     const siteUrl = 'https://www.rootedai.co.in';
+    // Strip query params — canonical URLs must never include ?s= or any other query strings
     const fullUrl = canonical
         ? canonical
         : (typeof window !== 'undefined'
-            ? window.location.href.replace(window.location.origin, siteUrl)
+            ? siteUrl + window.location.pathname
             : '');
 
     return (

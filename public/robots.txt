@@ -1,5 +1,6 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /*?s=
 
 User-agent: Bingbot
 Allow: /
