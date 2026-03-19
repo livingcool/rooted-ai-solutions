@@ -190,26 +190,6 @@ const CaseStudies = () => {
             );
           })}
         </div>
-
-        {/* Call to Action Spotlight */}
-        <div className="mt-24 relative">
-          <div className="absolute inset-0 bg-blue-500/5 blur-[100px] rounded-full" />
-          <div className="relative glass-premium p-12 md:p-20 text-center rounded-[3rem] border border-blue-500/10 dark:bg-slate-900/40">
-            <h3 className="text-3xl md:text-6xl font-black text-black dark:text-white mb-8 tracking-tighter max-w-4xl mx-auto">
-              Ready to automate your process in <span className="text-blue-500 underline decoration-2 underline-offset-8">7 days?</span>
-            </h3>
-            <p className="text-xl text-muted-foreground mb-12 font-light max-w-2xl mx-auto">
-              Skip the deck. Let's look at your actual data and find $10k+ in quick wins.
-            </p>
-            <Button
-              onClick={handleBookCall}
-              className="bw-button text-xl px-12 py-8 group rounded-full"
-            >
-              Book Discovery Call
-              <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-        </div>
       </div>
 
       <style>{`

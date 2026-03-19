@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import GlobalBackground from "@/components/GlobalBackground";
+import Dynamic3DBackground from "@/components/Dynamic3DBackground";
 import PageTransition from "@/components/PageTransition";
 import { Suspense, lazy, useState, useEffect } from "react";
 import RevealLoader from "@/components/ui/RevealLoader";
@@ -154,7 +154,7 @@ const App = () => {
               onComplete={() => setLoading(false)}
             />
           )}
-          <GlobalBackground paused={loading} />
+          <Dynamic3DBackground paused={loading} />
           <Toaster />
           <Sonner />
           <BrowserRouter>

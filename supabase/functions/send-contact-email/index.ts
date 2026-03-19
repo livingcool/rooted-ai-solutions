@@ -10,6 +10,9 @@ const corsHeaders = {
 interface ContactRequest {
     name: string;
     email: string;
+    company?: string;
+    phone?: string;
+    service_needed?: string;
     message: string;
 }
 
@@ -20,7 +23,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     try {
-        const { name, email, message }: ContactRequest = await req.json();
+        const { name, email, company, phone, service_needed, message }: ContactRequest = await req.json();
 
         // Create a transporter using Gmail SMTP
         // User must set GMAIL_USER and GMAIL_APP_PASSWORD in Supabase secrets
@@ -67,6 +70,9 @@ const handler = async (req: Request): Promise<Response> => {
                     <div style="background-color: #111111; padding: 20px; border: 1px solid #333333; margin: 30px 0;">
                         <p style="margin: 5px 0; color: #a0a0a0;">Name: <strong style="color: #ffffff;">${name}</strong></p>
                         <p style="margin: 5px 0; color: #a0a0a0;">Email: <strong style="color: #ffffff;">${email}</strong></p>
+                        ${company ? `<p style="margin: 5px 0; color: #a0a0a0;">Company: <strong style="color: #ffffff;">${company}</strong></p>` : ''}
+                        ${phone ? `<p style="margin: 5px 0; color: #a0a0a0;">Phone: <strong style="color: #ffffff;">${phone}</strong></p>` : ''}
+                        ${service_needed ? `<p style="margin: 5px 0; color: #a0a0a0;">Service Needed: <strong style="color: #ffffff;">${service_needed}</strong></p>` : ''}
                     </div>
 
                     <div style="background-color: #111111; padding: 20px; border: 1px solid #333333; margin: 30px 0;">

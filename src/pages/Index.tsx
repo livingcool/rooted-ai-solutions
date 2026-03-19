@@ -9,10 +9,9 @@ const CaseStudies = lazy(() => import("@/components/CaseStudies"));
 const Products = lazy(() => import("@/components/Products"));
 const Careers = lazy(() => import("@/components/Careers"));
 const Contact = lazy(() => import("@/components/Contact"));
-const Team = lazy(() => import("@/components/Team"));
-const Footer = lazy(() => import("@/components/Footer"));
 const SocialProof = lazy(() => import("@/components/SocialProof"));
 const NewsletterCapture = lazy(() => import("@/components/NewsletterCapture"));
+const Footer = lazy(() => import("@/components/Footer"));
 
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import TechStackMarquee from "@/components/TechStackMarquee";
@@ -312,13 +311,7 @@ const Index = () => {
           </RevealOnScroll>
         </div>
 
-        <div id="team">
-          <RevealOnScroll>
-            <Suspense fallback={<div className="min-h-[50vh]" />}>
-              <Team />
-            </Suspense>
-          </RevealOnScroll>
-        </div>
+
 
         <div id="contact">
           <RevealOnScroll>

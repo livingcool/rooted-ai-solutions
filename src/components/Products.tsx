@@ -104,132 +104,123 @@ const Products = () => {
                 </div>
 
                 {/* Product Showcase */}
-                <div className="max-w-6xl mx-auto">
+                <div className="max-w-7xl mx-auto px-4">
                     {products.map((product, index) => (
-                        <div key={index} className="space-y-8">
-                            {/* Main Product Card */}
-                            <TiltCard className="glass-premium p-4 md:p-6 group transition-all duration-500">
-                                <div className="grid lg:grid-cols-2 gap-6 items-center">
-                                    {/* Left: Product Info */}
-                                    <div className="space-y-4">
-                                        {/* Header Row: Logo, Status, Title */}
-                                        <div className="flex items-start justify-between gap-4">
-                                            <div className="flex items-center gap-4">
-                                                <img
-                                                    src={product.logoUrl}
-                                                    alt={`${product.name} Logo`}
-                                                    className="w-12 h-12 object-cover rounded-xl border border-black/10 dark:border-white/10"
-                                                />
+                        <div key={index} className="relative py-20">
+                            {/* Decorative Background Energy */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] opacity-20 pointer-events-none">
+                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15),transparent_70%)]" />
+                                <div className="absolute top-0 left-0 w-full h-full border-[1px] border-blue-500/5 rounded-[5rem] rotate-3 animate-pulse" />
+                            </div>
+
+                            <div className="relative z-10 grid lg:grid-cols-12 gap-12 items-center">
+                                {/* Left: Content Card (Layered Behind) */}
+                                <div className="lg:col-span-7 order-2 lg:order-1">
+                                    <div className="glass-premium relative z-10 p-10 md:p-16 rounded-[3rem] border border-white/10 dark:bg-slate-900/60 backdrop-blur-3xl shadow-2xl">
+                                        <div className="space-y-8">
+                                            {/* Brand Header */}
+                                            <div className="flex items-center gap-6">
+                                                <div className="relative group">
+                                                    <div className="absolute -inset-2 bg-blue-500/50 rounded-2xl blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
+                                                    <img
+                                                        src={product.logoUrl}
+                                                        alt={product.name}
+                                                        className="relative w-16 h-16 object-cover rounded-2xl border border-white/10"
+                                                    />
+                                                </div>
                                                 <div>
-                                                    <h3 className="text-xl md:text-2xl font-bold text-black dark:text-white leading-tight">
+                                                    <h3 className="text-3xl md:text-5xl font-black text-black dark:text-white tracking-tighter">
                                                         {product.name}
                                                     </h3>
-                                                    <div className="flex items-center gap-2 mt-1">
-                                                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                                        <span className="text-[10px] uppercase tracking-wider font-semibold text-black/60 dark:text-white/60">{product.status}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Tagline & Description */}
-                                        <div>
-                                            <p className="text-base font-medium text-black/80 dark:text-white/80 mb-2">
-                                                {product.tagline}
-                                            </p>
-                                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                                                {product.description}
-                                            </p>
-                                        </div>
-
-                                        {/* Features - Horizontal Grid */}
-                                        <div className="grid grid-cols-3 gap-2">
-                                            {product.features.map((feature, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    className="flex flex-col items-center justify-center text-center gap-1 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg p-2"
-                                                >
-                                                    <feature.icon className="w-4 h-4 text-black/70 dark:text-white/70" />
-                                                    <span className="text-[10px] font-medium leading-tight text-muted-foreground">
-                                                        {feature.text}
+                                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-green-500/10 text-green-500 border border-green-500/20">
+                                                        {product.status}
                                                     </span>
                                                 </div>
-                                            ))}
-                                        </div>
+                                            </div>
 
-                                        {/* Use Cases - Inline */}
-                                        <div className="text-xs text-muted-foreground border-l-2 border-black/10 dark:border-white/10 pl-3">
-                                            <span className="font-semibold text-black/80 dark:text-white/80 mr-1">Best for:</span>
-                                            {product.useCases.map(u => u.split(":")[0]).join(", ")}
-                                        </div>
+                                            {/* Tagline & Core Story */}
+                                            <div className="space-y-4">
+                                                <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                                    {product.tagline}
+                                                </p>
+                                                <p className="text-lg text-muted-foreground leading-relaxed font-light">
+                                                    {product.description}
+                                                </p>
+                                            </div>
 
-                                        {/* Quote - Compact */}
-                                        <div className="text-xs italic text-black/60 dark:text-white/60 bg-black/5 dark:bg-white/5 p-3 rounded-lg border border-black/5 dark:border-white/5">
-                                            "{product.clientQuote.text}"
-                                        </div>
+                                            {/* High-Impact Stats Grid */}
+                                            <div className="grid grid-cols-3 gap-6">
+                                                {product.features.map((feature, idx) => (
+                                                    <div key={idx} className="group/stat relative bg-white/5 border border-white/5 rounded-2xl p-6 transition-all hover:bg-white/10 hover:border-blue-500/30">
+                                                        <feature.icon className="w-6 h-6 text-blue-500 mb-3 group-hover/stat:scale-110 transition-transform" />
+                                                        <div className="text-xl font-bold text-black dark:text-white tracking-tight">{feature.text.split(' ')[0]}</div>
+                                                        <div className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
+                                                            {feature.text.split(' ').slice(1).join(' ')}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
 
-                                        {/* Action Buttons */}
-                                        <div className="flex gap-3 pt-1">
-                                            <a
-                                                href={product.productUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-black text-white hover:bg-black/90 dark:bg-white dark:text-black text-sm font-semibold rounded-lg transition-all"
-                                            >
-                                                Launch
-                                                <ExternalLink className="w-3 h-3" />
-                                            </a>
-                                            <a
-                                                href={product.productHuntUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#ff6154] text-white text-sm font-semibold rounded-lg hover:bg-[#ff6154]/90 transition-all"
-                                            >
-                                                Product Hunt
-                                            </a>
+                                            {/* Action Bar */}
+                                            <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                                                <Button
+                                                    onClick={() => window.open(product.productUrl, '_blank')}
+                                                    className="h-16 px-10 text-lg rounded-2xl bg-black dark:bg-white dark:text-black hover:scale-[1.02] transition-transform"
+                                                >
+                                                    Launch Platform
+                                                    <ExternalLink className="ml-2 w-5 h-5" />
+                                                </Button>
+                                                <Button
+                                                    onClick={() => window.open(product.productHuntUrl, '_blank')}
+                                                    variant="outline"
+                                                    className="h-16 px-10 text-lg rounded-2xl border-white/10 hover:bg-white/5"
+                                                >
+                                                    View Roadmap
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    {/* Right: Image Carousel */}
-                                    <div className="space-y-3">
-                                        <div
-                                            className="relative aspect-video rounded-xl overflow-hidden border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5"
-                                        >
-                                            <div
-                                                className={`w-full h-full transition-all duration-500`}
-                                            >
+                                {/* Right: Floating Visual (Layered Above) */}
+                                <div className="lg:col-span-5 order-1 lg:order-2 relative lg:-ml-24 z-20">
+                                    <div className="relative group perspective-1000">
+                                        <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-500 opacity-20 blur-2xl group-hover:opacity-40 transition duration-1000" />
+                                        
+                                        <div className="relative glass-premium p-3 rounded-[3rem] border border-white/10 shadow-2xl transition-all duration-700 group-hover:rotate-y-12">
+                                            <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem]">
                                                 <img
                                                     src={product.images[currentImageIndex].url}
-                                                    alt={product.images[currentImageIndex].alt}
-                                                    className="w-full h-full object-cover"
+                                                    alt={product.name}
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms]"
                                                 />
-                                            </div>
-
-                                            {/* Navigation Overlay */}
-                                            <div className="absolute inset-0 flex items-center justify-between p-2 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                                                <Button variant="ghost" size="icon" onClick={prevImage} className="h-8 w-8 bg-black/20 hover:bg-black/40 text-white rounded-full"><ChevronLeft className="w-4 h-4" /></Button>
-                                                <Button variant="ghost" size="icon" onClick={nextImage} className="h-8 w-8 bg-black/20 hover:bg-black/40 text-white rounded-full"><ChevronRight className="w-4 h-4" /></Button>
+                                                
+                                                {/* Floating Image Actions */}
+                                                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-black/60 backdrop-blur-md p-2 rounded-full border border-white/10 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                                                    <Button variant="ghost" size="icon" onClick={prevImage} className="text-white hover:bg-white/20 rounded-full"><ChevronLeft className="w-5 h-5" /></Button>
+                                                    <div className="text-xs font-mono text-white px-2">0{currentImageIndex + 1} / 0{product.images.length}</div>
+                                                    <Button variant="ghost" size="icon" onClick={nextImage} className="text-white hover:bg-white/20 rounded-full"><ChevronRight className="w-5 h-5" /></Button>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Thumbnails - Smaller */}
-                                        <div className="grid grid-cols-4 gap-2">
+                                        {/* Floating Thumbnail Bar (Creative Element) */}
+                                        <div className="absolute top-1/2 -right-12 -translate-y-1/2 flex flex-col gap-4">
                                             {product.images.map((img, idx) => (
                                                 <button
                                                     key={idx}
                                                     onClick={() => goToImage(idx)}
-                                                    className={`aspect-video rounded-md overflow-hidden border transition-all duration-300 ${idx === currentImageIndex
-                                                        ? "border-black dark:border-white opacity-100"
-                                                        : "border-transparent opacity-50 hover:opacity-100"
-                                                        }`}
-                                                >
-                                                    <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
-                                                </button>
+                                                    className={`w-3 h-12 rounded-full transition-all duration-500 border ${
+                                                        idx === currentImageIndex 
+                                                        ? 'bg-blue-500 border-blue-400 h-16' 
+                                                        : 'bg-white/10 border-white/5 hover:bg-white/30'
+                                                    }`}
+                                                />
                                             ))}
                                         </div>
                                     </div>
                                 </div>
-                            </TiltCard>
+                            </div>
                         </div>
                     ))}
                 </div>
