@@ -108,7 +108,7 @@ const Contact = () => {
 
           {/* Right: Neural Console Form */}
           <div className="lg:col-span-7">
-            <div className="glass-premium p-8 md:p-12 rounded-[3.5rem] border border-white/10 dark:bg-slate-900/40 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
+            <div className="glass-premium p-6 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/10 dark:bg-slate-900/40 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl" />
               
               <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
@@ -189,7 +189,7 @@ const Contact = () => {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-16 rounded-2xl text-xl font-bold bg-black dark:bg-white dark:text-black hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl flex items-center justify-center gap-3 group"
+                  className="w-full h-16 rounded-2xl text-lg md:text-xl font-bold bg-black dark:bg-white dark:text-black hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl flex items-center justify-center gap-3 group"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-6 h-6 animate-spin" />

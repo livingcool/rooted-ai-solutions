@@ -72,9 +72,9 @@ const SocialProof = () => {
               {/* Shard Background */}
               <div className={`absolute -inset-4 bg-gradient-to-br ${stat.color} to-transparent rounded-[2rem] blur-2xl opacity-0 group-hover:opacity-100 transition duration-700`} />
               
-              <div className="relative glass-premium p-8 md:p-12 rounded-[2.5rem] border border-black/5 dark:border-white/5 bg-white/40 dark:bg-black/40 backdrop-blur-3xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-2xl">
-                <div className="space-y-3">
-                  <div className="text-4xl md:text-6xl font-black text-black dark:text-white tracking-tighter">
+              <div className="relative glass-premium p-6 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-black/5 dark:border-white/5 bg-white/40 dark:bg-black/40 backdrop-blur-3xl transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-2xl">
+                <div className="space-y-2 md:space-y-3">
+                  <div className="text-3xl md:text-6xl font-black text-black dark:text-white tracking-tighter">
                     {stat.displayValue ? (
                       <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         {stat.displayValue}
