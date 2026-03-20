@@ -33,7 +33,7 @@ const Careers = () => {
       }
     };
     fetchJobs();
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     const lowerQuery = searchQuery.toLowerCase();
@@ -210,6 +210,18 @@ const Careers = () => {
                                   {job.salary_range}
                                 </span>
                               )}
+                            </div>
+                            {job.description && (
+                              <p className="text-sm text-muted-foreground line-clamp-2 max-w-2xl font-light">
+                                {job.description}
+                              </p>
+                            )}
+                            <div className="flex flex-wrap gap-2 pt-2">
+                              {job.requirements?.slice(0, 3).map((req, i) => (
+                                <span key={i} className="text-[10px] uppercase tracking-wider px-2 py-0.5 border border-black/10 dark:border-white/10 rounded-md opacity-70">
+                                  {req}
+                                </span>
+                              ))}
                             </div>
                           </div>
                           <Button 

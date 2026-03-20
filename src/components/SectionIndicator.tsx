@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
+const sections = [
+    { id: "hero", name: "Home" },
+    { id: "about", name: "About Us" },
+    { id: "services", label: "Services" },
+    { id: "case-studies", label: "Case Studies" },
+    { id: "products", name: "Products" },
+    { id: "careers", name: "Careers" },
+    { id: "contact", name: "Contact" },
+];
+
 const SectionIndicator = () => {
     const [activeSection, setActiveSection] = useState("Home");
-
-    const sections = [
-        { id: "hero", name: "Home" },
-        { id: "about", name: "About Us" },
-        { id: "services", label: "Services" },
-        { id: "case-studies", label: "Case Studies" },
-        { id: "products", name: "Products" },
-        { id: "careers", name: "Careers" },
-        { id: "contact", name: "Contact" },
-    ];
 
     useEffect(() => {
         const handleScroll = () => {

@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+import tailwindAnimate from "tailwindcss-animate";
+import tailwindTypography from "@tailwindcss/typography";
 
 export default {
   darkMode: ["class"],
@@ -97,6 +99,10 @@ export default {
           "0%, 100%": { boxShadow: "0 0 20px hsl(var(--neon-blue) / 0.5)" },
           "50%": { boxShadow: "0 0 40px hsl(var(--neon-blue) / 0.8)" },
         },
+        "pulse-subtle": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.85" },
+        },
         "rotate-slow": {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
@@ -113,6 +119,7 @@ export default {
         "slide-in-right": "slide-in-right 0.6s ease-out",
         "float": "float 6s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
         "rotate-slow": "rotate-slow 20s linear infinite",
         "marquee": "marquee 30s linear infinite",
       },
@@ -122,5 +129,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [tailwindAnimate, tailwindTypography],
 } satisfies Config;

@@ -32,7 +32,7 @@ const Seo = ({
             {/* Basic Meta Tags */}
             <title>{title.includes('RootedAI') ? title : `${title} | RootedAI`}</title>
             <meta name="description" content={description} />
-            {keywords && <meta name="keywords" content={keywords.join(', ')} />}
+            <meta name="keywords" content={[...(keywords || []), "Engineering Intelligence", "Complexity Simplified", "Autonomous Automation", "AI Safety", "Data Archaeology", "RootedAI"].join(', ')} />
             <link rel="canonical" href={fullUrl} />
 
             {/* Geo Tags */}

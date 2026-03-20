@@ -40,7 +40,10 @@ const AISafety = lazy(() => import("./pages/services/AISafety"));
 const BlogListing = lazy(() => import("./pages/BlogListing"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const BlogAdmin = lazy(() => import("./pages/BlogAdmin"));
+const Impacts = lazy(() => import("./pages/Impacts"));
 const CaseStudies = lazy(() => import("./pages/CaseStudies"));
+const ProductsPage = lazy(() => import("./pages/Products"));
+const CareersPage = lazy(() => import("./pages/CareersPage"));
 
 // Services Page
 const ServicesPage = lazy(() => import("./pages/ServicesPage"));
@@ -74,9 +77,10 @@ const AnimatedRoutes = () => {
       <Route path="/" element={<PageTransition><Index /></PageTransition>} />
       <Route path="/about" element={<PageTransition><Index /></PageTransition>} />
       <Route path="/services" element={<PageTransition><ServicesPage /></PageTransition>} />
+      <Route path="/impacts" element={<PageTransition><Impacts /></PageTransition>} />
       <Route path="/case-studies" element={<PageTransition><CaseStudies /></PageTransition>} />
-      <Route path="/products" element={<PageTransition><Index /></PageTransition>} />
-      <Route path="/careers" element={<PageTransition><Index /></PageTransition>} />
+      <Route path="/products" element={<PageTransition><ProductsPage /></PageTransition>} />
+      <Route path="/careers" element={<PageTransition><CareersPage /></PageTransition>} />
       <Route path="/contact" element={<PageTransition><Index /></PageTransition>} />
       <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
 

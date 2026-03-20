@@ -46,22 +46,23 @@ const TechStackMarquee = () => {
             src={tech.logo}
             alt={`${tech.name} logo`}
             title={tech.name}
-            className="h-12 w-auto object-contain min-w-[32px] block dark:brightness-0 dark:invert"
+            className="h-6 md:h-8 w-auto object-contain min-w-[24px] block dark:brightness-0 dark:invert opacity-50 hover:opacity-100 transition-opacity duration-300"
         />
     ));
 
     return (
-        <div className="w-full py-12 relative z-10 border-y border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] overflow-hidden">
-            <div className="container mx-auto px-4 md:px-6 mb-8">
-                <p className="text-sm uppercase tracking-widest text-muted-foreground text-center font-bold">
-                    Powered by Modern Tech Stack
+        <div className="w-full py-4 md:py-6 relative z-10 overflow-hidden">
+            <div className="container mx-auto px-4 mb-4">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400 text-center font-bold leading-none mb-0">
+                    Trusted Tech Stack
                 </p>
             </div>
 
             <LogoSlider
                 logos={logos}
-                speed={60}
+                speed={40}
                 direction="left"
+                className="opacity-80"
             />
         </div>
     );

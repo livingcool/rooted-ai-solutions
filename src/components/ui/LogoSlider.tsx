@@ -35,19 +35,19 @@ export const LogoSlider = ({
             } as React.CSSProperties}
         >
             <div
-                className={cn("logo-slider__container", "relative w-full min-h-[80px] grid")}
+                className={cn("logo-slider__container", "relative w-full min-h-[40px] md:min-h-[50px] grid")}
                 data-direction={direction}
                 data-pause-on-hover={pauseOnHover}
             >
                 {showBlur && (
-                    <div className="logo-slider__blur logo-slider__blur--left absolute top-0 bottom-0 left-0 w-1/4 z-10 pointer-events-none rotate-180">
+                    <div className="logo-slider__blur logo-slider__blur--left absolute top-0 bottom-0 left-0 w-1/6 z-10 pointer-events-none rotate-180">
                         {Array.from({ length: blurLayers }).map((_, i) => (
                             <div key={i} className="absolute inset-0" style={{ "--blur-index": i } as React.CSSProperties} />
                         ))}
                     </div>
                 )}
                 {showBlur && (
-                    <div className="logo-slider__blur logo-slider__blur--right absolute top-0 bottom-0 right-0 w-1/4 z-10 pointer-events-none">
+                    <div className="logo-slider__blur logo-slider__blur--right absolute top-0 bottom-0 right-0 w-1/6 z-10 pointer-events-none">
                         {Array.from({ length: blurLayers }).map((_, i) => (
                             <div key={i} className="absolute inset-0" style={{ "--blur-index": i } as React.CSSProperties} />
                         ))}
@@ -57,7 +57,7 @@ export const LogoSlider = ({
                     {logos.map((logo, index) => (
                         <li
                             key={index}
-                            className="logo-slider__item h-4/5 w-[120px] sm:w-[140px] lg:w-[160px] aspect-video grid place-items-center shrink-0"
+                            className="logo-slider__item h-4/5 w-[80px] sm:w-[100px] lg:w-[120px] aspect-video grid place-items-center shrink-0"
                             style={{ "--item-index": index } as React.CSSProperties}
                         >
                             <div className="w-full h-full flex items-center justify-center [&>svg]:h-[65%] [&>svg]:w-auto [&>svg]:fill-zinc-800 dark:[&>svg]:fill-zinc-200 [&>img]:h-[65%] [&>img]:w-auto [&>img]:object-contain [&>img]:grayscale [&>img]:brightness-50 dark:[&>img]:brightness-125">

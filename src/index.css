@@ -30,7 +30,7 @@
     --secondary-foreground: oklch(0.15 0.04 260);
 
     --muted: oklch(0.94 0.02 240);
-    --muted-foreground: oklch(0.4 0.04 260);
+    --muted-foreground: oklch(0.25 0.04 260); /* Darkened for better readability */
 
     --accent: oklch(0.65 0.2 200);
     /* Premium Blue Accent */
@@ -144,7 +144,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--border);
   }
 
   body {
@@ -158,7 +158,33 @@
   h5,
   h6 {
     /* Using font-heading (Outfit) for headings */
-    @apply font-heading tracking-tight font-bold;
+    @apply font-heading tracking-tight font-bold text-slate-950 dark:text-white;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #334155;
   }
 }
 
@@ -521,6 +547,52 @@
     50% {
       transform: scaleY(1.4);
     }
+  }
+
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+
+  @keyframes glitch-intense {
+    0% { clip-path: inset(10% 0 30% 0); transform: translate(-5px, -5px); }
+    20% { clip-path: inset(40% 0 10% 0); transform: translate(5px, 5px); }
+    40% { clip-path: inset(80% 0 5% 0); transform: translate(-5px, 2px); }
+    60% { clip-path: inset(20% 0 50% 0); transform: translate(5px, -2px); }
+    80% { clip-path: inset(50% 0 20% 0); transform: translate(-2px, 5px); }
+    100% { clip-path: inset(10% 0 30% 0); transform: translate(0); }
+  }
+
+  .animate-glitch-scroll {
+    animation: glitch-intense 0.2s linear infinite;
+  }
+
+  .hover-glitch:hover {
+    animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+    @apply text-blue-500 dark:text-blue-400;
+  }
+
+  @keyframes orbital-glow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
+
+  .animate-orbital-glow {
+    animation: orbital-glow 4s ease-in-out infinite;
+  }
+
+  @keyframes data-stream {
+    0% { transform: translateY(-100%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+
+  .animate-data-stream {
+    animation: data-stream 8s linear infinite;
   }
 
   .animate-scan {

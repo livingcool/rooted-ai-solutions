@@ -71,7 +71,7 @@ const StickyScrollReveal = ({ content }: { content: any[] }) => {
     })
 
     return (
-        <div ref={container} className="relative mt-[20vh] mb-[50vh]">
+        <div ref={container} className="relative mt-8 md:mt-12 mb-12 md:mb-24">
             {
                 content.map((project, i) => {
                     const targetScale = 1 - ((content.length - i) * 0.05);

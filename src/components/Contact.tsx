@@ -57,15 +57,15 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-32 relative overflow-hidden bg-white dark:bg-[#0a0f14]">
+    <section id="contact" className="py-16 relative overflow-hidden bg-white dark:bg-[#0a0f14]">
       {/* High-Impact background glow */}
       <div className="absolute top-0 right-0 w-[50%] h-[100%] bg-blue-500/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[50%] h-[100%] bg-purple-500/5 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-16 items-center">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
           {/* Left: Branding & Reactive Visual */}
-          <div className="lg:col-span-5 space-y-12">
+          <div className="lg:col-span-5 space-y-8">
             <div className="space-y-6">
               <h2 className="text-5xl md:text-7xl font-black text-black dark:text-white tracking-tighter leading-tight">
                 Let's <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent italic">Talk</span>
@@ -108,7 +108,7 @@ const Contact = () => {
 
           {/* Right: Neural Console Form */}
           <div className="lg:col-span-7">
-            <div className="glass-premium p-6 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-white/10 dark:bg-slate-900/40 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
+            <div className="glass-premium p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-white/10 dark:bg-slate-900/40 backdrop-blur-3xl shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl" />
               
               <form onSubmit={handleSubmit} className="space-y-8 relative z-10">

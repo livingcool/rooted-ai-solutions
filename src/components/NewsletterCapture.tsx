@@ -16,7 +16,7 @@ const NewsletterCapture = () => {
 
     try {
       const { error } = await supabase
-        .from('newsletter_subscribers')
+        .from('newsletter_subscriptions')
         .insert([{ email }]);
 
       if (error) throw error;
@@ -39,9 +39,9 @@ const NewsletterCapture = () => {
   };
 
   return (
-    <section className="py-20 border-t border-black/10 dark:border-white/10">
+    <section className="py-10 border-t border-black/10 dark:border-white/10">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-2xl mx-auto text-center space-y-6">
+        <div className="max-w-2xl mx-auto text-center space-y-4">
           <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white tracking-tight">
             Get the AI Safety Checklist - Free
           </h2>

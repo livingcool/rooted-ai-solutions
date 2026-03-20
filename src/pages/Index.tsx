@@ -4,10 +4,9 @@ import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 // Lazy load non-critical sections
 const About = lazy(() => import("@/components/About"));
-const Services = lazy(() => import("@/components/Services"));
+const NodeArchitecture = lazy(() => import("@/components/NodeArchitecture"));
 const CaseStudies = lazy(() => import("@/components/CaseStudies"));
-const Products = lazy(() => import("@/components/Products"));
-const Careers = lazy(() => import("@/components/Careers"));
+const Services = lazy(() => import("@/components/Services"));
 const Contact = lazy(() => import("@/components/Contact"));
 const SocialProof = lazy(() => import("@/components/SocialProof"));
 const NewsletterCapture = lazy(() => import("@/components/NewsletterCapture"));
@@ -16,9 +15,12 @@ const Footer = lazy(() => import("@/components/Footer"));
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 import TechStackMarquee from "@/components/TechStackMarquee";
 import Seo from "@/components/Seo";
+import { useSmoothScroll } from "@/hooks/use-smooth-scroll";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 
 const Index = () => {
   const location = useLocation();
+  useSmoothScroll();
 
   useEffect(() => {
     // Prevent browser from restoring scroll position automatically
@@ -264,52 +266,18 @@ const Index = () => {
           <TechStackMarquee />
         </RevealOnScroll>
 
-
-        <RevealOnScroll>
-          <Suspense fallback={<div className="h-20" />}>
-            <SocialProof />
+        <div id="about" className="relative">
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <About />
           </Suspense>
-        </RevealOnScroll>
-
-        <div id="about">
-          <RevealOnScroll>
-            <Suspense fallback={<div className="min-h-[50vh]" />}>
-              <About />
-            </Suspense>
-          </RevealOnScroll>
         </div>
 
-        <div id="services">
-          <RevealOnScroll>
-            <Suspense fallback={<div className="min-h-[50vh]" />}>
-              <Services />
-            </Suspense>
-          </RevealOnScroll>
+        <div id="services" className="relative">
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <Services />
+          </Suspense>
         </div>
 
-        <div id="case-studies">
-          <RevealOnScroll>
-            <Suspense fallback={<div className="min-h-[50vh]" />}>
-              <CaseStudies />
-            </Suspense>
-          </RevealOnScroll>
-        </div>
-
-        <div id="products">
-          <RevealOnScroll>
-            <Suspense fallback={<div className="min-h-[50vh]" />}>
-              <Products />
-            </Suspense>
-          </RevealOnScroll>
-        </div>
-
-        <div id="careers">
-          <RevealOnScroll>
-            <Suspense fallback={<div className="min-h-[50vh]" />}>
-              <Careers />
-            </Suspense>
-          </RevealOnScroll>
-        </div>
 
 
 

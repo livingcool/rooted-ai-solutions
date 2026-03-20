@@ -80,23 +80,23 @@ const services = [
 
 const Services = () => {
   return (
-    <section id="services" className="py-20 relative bg-white dark:bg-black">
-      <div className="container mx-auto px-4 md:px-6 mb-24 text-center">
-        <h2 className="text-4xl md:text-7xl font-bold font-heading text-black dark:text-white tracking-tighter mb-6">
+    <section id="services" className="py-12 relative bg-white dark:bg-black">
+      <div className="container mx-auto px-4 md:px-6 mb-6 md:mb-8 text-center">
+        <h2 className="text-4xl md:text-7xl font-bold font-heading text-black dark:text-white tracking-tighter mb-4">
           Our Capabilities
         </h2>
-        <p className="text-xl text-black/60 dark:text-white/60 max-w-2xl mx-auto font-light">
+        <p className="text-xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto font-medium">
           We stack value on top of value. Scroll to explore how we engineer intelligence.
         </p>
       </div>
 
       <StickyScrollReveal content={services} />
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10 pb-20">
+      <div className="container mx-auto px-4 md:px-6 relative z-10 pb-12">
         {/* Why Choose Us Section */}
-        <div className="mt-40">
+        <div className="mt-20">
           <div className="glass-premium p-10 md:p-20 text-center rounded-3xl bg-gradient-to-b from-transparent to-black/5 dark:to-white/5">
-            <h3 className="text-3xl md:text-5xl font-bold font-heading text-black dark:text-white mb-16">
+            <h3 className="text-3xl md:text-5xl font-bold font-heading text-black dark:text-white mb-8">
               Why Choose RootedAI?
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8">

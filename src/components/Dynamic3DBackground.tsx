@@ -307,7 +307,14 @@ const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
             
             <Canvas
                 shadows
-                gl={{ antialias: true, alpha: true, stencil: false, depth: true }}
+                gl={{ 
+                    antialias: true, 
+                    alpha: true, 
+                    stencil: false, 
+                    depth: true,
+                    powerPreference: "high-performance",
+                    failIfMajorPerformanceCaveat: true
+                }}
                 dpr={[1, 2]}
                 camera={{ position: [0, 0, 30], fov: 60 }}
                 style={{ opacity: 0.8 }}
