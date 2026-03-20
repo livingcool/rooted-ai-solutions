@@ -1,6 +1,6 @@
 User-agent: Googlebot
 Allow: /
-Disallow: /*?s=
+# Disallow: /*?s= # Removed to allow crawler to see canonical tags and handle duplicates gracefully
 
 User-agent: Bingbot
 Allow: /
