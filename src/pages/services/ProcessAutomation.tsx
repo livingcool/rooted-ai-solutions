@@ -7,7 +7,7 @@ import TiltCard from "@/components/ui/TiltCard";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
-
+import ComparisonTable from "@/components/ComparisonTable";
 import ROICalculator from "@/components/ROICalculator";
 
 const ProcessAutomation = () => {
@@ -131,28 +131,34 @@ const ProcessAutomation = () => {
 
     const faqs = [
         {
-            question: "What processes can be automated?",
-            answer: "Almost any repetitive, rule-based process can be automated. Common candidates include data entry, report generation, email responses, invoice processing, order fulfillment, employee onboarding, and system integrations. If your team does it manually and repeatedly, it's likely automatable.",
+            id: "what-processes-can-be-automated",
+            question: "What business processes can be automated?",
+            answer: "Any repetitive, rule-based task can be automated. Common examples include data entry, report generation, invoice processing, order fulfillment, and employee onboarding. If your team manually repeats a process, it's a prime candidate for automation to save time and reduce errors.",
         },
         {
-            question: "How much time can automation save?",
-            answer: "Time savings vary by process, but our clients typically save 15-20 hours per week per team member on automated tasks. Some processes see 90%+ reduction in processing time. We provide detailed ROI analysis during the discovery phase.",
+            id: "automation-time-savings",
+            question: "How much time can my business save with automation?",
+            answer: "Most clients save 15-20 hours per week per team member. Some processes achieve a 90%+ reduction in manual effort. We provide a detailed ROI analysis during discovery to identify exactly where automation will deliver the highest time and cost savings for your business.",
         },
         {
-            question: "Will automation replace our employees?",
-            answer: "No! Automation eliminates tedious tasks, not jobs. It frees your team to focus on higher-value work that requires human judgment, creativity, and relationship-building. Most organizations redeploy staff to more strategic roles rather than reducing headcount.",
+            id: "automation-replacing-employees",
+            question: "Will process automation replace my current employees?",
+            answer: "No, automation eliminates tedious tasks, not people. It frees your team to focus on high-value work requiring human judgment and creativity. Organizations typically redeploy staff to strategic roles, increasing overall productivity and job satisfaction without reducing necessary headcount.",
         },
         {
-            question: "How long does automation implementation take?",
-            answer: "Simple automations can be deployed in 1-2 weeks. Complex, multi-system automations typically take 6-12 weeks. We use agile methodologies to deliver incremental value throughout the process, so you see benefits before the full solution is complete.",
+            id: "automation-implementation-time",
+            question: "How long does it take to implement process automation?",
+            answer: "Simple automations deploy in 1-2 weeks, while complex multi-system integrations take 6-12 weeks. We use agile methodologies to deliver incremental value, ensuring you see operational benefits quickly while we build out the full, end-to-end automated solution.",
         },
         {
-            question: "What happens if our process changes?",
-            answer: "We design automations to be flexible and maintainable. When processes change, we can quickly update the automation. We also provide training so your team can make minor adjustments independently. Our ongoing support ensures automations evolve with your business.",
+            id: "automation-process-changes",
+            question: "What happens if our business processes change later?",
+            answer: "Our automations are designed for flexibility. When processes evolve, we can quickly update the logic. We also provide training so your team can handle minor adjustments independently. Our ongoing support ensures your automation infrastructure scales and adapts alongside your business growth.",
         },
         {
-            question: "How do you ensure automation security?",
-            answer: "Security is paramount. We implement role-based access controls, encrypt sensitive data, maintain comprehensive audit logs, and follow industry best practices. All automations undergo security review before deployment, and we provide ongoing monitoring for anomalies.",
+            id: "automation-security",
+            question: "How do you ensure the security of automated processes?",
+            answer: "Security is built-in. We implement role-based access controls, data encryption, and comprehensive audit logs. All automations undergo rigorous security reviews before deployment and are monitored 24/7 for anomalies, ensuring your data and operations remain protected and compliant.",
         },
     ];
 
@@ -245,15 +251,32 @@ const ProcessAutomation = () => {
                     </div>
                 </section>
 
+                {/* Comparison Section */}
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <ComparisonTable
+                            title="RootedAI Automation vs. Standard RPA"
+                            items={[
+                                { feature: "Cognitive Decision Making", rootedAI: true, traditional: false },
+                                { feature: "Unstructured Data Handling", rootedAI: true, traditional: "Poor" },
+                                { feature: "Integration Complexity", rootedAI: "Low (API-first)", traditional: "High (UI-based)" },
+                                { feature: "Processing Speed", rootedAI: "Real-time", traditional: "Batch/Delayed" },
+                                { feature: "Cost Recovery (ROI)", rootedAI: "3-6 Months", traditional: "12-18 Months" },
+                                { feature: "System Resilience", rootedAI: "High", traditional: "Fragile" },
+                            ]}
+                        />
+                    </div>
+                </section>
+
                 {/* Our Services Section */}
                 <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16 space-y-4">
                             <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
-                                Our Services
+                                What Process Automation Services Does RootedAI Provide?
                             </h2>
                             <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light">
-                                Comprehensive automation solutions for modern businesses
+                                Scalable automation solutions for complex enterprise workflows.
                             </p>
                         </div>
 
@@ -376,7 +399,7 @@ const ProcessAutomation = () => {
 
                         <div className="max-w-4xl mx-auto space-y-6">
                             {faqs.map((faq, index) => (
-                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                <TiltCard key={index} id={faq.id} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
                                     <h3 className="text-lg font-bold text-black dark:text-white mb-3">{faq.question}</h3>
                                     <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
                                 </TiltCard>

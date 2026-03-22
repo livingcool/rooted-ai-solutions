@@ -197,30 +197,38 @@ const Index = () => {
           "@graph": [
             {
               "@type": "ProfessionalService",
-              "additionalType": "SoftwareHouse",
+              "additionalType": ["SoftwareHouse", "AICompany"],
               "name": "RootedAI Solutions",
               "url": "https://www.rootedai.co.in",
               "logo": "https://www.rootedai.co.in/logo.png",
               "image": "https://www.rootedai.co.in/og-image.png",
-              "description": "RootedAI is the top software solutions provider in Hosur, specializing in AI automation, custom ERP, web apps, and enterprise software.",
+              "description": "RootedAI is a premier engineering firm specializing in autonomous agentic workflows and enterprise-grade AI safety solutions.",
               "slogan": "Engineering Intelligence. COMPLEXITY. SIMPLIFIED.",
               "priceRange": "$$",
               "foundingDate": "2023",
               "founders": [
                 {
                   "@type": "Person",
-                  "name": "RootedAI Team"
+                  "name": "RootedAI Engineering Team"
                 }
+              ],
+              "knowsAbout": [
+                "Artificial Intelligence",
+                "Process Automation",
+                "Large Language Models",
+                "AI Safety",
+                "Enterprise Software"
               ],
               "sameAs": [
                 "https://www.linkedin.com/company/rootedai",
                 "https://x.com/rootedai2025",
-                "https://www.instagram.com/rootedai_official/"
+                "https://www.instagram.com/rootedai_official/",
+                "https://github.com/rootedai"
               ],
               "contactPoint": {
                 "@type": "ContactPoint",
-                "telephone": "+91-917904168521",
-                "contactType": "sales",
+                "telephone": "+91-7904168521",
+                "contactType": "customer service",
                 "areaServed": "Global",
                 "availableLanguage": ["English", "Tamil", "Hindi"]
               },
@@ -238,8 +246,8 @@ const Index = () => {
                 "longitude": 77.8253
               },
               "areaServed": {
-                "@type": "City",
-                "name": "Hosur"
+                "@type": "Country",
+                "name": "Global"
               },
               "hasMap": "https://maps.google.com/?q=RootedAI+Hosur"
             },

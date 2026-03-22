@@ -3,29 +3,37 @@ import { motion } from "framer-motion";
 const caseStudies = [
   {
     client: "Global Logistics Corp",
+    challenge: "Manual invoice auditing and high error rates in processing 10k+ monthly documents.",
+    solution: "Deployed autonomous AI agents to parse, validate, and reconcile invoices in real-time.",
+    result: "90% Automation and $2.4M saved annually.",
     impact: "90% Automation",
-    description: "Replaced manual invoice auditing with AI agents.",
     metric: "Saved $2.4M/yr",
     category: "LVO"
   },
   {
     client: "FinTech Prime",
+    challenge: "Scaling compliance monitoring for thousands of transactions with zero tolerance for errors.",
+    solution: "Integrated real-time AI security protocols for automated threat detection and audit trails.",
+    result: "Zero breaches and 100% audit accuracy score.",
     impact: "Zero Breaches",
-    description: "Implemented real-time compliance monitoring.",
     metric: "100% Audit Score",
     category: "SAFETY"
   },
   {
     client: "HealthSync AI",
+    challenge: "High volume of patient queries leading to long wait times and occasional hallucinations.",
+    solution: "Implemented RAG-based AI agents with strict medical guardrails and context awareness.",
+    result: "10x accuracy improvement and 99.9% reliable response rates.",
     impact: "10x Accuracy",
-    description: "Reduced patient query hallucinations.",
     metric: "99.9% Reliable",
     category: "NLP"
   },
   {
     client: "RetailFlow",
+    challenge: "Inefficient inventory management across 500+ stores causing excessive waste.",
+    solution: "Custom predictive analytics engine forecasting demand with high granularity.",
+    result: "60% efficiency gain and near-zero inventory waste.",
     impact: "60% Efficiency",
-    description: "Automated inventory predictions across 500 stores.",
     metric: "Near-Zero Waste",
     category: "PREDICTIVE"
   }
@@ -58,7 +66,12 @@ const CaseStudies = () => {
                 <span className="text-2xl font-black text-slate-900 dark:text-white">{study.impact}</span>
               </div>
               <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-2">{study.client}</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 whitespace-normal">{study.description}</p>
+              <div className="space-y-2 mb-4">
+                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Solution:</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-normal leading-relaxed">{study.solution}</p>
+                <p className="text-xs text-green-600 dark:text-green-400 font-bold uppercase tracking-wider mt-2">Result:</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300 italic">"{study.result}"</p>
+              </div>
               <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
                 <span className="text-xs font-black tracking-widest text-slate-900 dark:text-white uppercase">{study.metric}</span>

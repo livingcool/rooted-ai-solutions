@@ -4,9 +4,10 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 interface TiltCardProps {
     children: React.ReactNode;
     className?: string;
+    id?: string;
 }
 
-const TiltCard = ({ children, className = "" }: TiltCardProps) => {
+const TiltCard = ({ children, className = "", id }: TiltCardProps) => {
     const ref = useRef<HTMLDivElement>(null);
 
     const x = useMotionValue(0);
@@ -44,6 +45,7 @@ const TiltCard = ({ children, className = "" }: TiltCardProps) => {
     return (
         <motion.div
             ref={ref}
+            id={id}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{
@@ -69,7 +71,7 @@ const TiltCard = ({ children, className = "" }: TiltCardProps) => {
                     background: useTransform(
                         [mouseX, mouseY],
                         ([latestX, latestY]) =>
-                            `radial-gradient(circle at ${50 + latestX * 100}% ${50 + latestY * 100
+                            `radial-gradient(circle at ${50 + (latestX as number) * 100}% ${50 + (latestY as number) * 100
                             }%, rgba(255,255,255,0.15) 0%, transparent 50%)`
                     ),
                     opacity: useTransform(mouseX, [-0.5, 0.5], [0, 1]), // Fade in glare on interaction

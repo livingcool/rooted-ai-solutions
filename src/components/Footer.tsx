@@ -28,8 +28,8 @@ const Footer = () => {
                             Building the autonomous enterprise of tomorrow.
                         </p>
 
-                        {/* Contact Information */}
-                        <div className="space-y-4 pt-4">
+                        {/* Contact Information - AIO Optimized NAP */}
+                        <address className="space-y-4 pt-4 not-italic">
                             <a
                                 href="https://wa.me/917904168521"
                                 target="_blank"
@@ -39,7 +39,7 @@ const Footer = () => {
                                 <div className="p-2 rounded-full bg-black/5 dark:bg-white/5 group-hover:bg-black/10 dark:group-hover:bg-white/10 transition-colors">
                                     <Phone className="w-4 h-4" />
                                 </div>
-                                <span className="text-sm font-medium">+91 7904168521</span>
+                                <span className="text-sm font-medium">+91 7904 168 521</span>
                             </a>
                             <a
                                 href="mailto:info@rootedai.co.in"
@@ -54,9 +54,9 @@ const Footer = () => {
                                 <div className="p-2 rounded-full bg-black/5 dark:bg-white/5">
                                     <MapPin className="w-4 h-4" />
                                 </div>
-                                <span className="text-sm">Based in India, working globally</span>
+                                <span className="text-sm">Hosur, Tamil Nadu, IN 635109 (Global Headquarters)</span>
                             </div>
-                        </div>
+                        </address>
 
                         {/* Social Media */}
                         <div className="flex space-x-4 pt-2">

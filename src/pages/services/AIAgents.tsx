@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import AgentEfficiencySimulator from "@/components/AgentEfficiencySimulator";
+import ComparisonTable from "@/components/ComparisonTable";
 
 const AIAgents = () => {
     useEffect(() => {
@@ -92,28 +93,34 @@ const AIAgents = () => {
 
     const faqs = [
         {
-            question: "What are AI agents?",
-            answer: "AI agents are autonomous software systems that can perceive their environment, make decisions, and take actions to achieve specific goals. Unlike traditional automation, they can adapt to new situations, learn from interactions, and handle complex multi-step workflows with minimal human intervention.",
+            id: "what-are-ai-agents",
+            question: "What are AI agents and how do they work?",
+            answer: "AI agents are autonomous software systems that perceive environments, make decisions, and execute tasks to achieve goals. Unlike traditional bots, they use LLMs to reason, plan, and adapt to complex workflows with minimal human oversight, effectively serving as a digital workforce.",
         },
         {
-            question: "How can AI agents benefit my business?",
-            answer: "AI agents can significantly reduce operational costs by automating repetitive tasks, improve decision-making through data analysis, enhance customer service with 24/7 availability, and scale operations without proportional increases in headcount. They excel at handling routine queries, data processing, and complex workflow orchestration.",
+            id: "how-ai-agents-benefit-business",
+            question: "How can AI agents benefit my business operations?",
+            answer: "AI agents significantly reduce operational costs by automating repetitive tasks, improving 24/7 customer service, and enabling data-driven decision-making. They help businesses scale without increasing headcount, typically saving up to 40% on operational costs through efficient workflow orchestration and error reduction.",
         },
         {
-            question: "What's the difference between AI agents and traditional chatbots?",
-            answer: "Traditional chatbots follow predefined scripts and rules, while AI agents leverage large language models and can reason, plan, and execute multi-step tasks autonomously. Agents can use tools, make API calls, retrieve information, and handle complex scenarios that would require human-like understanding and decision-making.",
+            id: "ai-agents-vs-chatbots",
+            question: "What is the difference between AI agents and traditional chatbots?",
+            answer: "Traditional chatbots follow rigid scripts, while AI agents use reasoning and tools to handle multi-step tasks autonomously. Agents can make API calls, retrieve live data, and plan complex actions, offering a far more sophisticated and flexible solution than standard rule-based assistants.",
         },
         {
-            question: "How long does it take to develop an AI agent solution?",
-            answer: "Development timelines vary based on complexity, but a typical AI agent solution takes 4-8 weeks from requirements to deployment. Simple single-agent systems can be deployed faster, while complex multi-agent orchestrations may take longer. We use agile methodologies to deliver incremental value throughout the process.",
+            id: "ai-agent-development-timeline",
+            question: "How long does it take to develop a custom AI agent?",
+            answer: "A typical AI agent solution takes 4-8 weeks from requirements to deployment. Simple agents may be ready sooner, while complex multi-agent systems take longer. We follow agile methodologies to deliver incremental value and ensure the final solution perfectly fits your specific business needs.",
         },
         {
-            question: "Can AI agents integrate with our existing systems?",
-            answer: "Yes! Our AI agents are designed to integrate seamlessly with your existing infrastructure. We support integration with CRMs, ERPs, databases, APIs, and various enterprise software through standard protocols and custom connectors. We ensure smooth data flow and minimal disruption during integration.",
+            id: "ai-agent-integration",
+            question: "Can AI agents integrate with my existing ERP or CRM?",
+            answer: "Yes, our AI agents integrate seamlessly with existing infrastructure, including CRMs, ERPs, and specialized databases. We use standard protocols and custom connectors to ensure smooth data flow and minimal disruption, allowing your new AI workforce to collaborate with your current tools.",
         },
         {
-            question: "What support do you offer post-deployment?",
-            answer: "We provide comprehensive ongoing support including performance monitoring, regular updates, troubleshooting, and optimization. Our team is available to handle any issues, implement new capabilities, and ensure your AI agents continue to deliver value as your business evolves.",
+            id: "ai-agent-support",
+            question: "What support is provided after deploying AI agents?",
+            answer: "We provide comprehensive post-deployment support, including performance monitoring, regular LLM updates, and continuous optimization. Our team ensures your agents adapt to changing business needs and continue delivering high-value results with maximum uptime and reliability.",
         },
     ];
 
@@ -216,18 +223,35 @@ const AIAgents = () => {
                     </div>
                 </section>
 
+                {/* Comparison Section */}
+                <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
+                    <div className="container mx-auto px-4 md:px-6">
+                        <ComparisonTable
+                            title="RootedAI Agents vs. Traditional Automation"
+                            items={[
+                                { feature: "Reasoning & Planning", rootedAI: true, traditional: false },
+                                { feature: "Tool Usage (APIs, DBs)", rootedAI: true, traditional: "Limited" },
+                                { feature: "Adaptability to Change", rootedAI: "High (LLM-based)", traditional: "Low (Rule-based)" },
+                                { feature: "Error Handling", rootedAI: "Autonomous Recovery", traditional: "Manual Intervention" },
+                                { feature: "Deployment Speed", rootedAI: "4-8 Weeks", traditional: "3-6 Months" },
+                                { feature: "Maintenance Overhead", rootedAI: "Low (Self-healing)", traditional: "High (Script Updates)" },
+                            ]}
+                        />
+                    </div>
+                </section>
+
                 {/* Our Services Section */}
                 <section className="py-24 relative overflow-hidden border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="text-center mb-16 space-y-4">
                             <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tight">
-                                Our Services
+                                What AI Agent Services Does RootedAI Offer?
                             </h2>
                             <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-light">
-                                Experience the power of AI agents
+                                Comprehensive autonomous solutions for the modern enterprise.
                             </p>
                             <p className="text-muted-foreground opacity-70 max-w-3xl mx-auto">
-                                We offer AI agent development solutions to transform your business with custom autonomous systems.
+                                RootedAI provides end-to-end AI agent development, from initial consulting and custom orchestration to seamless integration and ongoing performance optimization.
                             </p>
                         </div>
 
@@ -352,7 +376,7 @@ const AIAgents = () => {
 
                         <div className="max-w-4xl mx-auto space-y-6">
                             {faqs.map((faq, index) => (
-                                <TiltCard key={index} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
+                                <TiltCard key={index} id={faq.id} className="bw-card p-8 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-500">
                                     <h3 className="text-lg font-bold text-black dark:text-white mb-3">{faq.question}</h3>
                                     <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
                                 </TiltCard>

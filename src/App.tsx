@@ -15,6 +15,7 @@ import { Analytics } from "@vercel/analytics/react";
 const Index = lazy(() => import("./pages/Index"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const FAQ = lazy(() => import("./pages/FAQ"));
 const AdminHiringDashboard = lazy(() => import("./pages/AdminHiringDashboard"));
 const AdminPassSet = lazy(() => import("./pages/AdminPassSet"));
 const Login = lazy(() => import("./pages/Login"));
@@ -83,6 +84,7 @@ const AnimatedRoutes = () => {
       <Route path="/careers" element={<PageTransition><CareersPage /></PageTransition>} />
       <Route path="/contact" element={<PageTransition><Index /></PageTransition>} />
       <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
+      <Route path="/faq" element={<PageTransition><FAQ /></PageTransition>} />
 
       {/* Blog */}
       <Route path="/blog" element={<PageTransition><BlogListing /></PageTransition>} />

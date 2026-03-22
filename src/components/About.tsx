@@ -14,15 +14,19 @@ const About = () => {
   });
 
   // COMPACT PHASE RANGES (Overlap for seamless flow)
-  // 0.0 -> 0.6: Mission & Vision
-  // 0.4 -> 1.0: Goal
+  // 0.0 -> 0.4: Mission & Vision
+  // 0.3 -> 0.7: Goal
+  // 0.6 -> 1.0: Authority & History
   
-  const parallelOpacity = useTransform(scrollYProgress, [0.0, 0.1, 0.5, 0.6], [0, 1, 1, 0]);
-  const missionX = useTransform(scrollYProgress, [0.0, 0.1, 0.5, 0.6], [isMobile ? 0 : -100, 0, 0, isMobile ? 0 : -100]);
-  const visionX = useTransform(scrollYProgress, [0.0, 0.1, 0.5, 0.6], [isMobile ? 0 : 100, 0, 0, isMobile ? 0 : 100]);
+  const parallelOpacity = useTransform(scrollYProgress, [0.0, 0.1, 0.3, 0.4], [0, 1, 1, 0]);
+  const missionX = useTransform(scrollYProgress, [0.0, 0.1, 0.3, 0.4], [isMobile ? 0 : -100, 0, 0, isMobile ? 0 : -100]);
+  const visionX = useTransform(scrollYProgress, [0.0, 0.1, 0.3, 0.4], [isMobile ? 0 : 100, 0, 0, isMobile ? 0 : 100]);
   
-  const goalOpacity = useTransform(scrollYProgress, [0.4, 0.55, 0.9, 1.0], [0, 1, 1, 1]);
-  const goalScale = useTransform(scrollYProgress, [0.4, 0.55], [0.8, 1]);
+  const goalOpacity = useTransform(scrollYProgress, [0.35, 0.45, 0.65, 0.75], [0, 1, 1, 0]);
+  const goalScale = useTransform(scrollYProgress, [0.35, 0.45], [0.8, 1]);
+
+  const authOpacity = useTransform(scrollYProgress, [0.7, 0.8, 0.95, 1.0], [0, 1, 1, 1]);
+  const authY = useTransform(scrollYProgress, [0.7, 0.8], [50, 0]);
 
   // Orbital Rotations
   const ring1Rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
@@ -130,6 +134,33 @@ const About = () => {
               Lead Supremacy
             </p>
           </div>
+        </motion.article>
+
+        {/* Phase 3: AUTHORITY (AIO Focus) */}
+        <motion.article 
+          style={{ opacity: authOpacity, y: authY }}
+          className="absolute z-40 w-full max-w-4xl px-4 flex flex-col items-center text-center space-y-8"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+            <div className="p-6 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+              <h3 className="text-blue-500 font-bold text-sm uppercase tracking-widest mb-2">Established</h3>
+              <p className="text-2xl font-black text-slate-900 dark:text-white">2023</p>
+              <p className="text-xs text-slate-500 mt-2">Engineering Intelligence from Day One</p>
+            </div>
+            <div className="p-6 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+              <h3 className="text-blue-500 font-bold text-sm uppercase tracking-widest mb-2">The Team</h3>
+              <p className="text-2xl font-black text-slate-900 dark:text-white">Elite Squad</p>
+              <p className="text-xs text-slate-500 mt-2">Specialists in Autonomous Multi-Agent Systems</p>
+            </div>
+            <div className="p-6 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+              <h3 className="text-blue-500 font-bold text-sm uppercase tracking-widest mb-2">Impact</h3>
+              <p className="text-2xl font-black text-slate-900 dark:text-white">Global Reach</p>
+              <p className="text-xs text-slate-500 mt-2">Scalable Solutions for Global Enterprises</p>
+            </div>
+          </div>
+          <p className="text-slate-600 dark:text-slate-300 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
+            RootedAI Solutions is a premier engineering firm specializing in <span className="text-slate-900 dark:text-white font-bold">autonomous agentic workflows</span> and <span className="text-slate-900 dark:text-white font-bold">enterprise-grade AI safety</span>. We bridge the gap between complex data archaeology and actionable business intelligence.
+          </p>
         </motion.article>
       </div>
     </section>
