@@ -14,19 +14,23 @@ const About = () => {
   });
 
   // COMPACT PHASE RANGES (Overlap for seamless flow)
-  // 0.0 -> 0.4: Mission & Vision
-  // 0.3 -> 0.7: Goal
-  // 0.6 -> 1.0: Authority & History
+  // 0.0 -> 0.25: Mission & Vision
+  // 0.20 -> 0.50: Goal
+  // 0.45 -> 0.75: Authority & History
+  // 0.70 -> 1.0: Data First Philosophy
   
-  const parallelOpacity = useTransform(scrollYProgress, [0.0, 0.1, 0.3, 0.4], [0, 1, 1, 0]);
-  const missionX = useTransform(scrollYProgress, [0.0, 0.1, 0.3, 0.4], [isMobile ? 0 : -100, 0, 0, isMobile ? 0 : -100]);
-  const visionX = useTransform(scrollYProgress, [0.0, 0.1, 0.3, 0.4], [isMobile ? 0 : 100, 0, 0, isMobile ? 0 : 100]);
+  const parallelOpacity = useTransform(scrollYProgress, [0.0, 0.05, 0.2, 0.25], [0, 1, 1, 0]);
+  const missionX = useTransform(scrollYProgress, [0.0, 0.05, 0.2, 0.25], [isMobile ? 0 : -100, 0, 0, isMobile ? 0 : -100]);
+  const visionX = useTransform(scrollYProgress, [0.0, 0.05, 0.2, 0.25], [isMobile ? 0 : 100, 0, 0, isMobile ? 0 : 100]);
   
-  const goalOpacity = useTransform(scrollYProgress, [0.35, 0.45, 0.65, 0.75], [0, 1, 1, 0]);
-  const goalScale = useTransform(scrollYProgress, [0.35, 0.45], [0.8, 1]);
+  const goalOpacity = useTransform(scrollYProgress, [0.2, 0.3, 0.45, 0.5], [0, 1, 1, 0]);
+  const goalScale = useTransform(scrollYProgress, [0.2, 0.3], [0.8, 1]);
 
-  const authOpacity = useTransform(scrollYProgress, [0.7, 0.8, 0.95, 1.0], [0, 1, 1, 1]);
-  const authY = useTransform(scrollYProgress, [0.7, 0.8], [50, 0]);
+  const authOpacity = useTransform(scrollYProgress, [0.45, 0.55, 0.7, 0.75], [0, 1, 1, 0]);
+  const authY = useTransform(scrollYProgress, [0.45, 0.55], [50, 0]);
+
+  const philOpacity = useTransform(scrollYProgress, [0.7, 0.8, 0.95, 1.0], [0, 1, 1, 1]);
+  const philScale = useTransform(scrollYProgress, [0.7, 0.8], [0.9, 1]);
 
   // Orbital Rotations
   const ring1Rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
@@ -44,7 +48,7 @@ const About = () => {
   });
 
   return (
-    <section ref={containerRef} className="relative h-[200vh] bg-white dark:bg-[#030303] overflow-visible font-heading transition-colors duration-500">
+    <section ref={containerRef} className="relative h-[400vh] bg-transparent overflow-visible font-heading transition-colors duration-500">
       {/* Background Ambience */}
       <div className="absolute inset-0 z-0 opacity-[0.05] dark:opacity-[0.1] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500 via-transparent to-transparent pointer-events-none" />
 
@@ -161,6 +165,50 @@ const About = () => {
           <p className="text-slate-600 dark:text-slate-300 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
             RootedAI Solutions is a premier engineering firm specializing in <span className="text-slate-900 dark:text-white font-bold">autonomous agentic workflows</span> and <span className="text-slate-900 dark:text-white font-bold">enterprise-grade AI safety</span>. We bridge the gap between complex data archaeology and actionable business intelligence.
           </p>
+        </motion.article>
+
+        {/* Phase 4: DATA-FIRST PHILOSOPHY */}
+        <motion.article 
+          style={{ opacity: philOpacity, scale: philScale }}
+          className="absolute z-40 w-full max-w-5xl px-4 flex flex-col items-center text-center space-y-8 pointer-events-none"
+        >
+          <div className="mb-4">
+             <h2 className={cn(
+               "text-4xl md:text-7xl font-black tracking-tighter text-slate-900 dark:text-white uppercase transition-all duration-75",
+               glitchActive && "animate-glitch-scroll text-blue-600 dark:text-blue-400"
+             )}>
+                DATA FIRST<span className="text-blue-600">.</span>
+             </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-8 pointer-events-auto">
+            <div className="p-8 rounded-2xl bg-slate-900 dark:bg-white border border-slate-800 dark:border-slate-200 shadow-2xl relative overflow-hidden group">
+              <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <h3 className="text-blue-400 dark:text-blue-600 font-bold text-lg md:text-xl uppercase tracking-widest mb-4">The Foundation</h3>
+              <p className="text-xl md:text-2xl font-bold text-white dark:text-slate-900 leading-tight">
+                Data-first ensures reliability.
+              </p>
+              <p className="mt-4 text-slate-400 dark:text-slate-600 font-medium">
+                We emphasize building robust data quality and infrastructure before implementing AI. Data is the bedrock of trustworthy intelligence.
+              </p>
+            </div>
+            <div className="p-8 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-md">
+              <h3 className="text-slate-500 font-bold text-lg md:text-xl uppercase tracking-widest mb-4">The Engine</h3>
+              <p className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-tight">
+                AI-first prioritizes speed to maturity.
+              </p>
+              <p className="mt-4 text-slate-600 dark:text-slate-400 font-medium">
+                While AI drives business value and automation rapidly, its success is tethered to the quality of the data it consumes.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 p-8 rounded-2xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-blue-900/20 border border-blue-500/20 max-w-4xl mx-auto backdrop-blur-md relative overflow-hidden pointer-events-auto">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400/20 via-transparent to-transparent opacity-50 blur-2xl pointer-events-none" />
+            <p className="text-xl md:text-3xl text-slate-800 dark:text-slate-200 font-medium italic leading-relaxed relative z-10">
+              "Both are codependent; <br className="hidden md:block" /><span className="font-black text-slate-900 dark:text-white underline decoration-blue-500/30">AI without data is blind</span>, and <span className="font-black text-slate-900 dark:text-white underline decoration-purple-500/30">data without AI is simply storage</span>."
+            </p>
+          </div>
         </motion.article>
       </div>
     </section>

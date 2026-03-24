@@ -1,120 +1,198 @@
-import { Brain, Cpu, Globe, MessageSquare, Zap, Shield, Users } from "lucide-react";
-import StickyScrollReveal from "@/components/ui/sticky-scroll-reveal";
+import { Brain, Cpu, Globe, MessageSquare, Zap, Shield, Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 
 const services = [
   {
     title: "AI Safety & Compliance",
-    description: "Deploy AI without the risk. Comprehensive safety audits, bias testing, and DPDP compliance.",
-    example: "E.g., Ensure DPDP compliance, eliminate AI bias, maintain 99.8% accuracy",
-    icon: <Shield className="w-12 h-12 text-white" />,
-    metrics: "Zero compliance incidents",
+    description: "Deploy AI without risk. Full DPDP audits, zero bias.",
+    icon: <Shield className="w-8 h-8" />,
     route: "/services/ai-safety",
-    color: "#0f4c3a",
+    color: "from-emerald-500/20 to-emerald-900/20",
+    borderHover: "group-hover:border-emerald-500/50",
+    textHover: "group-hover:text-emerald-400",
+    size: "col-span-1 md:col-span-2 row-span-2",
   },
   {
     title: "AI Agents",
-    description: "Autonomous agents that handle complex workflows, from customer support to data analysis.",
-    example: "E.g., Auto-respond to 80% of support tickets, route complex queries to humans",
-    icon: <Brain className="w-12 h-12 text-white" />,
-    metrics: "Deflect 60% of tickets",
+    description: "Autonomous agents mapping complex pipelines.",
+    icon: <Brain className="w-8 h-8" />,
     route: "/services/ai-agents",
-    color: "#0f172a", // Slate 900
+    color: "from-blue-500/20 to-blue-900/20",
+    borderHover: "group-hover:border-blue-500/50",
+    textHover: "group-hover:text-blue-400",
+    size: "col-span-1 md:col-span-1 row-span-1",
   },
   {
     title: "Process Automation",
-    description: "End-to-end automation of repetitive tasks, reducing manual effort by up to 90%.",
-    example: "E.g., Automate invoice reconciliation and order status updates for logistics",
-    icon: <Cpu className="w-12 h-12 text-white" />,
-    metrics: "Save 15-20 hrs/week",
+    description: "End-to-end autonomous RPA scaling.",
+    icon: <Cpu className="w-8 h-8" />,
     route: "/services/process-automation",
-    color: "#1e1b4b", // Indigo 950
+    color: "from-purple-500/20 to-purple-900/20",
+    borderHover: "group-hover:border-purple-500/50",
+    textHover: "group-hover:text-purple-400",
+    size: "col-span-1 md:col-span-1 row-span-1",
   },
   {
     title: "Web Solutions",
-    description: "Dynamic, AI-integrated web environments that adapt to user behavior.",
-    example: "E.g., Custom dashboards with real-time analytics and predictive insights",
-    icon: <Globe className="w-12 h-12 text-white" />,
-    metrics: "Deploy in 2-4 weeks",
+    description: "Dynamic responsive digital gateways.",
+    icon: <Globe className="w-8 h-8" />,
     route: "/services/web-solutions",
-    color: "#172554", // Blue 950
+    color: "from-amber-500/20 to-amber-900/20",
+    borderHover: "group-hover:border-amber-500/50",
+    textHover: "group-hover:text-amber-400",
+    size: "col-span-1 md:col-span-1 row-span-1",
   },
   {
     title: "NLP Systems",
-    description: "Advanced natural language processing for sentiment analysis and automated reporting.",
-    example: "E.g., Extract key insights from customer feedback and generate weekly reports",
-    icon: <MessageSquare className="w-12 h-12 text-white" />,
-    metrics: "Process 1000s docs/min",
+    description: "Human-level semantic understanding.",
+    icon: <MessageSquare className="w-8 h-8" />,
     route: "/services/nlp-systems",
-    color: "#020617", // Slate 950
+    color: "from-rose-500/20 to-rose-900/20",
+    borderHover: "group-hover:border-rose-500/50",
+    textHover: "group-hover:text-rose-400",
+    size: "col-span-1 md:col-span-2 row-span-1",
   },
   {
     title: "Predictive Analytics",
-    description: "Data-driven insights that forecast trends and optimize decision-making.",
-    example: "E.g., Predict inventory demand and optimize stock levels for e-commerce",
-    icon: <Zap className="w-12 h-12 text-white" />,
-    metrics: "Reduce wastage by 30%",
+    description: "Precision forecasting with ML models.",
+    icon: <Zap className="w-8 h-8" />,
     route: "/services/predictive-analytics",
-    color: "#0a0a0a", // Neutral 950
+    color: "from-cyan-500/20 to-cyan-900/20",
+    borderHover: "group-hover:border-cyan-500/50",
+    textHover: "group-hover:text-cyan-400",
+    size: "col-span-1 md:col-span-1 row-span-2",
   },
   {
     title: "Enterprise Security",
-    description: "AI-powered threat detection and automated security protocols.",
-    example: "E.g., Real-time anomaly detection and automated security alerts",
-    icon: <Shield className="w-12 h-12 text-white" />,
-    metrics: "99.9% uptime SLA",
+    description: "Military-grade automated defenses.",
+    icon: <Shield className="w-8 h-8" />,
     route: "/services/enterprise-security",
-    color: "#111827", // Gray 900
+    color: "from-indigo-500/20 to-indigo-900/20",
+    borderHover: "group-hover:border-indigo-500/50",
+    textHover: "group-hover:text-indigo-400",
+    size: "col-span-1 md:col-span-1 row-span-1",
   },
   {
     title: "Outsourcing",
-    description: "Scale your team instantly with our elite pre-vetted developers.",
-    example: "E.g., Hire a full stack team in 48 hours for your next big project",
-    icon: <Users className="w-12 h-12 text-white" />,
-    metrics: "Save 60% on costs",
+    description: "Elite 10x engineering squads.",
+    icon: <Users className="w-8 h-8" />,
     route: "/services/outsourcing",
-    color: "#18181b", // Zinc 950
+    color: "from-orange-500/20 to-orange-900/20",
+    borderHover: "group-hover:border-orange-500/50",
+    textHover: "group-hover:text-orange-400",
+    size: "col-span-1 md:col-span-1 row-span-1",
   },
 ];
 
+const InteractiveServiceCard = ({ service, index }: { service: any; index: number }) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95, y: 30 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: index * 0.05 }}
+      onMouseMove={handleMouseMove}
+      className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-black/10 dark:border-white/10 glass-premium bg-white/50 dark:bg-black/50 p-8 hover:shadow-2xl transition-all duration-500 ${service.size} ${service.borderHover}`}
+    >
+      {/* Interactive Spotlight Effect */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100 dark:group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              600px circle at ${mouseX}px ${mouseY}px,
+              rgba(255,255,255,0.15),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      
+      {/* Background Static Gradient */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-40 group-hover:opacity-80 transition-opacity duration-500 -z-10`} />
+
+      <div className="relative z-10 flex flex-col h-full">
+        <div className={`p-4 rounded-2xl w-fit bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/20 mb-6 text-slate-800 dark:text-slate-200 transition-colors ${service.textHover}`}>
+          {service.icon}
+        </div>
+        
+        <div>
+          <h3 className={`text-2xl font-heading font-bold text-slate-900 dark:text-white mb-2 transition-colors ${service.textHover}`}>
+            {service.title}
+          </h3>
+          <p className="text-slate-600 dark:text-slate-400 font-medium">
+            {service.description}
+          </p>
+        </div>
+
+        <div className="mt-8 flex justify-end flex-grow items-end w-full">
+          <Link 
+            to={service.route}
+            className="group/link flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            <span>Initialize Node</span>
+            <div className="w-8 h-8 rounded-full border border-black/20 dark:border-white/20 flex items-center justify-center group-hover/link:bg-blue-600 group-hover/link:border-blue-600 group-hover/link:text-white transition-all overflow-hidden relative">
+              <ArrowRight className="w-4 h-4 absolute transition-transform duration-300 -translate-x-6 group-hover/link:translate-x-0" />
+              <ArrowRight className="w-4 h-4 absolute transition-transform duration-300 translate-x-0 group-hover/link:translate-x-6" />
+            </div>
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const Services = () => {
   return (
-    <section id="services" className="py-12 relative bg-white dark:bg-black">
-      <div className="container mx-auto px-4 md:px-6 mb-6 md:mb-8 text-center">
-        <h2 className="text-4xl md:text-7xl font-bold font-heading text-black dark:text-white tracking-tighter mb-4">
-          Our Capabilities
+    <section id="services" className="py-24 relative bg-transparent pointer-events-none">
+      <div className="container mx-auto px-4 md:px-6 mb-12 md:mb-16 text-center pointer-events-auto relative z-10">
+        <h2 className="text-4xl md:text-7xl font-bold font-heading text-black dark:text-white tracking-tighter mb-6 drop-shadow-md">
+          Core Capabilities
         </h2>
-        <p className="text-xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto font-medium">
-          We stack value on top of value. Scroll to explore how we engineer intelligence.
+        <p className="text-lg md:text-xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto font-medium bg-white/50 dark:bg-black/50 p-4 rounded-full backdrop-blur-md border border-black/5 dark:border-white/5">
+          Orchestrating autonomous logic architectures. Scale your enterprise beyond organic limits.
         </p>
       </div>
 
-      <StickyScrollReveal content={services} />
+      <div className="container mx-auto px-4 md:px-6 relative z-10 pointer-events-auto">
+        <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[250px] gap-4 md:gap-6">
+          {services.map((service, i) => (
+            <InteractiveServiceCard key={i} service={service} index={i} />
+          ))}
+        </div>
+      </div>
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10 pb-12">
+      <div className="container mx-auto px-4 md:px-6 relative z-10 pb-12 pointer-events-auto mt-20">
         {/* Why Choose Us Section */}
-        <div className="mt-20">
-          <div className="glass-premium p-10 md:p-20 text-center rounded-3xl bg-gradient-to-b from-transparent to-black/5 dark:to-white/5">
-            <h3 className="text-3xl md:text-5xl font-bold font-heading text-black dark:text-white mb-8">
-              Why Choose RootedAI?
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8">
-              <div className="space-y-4 group">
-                <div className="text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-black to-black/50 dark:from-white dark:to-white/50 group-hover:scale-110 transition-transform duration-500">10x</div>
-                <p className="text-xl text-black dark:text-white font-medium">Faster Execution</p>
-                <p className="text-sm text-black/50 dark:text-white/50 uppercase tracking-widest">vs manual processes</p>
-              </div>
-              <div className="space-y-4 group">
-                <div className="text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-black to-black/50 dark:from-white dark:to-white/50 group-hover:scale-110 transition-transform duration-500">90%</div>
-                <p className="text-xl text-black dark:text-white font-medium">Error Reduction</p>
-                <p className="text-sm text-black/50 dark:text-white/50 uppercase tracking-widest">in repetitive tasks</p>
-              </div>
-              <div className="space-y-4 group">
-                <div className="text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-black to-black/50 dark:from-white dark:to-white/50 group-hover:scale-110 transition-transform duration-500">24/7</div>
-                <p className="text-xl text-black dark:text-white font-medium">Uptime Guarantee</p>
-                <p className="text-sm text-black/50 dark:text-white/50 uppercase tracking-widest">with AI agents</p>
-              </div>
+        <div className="glass-premium p-10 md:p-16 text-center rounded-[3rem] bg-white/40 dark:bg-[#030303]/40 border border-black/10 dark:border-white/10 shadow-2xl backdrop-blur-xl">
+          <h3 className="text-3xl md:text-5xl font-bold font-heading text-black dark:text-white mb-12">
+            The RootedAI Theorem
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 divide-y md:divide-y-0 md:divide-x divide-black/10 dark:divide-white/10">
+            <div className="space-y-4 pt-8 md:pt-0 group hover:-translate-y-2 transition-transform duration-300">
+              <div className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-blue-600 to-purple-600 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]">10x</div>
+              <p className="text-xl text-slate-900 dark:text-slate-100 font-bold uppercase tracking-widest">Velocity Output</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">exponential compounding vs manual processes</p>
+            </div>
+            <div className="space-y-4 pt-8 md:pt-0 group hover:-translate-y-2 transition-transform duration-300">
+              <div className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-emerald-500 to-teal-700 drop-shadow-[0_0_15px_rgba(16,185,129,0.3)]">90%</div>
+              <p className="text-xl text-slate-900 dark:text-slate-100 font-bold uppercase tracking-widest">Error Mitigation</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">systematic elimination of repetitive friction</p>
+            </div>
+            <div className="space-y-4 pt-8 md:pt-0 group hover:-translate-y-2 transition-transform duration-300">
+              <div className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-orange-500 to-rose-600 drop-shadow-[0_0_15px_rgba(249,115,22,0.3)]">24/7</div>
+              <p className="text-xl text-slate-900 dark:text-slate-100 font-bold uppercase tracking-widest">Autonomous Uptime</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">borderless AI agents orchestrating logic</p>
             </div>
           </div>
         </div>

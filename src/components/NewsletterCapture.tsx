@@ -25,6 +25,7 @@ const NewsletterCapture = () => {
         title: "You're in!",
         description: "Check your inbox for the AI Safety Checklist.",
       });
+      window.dispatchEvent(new CustomEvent('trigger-bg-flare'));
       setEmail("");
     } catch (error) {
       console.error("Error subscribing:", error);

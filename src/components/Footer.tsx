@@ -13,9 +13,9 @@ const Footer = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-gray-100/50 to-transparent dark:from-black/50 dark:to-transparent pointer-events-none -z-10" />
 
             <div className="container mx-auto px-4 md:px-6 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-16 mb-20">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 lg:gap-8 mb-20">
                     {/* Brand & Contact */}
-                    <div className="space-y-8 md:col-span-2">
+                    <div className="space-y-8 lg:col-span-2">
                         <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="block group">
                             <div className="relative h-20 w-auto flex items-center">
                                 <span className="text-3xl font-bold font-heading tracking-[0.1em] text-black dark:text-white group-hover:opacity-80 transition-opacity">

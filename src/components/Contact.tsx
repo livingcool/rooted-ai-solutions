@@ -43,6 +43,7 @@ const Contact = () => {
         title: "Message Sent",
         description: "We'll get back to you shortly.",
       });
+      window.dispatchEvent(new CustomEvent('trigger-bg-flare'));
       setFormData({ name: "", email: "", company: "", phone: "", service_needed: "", message: "" });
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -57,7 +58,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-16 relative overflow-hidden bg-white dark:bg-[#0a0f14]">
+    <section id="contact" className="py-16 relative overflow-hidden bg-transparent">
       {/* High-Impact background glow */}
       <div className="absolute top-0 right-0 w-[50%] h-[100%] bg-blue-500/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[50%] h-[100%] bg-purple-500/5 blur-[120px] rounded-full -translate-x-1/2 translate-y-1/2 pointer-events-none" />

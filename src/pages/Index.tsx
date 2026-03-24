@@ -264,8 +264,7 @@ const Index = () => {
           ]
         }}
       />
-      <div className="relative z-10">
-        <Navigation />
+      <main className="relative z-10 bg-transparent flex flex-col min-h-screen">
         <div id="hero">
           <Hero />
         </div>
@@ -303,14 +302,15 @@ const Index = () => {
           </Suspense>
         </RevealOnScroll>
 
-        <RevealOnScroll>
+        <div className="w-full pt-12">
           <Suspense fallback={<div className="h-20" />}>
             <Footer />
           </Suspense>
-        </RevealOnScroll>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
 
 export default Index;
+

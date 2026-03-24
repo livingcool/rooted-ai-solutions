@@ -43,7 +43,7 @@ const stats = [
 
 const SocialProof = () => {
   return (
-    <section className="py-8 md:py-12 relative overflow-hidden bg-white dark:bg-[#050505]">
+    <section className="py-8 md:py-12 relative overflow-hidden bg-transparent">
       {/* Background Data Wave - More subtle */}
       <div className="absolute inset-0 opacity-5 dark:opacity-10 pointer-events-none">
         <svg className="w-full h-full" viewBox="0 0 1440 400" preserveAspectRatio="none">

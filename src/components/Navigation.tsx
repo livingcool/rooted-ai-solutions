@@ -1,22 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Command, Activity, Cpu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { SpotlightNavbar } from "@/components/ui/SpotlightNavbar";
-import type { NavItem } from "@/components/ui/SpotlightNavbar";
 import BottomNavigation from "@/components/BottomNavigation";
 import { cn } from "@/lib/utils";
 import { useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollDir, setScrollDir] = useState<"up" | "down">("up");
+  const [isHovered, setIsHovered] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  
   const navRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
-  const isHome = pathname === "/" || pathname === "/index.html";
 
-  // Close dropdown on click outside
+  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
@@ -27,34 +30,63 @@ const Navigation = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Update dropdown state on path change
+  // Reset state on path change
   useEffect(() => {
     setActiveDropdown(null);
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  // Scroll tracking
-  const [isInHero, setIsInHero] = useState(true);       // true when in the hero section (top of page)
-  const [scrollingUp, setScrollingUp] = useState(false); // true when user is scrolling up
-  const lastScrollY = useRef(0);
-
+  // Scroll tracking — direction-aware
   useEffect(() => {
+    let lastY = window.scrollY;
+    let ticking = false;
+
     const handleScroll = () => {
-      const currentY = window.scrollY;
-      const goingUp = currentY < lastScrollY.current;
-      
-      // Full bar at top (< 50px)
-      setIsInHero(currentY < 50);
-      setScrollingUp(goingUp && currentY > 150);
-      lastScrollY.current = currentY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentY = window.scrollY;
+          const diff = currentY - lastY;
+          
+          if (Math.abs(diff) > 5) {
+            setScrollDir(diff > 0 ? "down" : "up");
+          }
+          
+          setIsScrolled(currentY > 40);
+          lastY = currentY;
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const showFullBar = isInHero; 
-  const showNavOnly = scrollingUp;
+  // Theme tracking
+  useEffect(() => {
+    const isDark = document.documentElement.classList.contains("dark");
+    setIsDarkMode(isDark);
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          setIsDarkMode(document.documentElement.classList.contains("dark"));
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
+  // Nav visibility states:
+  // • At top (not scrolled)  → fully expanded
+  // • Scrolling down         → hidden
+  // • Scrolling up           → compact pill
+  // • Hovered while compact  → fully expanded
+  const isHidden  = isScrolled && scrollDir === "down" && !isHovered;
+  const isCompact = isScrolled && scrollDir === "up"   && !isHovered;
+  // isExpanded = !isScrolled OR (scrolled-up AND hovered)
 
   const navLinks = [
     { name: "Services", href: "/services" },
@@ -78,16 +110,6 @@ const Navigation = () => {
     { name: "Contact", href: "/contact" },
   ];
 
-  // Flat list for SpotlightNavbar and mobile menu (initial load)
-  const flatLinks = navLinks.flatMap(link => 
-    'links' in link ? link.links : [link]
-  ) as { name: string; href: string }[];
-
-  const spotlightItems: NavItem[] = flatLinks.map((link) => ({
-    label: link.name,
-    href: link.href,
-  }));
-
   const handleToggle = (e: React.MouseEvent, name: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -95,26 +117,94 @@ const Navigation = () => {
   };
 
   return (
-    <div ref={navRef}>
-      <nav
-        className={cn(
-          "fixed top-0 left-0 right-0 z-[120] transition-all duration-500 flex flex-col",
-          showFullBar ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none",
-          !isHome && !isInHero && "bg-background/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 shadow-sm"
-        )}
+    <>
+      {/* Desktop Dynamic Island Navigation */}
+      <div className="fixed top-0 left-0 right-0 z-[120] hidden md:flex justify-center pt-4"
+           onMouseEnter={() => setIsHovered(true)}
+           onMouseLeave={() => {
+             setIsHovered(false);
+             setActiveDropdown(null);
+           }}
       >
-        <div className="w-full md:container mx-auto px-4 md:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <a href="/" className="flex items-center group relative z-50">
-              <span className="text-2xl md:text-3xl font-bold font-heading tracking-[0.1em] text-black dark:text-white transition-all duration-300">
+        <motion.nav
+          ref={navRef}
+          layout
+          initial={false}
+          animate={{
+            width: isCompact ? "auto" : "min(95vw, 1200px)",
+            borderRadius: "9999px",
+            y: isHidden ? -100 : 0,
+            opacity: isHidden ? 0 : 1,
+            backgroundColor: isDarkMode 
+              ? "rgba(5, 5, 15, 0.88)" 
+              : "rgba(255, 255, 255, 0.92)"
+          }}
+          transition={{
+            layout: {
+              type: "spring",
+              stiffness: 250,
+              damping: 25,
+              mass: 0.6
+            },
+            y: { duration: 0.3 },
+            opacity: { duration: 0.3 },
+            backgroundColor: { duration: 0.5 }
+          }}
+          className={cn(
+            "pointer-events-auto relative flex items-center h-14 transition-all duration-500",
+            "shadow-2xl overflow-visible backdrop-blur-2xl border",
+            isCompact 
+              ? "px-4 border-slate-200/80 dark:border-white/10 shadow-[0_8px_20px_rgba(0,0,0,0.12)] dark:shadow-[0_0_20px_rgba(0,0,0,0.6)] min-w-[160px]" 
+              : "px-6 border-white/20 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.2)] rounded-[32px]"
+          )}
+        >
+          {/* Logo Section */}
+          <div className="flex items-center gap-2 shrink-0">
+            <a href="/" className="flex items-center gap-2 group outline-none overflow-hidden">
+              <AnimatePresence mode="wait">
+                {isCompact ? (
+                  <motion.div
+                    key="icon-compact"
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    exit={{ scale: 0, rotate: 180 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                    className="p-1.5 rounded-full bg-blue-600/10 dark:bg-blue-400/10 border border-blue-500/20"
+                  >
+                    <Activity className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="icon-expanded"
+                    initial={{ scale: 0, rotate: 180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    exit={{ scale: 0, rotate: -180 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  >
+                    <Command className="w-6 h-6 text-black dark:text-white transition-transform duration-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:rotate-90" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              {/* Always show brand name — smaller in compact mode */}
+              <span className={cn(
+                "font-bold font-heading tracking-[0.1em] text-black dark:text-white whitespace-nowrap transition-all duration-300",
+                isCompact ? "text-sm opacity-80" : "text-xl"
+              )}>
                 ROOTED<span className="font-light">AI</span>
               </span>
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-black dark:bg-white transition-all duration-300 group-hover:w-full"></span>
             </a>
+          </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-2">
-              <div className="glass-premium overflow-visible flex items-center p-1.5 rounded-full border border-black/5 dark:border-white/5 bg-white/40 dark:bg-black/40 backdrop-blur-xl">
+          {/* Expanded Menu Items */}
+          <AnimatePresence>
+            {!isCompact && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="flex-1 flex items-center justify-center gap-1 mx-4"
+              >
                 {navLinks.map((link) => (
                   <div key={link.name} className="relative">
                     {link.links ? (
@@ -123,9 +213,9 @@ const Navigation = () => {
                           onClick={(e) => handleToggle(e, link.name)}
                           onMouseEnter={() => setActiveDropdown(link.name)}
                           className={cn(
-                            "flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-full transition-all",
-                            "text-muted-foreground hover:text-black dark:hover:text-white",
-                            activeDropdown === link.name && "bg-black/10 dark:bg-white/10 text-black dark:text-white"
+                            "flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-full transition-all outline-none",
+                            "text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10",
+                            activeDropdown === link.name && "bg-black/5 dark:bg-white/10 text-black dark:text-white"
                           )}
                         >
                           {link.name}
@@ -134,161 +224,121 @@ const Navigation = () => {
                         
                         <div 
                           className={cn(
-                            "absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 origin-top z-[200]",
+                            "absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transition-all duration-300 origin-top z-[200]",
                             activeDropdown === link.name ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
                           )}
                           onMouseLeave={() => setActiveDropdown(null)}
                         >
-                          <div className="w-56 glass-premium overflow-visible p-2 rounded-2xl border border-black/10 dark:border-white/10 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-2xl shadow-2xl ring-1 ring-black/5">
-                            {link.links.map((sub) => (
-                              <a
+                          <div className="w-56 glass-premium overflow-hidden p-2 rounded-2xl border border-white/10 bg-[#050505]/95 backdrop-blur-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]">
+                            {link.links.map((sub, i) => (
+                              <motion.a
                                 key={sub.name}
                                 href={sub.href}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: i * 0.05 }}
                                 onClick={() => setActiveDropdown(null)}
-                                className="block px-4 py-3 text-sm font-semibold rounded-xl transition-all hover:bg-black/5 dark:hover:bg-white/10 text-muted-foreground hover:text-black dark:hover:text-white"
+                                className="block px-4 py-3 text-sm font-semibold rounded-xl transition-all hover:bg-white/10 text-slate-300 hover:text-blue-400 outline-none"
                               >
                                 {sub.name}
-                              </a>
+                              </motion.a>
                             ))}
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <a
-                        href={link.href}
-                        onMouseEnter={() => setActiveDropdown(null)}
-                        className="block px-4 py-2 text-sm font-medium rounded-full transition-all text-muted-foreground hover:text-black dark:hover:text-white"
-                      >
-                        {link.name}
-                      </a>
+                        <a
+                          href={link.href}
+                          onMouseEnter={() => setActiveDropdown(null)}
+                          className="block px-4 py-2 text-sm font-semibold rounded-full transition-all text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 outline-none"
+                        >
+                          {link.name}
+                        </a>
                     )}
                   </div>
                 ))}
-              </div>
-            </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-            <div className="hidden md:flex items-center gap-4">
-              <ThemeToggle />
-              <Button
-                variant="glow"
-                className="text-xs md:text-sm px-6"
-                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-              >
-                Get Started
-              </Button>
-            </div>
-
-            <div className="md:hidden flex items-center gap-4 relative z-50">
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Pill Nav on Scroll Up */}
-      <div
-        className={cn(
-          "fixed top-4 left-0 right-0 z-[120] hidden md:flex justify-center transition-all duration-400",
-          showNavOnly && !showFullBar ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-8 pointer-events-none"
-        )}
-      >
-        <div className="glass-premium overflow-visible flex items-center p-1.5 rounded-full border border-black/5 dark:border-white/5 bg-white/40 dark:bg-black/40 backdrop-blur-xl">
-          {navLinks.map((link) => (
-            <div key={link.name} className="relative">
-              {link.links ? (
-                <div className="relative">
-                  <button 
-                    onClick={(e) => handleToggle(e, link.name)}
-                    onMouseEnter={() => setActiveDropdown(link.name)}
-                    className={cn(
-                      "flex items-center gap-1 px-4 py-1.5 text-xs font-semibold rounded-full transition-colors",
-                      "text-muted-foreground hover:text-black dark:hover:text-white",
-                      activeDropdown === link.name && "bg-black/10 dark:bg-white/10 text-black dark:text-white"
-                    )}
-                  >
-                    {link.name}
-                    <ChevronDown size={14} className={cn("transition-transform", activeDropdown === link.name && "rotate-180")} />
-                  </button>
-                  <div 
-                    className={cn(
-                      "absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 origin-top z-[200]",
-                      activeDropdown === link.name ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
-                    )}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                  >
-                    <div className="w-48 glass-premium overflow-visible p-1.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl shadow-xl">
-                      {link.links.map((sub) => (
-                        <a 
-                          key={sub.name} 
-                          href={sub.href} 
-                          onClick={() => setActiveDropdown(null)}
-                          className="block px-3 py-2 text-xs font-bold rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-muted-foreground hover:text-black dark:hover:text-white"
-                        >
-                          {sub.name}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <a 
-                  href={link.href} 
-                  onMouseEnter={() => setActiveDropdown(null)}
-                  className="block px-4 py-1.5 text-xs font-semibold rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-muted-foreground hover:text-black dark:hover:text-white"
+          {/* Right Actions */}
+          <div className="flex items-center gap-3 shrink-0 ml-auto flex-nowrap overflow-hidden">
+            <AnimatePresence>
+              {!isCompact && (
+                <motion.div
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  className="flex items-center gap-3 overflow-hidden"
                 >
-                  {link.name}
-                </a>
+                  <ThemeToggle />
+                  <Button
+                    variant="glow"
+                    className="text-xs font-bold px-6 h-10 rounded-full shrink-0"
+                    onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                  >
+                    INITIATE
+                  </Button>
+                </motion.div>
               )}
-            </div>
-          ))}
+            </AnimatePresence>
+          </div>
+        </motion.nav>
+      </div>
+
+      {/* Mobile Top Bar (Simplified) */}
+      <div className="fixed top-0 left-0 right-0 z-[120] md:hidden px-4 pt-4">
+        <div className={cn(
+          "backdrop-blur-2xl border border-white/10 rounded-2xl py-3 px-4 flex items-center justify-between shadow-2xl transition-all duration-300",
+          isDarkMode ? "bg-black/40 border-white/5" : "bg-white/40 border-slate-200"
+        )}>
+          <a href="/" className="flex items-center gap-2">
+            <Command className={cn("w-5 h-5", isDarkMode ? "text-blue-400" : "text-blue-600")} />
+            <span className={cn("text-lg font-bold font-heading tracking-[0.1em] transition-colors", isDarkMode ? "text-white" : "text-black")}>
+              ROOTED<span className="font-light">AI</span>
+            </span>
+          </a>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
 
-      <div
-        className={cn(
-          "fixed top-0 left-0 right-0 z-[120] md:hidden transition-all duration-400",
-          showNavOnly ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
-        )}
-      >
-        <div className="bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-white/20 dark:border-white/5 shadow-md px-4 py-2">
-          <div className="flex items-center justify-between">
-            <a href="/" className="flex items-center">
+      {/* Mobile Fullscreen Menu */}
+      {isMobileMenuOpen && createPortal(
+        <div className="fixed inset-0 bg-white/95 dark:bg-black/95 backdrop-blur-2xl z-[200] flex flex-col md:hidden animate-in fade-in duration-300">
+          <div className="flex items-center justify-between p-6">
+            <div className="flex items-center gap-2">
+              <Command className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               <span className="text-xl font-bold font-heading tracking-[0.1em] text-black dark:text-white">
                 ROOTED<span className="font-light">AI</span>
               </span>
-            </a>
-            <div className="flex items-center gap-4">
-              <ThemeToggle />
             </div>
-          </div>
-        </div>
-      </div>
-
-      {isMobileMenuOpen && createPortal(
-        <div className="fixed inset-0 bg-white dark:bg-black z-[200] flex flex-col md:hidden animate-in fade-in duration-300">
-          <div className="flex items-center justify-between p-6">
-            <span className="text-xl font-bold font-heading text-black dark:text-white">
-              ROOTED<span className="font-light">AI</span>
-            </span>
-            <button className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5" onClick={() => setIsMobileMenuOpen(false)}>
+            <button className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 outline-none" onClick={() => setIsMobileMenuOpen(false)}>
               <X size={24} />
             </button>
           </div>
           
           <div className="flex-1 overflow-y-auto px-6 py-8">
-            <div className="space-y-6">
-              {navLinks.map((group) => (
-                <div key={group.name} className="space-y-4">
+            <div className="space-y-8">
+              {navLinks.map((group, idx) => (
+                <motion.div 
+                  key={group.name} 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="space-y-4"
+                >
                   {group.links ? (
                     <>
-                      <div className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-50 px-2">{group.name}</div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 dark:text-blue-400 px-2">{group.name}</div>
                       <div className="grid gap-2">
                         {group.links.map((link) => (
                           <a 
                             key={link.name} 
                             href={link.href} 
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="flex items-center justify-between p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-transparent hover:border-black/10 dark:hover:border-white/10 transition-all font-bold text-lg"
+                            className="flex items-center justify-between p-4 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-lg text-slate-800 dark:text-slate-200 outline-none"
                           >
                             {link.name}
                             <ChevronDown size={20} className="-rotate-90 opacity-30" />
@@ -300,31 +350,32 @@ const Navigation = () => {
                     <a 
                       href={group.href} 
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center justify-between p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-transparent hover:border-black/10 dark:hover:border-white/10 transition-all font-bold text-lg"
+                      className="flex items-center justify-between p-4 rounded-2xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors font-bold text-lg text-slate-800 dark:text-slate-200 outline-none"
                     >
                       {group.name}
                       <ChevronDown size={20} className="-rotate-90 opacity-30" />
                     </a>
                   )}
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
           
-          <div className="p-6 border-t border-black/5 dark:border-white/5">
-            <Button className="w-full h-16 text-lg rounded-2xl font-bold" onClick={() => {
+          <div className="p-6 border-t border-black/5 dark:border-white/5 bg-white/50 dark:bg-black/50">
+            <Button variant="glow" className="w-full h-14 text-lg rounded-2xl font-bold" onClick={() => {
               setIsMobileMenuOpen(false);
               setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 300);
             }}>
-              Get Started
+              INITIATE SYSTEM
             </Button>
           </div>
         </div>,
         document.body
       )}
 
+      {/* Bottom Nav triggering Mobile Overlay */}
       <BottomNavigation onMenuClick={() => setIsMobileMenuOpen(true)} />
-    </div>
+    </>
   );
 };
 
