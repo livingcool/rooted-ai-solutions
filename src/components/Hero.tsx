@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 
 // ─── Dynamic Copy ────────────────────────────────────────────────────────
 const WORDS = [
-  "The Compliance",
-  "The Infrastructure",
-  "The Pipelines",
-  "The Agents",
-  "Your Advantage"
+  "Compliance",
+  "Infrastructure",
+  "Pipelines",
+  "Agents",
+  "Advantage"
 ];
 
 // ─── Animated Word Flipper (Refactored for Sans-Serif) ───────────────────
@@ -27,7 +27,7 @@ const LetterCascade: React.FC<LetterCascadeProps> = ({ words, intervalMs = 3000 
       if (busyRef.current) return;
       busyRef.current = true;
       setPhase("exit");
-      
+
       const exitDur = current.length * 20 + 300;
       setTimeout(() => {
         idxRef.current = (idxRef.current + 1) % words.length;
@@ -84,7 +84,7 @@ const DeepSpaceCanvas = () => {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    
+
     // Handle resize
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -106,7 +106,7 @@ const DeepSpaceCanvas = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isDark = document.documentElement.classList.contains("dark");
       const color = isDark ? "92, 148, 255" : "59, 130, 246";
-      
+
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
         n.x += n.vx; n.y += n.vy;
@@ -127,7 +127,7 @@ const DeepSpaceCanvas = () => {
             ctx.stroke();
           }
         }
-        
+
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${color}, 0.5)`;
@@ -135,7 +135,7 @@ const DeepSpaceCanvas = () => {
       }
       frameRef.current = requestAnimationFrame(draw);
     };
-    
+
     draw();
     return () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
@@ -157,15 +157,15 @@ const Hero = () => {
       `}</style>
 
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white/0 dark:bg-[#030614]/0 transition-colors duration-700">
-        
+
         {/* Background Network Canvas */}
         <DeepSpaceCanvas />
 
         {/* ── Main Hero Content ── */}
         <div className="flex flex-col items-center justify-center relative z-10 px-4 text-center mt-12">
-          
+
           {/* Headline */}
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -176,7 +176,7 @@ const Hero = () => {
           </motion.h1>
 
           {/* Sub-Pill */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -188,7 +188,7 @@ const Hero = () => {
           </motion.div>
 
           {/* Central Initiate Module */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4 }}
@@ -200,7 +200,7 @@ const Hero = () => {
           >
             {/* Visual Halo */}
             <div className="orb-pulse absolute w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-blue-500/10 shadow-[inner_0_0_80px_rgba(59,130,246,0.05)] dark:shadow-[inner_0_0_100px_rgba(92,148,255,0.1)]" />
-            
+
             {/* Core Interaction Button */}
             <div className="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-slate-50/80 dark:bg-[#0a0f1e]/80 backdrop-blur-md border border-slate-200 dark:border-white/10 flex flex-col justify-center items-center shadow-xl dark:shadow-[0_20px_40px_rgba(0,0,0,0.5),inset_0_0_40px_rgba(0,0,0,0.8)] z-20 transition-all duration-500 group-hover:border-blue-500">
               <span className="font-mono text-[8px] md:text-[9px] text-slate-500 dark:text-zinc-500 tracking-[0.2em] mb-4 group-hover:text-blue-500 transition-colors">

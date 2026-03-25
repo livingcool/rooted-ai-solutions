@@ -104,7 +104,7 @@ const Impacts = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-slate-900 dark:text-white selection:bg-cyan-500/30 selection:text-cyan-600 dark:selection:text-cyan-400 overflow-x-hidden transition-colors duration-500">
+    <div className="min-h-screen bg-transparent text-slate-900 dark:text-white selection:bg-cyan-500/30 selection:text-cyan-600 dark:selection:text-cyan-400 overflow-x-hidden transition-colors duration-500">
       <Seo 
         title="Proven AI Impacts & Case Studies" 
         description="Scalable AI solutions delivering 99.8% accuracy and 85% time savings. Explore our real-world deployments in Government, E-Commerce, and Logistics."
@@ -249,7 +249,7 @@ const Impacts = () => {
       </div>
 
       {/* Global Interactive Section */}
-      <section className="bg-slate-900 dark:bg-white text-white dark:text-black py-40 px-4 md:px-8 mt-48 selection:bg-cyan-500 selection:text-white relative transition-colors duration-700">
+      <section className="bg-slate-900/10 dark:bg-white/10 backdrop-blur-md text-white dark:text-black py-40 px-4 md:px-8 mt-48 selection:bg-cyan-500 selection:text-white relative transition-colors duration-700">
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
         <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
           <Globe className="w-16 h-16 mb-8 text-cyan-400 dark:text-cyan-600 animate-spin-slow" />

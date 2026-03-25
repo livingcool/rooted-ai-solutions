@@ -74,6 +74,11 @@ const LoadingFallback = () => (
 const AnimatedRoutes = () => {
   const location = useLocation();
 
+  useEffect(() => {
+    // Trigger background zoom on every route change
+    window.dispatchEvent(new CustomEvent('trigger-bg-zoom'));
+  }, [location.pathname]);
+
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
@@ -135,36 +140,11 @@ const AnimatedRoutes = () => {
 };
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    try {
-      // Show preloader ONLY on home page and ONLY once per session
-      const path = window.location.pathname;
-      const isHome = path === "/" || path === "/index.html" || path.endsWith("/rooted-ai-solutions/");
-      const hasSeenLoader = sessionStorage.getItem("rooted-loader-shown");
-
-      if (isHome && !hasSeenLoader) {
-        setLoading(true);
-        sessionStorage.setItem("rooted-loader-shown", "true");
-      }
-    } catch (e) {
-      console.warn("Session storage not available:", e);
-    }
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
         <TooltipProvider>
-          {loading && (
-            <RevealLoader
-              text="ROOTED AI"
-              bgColors={["#000000"]}
-              onComplete={() => setLoading(false)}
-            />
-          )}
-          <Dynamic3DBackground paused={loading} />
+          <Dynamic3DBackground />
           <Toaster />
           <Sonner />
           <BrowserRouter>

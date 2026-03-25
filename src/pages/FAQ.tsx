@@ -177,7 +177,7 @@ const FAQ = () => {
   })).filter(category => category.questions.length > 0);
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative bg-transparent">
       <Seo 
         title="Frequently Asked Questions | RootedAI Help Center"
         description="Find answers to common questions about AI Agents, Process Automation, Safety, Security, and more. Your complete guide to RootedAI services."

@@ -5,7 +5,7 @@ import Products from "@/components/Products";
 
 const ProductsPage = () => {
     return (
-        <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/20">
+        <div className="min-h-screen bg-transparent text-foreground overflow-x-hidden selection:bg-primary/20">
             <Seo
                 title="Our AI Products | RootedAI - Enterprise Solutions"
                 description="Discover RootedAI's flagship AI products like RhizoConnect, designed to streamline your operations and ticketing processes."

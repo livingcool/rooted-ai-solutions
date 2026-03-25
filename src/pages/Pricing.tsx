@@ -62,7 +62,7 @@ const Pricing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-transparent text-foreground selection:bg-primary/20">
       <Seo
         title="Pricing Plans"
         description="Transparent pricing for AI solutions. Choose from Starter, Professional, or Enterprise plans tailored to your business needs."

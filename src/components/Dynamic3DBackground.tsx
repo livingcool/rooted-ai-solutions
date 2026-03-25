@@ -13,56 +13,6 @@ import * as THREE from "three";
 import { useTheme } from "@/components/ThemeProvider";
 import { useScroll as usePageScroll } from "framer-motion";
 
-// --- The Massive Torus Knot Core ---
-const SuperTorusCore = ({ color }: { color: string }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
-  
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    if (meshRef.current) {
-      meshRef.current.rotation.x = time * 0.1;
-      meshRef.current.rotation.y = time * 0.15;
-      meshRef.current.rotation.z = Math.sin(time * 0.1) * 0.2;
-    }
-  });
-
-  return (
-    <group position={[0, -5, -40]}>
-      {/* Outer Wireframe Complex Knot */}
-      <Float speed={1.5} rotationIntensity={0.5} floatIntensity={2}>
-        <mesh ref={meshRef}>
-          <torusKnotGeometry args={[14, 3, 300, 32, 2, 5]} />
-          <meshStandardMaterial 
-            color={color} 
-            wireframe 
-            transparent 
-            opacity={0.15} 
-            emissive={color}
-            emissiveIntensity={1.5}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      </Float>
-
-      {/* Inner Glowing Core */}
-      <Float speed={3} rotationIntensity={2} floatIntensity={1}>
-        <mesh>
-          <icosahedronGeometry args={[6, 2]} />
-          <MeshDistortMaterial 
-            color="#ffffff" 
-            emissive={color}
-            emissiveIntensity={2}
-            speed={2} 
-            distort={0.4} 
-            transparent 
-            opacity={0.3} 
-          />
-        </mesh>
-      </Float>
-    </group>
-  );
-};
-
 // --- Orbital Data Rings ---
 const OrbitalRings = ({ color }: { color: string }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -193,23 +143,35 @@ const NeuralNetworkLines = ({ color }: { color: string }) => {
 
 // --- Interactive Camera ---
 const Rig = () => {
-  const { camera, mouse } = useThree();
-  const { scrollYProgress } = usePageScroll();
-  const vec = new THREE.Vector3();
+    const { camera, mouse } = useThree();
+    const { scrollYProgress } = usePageScroll();
+    const [isZooming, setIsZooming] = useState(false);
+    const vec = new THREE.Vector3();
 
-  useFrame((state) => {
-    // Cinematic Parallax
-    camera.position.lerp(vec.set(mouse.x * 5, mouse.y * 5, camera.position.z), 0.02);
-    
-    // Depth plunge on scroll
-    const scroll = scrollYProgress.get();
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, 20 + scroll * 40, 0.05);
-    camera.rotation.x = THREE.MathUtils.lerp(camera.rotation.x, scroll * 0.3, 0.05);
-    camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, scroll * -0.1, 0.05);
-    
-    camera.lookAt(0, 0, -20);
-  });
-  return null;
+    useEffect(() => {
+        const handleZoom = () => {
+            setIsZooming(true);
+            setTimeout(() => setIsZooming(false), 1500);
+        };
+        window.addEventListener('trigger-bg-zoom', handleZoom);
+        return () => window.removeEventListener('trigger-bg-zoom', handleZoom);
+    }, []);
+
+    useFrame((state) => {
+        // Cinematic Parallax
+        camera.position.lerp(vec.set(mouse.x * 5, mouse.y * 5, camera.position.z), 0.02);
+
+        // Depth plunge on scroll
+        const scroll = scrollYProgress.get();
+        const targetZ = 20 + scroll * 40 + (isZooming ? -15 : 0);
+        
+        camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, isZooming ? 0.08 : 0.05);
+        camera.rotation.x = THREE.MathUtils.lerp(camera.rotation.x, scroll * 0.3, 0.05);
+        camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, scroll * -0.1, 0.05);
+
+        camera.lookAt(0, 0, -20);
+    });
+    return null;
 };
 
 // --- Flare Logic Hook ---
@@ -235,9 +197,6 @@ const BackgroundContent = ({ isDark }: { isDark: boolean }) => {
 
     return (
         <group>
-            {/* Massive Torus Core */}
-            <SuperTorusCore color={accentColor} />
-            
             {/* Orbital Rings */}
             <OrbitalRings color={secondaryColor} />
 

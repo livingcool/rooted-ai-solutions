@@ -113,7 +113,7 @@ const ServicesPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/20">
+        <div className="min-h-screen bg-transparent text-foreground overflow-x-hidden selection:bg-primary/20">
             <Seo
                 title="AI Services & Solutions | RootedAI - Enterprise AI Automation"
                 description="Explore RootedAI's full suite of AI services: AI Agents, Process Automation, Predictive Analytics, NLP, Web Solutions, Enterprise Security, and IT Outsourcing. Trusted by businesses in India, Singapore, and Dubai."
