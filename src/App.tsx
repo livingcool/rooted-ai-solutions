@@ -63,10 +63,12 @@ const BusinessCardGenerator = lazy(() => import("./pages/BusinessCardGenerator")
 const queryClient = new QueryClient();
 
 const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-    <div className="flex flex-col items-center gap-4">
-      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      <p className="text-muted-foreground animate-pulse">Loading RootedAI...</p>
+  <div className="min-h-screen flex items-center justify-center bg-transparent pointer-events-none">
+    <div className="flex flex-col items-center gap-2">
+      <div className="w-12 h-[1px] bg-blue-500/50 animate-pulse" />
+      <p className="text-[10px] font-mono tracking-[0.5em] uppercase text-blue-500/40 animate-pulse">
+        Establishing Link...
+      </p>
     </div>
   </div>
 );

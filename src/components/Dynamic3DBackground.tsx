@@ -195,7 +195,7 @@ const Rig = () => {
 
         // Depth plunge on scroll
         const scroll = scrollYProgress.get();
-        const targetZ = 20 + scroll * 40 + (isZooming ? -15 : 0);
+        const targetZ = 20 + scroll * 40 + (isZooming ? -30 : 0);
         
         camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, isZooming ? 0.08 : 0.05);
         camera.rotation.x = THREE.MathUtils.lerp(camera.rotation.x, scroll * 0.3, 0.05);
