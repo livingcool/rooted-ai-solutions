@@ -117,7 +117,11 @@ const SecurityRiskSimulator = () => {
                     </div>
 
                     <div className="mt-8 flex justify-end">
-                        <Button onClick={handleConsult} disabled={totalScore === 0} className="w-full sm:w-auto">
+                        <Button 
+                            onClick={handleConsult} 
+                            disabled={totalScore === 0} 
+                            className="w-full sm:w-auto h-12 rounded-xl bg-black text-white dark:bg-white dark:text-black hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        >
                             Audit My Infrastructure <ShieldAlert className="ml-2 w-4 h-4" />
                         </Button>
                     </div>

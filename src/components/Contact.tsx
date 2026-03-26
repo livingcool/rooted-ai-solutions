@@ -190,7 +190,7 @@ const Contact = () => {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-16 rounded-2xl text-lg md:text-xl font-bold bg-black dark:bg-white dark:text-black hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl flex items-center justify-center gap-3 group"
+                  className="w-full h-16 rounded-2xl text-lg md:text-xl font-bold bg-black text-white dark:bg-white dark:text-black hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl flex items-center justify-center gap-3 group"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-6 h-6 animate-spin" />

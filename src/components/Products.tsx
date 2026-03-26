@@ -165,7 +165,7 @@ const Products = () => {
                                             <div className="flex flex-col sm:flex-row gap-4 pt-6">
                                                 <Button
                                                     onClick={() => window.open(product.productUrl, '_blank')}
-                                                    className="h-16 px-10 text-lg rounded-2xl bg-black dark:bg-white dark:text-black hover:scale-[1.02] transition-transform"
+                                                    className="h-16 px-10 text-lg rounded-2xl bg-black text-white dark:bg-white dark:text-black hover:scale-[1.02] transition-transform"
                                                 >
                                                     Launch Platform
                                                     <ExternalLink className="ml-2 w-5 h-5" />

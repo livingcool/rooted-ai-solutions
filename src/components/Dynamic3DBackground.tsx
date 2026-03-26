@@ -13,6 +13,38 @@ import * as THREE from "three";
 import { useTheme } from "@/components/ThemeProvider";
 import { useScroll as usePageScroll } from "framer-motion";
 
+// --- Optimized Wireframe Knot (Replaces the central 'cement ball') ---
+const WireframeKnot = ({ color }: { color: string }) => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    if (meshRef.current) {
+      meshRef.current.rotation.x = time * 0.1;
+      meshRef.current.rotation.y = time * 0.15;
+    }
+  });
+
+  return (
+    <group position={[0, -5, -40]}>
+      <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1}>
+        <mesh ref={meshRef}>
+          <torusKnotGeometry args={[14, 2.5, 120, 24, 2, 5]} />
+          <meshStandardMaterial 
+            color={color} 
+            wireframe 
+            transparent 
+            opacity={0.12} 
+            emissive={color}
+            emissiveIntensity={1.2}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      </Float>
+    </group>
+  );
+};
+
 // --- Orbital Data Rings ---
 const OrbitalRings = ({ color }: { color: string }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -197,6 +229,9 @@ const BackgroundContent = ({ isDark }: { isDark: boolean }) => {
 
     return (
         <group>
+            {/* Central Wireframe Focus */}
+            <WireframeKnot color={accentColor} />
+
             {/* Orbital Rings */}
             <OrbitalRings color={secondaryColor} />
 
@@ -251,10 +286,10 @@ const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
                     alpha: true, 
                     stencil: false, 
                     depth: true,
-                    powerPreference: "high-performance",
-                    failIfMajorPerformanceCaveat: true
+                    // Relaxed settings for better compatibility
+                    failIfMajorPerformanceCaveat: false
                 }}
-                dpr={[1, 2]}
+                dpr={typeof window !== 'undefined' && window.devicePixelRatio > 1.5 ? 1.5 : 1}
                 camera={{ position: [0, 0, 20], fov: 60 }}
                 style={{ opacity: isDark ? 1 : 0.6 }}
             >
