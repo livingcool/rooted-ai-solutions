@@ -89,7 +89,16 @@ const Navigation = () => {
   // isExpanded = !isScrolled OR (scrolled-up AND hovered)
 
   const navLinks = [
-    { name: "Services", href: "/services" },
+    { 
+      name: "Services", 
+      links: [
+        { name: "AI Agents", href: "/services/ai-agents" },
+        { name: "Process Automation", href: "/services/process-automation" },
+        { name: "Web Solutions", href: "/services/web-solutions" },
+        { name: "NLP Systems", href: "/services/nlp-systems" },
+        { name: "All Services", href: "/services" },
+      ]
+    },
     { 
       name: "Portfolio", 
       links: [
@@ -99,9 +108,19 @@ const Navigation = () => {
       ]
     },
     { 
+      name: "Locations", 
+      links: [
+        { name: "Bangalore", href: "/locations/bangalore" },
+        { name: "Chennai", href: "/locations/chennai" },
+        { name: "Hosur", href: "/locations/hosur" },
+        { name: "Coimbatore", href: "/locations/coimbatore" },
+        { name: "All Locations", href: "/locations" },
+      ]
+    },
+    { 
       name: "Company", 
       links: [
-        { name: "About", href: "/about" },
+        { name: "About Us", href: "/about" },
         { name: "Blog", href: "/blog" },
         { name: "Careers", href: "/careers" },
         { name: "FAQ", href: "/faq" },
@@ -161,36 +180,20 @@ const Navigation = () => {
           {/* Logo Section */}
           <div className="flex items-center gap-2 shrink-0">
             <a href="/" className="flex items-center gap-2 group outline-none overflow-hidden">
-              <AnimatePresence mode="wait">
-                {isCompact ? (
-                  <motion.div
-                    key="icon-compact"
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    exit={{ scale: 0, rotate: 180 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                    className="p-1.5 rounded-full bg-blue-600/10 dark:bg-blue-400/10 border border-blue-500/20"
-                  >
-                    <Activity className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="icon-expanded"
-                    initial={{ scale: 0, rotate: 180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    exit={{ scale: 0, rotate: -180 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                  >
-                    <Command className="w-6 h-6 text-black dark:text-white transition-transform duration-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:rotate-90" />
-                  </motion.div>
+              <img 
+                src={isDarkMode ? "/images/Darkmode logo.png" : "/images/Lightmode logo.png"} 
+                alt="RootedAI Logo" 
+                className={cn(
+                  "transition-all duration-300 object-contain",
+                  isCompact ? "h-6 w-auto" : "h-10 w-auto"
                 )}
-              </AnimatePresence>
-              {/* Always show brand name — smaller in compact mode */}
+              />
               <span className={cn(
-                "font-bold font-heading tracking-[0.1em] text-black dark:text-white whitespace-nowrap transition-all duration-300",
-                isCompact ? "text-sm opacity-80" : "text-xl"
+                "font-bold tracking-tight transition-all duration-300 whitespace-nowrap",
+                isCompact ? "text-lg" : "text-xl",
+                isDarkMode ? "text-white" : "text-slate-900"
               )}>
-                ROOTED<span className="font-light">AI</span>
+                Rooted<span className="text-violet-600 dark:text-violet-400">AI</span>
               </span>
             </a>
           </div>
@@ -277,7 +280,7 @@ const Navigation = () => {
                     className="text-xs font-bold px-6 h-10 rounded-full shrink-0"
                     onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
                   >
-                    INITIATE
+                    GET STARTED
                   </Button>
                 </motion.div>
               )}
@@ -293,9 +296,16 @@ const Navigation = () => {
           isDarkMode ? "bg-black/40 border-white/5" : "bg-white/40 border-slate-200"
         )}>
           <a href="/" className="flex items-center gap-2">
-            <Command className={cn("w-5 h-5", isDarkMode ? "text-blue-400" : "text-blue-600")} />
-            <span className={cn("text-lg font-bold font-heading tracking-[0.1em] transition-colors", isDarkMode ? "text-white" : "text-black")}>
-              ROOTED<span className="font-light">AI</span>
+            <img 
+              src={isDarkMode ? "/images/Darkmode logo.png" : "/images/Lightmode logo.png"} 
+              alt="RootedAI Logo" 
+              className="h-7 w-auto object-contain"
+            />
+            <span className={cn(
+              "font-bold tracking-tight text-lg",
+              isDarkMode ? "text-white" : "text-slate-900"
+            )}>
+              Rooted<span className="text-violet-600 dark:text-violet-400">AI</span>
             </span>
           </a>
           <div className="flex items-center gap-3">
@@ -308,12 +318,19 @@ const Navigation = () => {
       {isMobileMenuOpen && createPortal(
         <div className="fixed inset-0 bg-white/95 dark:bg-black/95 backdrop-blur-2xl z-[200] flex flex-col md:hidden animate-in fade-in duration-300">
           <div className="flex items-center justify-between p-6">
-            <div className="flex items-center gap-2">
-              <Command className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              <span className="text-xl font-bold font-heading tracking-[0.1em] text-black dark:text-white">
-                ROOTED<span className="font-light">AI</span>
+            <a href="/" className="flex items-center gap-2">
+              <img 
+                src={isDarkMode ? "/images/Darkmode logo.png" : "/images/Lightmode logo.png"} 
+                alt="RootedAI Logo" 
+                className="h-8 w-auto object-contain"
+              />
+              <span className={cn(
+                "font-bold tracking-tight text-xl",
+                isDarkMode ? "text-white" : "text-slate-900"
+              )}>
+                Rooted<span className="text-violet-600 dark:text-violet-400">AI</span>
               </span>
-            </div>
+            </a>
             <button className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 outline-none" onClick={() => setIsMobileMenuOpen(false)}>
               <X size={24} />
             </button>
@@ -331,7 +348,7 @@ const Navigation = () => {
                 >
                   {group.links ? (
                     <>
-                      <div className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 dark:text-blue-400 px-2">{group.name}</div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400 px-2">{group.name}</div>
                       <div className="grid gap-2">
                         {group.links.map((link) => (
                           <a 
@@ -366,7 +383,7 @@ const Navigation = () => {
               setIsMobileMenuOpen(false);
               setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 300);
             }}>
-              INITIATE SYSTEM
+              GET STARTED
             </Button>
           </div>
         </div>,

@@ -224,8 +224,8 @@ const useBackgroundFlare = () => {
 
 const BackgroundContent = ({ isDark }: { isDark: boolean }) => {
     const isFlaring = useBackgroundFlare();
-    const accentColor = "#0ea5e9";  // Sky 500
-    const secondaryColor = "#6366f1"; // Indigo 500
+    const accentColor = "#7c3aed";  // Violet 600
+    const secondaryColor = "#c084fc"; // Purple 400
 
     return (
         <group>
@@ -274,8 +274,8 @@ const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
             <div 
                 className={`absolute inset-0 w-full h-full transition-colors duration-1000 ${
                     isDark 
-                    ? "bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#020617]" 
-                    : "bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0]"
+                    ? "bg-gradient-to-br from-[#0f0720] via-[#1e1b4b] to-[#0f0720]" 
+                    : "bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#ede9fe]"
                 }`}
             />
             

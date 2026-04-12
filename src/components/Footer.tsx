@@ -18,8 +18,13 @@ const Footer = () => {
                     <div className="space-y-8 lg:col-span-2">
                         <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="block group">
                             <div className="relative h-20 w-auto flex items-center">
-                                <span className="text-3xl font-bold font-heading tracking-[0.1em] text-black dark:text-white group-hover:opacity-80 transition-opacity">
-                                    ROOTED<span className="font-light">AI</span>
+                                <img 
+                                    src="/images/Darkmode logo.png" 
+                                    alt="RootedAI Logo" 
+                                    className="h-12 w-auto object-contain mr-3"
+                                />
+                                <span className="text-3xl font-bold font-heading tracking-tight text-black dark:text-white group-hover:opacity-80 transition-opacity">
+                                    Rooted<span className="text-violet-600 dark:text-violet-400">AI</span>
                                 </span>
                             </div>
                         </Link>
@@ -109,6 +114,7 @@ const Footer = () => {
                             <li><Link to="/blog" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Blog</Link></li>
                             <li><Link to="/case-studies" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Case Studies</Link></li>
                             <li><Link to="/pricing" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block">Pricing</Link></li>
+                            <li><a href="https://portal.rootedai.co.in" target="_blank" rel="noopener noreferrer" className="hover:text-black dark:hover:text-white transition-colors hover:pl-2 duration-300 block font-medium underline underline-offset-4 decoration-violet-500/30">Internal Employee Portal</a></li>
                         </ul>
                     </div>
 

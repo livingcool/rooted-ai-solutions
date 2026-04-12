@@ -186,10 +186,10 @@ const HeroBackground = () => {
     return (
         <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden">
             {/* Gradient Background Layer */}
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-black dark:via-gray-900 dark:to-black transition-colors duration-500" />
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-[#0f0720] dark:via-[#1e1b4b] dark:to-[#0f0720] transition-colors duration-500" />
 
             {/* Radial Gradient Overlay for depth */}
-            <div className="absolute inset-0 w-full h-full opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-200/50 via-transparent to-transparent dark:from-gray-800/50 dark:via-transparent dark:to-transparent" />
+            <div className="absolute inset-0 w-full h-full opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-200/50 via-transparent to-transparent dark:from-violet-900/50 dark:via-transparent dark:to-transparent" />
 
             <canvas
                 ref={canvasRef}

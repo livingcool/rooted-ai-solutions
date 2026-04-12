@@ -18,9 +18,9 @@ const services = [
     description: "Autonomous agents mapping complex pipelines.",
     icon: <Brain className="w-8 h-8" />,
     route: "/services/ai-agents",
-    color: "from-blue-500/20 to-blue-900/20",
-    borderHover: "group-hover:border-blue-500/50",
-    textHover: "group-hover:text-blue-400",
+    color: "from-violet-500/20 to-violet-900/20",
+    borderHover: "group-hover:border-violet-500/50",
+    textHover: "group-hover:text-violet-400",
     size: "col-span-1 md:col-span-1 row-span-1",
   },
   {
@@ -138,10 +138,10 @@ const InteractiveServiceCard = ({ service, index }: { service: any; index: numbe
         <div className="mt-8 flex justify-end flex-grow items-end w-full">
           <Link 
             to={service.route}
-            className="group/link flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="group/link flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-slate-200 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
           >
             <span>Initialize Node</span>
-            <div className="w-8 h-8 rounded-full border border-black/20 dark:border-white/20 flex items-center justify-center group-hover/link:bg-blue-600 group-hover/link:border-blue-600 group-hover/link:text-white transition-all overflow-hidden relative">
+            <div className="w-8 h-8 rounded-full border border-black/20 dark:border-white/20 flex items-center justify-center group-hover/link:bg-violet-600 group-hover/link:border-violet-600 group-hover/link:text-white transition-all overflow-hidden relative">
               <ArrowRight className="w-4 h-4 absolute transition-transform duration-300 -translate-x-6 group-hover/link:translate-x-0" />
               <ArrowRight className="w-4 h-4 absolute transition-transform duration-300 translate-x-0 group-hover/link:translate-x-6" />
             </div>
@@ -180,7 +180,7 @@ const Services = () => {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 divide-y md:divide-y-0 md:divide-x divide-black/10 dark:divide-white/10">
             <div className="space-y-4 pt-8 md:pt-0 group hover:-translate-y-2 transition-transform duration-300">
-              <div className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-blue-600 to-purple-600 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]">10x</div>
+              <div className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-violet-600 to-purple-600 drop-shadow-[0_0_15px_rgba(139,92,246,0.3)]">10x</div>
               <p className="text-xl text-slate-900 dark:text-slate-100 font-bold uppercase tracking-widest">Velocity Output</p>
               <p className="text-sm text-slate-600 dark:text-slate-400">exponential compounding vs manual processes</p>
             </div>

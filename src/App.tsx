@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Dynamic3DBackground from "@/components/Dynamic3DBackground";
 import PageTransition from "@/components/PageTransition";
 import { Suspense, lazy, useState, useEffect } from "react";
-import RevealLoader from "@/components/ui/RevealLoader";
+import FullPageLoader from "@/components/ui/FullPageLoader";
 import ScrollToHash from "@/components/ScrollToHash";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import SectionIndicator from "@/components/SectionIndicator";
@@ -62,16 +62,7 @@ const BusinessCardGenerator = lazy(() => import("./pages/BusinessCardGenerator")
 
 const queryClient = new QueryClient();
 
-const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-transparent pointer-events-none">
-    <div className="flex flex-col items-center gap-2">
-      <div className="w-12 h-[1px] bg-blue-500/50 animate-pulse" />
-      <p className="text-[10px] font-mono tracking-[0.5em] uppercase text-blue-500/40 animate-pulse">
-        Establishing Link...
-      </p>
-    </div>
-  </div>
-);
+const LoadingFallback = () => <FullPageLoader />;
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -142,10 +133,22 @@ const AnimatedRoutes = () => {
 };
 
 const App = () => {
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 2000); // Premium entry delay
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
         <TooltipProvider>
+          <AnimatePresence>
+            {initialLoading && <FullPageLoader key="initial-loader" />}
+          </AnimatePresence>
           <Dynamic3DBackground />
           <Toaster />
           <Sonner />
@@ -154,9 +157,11 @@ const App = () => {
             <ScrollProgress />
             <ScrollToHash />
             <SectionIndicator />
-            <Suspense fallback={<LoadingFallback />}>
-              <AnimatedRoutes />
-            </Suspense>
+            {!initialLoading && (
+              <Suspense fallback={<LoadingFallback />}>
+                <AnimatedRoutes />
+              </Suspense>
+            )}
             <Analytics />
           </BrowserRouter>
         </TooltipProvider>

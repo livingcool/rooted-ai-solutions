@@ -47,7 +47,7 @@ const LetterCascade: React.FC<LetterCascadeProps> = ({ words, intervalMs = 3000 
 
   return (
     <span
-      className="inline-flex font-extrabold tracking-tight overflow-hidden text-[#3B82F6] dark:text-[#5C94FF]"
+      className="inline-flex font-extrabold tracking-tight overflow-hidden text-violet-600 dark:text-violet-400"
       style={{
         letterSpacing: "-0.02em",
       }}
@@ -105,7 +105,7 @@ const DeepSpaceCanvas = () => {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isDark = document.documentElement.classList.contains("dark");
-      const color = isDark ? "92, 148, 255" : "59, 130, 246";
+      const color = isDark ? "167, 139, 250" : "139, 92, 246";
 
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
@@ -180,9 +180,9 @@ const Hero = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="px-8 py-3 rounded-full flex gap-4 items-center mb-20 border border-blue-500/20 bg-white/60 dark:bg-[#14203c]/80 backdrop-blur-md shadow-sm dark:shadow-[0_0_30px_rgba(92,148,255,0.05)]"
+            className="px-8 py-3 rounded-full flex gap-4 items-center mb-20 border border-violet-500/20 bg-white/60 dark:bg-[#14203c]/80 backdrop-blur-md shadow-sm dark:shadow-[0_0_30px_rgba(167,139,250,0.05)]"
           >
-            <span className="font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-blue-600 dark:text-[#5C94FF]">
+            <span className="font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-violet-600 dark:text-violet-400">
               ENGINEERING INTELLIGENCE <span className="text-slate-400 dark:text-slate-500">.</span> COMPLEXITY <span className="text-purple-600 dark:text-[#D6BCFA]">. SIMPLIFIED</span>
             </span>
           </motion.div>
@@ -199,18 +199,18 @@ const Hero = () => {
             }}
           >
             {/* Visual Halo */}
-            <div className="orb-pulse absolute w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-blue-500/10 shadow-[inner_0_0_80px_rgba(59,130,246,0.05)] dark:shadow-[inner_0_0_100px_rgba(92,148,255,0.1)]" />
+            <div className="orb-pulse absolute w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-violet-500/10 shadow-[inner_0_0_80px_rgba(139,92,246,0.05)] dark:shadow-[inner_0_0_100px_rgba(167,139,250,0.1)]" />
 
             {/* Core Interaction Button */}
-            <div className="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-slate-50/80 dark:bg-[#0a0f1e]/80 backdrop-blur-md border border-slate-200 dark:border-white/10 flex flex-col justify-center items-center shadow-xl dark:shadow-[0_20px_40px_rgba(0,0,0,0.5),inset_0_0_40px_rgba(0,0,0,0.8)] z-20 transition-all duration-500 group-hover:border-blue-500">
-              <span className="font-mono text-[8px] md:text-[9px] text-slate-500 dark:text-zinc-500 tracking-[0.2em] mb-4 group-hover:text-blue-500 transition-colors">
+            <div className="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-slate-50/80 dark:bg-[#0a0f1e]/80 backdrop-blur-md border border-slate-200 dark:border-white/10 flex flex-col justify-center items-center shadow-xl dark:shadow-[0_20px_40px_rgba(0,0,0,0.5),inset_0_0_40px_rgba(0,0,0,0.8)] z-20 transition-all duration-500 group-hover:border-violet-500">
+              <span className="font-mono text-[8px] md:text-[9px] text-slate-500 dark:text-zinc-500 tracking-[0.2em] mb-4 group-hover:text-violet-500 transition-colors">
                 STATUS: OPTIMIZED
               </span>
-              <span className="text-2xl md:text-3xl font-black tracking-tight text-slate-950 dark:text-white mb-4 group-hover:scale-105 transition-transform">
-                INITIATE
+              <span className="text-2xl md:text-3xl font-black tracking-tight text-slate-950 dark:text-white mb-4 group-hover:scale-105 transition-transform text-center px-4 leading-tight">
+                GET STARTED
               </span>
-              <div className="w-8 h-[1px] bg-blue-500/50 mb-4" />
-              <span className="font-mono text-[8px] md:text-[9px] text-blue-600 dark:text-[#5C94FF] tracking-[0.2em]">
+              <div className="w-8 h-[1px] bg-violet-500/50 mb-4" />
+              <span className="font-mono text-[8px] md:text-[9px] text-violet-600 dark:text-violet-400 tracking-[0.2em]">
                 PROTOCOL ROOT-01
               </span>
             </div>

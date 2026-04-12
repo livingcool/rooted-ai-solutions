@@ -181,8 +181,8 @@ const GlobalBackground = ({ paused = false }: GlobalBackgroundProps) => {
 
     return (
         <div className="fixed inset-0 w-full h-full -z-50 pointer-events-none overflow-hidden">
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-black dark:via-gray-900 dark:to-black transition-colors duration-500" />
-            <div className="absolute inset-0 w-full h-full opacity-30 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-200/40 via-transparent to-transparent dark:from-gray-800/40 dark:via-transparent dark:to-transparent" />
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-[#0f0720] dark:via-[#1e1b4b] dark:to-[#0f0720] transition-colors duration-500" />
+            <div className="absolute inset-0 w-full h-full opacity-30 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-200/40 via-transparent to-transparent dark:from-violet-900/40 dark:via-transparent dark:to-transparent" />
 
             <canvas
                 ref={canvasRef}
