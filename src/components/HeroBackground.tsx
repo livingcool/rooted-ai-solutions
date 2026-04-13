@@ -21,8 +21,8 @@ const HeroBackground = () => {
         const getColors = () => {
             isDark = document.documentElement.classList.contains('dark');
             return {
-                particleColor: isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)",
-                lineColor: isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.15)"
+                particleColor: isDark ? "rgba(99, 102, 241, 0.8)" : "rgba(79, 70, 229, 0.8)",
+                lineColor: isDark ? "rgba(168, 85, 247, 0.2)" : "rgba(147, 51, 234, 0.2)"
             };
         };
 
@@ -185,11 +185,20 @@ const HeroBackground = () => {
 
     return (
         <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden">
-            {/* Gradient Background Layer */}
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-[#0f0720] dark:via-[#1e1b4b] dark:to-[#0f0720] transition-colors duration-500" />
+            {/* Deep space background */}
+            <div className="absolute inset-0 w-full h-full bg-[#030014] transition-colors duration-1000" />
+            
+            {/* Primary Gradient Mesh */}
+            <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_20%_20%,_rgba(99,102,241,0.15)_0%,_transparent_50%),radial-gradient(circle_at_80%_80%,_rgba(168,85,247,0.15)_0%,_transparent_50%)]" />
 
-            {/* Radial Gradient Overlay for depth */}
-            <div className="absolute inset-0 w-full h-full opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-200/50 via-transparent to-transparent dark:from-violet-900/50 dark:via-transparent dark:to-transparent" />
+            {/* Technical Grid Pattern */}
+            <div 
+                className="absolute inset-0 opacity-[0.03] dark:opacity-[0.07]" 
+                style={{ 
+                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)`,
+                    backgroundSize: '40px 40px'
+                }} 
+            />
 
             <canvas
                 ref={canvasRef}

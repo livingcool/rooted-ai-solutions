@@ -16,10 +16,15 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Montserrat', 'Inter', 'system-ui', 'sans-serif'],
-        heading: ['Aquire', 'Outfit', 'Inter', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        heading: ['Syne', 'Outfit', 'Inter', 'sans-serif'],
       },
       colors: {
+        "premium-violet": "#9b30ff",
+        "digital-indigo": "#4f46e5",
+        "deep-space": "#030712",
+        "prestige-white": "#f8fafc",
+        "deep-charcoal": "#030614",
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
@@ -111,6 +116,9 @@ export default {
           "0%": { transform: "translateX(0%)" },
           "100%": { transform: "translateX(-100%)" },
         },
+        "shimmer": {
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -122,6 +130,7 @@ export default {
         "pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
         "rotate-slow": "rotate-slow 20s linear infinite",
         "marquee": "marquee 30s linear infinite",
+        "shimmer": "shimmer 2s infinite",
       },
       transform: {
         "rotateY-5": "rotateY(5deg)",

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useTheme } from "./ThemeProvider";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 // ─── Dynamic Copy ────────────────────────────────────────────────────────
 const WORDS = [
@@ -7,7 +8,7 @@ const WORDS = [
   "Infrastructure",
   "Pipelines",
   "Agents",
-  "Advantage"
+  "Systems"
 ];
 
 // ─── Animated Word Flipper (Refactored for Sans-Serif) ───────────────────
@@ -47,9 +48,9 @@ const LetterCascade: React.FC<LetterCascadeProps> = ({ words, intervalMs = 3000 
 
   return (
     <span
-      className="inline-flex font-extrabold tracking-tight overflow-hidden text-violet-600 dark:text-violet-400"
+      className="inline-flex font-extrabold tracking-tight overflow-hidden text-indigo-600 dark:text-indigo-400 font-syne"
       style={{
-        letterSpacing: "-0.02em",
+        letterSpacing: "-0.04em",
       }}
     >
       {[...current].map((ch, i) => {
@@ -75,7 +76,7 @@ const LetterCascade: React.FC<LetterCascadeProps> = ({ words, intervalMs = 3000 
 };
 
 // ─── Deep Space Network Canvas ─────────────────────────────────────────────
-const DeepSpaceCanvas = () => {
+const DeepSpaceCanvas = ({ isDark }: { isDark: boolean }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef<number>();
 
@@ -85,7 +86,6 @@ const DeepSpaceCanvas = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Handle resize
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -93,7 +93,6 @@ const DeepSpaceCanvas = () => {
     window.addEventListener('resize', resize);
     resize();
 
-    // Generate network nodes
     const nodes = Array.from({ length: 60 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -104,7 +103,6 @@ const DeepSpaceCanvas = () => {
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const isDark = document.documentElement.classList.contains("dark");
       const color = isDark ? "167, 139, 250" : "139, 92, 246";
 
       for (let i = 0; i < nodes.length; i++) {
@@ -141,82 +139,158 @@ const DeepSpaceCanvas = () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
       window.removeEventListener('resize', resize);
     };
-  }, []);
+  }, [isDark]);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />;
+  return (
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.05),transparent_70%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.08),transparent_70%)]" />
+      <canvas ref={canvasRef} className="absolute inset-0 opacity-40 dark:opacity-60" />
+    </div>
+  );
+};
+
+// ─── Magnetic Button Component ───────────────────────────────────────────
+const MagneticButton = ({ children, onClick }: { children?: React.ReactNode, onClick?: () => void }) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const x = (clientX - (left + width / 2)) * 0.35;
+    const y = (clientY - (top + height / 2)) * 0.35;
+    setPosition({ x, y });
+  };
+
+  const reset = () => setPosition({ x: 0, y: 0 });
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={reset}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      className="relative flex justify-center items-center cursor-pointer group"
+      onClick={onClick}
+    >
+      <div className="orb-pulse absolute w-[280px] h-[280px] md:w-[350px] md:h-[350px] rounded-full border border-indigo-500/10 dark:border-indigo-400/5 shadow-[0_0_100px_rgba(99,102,241,0.03)]" />
+      <motion.div 
+        animate={{ x: position.x * 0.5, y: position.y * 0.5 }}
+        className="absolute w-52 h-52 md:w-64 md:h-64 rounded-full border border-indigo-500/10 dark:border-indigo-400/10 group-hover:border-indigo-500/30 transition-colors duration-500"
+      />
+      <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-full bg-white dark:bg-slate-950/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 flex flex-col justify-center items-center shadow-2xl dark:shadow-[0_20px_40px_rgba(0,0,0,0.6)] z-20 transition-all duration-500 group-hover:scale-105 group-hover:border-indigo-500/50">
+        <span className="font-mono text-[8px] md:text-[9px] text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-3 group-hover:text-indigo-500 transition-colors uppercase">
+          Transmission Active
+        </span>
+        <span className="text-xl md:text-2xl font-black tracking-tighter text-slate-900 dark:text-white mb-3 text-center px-4 leading-tight font-syne">
+          GET STARTED
+        </span>
+        <div className="w-6 h-[2px] bg-indigo-500/40 mb-3 rounded-full transition-all group-hover:w-10 group-hover:bg-indigo-500" />
+        <span className="font-mono text-[7px] md:text-[8px] text-indigo-500/60 dark:text-indigo-400/60 tracking-[0.4em] uppercase font-bold">
+          R-AI // v1.0
+        </span>
+      </div>
+    </motion.div>
+  );
 };
 
 // ─── Hero Component ────────────────────────────────────────────────────────
 const Hero = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  const noiseOpacity = useTransform(smoothProgress, [0, 0.4], [isDark ? 0.4 : 0.2, 0]);
+  const contentOpacity = useTransform(smoothProgress, [0.6, 0.9], [1, 0]);
+  const contentScale = useTransform(smoothProgress, [0, 0.5], [1, 0.95]);
+  const contentY = useTransform(smoothProgress, [0, 1], [0, -50]);
+  const bgOpacity = useTransform(smoothProgress, [0, 0.4], [1, 0]);
+
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
-        .orb-pulse { animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .7; transform: scale(0.98); } }
+        .overlay-noise {
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .orb-pulse { animation: orb-pulse 8s ease-in-out infinite; }
+        @keyframes orb-pulse { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.1); } }
       `}</style>
 
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-white/0 dark:bg-[#030614]/0 transition-colors duration-700">
+      <section ref={containerRef} className="relative min-h-[200vh] bg-transparent">
+        <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden">
+          <motion.div 
+            style={{ opacity: bgOpacity }}
+            className="absolute inset-0 z-[-1] bg-white dark:bg-[#030614] transition-colors duration-1000"
+          />
+          <div className="absolute inset-0 z-0">
+            <DeepSpaceCanvas isDark={isDark} />
+            <motion.div 
+              style={{ opacity: noiseOpacity }}
+              className="absolute inset-0 z-0 mix-blend-overlay overlay-noise pointer-events-none opacity-20 dark:opacity-40" 
+            />
+            <div className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-[#030614]/40 to-[#030614]" />
+          </div>
 
-        {/* Background Network Canvas */}
-        <DeepSpaceCanvas />
-
-        {/* ── Main Hero Content ── */}
-        <div className="flex flex-col items-center justify-center relative z-10 px-4 text-center mt-12">
-
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-5xl md:text-7xl lg:text-8xl font-black flex flex-wrap justify-center gap-x-4 gap-y-2 leading-[1.1] tracking-tighter mb-10 text-slate-900 dark:text-white"
+          <motion.div 
+            style={{ opacity: contentOpacity, scale: contentScale, y: contentY }}
+            className="relative z-10 px-4 text-center mt-8"
           >
-            <span>Engineering</span>
-            <LetterCascade words={WORDS} />
-          </motion.h1>
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+              className="px-6 py-2 rounded-full flex gap-3 items-center mb-10 border border-indigo-500/10 bg-indigo-50/30 dark:bg-indigo-500/5 backdrop-blur-md shadow-sm mx-auto w-fit"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+              <span className="font-mono text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-slate-500 dark:text-slate-400">
+                Future-Ready AI Engineering
+              </span>
+            </motion.div>
 
-          {/* Sub-Pill */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="px-8 py-3 rounded-full flex gap-4 items-center mb-20 border border-violet-500/20 bg-white/60 dark:bg-[#14203c]/80 backdrop-blur-md shadow-sm dark:shadow-[0_0_30px_rgba(167,139,250,0.05)]"
-          >
-            <span className="font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-violet-600 dark:text-violet-400">
-              ENGINEERING INTELLIGENCE <span className="text-slate-400 dark:text-slate-500">.</span> COMPLEXITY <span className="text-purple-600 dark:text-[#D6BCFA]">. SIMPLIFIED</span>
-            </span>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+              className="text-5xl md:text-7xl lg:text-[7.5rem] font-black flex flex-wrap justify-center gap-x-6 gap-y-2 leading-[0.9] tracking-tighter mb-12 text-slate-900 dark:text-white font-syne"
+            >
+              <span className="opacity-95">Engineering</span>
+              <LetterCascade words={WORDS} />
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.3 }}
+              className="max-w-2xl text-slate-500 dark:text-slate-400 text-lg md:text-xl font-medium mb-16 leading-relaxed px-6 font-inter mx-auto"
+            >
+              RootedAI solutions bridge the gap between complex infrastructure and autonomous intelligence. We build the foundations for your next competitive advantage.
+            </motion.p>
+
+            <MagneticButton 
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('trigger-bg-flare'));
+                document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            />
           </motion.div>
-
-          {/* Central Initiate Module */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="relative flex justify-center items-center cursor-pointer group"
-            onClick={() => {
-              window.dispatchEvent(new CustomEvent('trigger-bg-flare'));
-              document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            {/* Visual Halo */}
-            <div className="orb-pulse absolute w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-violet-500/10 shadow-[inner_0_0_80px_rgba(139,92,246,0.05)] dark:shadow-[inner_0_0_100px_rgba(167,139,250,0.1)]" />
-
-            {/* Core Interaction Button */}
-            <div className="relative w-44 h-44 md:w-56 md:h-56 rounded-full bg-slate-50/80 dark:bg-[#0a0f1e]/80 backdrop-blur-md border border-slate-200 dark:border-white/10 flex flex-col justify-center items-center shadow-xl dark:shadow-[0_20px_40px_rgba(0,0,0,0.5),inset_0_0_40px_rgba(0,0,0,0.8)] z-20 transition-all duration-500 group-hover:border-violet-500">
-              <span className="font-mono text-[8px] md:text-[9px] text-slate-500 dark:text-zinc-500 tracking-[0.2em] mb-4 group-hover:text-violet-500 transition-colors">
-                STATUS: OPTIMIZED
-              </span>
-              <span className="text-2xl md:text-3xl font-black tracking-tight text-slate-950 dark:text-white mb-4 group-hover:scale-105 transition-transform text-center px-4 leading-tight">
-                GET STARTED
-              </span>
-              <div className="w-8 h-[1px] bg-violet-500/50 mb-4" />
-              <span className="font-mono text-[8px] md:text-[9px] text-violet-600 dark:text-violet-400 tracking-[0.2em]">
-                PROTOCOL ROOT-01
-              </span>
-            </div>
-          </motion.div>
-
         </div>
+
+        {/* Floating Background Accents */}
+        <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-indigo-600/5 rounded-full blur-[150px] pointer-events-none" />
       </section>
     </>
   );

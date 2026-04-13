@@ -7,7 +7,8 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Dynamic3DBackground from "@/components/Dynamic3DBackground";
 import PageTransition from "@/components/PageTransition";
 import { Suspense, lazy, useState, useEffect } from "react";
-import FullPageLoader from "@/components/ui/FullPageLoader";
+import LoadingScreen from "@/components/LoadingScreen";
+import SmoothScroll from "@/components/SmoothScroll";
 import ScrollToHash from "@/components/ScrollToHash";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import SectionIndicator from "@/components/SectionIndicator";
@@ -62,7 +63,7 @@ const BusinessCardGenerator = lazy(() => import("./pages/BusinessCardGenerator")
 
 const queryClient = new QueryClient();
 
-const LoadingFallback = () => <FullPageLoader />;
+const LoadingFallback = () => null;
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -136,33 +137,51 @@ const App = () => {
   const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Listen for the 3D background engine readiness
+    const handleReady = () => {
+      // Small smoothing delay to ensure the first frame is fully rendered
+      setTimeout(() => setInitialLoading(false), 800);
+    };
+
+    window.addEventListener('3d-bg-ready', handleReady);
+    
+    // Safety fallback: if for some reason the 3D engine fails to signal, 
+    // reveal the site after 4 seconds anyway.
+    const safetyTimer = setTimeout(() => {
       setInitialLoading(false);
-    }, 2000); // Premium entry delay
-    return () => clearTimeout(timer);
+    }, 4000);
+
+    return () => {
+      window.removeEventListener('3d-bg-ready', handleReady);
+      clearTimeout(safetyTimer);
+    };
   }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="rootedai-theme">
         <TooltipProvider>
-          <AnimatePresence>
-            {initialLoading && <FullPageLoader key="initial-loader" />}
+          <AnimatePresence mode="wait">
+            {initialLoading && <LoadingScreen key="initial-loader" />}
           </AnimatePresence>
+          
           <Dynamic3DBackground />
           <Toaster />
           <Sonner />
+          
           <BrowserRouter>
-            <Navigation />
-            <ScrollProgress />
-            <ScrollToHash />
-            <SectionIndicator />
-            {!initialLoading && (
-              <Suspense fallback={<LoadingFallback />}>
-                <AnimatedRoutes />
-              </Suspense>
-            )}
-            <Analytics />
+            <SmoothScroll>
+              <div className={initialLoading ? "invisible" : "visible"}>
+                <Navigation />
+                <ScrollProgress />
+                <ScrollToHash />
+                <SectionIndicator />
+                <Suspense fallback={<LoadingFallback />}>
+                  <AnimatedRoutes />
+                </Suspense>
+                <Analytics />
+              </div>
+            </SmoothScroll>
           </BrowserRouter>
         </TooltipProvider>
       </ThemeProvider>

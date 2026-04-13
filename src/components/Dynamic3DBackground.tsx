@@ -13,8 +13,21 @@ import * as THREE from "three";
 import { useTheme } from "@/components/ThemeProvider";
 import { useScroll as usePageScroll } from "framer-motion";
 
-// --- Optimized Wireframe Knot (Replaces the central 'cement ball') ---
-const WireframeKnot = ({ color }: { color: string }) => {
+// --- Custom usePerformance Hook ---
+const usePerformance = () => {
+    const [isVisible, setIsVisible] = useState(true);
+
+    useEffect(() => {
+        const handleVisibility = () => setIsVisible(document.visibilityState === 'visible');
+        document.addEventListener('visibilitychange', handleVisibility);
+        return () => document.removeEventListener('visibilitychange', handleVisibility);
+    }, []);
+
+    return { isVisible };
+};
+
+// --- Optimized Wireframe Knot ---
+const WireframeKnot = React.memo(({ color }: { color: string }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
@@ -30,23 +43,25 @@ const WireframeKnot = ({ color }: { color: string }) => {
       <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1}>
         <mesh ref={meshRef}>
           <torusKnotGeometry args={[14, 2.5, 120, 24, 2, 5]} />
-          <meshStandardMaterial 
+          <MeshDistortMaterial 
             color={color} 
+            speed={2} 
+            distort={0.4} 
             wireframe 
             transparent 
-            opacity={0.12} 
+            opacity={0.15} 
             emissive={color}
-            emissiveIntensity={1.2}
+            emissiveIntensity={1.5}
             side={THREE.DoubleSide}
           />
         </mesh>
       </Float>
     </group>
   );
-};
+});
 
 // --- Orbital Data Rings ---
-const OrbitalRings = ({ color }: { color: string }) => {
+const OrbitalRings = React.memo(({ color }: { color: string }) => {
   const groupRef = useRef<THREE.Group>(null);
   
   useFrame((state) => {
@@ -73,10 +88,10 @@ const OrbitalRings = ({ color }: { color: string }) => {
       </mesh>
     </group>
   );
-};
+});
 
 // --- Neural Network Lines ---
-const NeuralNetworkLines = ({ color }: { color: string }) => {
+const NeuralNetworkLines = React.memo(({ color }: { color: string }) => {
   const count = 150;
   const { mouse } = useThree();
   const pointRef = useRef<THREE.Points>(null);
@@ -95,29 +110,37 @@ const NeuralNetworkLines = ({ color }: { color: string }) => {
   const basePositions = useMemo(() => new Float32Array(positions), []);
 
   useFrame((state) => {
-    const time = state.clock.getElapsedTime();
     if (!pointRef.current) return;
+    
+    // Safety check: if tab is hidden, skip expensive calculations
+    if (document.hidden) return;
 
+    const time = state.clock.getElapsedTime();
     const positionsArray = pointRef.current.geometry.attributes.position.array as Float32Array;
+    const mx = mouse.x * 30;
+    const my = mouse.y * 30;
 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      // Drifting flow
+      
+      // Drifting flow - use pre-calculated basePositions to avoid drift accumulation issues
       const x = basePositions[i3] + Math.sin(time * 0.2 + i) * 2;
       const y = basePositions[i3 + 1] + Math.cos(time * 0.3 + i) * 2;
       const z = basePositions[i3 + 2] + Math.sin(time * 0.1 + i) * 2;
 
-      // Extremely subtle mouse interaction
-      const dx = mouse.x * 30 - x;
-      const dy = mouse.y * 30 - y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      // Interaction
+      const dx = mx - x;
+      const dy = my - y;
+      const distSq = dx * dx + dy * dy; // Use squared distance for performance
       
-      if (dist < 15) {
+      if (distSq < 225) { // 15 * 15
+        const dist = Math.sqrt(distSq);
         positionsArray[i3] = x - (dx / dist) * 2;
         positionsArray[i3 + 1] = y - (dy / dist) * 2;
       } else {
-        positionsArray[i3] = THREE.MathUtils.lerp(positionsArray[i3], x, 0.05);
-        positionsArray[i3 + 1] = THREE.MathUtils.lerp(positionsArray[i3 + 1], y, 0.05);
+        // Smoother lerp back
+        positionsArray[i3] += (x - positionsArray[i3]) * 0.05;
+        positionsArray[i3 + 1] += (y - positionsArray[i3 + 1]) * 0.05;
       }
       positionsArray[i3 + 2] = z;
     }
@@ -128,30 +151,32 @@ const NeuralNetworkLines = ({ color }: { color: string }) => {
     }
   });
 
-  const lineGeometry = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    const lineIndices: number[] = [];
-    const threshold = 14;
+  // Pre-calculate line indices ONCE based on initial positions
+  const lineIndices = useMemo(() => {
+    const indices: number[] = [];
+    const thresholdSq = 14 * 14;
 
     for (let i = 0; i < count; i++) {
       for (let j = i + 1; j < count; j++) {
-        const x1 = basePositions[i * 3];
-        const y1 = basePositions[i * 3 + 1];
-        const z1 = basePositions[i * 3 + 2];
-        const x2 = basePositions[j * 3];
-        const y2 = basePositions[j * 3 + 1];
-        const z2 = basePositions[j * 3 + 2];
+        const dx = basePositions[i * 3] - basePositions[j * 3];
+        const dy = basePositions[i * 3 + 1] - basePositions[j * 3 + 1];
+        const dz = basePositions[i * 3 + 2] - basePositions[j * 3 + 2];
+        const distSq = dx * dx + dy * dy + dz * dz;
 
-        const dist = Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2);
-        if (dist < threshold) {
-          lineIndices.push(i, j);
+        if (distSq < thresholdSq) {
+          indices.push(i, j);
         }
       }
     }
-    geometry.setIndex(lineIndices);
+    return new Uint16Array(indices);
+  }, [basePositions]);
+
+  const lineGeometry = useMemo(() => {
+    const geometry = new THREE.BufferGeometry();
+    geometry.setIndex(new THREE.BufferAttribute(lineIndices, 1));
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     return geometry;
-  }, [basePositions, positions]);
+  }, [lineIndices, positions]);
 
   return (
     <group>
@@ -170,7 +195,7 @@ const NeuralNetworkLines = ({ color }: { color: string }) => {
       </lineSegments>
     </group>
   );
-};
+});
 
 
 // --- Interactive Camera ---
@@ -222,10 +247,12 @@ const useBackgroundFlare = () => {
     return isFlaring;
 };
 
-const BackgroundContent = ({ isDark }: { isDark: boolean }) => {
+const BackgroundContent = ({ isDark, isVisible }: { isDark: boolean; isVisible: boolean }) => {
     const isFlaring = useBackgroundFlare();
-    const accentColor = "#7c3aed";  // Violet 600
-    const secondaryColor = "#c084fc"; // Purple 400
+    const accentColor = "#6366f1";   // Deep Indigo
+    const secondaryColor = "#a855f7"; // Solar Violet
+
+    if (!isVisible) return null;
 
     return (
         <group>
@@ -250,10 +277,17 @@ const BackgroundContent = ({ isDark }: { isDark: boolean }) => {
 
             <Rig />
             
-            <ambientLight intensity={isFlaring ? 2 : 0.5} />
-            <pointLight position={[10, 20, 10]} intensity={isFlaring ? 5 : 2} color={accentColor} />
-            <pointLight position={[-10, -20, -10]} intensity={isFlaring ? 3 : 1} color={secondaryColor} />
-            <spotLight position={[0, 0, 40]} angle={0.3} penumbra={1} intensity={isFlaring ? 10 : 2} color="#ffffff" />
+            <ambientLight intensity={isFlaring ? 3 : 0.8} />
+            <pointLight position={[10, 20, 10]} intensity={isFlaring ? 8 : 4} color={accentColor} />
+            <pointLight position={[-10, -20, -10]} intensity={isFlaring ? 5 : 2} color={secondaryColor} />
+            <spotLight position={[0, 0, 40]} angle={0.4} penumbra={1} intensity={isFlaring ? 15 : 5} color="#ffffff" />
+            
+            {/* Dynamic Light Follower */}
+            <pointLight 
+              position={[Math.sin(Date.now() * 0.001) * 20, Math.cos(Date.now() * 0.001) * 20, -10]} 
+              intensity={2} 
+              color={accentColor} 
+            />
         </group>
     );
 };
@@ -265,6 +299,7 @@ interface Dynamic3DBackgroundProps {
 const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
     const { theme } = useTheme();
     const isDark = theme === "dark";
+    const { isVisible } = usePerformance();
 
     if (paused) return null;
 
@@ -282,18 +317,21 @@ const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
             <Canvas
                 shadows
                 gl={{ 
-                    antialias: true, 
+                    antialias: false, // Performance improvement
                     alpha: true, 
                     stencil: false, 
                     depth: true,
-                    // Relaxed settings for better compatibility
+                    powerPreference: "high-performance",
                     failIfMajorPerformanceCaveat: false
                 }}
-                dpr={typeof window !== 'undefined' && window.devicePixelRatio > 1.5 ? 1.5 : 1}
+                onCreated={() => {
+                  window.dispatchEvent(new CustomEvent('3d-bg-ready'));
+                }}
+                dpr={[1, 1.5]} // Adaptive DPR
                 camera={{ position: [0, 0, 20], fov: 60 }}
                 style={{ opacity: isDark ? 1 : 0.6 }}
             >
-                <BackgroundContent isDark={isDark} />
+                <BackgroundContent isDark={isDark} isVisible={isVisible} />
             </Canvas>
 
             {/* Vignette Overlay */}
@@ -302,4 +340,4 @@ const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
     );
 };
 
-export default Dynamic3DBackground;
+export default React.memo(Dynamic3DBackground);

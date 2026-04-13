@@ -14,6 +14,7 @@ const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollDir, setScrollDir] = useState<"up" | "down">("up");
   const [isHovered, setIsHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isDarkMode, setIsDarkMode] = useState(false);
   
   const navRef = useRef<HTMLDivElement>(null);
@@ -78,6 +79,15 @@ const Navigation = () => {
     observer.observe(document.documentElement, { attributes: true });
     return () => observer.disconnect();
   }, []);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!navRef.current) return;
+    const rect = navRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
 
   // Nav visibility states:
   // • At top (not scrolled)  → fully expanded
@@ -149,34 +159,42 @@ const Navigation = () => {
           ref={navRef}
           layout
           initial={false}
+          onMouseMove={handleMouseMove}
           animate={{
-            width: isCompact ? "auto" : "min(95vw, 1200px)",
+            width: isCompact ? "auto" : "min(95vw, 1100px)",
             borderRadius: "9999px",
             y: isHidden ? -100 : 0,
             opacity: isHidden ? 0 : 1,
             backgroundColor: isDarkMode 
-              ? "rgba(5, 5, 15, 0.88)" 
-              : "rgba(255, 255, 255, 0.92)"
+              ? "rgba(10, 10, 25, 0.7)" 
+              : "rgba(255, 255, 255, 0.75)"
           }}
           transition={{
             layout: {
               type: "spring",
-              stiffness: 250,
-              damping: 25,
-              mass: 0.6
+              stiffness: 300,
+              damping: 30,
+              mass: 0.8
             },
-            y: { duration: 0.3 },
+            y: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
             opacity: { duration: 0.3 },
             backgroundColor: { duration: 0.5 }
           }}
           className={cn(
             "pointer-events-auto relative flex items-center h-14 transition-all duration-500",
-            "shadow-2xl overflow-visible backdrop-blur-2xl border",
+            "backdrop-blur-3xl border group/nav",
             isCompact 
-              ? "px-4 border-slate-200/80 dark:border-white/10 shadow-[0_8px_20px_rgba(0,0,0,0.12)] dark:shadow-[0_0_20px_rgba(0,0,0,0.6)] min-w-[160px]" 
-              : "px-6 border-white/20 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.2)] rounded-[32px]"
+              ? "px-4 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] min-w-[180px]" 
+              : "px-6 border-slate-200 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-[32px]"
           )}
         >
+          {/* Mouse Glow Effect */}
+          <div 
+            className="absolute inset-0 pointer-events-none transition-opacity duration-500 opacity-0 group-hover/nav:opacity-100 overflow-hidden rounded-[inherit]"
+            style={{
+              background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, ${isDarkMode ? 'rgba(99, 102, 241, 0.12)' : 'rgba(79, 70, 229, 0.08)'}, transparent 80%)`
+            }}
+          />
           {/* Logo Section */}
           <div className="flex items-center gap-2 shrink-0">
             <a href="/" className="flex items-center gap-2 group outline-none overflow-hidden">
@@ -189,11 +207,11 @@ const Navigation = () => {
                 )}
               />
               <span className={cn(
-                "font-bold tracking-tight transition-all duration-300 whitespace-nowrap",
+                "font-bold tracking-tight transition-all duration-500 whitespace-nowrap font-syne",
                 isCompact ? "text-lg" : "text-xl",
                 isDarkMode ? "text-white" : "text-slate-900"
               )}>
-                Rooted<span className="text-violet-600 dark:text-violet-400">AI</span>
+                Rooted<span className="text-indigo-600 dark:text-indigo-400">AI</span>
               </span>
             </a>
           </div>
@@ -216,9 +234,9 @@ const Navigation = () => {
                           onClick={(e) => handleToggle(e, link.name)}
                           onMouseEnter={() => setActiveDropdown(link.name)}
                           className={cn(
-                            "flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-full transition-all outline-none",
-                            "text-slate-600 dark:text-slate-300 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10",
-                            activeDropdown === link.name && "bg-black/5 dark:bg-white/10 text-black dark:text-white"
+                            "flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-full transition-all outline-none relative z-10",
+                            "text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10",
+                            activeDropdown === link.name && "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"
                           )}
                         >
                           {link.name}

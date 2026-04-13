@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,136 +7,69 @@
 @layer base {
   :root {
     /* --- Font Mappings --- */
-    --font-sans: "Montserrat", sans-serif;
-    --font-heading: "Aquire", sans-serif;
-    --font-mono: "Geist Mono", monospace;
+    --font-heading: "Syne", sans-serif;
+    --font-sans: "Inter", sans-serif;
+    --font-syne: "Syne", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
 
-    /* --- Color Variables (Light Mode - Dull White & Premium Violet) --- */
-    --background: oklch(0.92 0.01 280);
-    /* Dull White (Grey/Violet Tint) */
-    --foreground: oklch(0.15 0.04 280);
-    /* Verbose/Rich Black-Violet */
+    /* --- Color Variables (Premium Light - Prestige White & Premium Violet) --- */
+    --background: #ffffff; 
+    --foreground: #030614; 
 
-    --card: oklch(0.98 0.01 280);
-    --card-foreground: oklch(0.15 0.04 280);
+    --card: #ffffff;
+    --card-foreground: #030614;
 
-    --popover: oklch(0.98 0.01 280);
-    --popover-foreground: oklch(0.15 0.04 280);
+    --popover: #ffffff;
+    --popover-foreground: #030614;
 
-    --primary: #210d41;
-    --primary-foreground: oklch(0.98 0.01 280);
+    --primary: #8b5cf6; 
+    --primary-foreground: #ffffff;
 
-    --secondary: oklch(0.94 0.02 280);
-    --secondary-foreground: oklch(0.15 0.04 280);
+    --secondary: #f8fafc;
+    --secondary-foreground: #0f172a;
 
-    --muted: oklch(0.94 0.02 280);
-    --muted-foreground: oklch(0.25 0.04 280);
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
 
-    --accent: #8b5cf6;
-    /* Premium Violet Accent */
-    --accent-foreground: oklch(0.98 0.01 280);
+    --accent: #6366f1; 
+    --accent-foreground: #ffffff;
 
-    --destructive: oklch(0.6 0.25 25);
-    --destructive-foreground: oklch(0.98 0 0);
+    --destructive: #ef4444;
+    --destructive-foreground: #f8fafc;
 
-    --border: oklch(0.92 0.01 280);
-    --input: oklch(0.92 0.01 280);
-    --ring: #210d41;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #8b5cf6;
 
-    /* --- Charts --- */
-    --chart-1: oklch(0.65 0.25 25);
-    --chart-2: oklch(0.6 0.2 60);
-    --chart-3: oklch(0.5 0.2 100);
-    --chart-4: oklch(0.4 0.2 200);
-    --chart-5: oklch(0.4 0.2 280);
-
-    --radius: 0.5rem;
-
-    /* --- Sidebar --- */
-    --sidebar: oklch(0.98 0 0);
-    --sidebar-foreground: oklch(0.2 0 0);
-    --sidebar-primary: oklch(0.15 0.02 240);
-    --sidebar-primary-foreground: oklch(0.98 0 0);
-    --sidebar-accent: oklch(0.96 0 0);
-    --sidebar-accent-foreground: oklch(0.15 0.02 240);
-    --sidebar-border: oklch(0.92 0.01 240);
-    --sidebar-ring: oklch(0.8 0 0);
-
-    /* --- Font Definitions --- */
-    --font-geist-mono: "Geist Mono", monospace;
-  }
-
-  @font-face {
-    font-family: 'Aquire';
-    src: url('/fonts/Aquire-BW0ox.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: 'Aquire';
-    src: url('/fonts/AquireBold-8Ma60.otf') format('opentype');
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: 'Aquire';
-    src: url('/fonts/AquireLight-YzE0o.otf') format('opentype');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
+    --radius: 1rem; 
   }
 
   .dark {
-    /* --- Color Variables (Dark Mode - Deep technical Violet) --- */
-    --background: #050208;
-    /* Ultra Deep Violet-Black */
-    --foreground: oklch(0.98 0 0);
+    /* --- Color Variables (Premium Dark - Atmospheric Space) --- */
+    --background: #030614; 
+    --foreground: #f8fafc;
 
-    --card: oklch(0.12 0.02 280 / 0.4);
-    /* Glassy Card (Violet Tint) */
-    --card-foreground: oklch(0.98 0 0);
+    --card: rgba(15, 23, 42, 0.4); 
+    --card-foreground: #f8fafc;
 
-    --popover: #0a0510;
-    --popover-foreground: oklch(0.98 0 0);
+    --popover: #030614;
+    --popover-foreground: #f8fafc;
 
-    --primary: #8b5cf6;
-    /* Vibrant Violet for Dark Mode */
-    --primary-foreground: #050208;
+    --primary: #a78bfa; 
+    --primary-foreground: #030614;
 
-    --secondary: oklch(0.2 0.03 280);
-    --secondary-foreground: oklch(0.98 0 0);
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
 
-    --muted: oklch(0.2 0.03 280);
-    --muted-foreground: oklch(0.7 0.03 280);
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
 
-    --accent: #8b5cf6;
-    --accent-foreground: #050208;
+    --accent: #818cf8; 
+    --accent-foreground: #ffffff;
 
-    --destructive: oklch(0.6 0.25 15);
-    --destructive-foreground: oklch(1 0 0);
-
-    --border: oklch(0.25 0.03 280 / 0.4);
-    --input: oklch(0.25 0.03 280 / 0.4);
-    --ring: #8b5cf6;
-
-    --chart-1: #8b5cf6;
-    --chart-2: #a78bfa;
-    --chart-3: #c4b5fd;
-    --chart-4: #ddd6fe;
-    --chart-5: #ede9fe;
-
-    --sidebar: #050208;
-    --sidebar-foreground: oklch(0.98 0 0);
-    --sidebar-primary: #8b5cf6;
-    --sidebar-primary-foreground: #050208;
-    --sidebar-accent: oklch(0.2 0.03 280);
-    --sidebar-accent-foreground: oklch(0.98 0 0);
-    --sidebar-border: oklch(0.25 0.03 280 / 0.4);
-    --sidebar-ring: #8b5cf6;
+    --border: rgba(255, 255, 255, 0.08);
+    --input: rgba(255, 255, 255, 0.08);
+    --ring: #a78bfa;
   }
 }
 
@@ -146,22 +79,17 @@
   }
 
   body {
-    @apply bg-transparent text-foreground font-sans antialiased selection:bg-violet-500 selection:text-white dark:selection:bg-violet-400 dark:selection:text-black;
+    @apply bg-background text-foreground font-sans antialiased selection:bg-indigo-500/30 dark:selection:bg-indigo-400/30;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    /* Using font-heading (Outfit) for headings */
-    @apply font-heading tracking-tight font-bold text-slate-950 dark:text-white;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight font-extrabold text-slate-900 dark:text-white leading-[1.1];
   }
 
-  /* Custom Scrollbar */
+  /* Custom Scrollbar - Minimalist */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
   }
 
   ::-webkit-scrollbar-track {
@@ -169,20 +97,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #e2e8f0;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
   }
 
   .dark ::-webkit-scrollbar-thumb {
-    background: #1e293b;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #cbd5e1;
-  }
-
-  .dark ::-webkit-scrollbar-thumb:hover {
-    background: #334155;
+    background: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -211,19 +131,16 @@
   }
 
   .glass-premium {
-    @apply bg-violet-500/5 dark:bg-black/20 backdrop-blur-3xl border-t border-l border-violet-500/10 dark:border-white/10 shadow-none dark:shadow-2xl;
-    box-shadow:
+    @apply bg-white/5 dark:bg-black/40 backdrop-blur-2xl border border-white/10 dark:border-white/5 shadow-2xl;
+    box-shadow: 
+      0 4px 24px rgba(0, 0, 0, 0.1),
       inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-    background-image:
-      linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-    position: relative;
-    overflow: hidden;
   }
 
   .dark .glass-premium {
     box-shadow:
-      0 8px 32px 0 rgba(0, 0, 0, 0.3),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      0 8px 32px 0 rgba(0, 0, 0, 0.5),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   /* Liquid Metal Gloss Overlay */
