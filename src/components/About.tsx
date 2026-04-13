@@ -48,7 +48,7 @@ const About = () => {
   });
 
   return (
-    <section ref={containerRef} className="relative h-[400vh] bg-transparent overflow-visible font-heading transition-colors duration-500">
+    <section ref={containerRef} className="relative h-[400vh] bg-transparent overflow-hidden font-heading transition-colors duration-500">
       {/* Background Ambience */}
       <div className="absolute inset-0 z-0 opacity-[0.05] dark:opacity-[0.1] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500 via-transparent to-transparent pointer-events-none" />
 
