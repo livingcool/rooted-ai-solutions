@@ -11,7 +11,7 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useTheme } from "@/components/ThemeProvider";
-import { useScroll as usePageScroll } from "framer-motion";
+import { motion, useScroll as usePageScroll, useTransform } from "framer-motion";
 
 // --- Custom usePerformance Hook ---
 const usePerformance = () => {
@@ -300,11 +300,21 @@ const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
     const { theme } = useTheme();
     const isDark = theme === "dark";
     const { isVisible } = usePerformance();
+    const { scrollY } = usePageScroll();
+
+    // Fade out as we scroll past the Hero section (which is ~200vh)
+    // Assuming 1vh is roughly 800px-1000px, but it's better to use vh units in transform if possible.
+    // However, framer motion useTransform with scrollY needs absolute values or we can use useScroll with offset.
+    // Let's use 1200 to 1800 px as the fade range (roughly 1.2 to 1.8 screen heights).
+    const opacity = useTransform(scrollY, [1200, 1800], [1, 0]);
 
     if (paused) return null;
 
     return (
-        <div className="fixed inset-0 w-full h-full -z-50 pointer-events-none overflow-hidden">
+        <motion.div 
+            style={{ opacity }}
+            className="fixed inset-0 w-full h-full -z-50 pointer-events-none overflow-hidden"
+        >
             {/* Deep immersive gradients */}
             <div 
                 className={`absolute inset-0 w-full h-full transition-colors duration-1000 ${
@@ -336,7 +346,7 @@ const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
 
             {/* Vignette Overlay */}
             <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_40%,_var(--tw-gradient-stops))] from-transparent via-transparent to-black/40 dark:to-black/80" />
-        </div>
+        </motion.div>
     );
 };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "./ThemeProvider";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
+import SignalInterference from "./ui/SignalInterference";
 
 // ─── Dynamic Copy ────────────────────────────────────────────────────────
 const WORDS = [
@@ -48,18 +49,18 @@ const LetterCascade: React.FC<LetterCascadeProps> = ({ words, intervalMs = 3000 
 
   return (
     <span
-      className="inline-flex font-extrabold tracking-tight overflow-hidden text-indigo-600 dark:text-indigo-400 font-syne min-w-[3ch] justify-center"
+      className="inline-flex font-extrabold tracking-tight overflow-hidden text-indigo-600 dark:text-indigo-400 font-syne"
       style={{
         letterSpacing: "-0.04em",
       }}
     >
       {[...current].map((ch, i) => {
-        if (ch === " ") return <span key={i} className="w-[0.2em]" />;
+        if (ch === " ") return <span key={i} className="w-[0.3em]" />;
         const isExit = phase === "exit";
         const delayMs = i * (isExit ? 15 : 25);
 
         return (
-          <span key={`${current}-${i}`} className="overflow-hidden flex items-center">
+          <span key={`${current}-${i}`} className="overflow-hidden">
             <motion.span
               className="inline-block"
               initial={{ y: isExit ? 0 : "100%", opacity: isExit ? 1 : 0 }}
@@ -172,23 +173,31 @@ const MagneticButton = ({ children, onClick }: { children?: React.ReactNode, onC
       onMouseLeave={reset}
       animate={{ x: position.x, y: position.y }}
       transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-      className="relative flex justify-center items-center cursor-pointer group scale-90 md:scale-100"
+      className="relative flex justify-center items-center cursor-pointer group"
       onClick={onClick}
     >
-      <div className="orb-pulse absolute w-[240px] h-[240px] md:w-[350px] md:h-[350px] rounded-full border border-indigo-500/10 dark:border-indigo-400/5 shadow-[0_0_100px_rgba(99,102,241,0.03)]" />
+      {/* Dynamic Radio Ripples */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="radio-ripple w-[300px] h-[300px] md:w-[400px] md:h-[400px]" style={{ animationDelay: '0s' }} />
+        <div className="radio-ripple w-[300px] h-[300px] md:w-[400px] md:h-[400px]" style={{ animationDelay: '1s' }} />
+        <div className="radio-ripple w-[300px] h-[300px] md:w-[400px] md:h-[400px]" style={{ animationDelay: '2s' }} />
+        <div className="radio-ripple w-[300px] h-[300px] md:w-[400px] md:h-[400px]" style={{ animationDelay: '3s' }} />
+      </div>
+
+      <div className="orb-pulse absolute w-[280px] h-[280px] md:w-[350px] md:h-[350px] rounded-full border border-indigo-500/10 dark:border-indigo-400/5 shadow-[0_0_100px_rgba(99,102,241,0.03)]" />
       <motion.div 
         animate={{ x: position.x * 0.5, y: position.y * 0.5 }}
-        className="absolute w-44 h-44 md:w-64 md:h-64 rounded-full border border-indigo-500/10 dark:border-indigo-400/10 group-hover:border-indigo-500/30 transition-colors duration-500"
+        className="absolute w-52 h-52 md:w-64 md:h-64 rounded-full border border-indigo-500/10 dark:border-indigo-400/10 group-hover:border-indigo-500/30 transition-colors duration-500"
       />
-      <div className="relative w-36 h-36 md:w-48 md:h-48 rounded-full bg-white dark:bg-slate-950/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 flex flex-col justify-center items-center shadow-2xl dark:shadow-[0_20px_40px_rgba(0,0,0,0.6)] z-20 transition-all duration-500 group-hover:scale-105 group-hover:border-indigo-500/50">
-        <span className="font-mono text-[7px] md:text-[9px] text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-2 md:mb-3 group-hover:text-indigo-500 transition-colors uppercase">
+      <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-full bg-white dark:bg-slate-950/60 backdrop-blur-xl border border-slate-200 dark:border-white/10 flex flex-col justify-center items-center shadow-2xl dark:shadow-[0_20px_40px_rgba(0,0,0,0.6)] z-20 transition-all duration-500 group-hover:scale-105 group-hover:border-indigo-500/50">
+        <span className="font-mono text-[8px] md:text-[9px] text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-3 group-hover:text-indigo-500 transition-colors uppercase">
           Transmission Active
         </span>
-        <span className="text-lg md:text-2xl font-black tracking-tighter text-slate-900 dark:text-white mb-2 md:mb-3 text-center px-4 leading-tight font-syne">
+        <span className="text-xl md:text-2xl font-black tracking-tighter text-slate-900 dark:text-white mb-3 text-center px-4 leading-tight font-syne">
           GET STARTED
         </span>
-        <div className="w-6 h-[2px] bg-indigo-500/40 mb-2 md:mb-3 rounded-full transition-all group-hover:w-10 group-hover:bg-indigo-500" />
-        <span className="font-mono text-[6px] md:text-[8px] text-indigo-500/60 dark:text-indigo-400/60 tracking-[0.4em] uppercase font-bold">
+        <div className="w-6 h-[2px] bg-indigo-500/40 mb-3 rounded-full transition-all group-hover:w-10 group-hover:bg-indigo-500" />
+        <span className="font-mono text-[7px] md:text-[8px] text-indigo-500/60 dark:text-indigo-400/60 tracking-[0.4em] uppercase font-bold">
           R-AI // v1.0
         </span>
       </div>
@@ -227,22 +236,37 @@ const Hero = () => {
         }
         .orb-pulse { animation: orb-pulse 8s ease-in-out infinite; }
         @keyframes orb-pulse { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.1); } }
+        
+        .radio-ripple {
+          position: absolute;
+          border-radius: 50%;
+          border: 1px solid rgba(99, 102, 241, 0.4);
+          animation: radio-ripple 4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+          pointer-events: none;
+        }
+
+        @keyframes radio-ripple {
+          0% { transform: scale(0.5); opacity: 0; }
+          20% { opacity: 0.5; }
+          100% { transform: scale(2.5); opacity: 0; }
+        }
       `}</style>
 
-      <section ref={containerRef} className="relative min-h-[200vh] bg-transparent overflow-hidden">
+      <section ref={containerRef} className="relative min-h-[200vh] bg-transparent">
+        <SignalInterference />
         <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden">
           <motion.div 
             style={{ opacity: bgOpacity }}
-            className="absolute inset-0 z-[-1] bg-white dark:bg-[#030614] transition-colors duration-1000"
-          />
-          <div className="absolute inset-0 z-0">
+            className="absolute inset-0 z-0 pointer-events-none"
+          >
+            <div className="absolute inset-0 bg-white dark:bg-[#030614] transition-colors duration-1000" />
             <DeepSpaceCanvas isDark={isDark} />
             <motion.div 
               style={{ opacity: noiseOpacity }}
-              className="absolute inset-0 z-0 mix-blend-overlay overlay-noise pointer-events-none opacity-20 dark:opacity-40" 
+              className="absolute inset-0 mix-blend-overlay overlay-noise opacity-20 dark:opacity-40" 
             />
-            <div className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-[#030614]/40 to-[#030614]" />
-          </div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#030614]/40 to-[#030614]" />
+          </motion.div>
 
           <motion.div 
             style={{ opacity: contentOpacity, scale: contentScale, y: contentY }}
@@ -276,7 +300,7 @@ const Hero = () => {
               transition={{ duration: 1, delay: 0.3 }}
               className="max-w-2xl text-slate-500 dark:text-slate-400 text-lg md:text-xl font-medium mb-16 leading-relaxed px-6 font-inter mx-auto"
             >
-              RootedAI solutions bridge the gap between complex infrastructure and autonomous intelligence. We build the foundations for your next competitive advantage.
+              Engineering Complexity, Simplified
             </motion.p>
 
             <MagneticButton 
