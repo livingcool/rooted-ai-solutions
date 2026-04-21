@@ -7,7 +7,7 @@ const About = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const [glitchActive, setGlitchActive] = useState(false);
-  
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -18,11 +18,11 @@ const About = () => {
   // 0.20 -> 0.50: Goal
   // 0.45 -> 0.75: Authority & History
   // 0.70 -> 1.0: Data First Philosophy
-  
+
   const parallelOpacity = useTransform(scrollYProgress, [0.0, 0.05, 0.2, 0.25], [0, 1, 1, 0]);
   const missionX = useTransform(scrollYProgress, [0.0, 0.05, 0.2, 0.25], [isMobile ? 0 : -100, 0, 0, isMobile ? 0 : -100]);
   const visionX = useTransform(scrollYProgress, [0.0, 0.05, 0.2, 0.25], [isMobile ? 0 : 100, 0, 0, isMobile ? 0 : 100]);
-  
+
   const goalOpacity = useTransform(scrollYProgress, [0.2, 0.3, 0.45, 0.5], [0, 1, 1, 0]);
   const goalScale = useTransform(scrollYProgress, [0.2, 0.3], [0.8, 1]);
 
@@ -53,11 +53,11 @@ const About = () => {
       <div className="absolute inset-0 z-0 opacity-[0.05] dark:opacity-[0.1] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500 via-transparent to-transparent pointer-events-none" />
 
       <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
-        
+
         {/* Advanced Multi-Ring Orbital System */}
         <div className="absolute flex items-center justify-center pointer-events-none">
           {/* Outer Glow Ring */}
-          <motion.div 
+          <motion.div
             style={{ rotate: ring1Rotate }}
             className="absolute w-[350px] h-[350px] md:w-[700px] md:h-[700px] border-[1px] border-slate-200 dark:border-white/5 rounded-full z-10 animate-orbital-glow"
           >
@@ -65,7 +65,7 @@ const About = () => {
           </motion.div>
 
           {/* Middle Data Ring (Dashed) */}
-          <motion.div 
+          <motion.div
             style={{ rotate: ring2Rotate }}
             className="absolute w-[300px] h-[300px] md:w-[600px] md:h-[600px] border-[1px] border-dashed border-slate-300 dark:border-blue-500/20 rounded-full z-10"
           >
@@ -73,21 +73,21 @@ const About = () => {
           </motion.div>
 
           {/* Inner Core Ring */}
-          <motion.div 
+          <motion.div
             style={{ rotate: ring3Rotate }}
             className="absolute w-[250px] h-[250px] md:w-[500px] md:h-[500px] border-[0.5px] border-slate-400 dark:border-white/10 rounded-full z-10"
           >
-             <div className="absolute -bottom-1 left-1/2 w-1 h-1 bg-blue-600 dark:bg-white rounded-full" />
+            <div className="absolute -bottom-1 left-1/2 w-1 h-1 bg-blue-600 dark:bg-white rounded-full" />
           </motion.div>
         </div>
 
         {/* Phase 1: MISSION & VISION (Parallel) */}
-        <motion.div 
+        <motion.div
           style={{ opacity: parallelOpacity }}
           className="relative z-20 w-full max-w-7xl px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-32 items-center pointer-events-none"
         >
           {/* Mission Column */}
-          <motion.article 
+          <motion.article
             style={{ x: missionX }}
             className="flex flex-col items-center md:items-end text-center md:text-right space-y-6"
           >
@@ -103,7 +103,7 @@ const About = () => {
           </motion.article>
 
           {/* Vision Column */}
-          <motion.article 
+          <motion.article
             style={{ x: visionX }}
             className="flex flex-col items-center md:items-start text-center md:text-left space-y-6"
           >
@@ -120,19 +120,19 @@ const About = () => {
         </motion.div>
 
         {/* Phase 2: GOAL (Center Reveal) */}
-        <motion.article 
+        <motion.article
           style={{ opacity: goalOpacity, scale: goalScale }}
           className="absolute z-30 flex flex-col items-center text-center px-4 pointer-events-none"
         >
           <div className="relative mb-8 text-center text-slate-900 dark:text-white">
             <h2 className={cn(
-               "text-6xl md:text-[10rem] font-black tracking-tighter leading-none transition-all duration-75",
-               glitchActive && "animate-glitch-scroll"
+              "text-6xl md:text-[10rem] font-black tracking-tighter leading-none transition-all duration-75",
+              glitchActive && "animate-glitch-scroll"
             )}>
               GOAL
             </h2>
           </div>
-          
+
           <div className="space-y-4 max-w-2xl bg-slate-900 dark:bg-white px-8 py-4 rounded-xl shadow-2xl">
             <p className="text-xl md:text-3xl font-black tracking-tight text-white dark:text-black uppercase italic">
               Lead Supremacy
@@ -141,7 +141,7 @@ const About = () => {
         </motion.article>
 
         {/* Phase 3: AUTHORITY (AIO Focus) */}
-        <motion.article 
+        <motion.article
           style={{ opacity: authOpacity, y: authY }}
           className="absolute z-40 w-full max-w-4xl px-4 flex flex-col items-center text-center space-y-8"
         >
@@ -168,19 +168,19 @@ const About = () => {
         </motion.article>
 
         {/* Phase 4: DATA-FIRST PHILOSOPHY */}
-        <motion.article 
+        <motion.article
           style={{ opacity: philOpacity, scale: philScale }}
           className="absolute z-40 w-full max-w-5xl px-4 flex flex-col items-center text-center space-y-8 pointer-events-none"
         >
           <div className="mb-4">
-             <h2 className={cn(
-               "text-4xl md:text-7xl font-black tracking-tighter text-slate-900 dark:text-white uppercase transition-all duration-75",
-               glitchActive && "animate-glitch-scroll text-blue-600 dark:text-blue-400"
-             )}>
-                DATA FIRST<span className="text-blue-600">.</span>
-             </h2>
+            <h2 className={cn(
+              "text-4xl md:text-7xl font-black tracking-tighter text-slate-900 dark:text-white uppercase transition-all duration-75",
+              glitchActive && "animate-glitch-scroll text-blue-600 dark:text-blue-400"
+            )}>
+              DATA FIRST<span className="text-blue-600">.</span>
+            </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mt-8 pointer-events-auto">
             <div className="p-8 rounded-2xl bg-slate-900 dark:bg-white border border-slate-800 dark:border-slate-200 shadow-2xl relative overflow-hidden group">
               <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />

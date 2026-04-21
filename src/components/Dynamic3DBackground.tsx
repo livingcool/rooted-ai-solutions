@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { 
-  Float, 
+import {
+  Float,
   Sparkles,
   PerspectiveCamera,
   useScroll,
@@ -11,27 +11,25 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useTheme } from "@/components/ThemeProvider";
-import { motion, useTransform } from "framer-motion";
-
+import { motion, useScroll as usePageScroll, useTransform } from "framer-motion";
 
 // --- Custom usePerformance Hook ---
-
 const usePerformance = () => {
-    const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
 
-    useEffect(() => {
-        const handleVisibility = () => setIsVisible(document.visibilityState === 'visible');
-        document.addEventListener('visibilitychange', handleVisibility);
-        return () => document.removeEventListener('visibilitychange', handleVisibility);
-    }, []);
+  useEffect(() => {
+    const handleVisibility = () => setIsVisible(document.visibilityState === 'visible');
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
 
-    return { isVisible };
+  return { isVisible };
 };
 
 // --- Optimized Wireframe Knot ---
 const WireframeKnot = React.memo(({ color }: { color: string }) => {
   const meshRef = useRef<THREE.Mesh>(null);
-  
+
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     if (meshRef.current) {
@@ -45,13 +43,13 @@ const WireframeKnot = React.memo(({ color }: { color: string }) => {
       <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1}>
         <mesh ref={meshRef}>
           <torusKnotGeometry args={[14, 2.5, 120, 24, 2, 5]} />
-          <MeshDistortMaterial 
-            color={color} 
-            speed={2} 
-            distort={0.4} 
-            wireframe 
-            transparent 
-            opacity={0.15} 
+          <MeshDistortMaterial
+            color={color}
+            speed={2}
+            distort={0.4}
+            wireframe
+            transparent
+            opacity={0.15}
             emissive={color}
             emissiveIntensity={1.5}
             side={THREE.DoubleSide}
@@ -65,7 +63,7 @@ const WireframeKnot = React.memo(({ color }: { color: string }) => {
 // --- Orbital Data Rings ---
 const OrbitalRings = React.memo(({ color }: { color: string }) => {
   const groupRef = useRef<THREE.Group>(null);
-  
+
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     if (groupRef.current) {
@@ -113,7 +111,7 @@ const NeuralNetworkLines = React.memo(({ color }: { color: string }) => {
 
   useFrame((state) => {
     if (!pointRef.current) return;
-    
+
     // Safety check: if tab is hidden, skip expensive calculations
     if (document.hidden) return;
 
@@ -124,7 +122,7 @@ const NeuralNetworkLines = React.memo(({ color }: { color: string }) => {
 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
-      
+
       // Drifting flow - use pre-calculated basePositions to avoid drift accumulation issues
       const x = basePositions[i3] + Math.sin(time * 0.2 + i) * 2;
       const y = basePositions[i3 + 1] + Math.cos(time * 0.3 + i) * 2;
@@ -134,7 +132,7 @@ const NeuralNetworkLines = React.memo(({ color }: { color: string }) => {
       const dx = mx - x;
       const dy = my - y;
       const distSq = dx * dx + dy * dy; // Use squared distance for performance
-      
+
       if (distSq < 225) { // 15 * 15
         const dist = Math.sqrt(distSq);
         positionsArray[i3] = x - (dx / dist) * 2;
@@ -149,7 +147,7 @@ const NeuralNetworkLines = React.memo(({ color }: { color: string }) => {
 
     pointRef.current.geometry.attributes.position.needsUpdate = true;
     if (linesRef.current) {
-        linesRef.current.geometry.attributes.position.needsUpdate = true;
+      linesRef.current.geometry.attributes.position.needsUpdate = true;
     }
   });
 
@@ -202,143 +200,153 @@ const NeuralNetworkLines = React.memo(({ color }: { color: string }) => {
 
 // --- Interactive Camera ---
 const Rig = () => {
-    const { camera, mouse } = useThree();
-    const [isZooming, setIsZooming] = useState(false);
-    const vec = new THREE.Vector3();
+  const { camera, mouse } = useThree();
+  const { scrollYProgress } = usePageScroll();
+  const [isZooming, setIsZooming] = useState(false);
+  const vec = new THREE.Vector3();
 
-    useEffect(() => {
-        const handleZoom = () => {
-            setIsZooming(true);
-            setTimeout(() => setIsZooming(false), 1500);
-        };
-        window.addEventListener('trigger-bg-zoom', handleZoom);
-        return () => window.removeEventListener('trigger-bg-zoom', handleZoom);
-    }, []);
+  useEffect(() => {
+    const handleZoom = () => {
+      setIsZooming(true);
+      setTimeout(() => setIsZooming(false), 1500);
+    };
+    window.addEventListener('trigger-bg-zoom', handleZoom);
+    return () => window.removeEventListener('trigger-bg-zoom', handleZoom);
+  }, []);
 
-    useFrame((state) => {
-        // Cinematic Parallax (Mouse only)
-        camera.position.lerp(vec.set(mouse.x * 5, mouse.y * 5, camera.position.z), 0.02);
-        
-        // Return to default Z or maintain current Z without scroll influence
-        camera.position.z = THREE.MathUtils.lerp(camera.position.z, 20 + (isZooming ? -30 : 0), isZooming ? 0.08 : 0.05);
+  useFrame((state) => {
+    // Cinematic Parallax
+    camera.position.lerp(vec.set(mouse.x * 5, mouse.y * 5, camera.position.z), 0.02);
 
-        camera.lookAt(0, 0, -20);
-    });
-    return null;
+    // Depth plunge on scroll
+    const scroll = scrollYProgress.get();
+    const targetZ = 20 + scroll * 40 + (isZooming ? -30 : 0);
+
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, isZooming ? 0.08 : 0.05);
+    camera.rotation.x = THREE.MathUtils.lerp(camera.rotation.x, scroll * 0.3, 0.05);
+    camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, scroll * -0.1, 0.05);
+
+    camera.lookAt(0, 0, -20);
+  });
+  return null;
 };
 
 // --- Flare Logic Hook ---
 const useBackgroundFlare = () => {
-    const [isFlaring, setIsFlaring] = useState(false);
-    
-    useEffect(() => {
-        const handleFlare = () => {
-            setIsFlaring(true);
-            setTimeout(() => setIsFlaring(false), 2000);
-        };
-        window.addEventListener('trigger-bg-flare', handleFlare);
-        return () => window.removeEventListener('trigger-bg-flare', handleFlare);
-    }, []);
+  const [isFlaring, setIsFlaring] = useState(false);
 
-    return isFlaring;
+  useEffect(() => {
+    const handleFlare = () => {
+      setIsFlaring(true);
+      setTimeout(() => setIsFlaring(false), 2000);
+    };
+    window.addEventListener('trigger-bg-flare', handleFlare);
+    return () => window.removeEventListener('trigger-bg-flare', handleFlare);
+  }, []);
+
+  return isFlaring;
 };
 
 const BackgroundContent = ({ isDark, isVisible }: { isDark: boolean; isVisible: boolean }) => {
-    const isFlaring = useBackgroundFlare();
-    const accentColor = "#6366f1";   // Deep Indigo
-    const secondaryColor = "#a855f7"; // Solar Violet
+  const isFlaring = useBackgroundFlare();
+  const accentColor = "#6366f1";   // Deep Indigo
+  const secondaryColor = "#a855f7"; // Solar Violet
 
-    if (!isVisible) return null;
+  if (!isVisible) return null;
 
-    return (
-        <group>
-            {/* Central Wireframe Focus */}
+  return (
+    <group>
+      {/* Central Wireframe Focus */}
+      <WireframeKnot color={accentColor} />
 
-            <WireframeKnot color={accentColor} />
+      {/* Orbital Rings */}
+      <OrbitalRings color={secondaryColor} />
 
-            {/* Orbital Rings */}
-            <OrbitalRings color={secondaryColor} />
+      {/* Neural Net Grid */}
+      <NeuralNetworkLines color={accentColor} />
 
-            {/* Neural Net Grid */}
-            <NeuralNetworkLines color={accentColor} />
-            
-            {/* Volumetric Sparkles */}
-            <Sparkles 
-                count={isFlaring ? 1000 : 500} 
-                scale={100} 
-                size={isFlaring ? 4 : 2} 
-                color="#ffffff" 
-                speed={isFlaring ? 2 : 0.4} 
-                opacity={isDark ? 0.8 : 0.4} 
-            />
+      {/* Volumetric Sparkles */}
+      <Sparkles
+        count={isFlaring ? 1000 : 500}
+        scale={100}
+        size={isFlaring ? 4 : 2}
+        color="#ffffff"
+        speed={isFlaring ? 2 : 0.4}
+        opacity={isDark ? 0.8 : 0.4}
+      />
 
-            <Rig />
-            
-            <ambientLight intensity={isFlaring ? 3 : 0.8} />
-            <pointLight position={[10, 20, 10]} intensity={isFlaring ? 8 : 4} color={accentColor} />
-            <pointLight position={[-10, -20, -10]} intensity={isFlaring ? 5 : 2} color={secondaryColor} />
-            <spotLight position={[0, 0, 40]} angle={0.4} penumbra={1} intensity={isFlaring ? 15 : 5} color="#ffffff" />
-            
-            {/* Dynamic Light Follower */}
-            <pointLight 
-              position={[Math.sin(Date.now() * 0.001) * 20, Math.cos(Date.now() * 0.001) * 20, -10]} 
-              intensity={2} 
-              color={accentColor} 
-            />
-        </group>
-    );
+      <Rig />
+
+      <ambientLight intensity={isFlaring ? 3 : 0.8} />
+      <pointLight position={[10, 20, 10]} intensity={isFlaring ? 8 : 4} color={accentColor} />
+      <pointLight position={[-10, -20, -10]} intensity={isFlaring ? 5 : 2} color={secondaryColor} />
+      <spotLight position={[0, 0, 40]} angle={0.4} penumbra={1} intensity={isFlaring ? 15 : 5} color="#ffffff" />
+
+      {/* Dynamic Light Follower */}
+      <pointLight
+        position={[Math.sin(Date.now() * 0.001) * 20, Math.cos(Date.now() * 0.001) * 20, -10]}
+        intensity={2}
+        color={accentColor}
+      />
+    </group>
+  );
 };
 
 interface Dynamic3DBackgroundProps {
-    paused?: boolean;
+  paused?: boolean;
 }
 
 const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
-    const { theme } = useTheme();
-    const isDark = theme === "dark";
-    const { isVisible } = usePerformance();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  const { isVisible } = usePerformance();
+  const { scrollY } = usePageScroll();
 
-    if (paused) return null;
+  // Fade out as we scroll past the Hero section (which is ~200vh)
+  // Assuming 1vh is roughly 800px-1000px, but it's better to use vh units in transform if possible.
+  // However, framer motion useTransform with scrollY needs absolute values or we can use useScroll with offset.
+  // Let's use 1200 to 1800 px as the fade range (roughly 1.2 to 1.8 screen heights).
+  const opacity = useTransform(scrollY, [1200, 1800], [1, 0]);
 
-    return (
-        <motion.div 
-            style={{ opacity: 1 }}
-            className="fixed inset-0 w-full h-full -z-50 pointer-events-none overflow-hidden"
-        >
-            {/* Deep immersive gradients */}
-            <div 
-                className={`absolute inset-0 w-full h-full transition-colors duration-1000 ${
-                    isDark 
-                    ? "bg-gradient-to-br from-[#0f0720] via-[#1e1b4b] to-[#0f0720]" 
-                    : "bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#ede9fe]"
-                }`}
-            />
-            
-            <Canvas
-                shadows
-                gl={{ 
-                    antialias: false, // Performance improvement
-                    alpha: true, 
-                    stencil: false, 
-                    depth: true,
-                    powerPreference: "high-performance",
-                    failIfMajorPerformanceCaveat: false
-                }}
-                onCreated={() => {
-                  window.dispatchEvent(new CustomEvent('3d-bg-ready'));
-                }}
-                dpr={[1, 2]} // High quality for shaders
-                camera={{ position: [0, 0, 20], fov: 60 }}
-                style={{ opacity: 1 }} // Fully opaque for the shader background
-            >
+  if (paused) return null;
 
-                <BackgroundContent isDark={isDark} isVisible={isVisible} />
-            </Canvas>
+  return (
+    <motion.div
+      style={{ opacity }}
+      className="fixed inset-0 w-full h-full -z-50 pointer-events-none overflow-hidden"
+    >
+      {/* Deep immersive gradients */}
+      <div
+        className={`absolute inset-0 w-full h-full transition-colors duration-1000 ${isDark
+            ? "bg-gradient-to-br from-[#0f0720] via-[#1e1b4b] to-[#0f0720]"
+            : "bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#ede9fe]"
+          }`}
+      />
 
-            {/* Vignette Overlay */}
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_40%,_var(--tw-gradient-stops))] from-transparent via-transparent to-black/40 dark:to-black/80" />
-        </motion.div>
-    );
+      <Canvas
+        shadows
+        gl={{
+          antialias: false, // Performance improvement
+          alpha: true,
+          stencil: false,
+          depth: true,
+          powerPreference: "high-performance",
+          failIfMajorPerformanceCaveat: false
+        }}
+        onCreated={() => {
+          window.dispatchEvent(new CustomEvent('3d-bg-ready'));
+        }}
+        dpr={[1, 1.5]} // Adaptive DPR
+        camera={{ position: [0, 0, 20], fov: 60 }}
+        style={{ opacity: isDark ? 1 : 0.6 }}
+      >
+        <BackgroundContent isDark={isDark} isVisible={isVisible} />
+      </Canvas>
+
+      {/* Vignette Overlay */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_transparent_40%,_var(--tw-gradient-stops))] from-transparent via-transparent to-black/40 dark:to-black/80" />
+    </motion.div>
+  );
 };
 
 export default React.memo(Dynamic3DBackground);
