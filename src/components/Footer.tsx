@@ -8,7 +8,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className="relative border-t border-black/10 dark:border-white/10 pt-24 pb-12 overflow-hidden">
+        <footer className="relative border-t border-black/10 dark:border-white/10 pt-24 pb-32 md:pb-12 overflow-hidden">
             {/* Background enhancement */}
             <div className="absolute inset-0 bg-gradient-to-t from-gray-100/50 to-transparent dark:from-black/50 dark:to-transparent pointer-events-none -z-10" />
 

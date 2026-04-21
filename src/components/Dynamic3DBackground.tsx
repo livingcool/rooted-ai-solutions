@@ -13,7 +13,9 @@ import * as THREE from "three";
 import { useTheme } from "@/components/ThemeProvider";
 import { motion, useScroll as usePageScroll, useTransform } from "framer-motion";
 
+
 // --- Custom usePerformance Hook ---
+
 const usePerformance = () => {
     const [isVisible, setIsVisible] = useState(true);
 
@@ -257,6 +259,7 @@ const BackgroundContent = ({ isDark, isVisible }: { isDark: boolean; isVisible: 
     return (
         <group>
             {/* Central Wireframe Focus */}
+
             <WireframeKnot color={accentColor} />
 
             {/* Orbital Rings */}
@@ -337,10 +340,11 @@ const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
                 onCreated={() => {
                   window.dispatchEvent(new CustomEvent('3d-bg-ready'));
                 }}
-                dpr={[1, 1.5]} // Adaptive DPR
+                dpr={[1, 2]} // High quality for shaders
                 camera={{ position: [0, 0, 20], fov: 60 }}
-                style={{ opacity: isDark ? 1 : 0.6 }}
+                style={{ opacity: 1 }} // Fully opaque for the shader background
             >
+
                 <BackgroundContent isDark={isDark} isVisible={isVisible} />
             </Canvas>
 

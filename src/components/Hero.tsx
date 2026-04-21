@@ -77,78 +77,6 @@ const LetterCascade: React.FC<LetterCascadeProps> = ({ words, intervalMs = 3000 
 };
 
 // ─── Deep Space Network Canvas ─────────────────────────────────────────────
-const DeepSpaceCanvas = ({ isDark }: { isDark: boolean }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const frameRef = useRef<number>();
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', resize);
-    resize();
-
-    const nodes = Array.from({ length: 60 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      r: Math.random() * 1.5 + 0.5,
-    }));
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const color = isDark ? "167, 139, 250" : "139, 92, 246";
-
-      for (let i = 0; i < nodes.length; i++) {
-        const n = nodes[i];
-        n.x += n.vx; n.y += n.vy;
-        if (n.x < 0) n.x = canvas.width;
-        if (n.x > canvas.width) n.x = 0;
-        if (n.y < 0) n.y = canvas.height;
-        if (n.y > canvas.height) n.y = 0;
-
-        for (let j = i + 1; j < nodes.length; j++) {
-          const m = nodes[j];
-          const d = Math.hypot(n.x - m.x, n.y - m.y);
-          if (d < 150) {
-            ctx.beginPath();
-            ctx.moveTo(n.x, n.y);
-            ctx.lineTo(m.x, m.y);
-            ctx.strokeStyle = `rgba(${color}, ${(1 - d / 150) * 0.15})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
-          }
-        }
-
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${color}, 0.5)`;
-        ctx.fill();
-      }
-      frameRef.current = requestAnimationFrame(draw);
-    };
-
-    draw();
-    return () => {
-      if (frameRef.current) cancelAnimationFrame(frameRef.current);
-      window.removeEventListener('resize', resize);
-    };
-  }, [isDark]);
-
-  return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.05),transparent_70%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.08),transparent_70%)]" />
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-40 dark:opacity-60" />
-    </div>
-  );
-};
 
 // ─── Magnetic Button Component ───────────────────────────────────────────
 const MagneticButton = ({ children, onClick }: { children?: React.ReactNode, onClick?: () => void }) => {
@@ -255,18 +183,6 @@ const Hero = () => {
       <section ref={containerRef} className="relative min-h-[200vh] bg-transparent">
         <SignalInterference />
         <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden">
-          <motion.div 
-            style={{ opacity: bgOpacity }}
-            className="absolute inset-0 z-0 pointer-events-none"
-          >
-            <div className="absolute inset-0 bg-white dark:bg-[#030614] transition-colors duration-1000" />
-            <DeepSpaceCanvas isDark={isDark} />
-            <motion.div 
-              style={{ opacity: noiseOpacity }}
-              className="absolute inset-0 mix-blend-overlay overlay-noise opacity-20 dark:opacity-40" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#030614]/40 to-[#030614]" />
-          </motion.div>
 
           <motion.div 
             style={{ opacity: contentOpacity, scale: contentScale, y: contentY }}
