@@ -11,7 +11,7 @@ import {
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useTheme } from "@/components/ThemeProvider";
-import { motion, useScroll as usePageScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 
 
 // --- Custom usePerformance Hook ---
@@ -203,7 +203,6 @@ const NeuralNetworkLines = React.memo(({ color }: { color: string }) => {
 // --- Interactive Camera ---
 const Rig = () => {
     const { camera, mouse } = useThree();
-    const { scrollYProgress } = usePageScroll();
     const [isZooming, setIsZooming] = useState(false);
     const vec = new THREE.Vector3();
 
@@ -217,16 +216,11 @@ const Rig = () => {
     }, []);
 
     useFrame((state) => {
-        // Cinematic Parallax
+        // Cinematic Parallax (Mouse only)
         camera.position.lerp(vec.set(mouse.x * 5, mouse.y * 5, camera.position.z), 0.02);
-
-        // Depth plunge on scroll
-        const scroll = scrollYProgress.get();
-        const targetZ = 20 + scroll * 40 + (isZooming ? -30 : 0);
         
-        camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, isZooming ? 0.08 : 0.05);
-        camera.rotation.x = THREE.MathUtils.lerp(camera.rotation.x, scroll * 0.3, 0.05);
-        camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, scroll * -0.1, 0.05);
+        // Return to default Z or maintain current Z without scroll influence
+        camera.position.z = THREE.MathUtils.lerp(camera.position.z, 20 + (isZooming ? -30 : 0), isZooming ? 0.08 : 0.05);
 
         camera.lookAt(0, 0, -20);
     });
@@ -303,19 +297,12 @@ const Dynamic3DBackground = ({ paused = false }: Dynamic3DBackgroundProps) => {
     const { theme } = useTheme();
     const isDark = theme === "dark";
     const { isVisible } = usePerformance();
-    const { scrollY } = usePageScroll();
-
-    // Fade out as we scroll past the Hero section (which is ~200vh)
-    // Assuming 1vh is roughly 800px-1000px, but it's better to use vh units in transform if possible.
-    // However, framer motion useTransform with scrollY needs absolute values or we can use useScroll with offset.
-    // Let's use 1200 to 1800 px as the fade range (roughly 1.2 to 1.8 screen heights).
-    const opacity = useTransform(scrollY, [1200, 1800], [1, 0]);
 
     if (paused) return null;
 
     return (
         <motion.div 
-            style={{ opacity }}
+            style={{ opacity: 1 }}
             className="fixed inset-0 w-full h-full -z-50 pointer-events-none overflow-hidden"
         >
             {/* Deep immersive gradients */}
