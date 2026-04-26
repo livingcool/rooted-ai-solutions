@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 // import { blogPosts } from "@/data/blogPosts"; // Deprecated
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
@@ -54,7 +52,6 @@ const BlogListing = () => {
                 }}
             />
             <div className="relative z-10">
-                <Navigation />
 
                 <section className="pt-32 pb-20 relative overflow-hidden bg-black/5 dark:bg-white/5 border-b border-black/10 dark:border-white/10">
                     <div className="container mx-auto px-4 md:px-6 text-center">
@@ -144,7 +141,6 @@ const BlogListing = () => {
                     </div>
                 </section>
 
-                <Footer />
             </div>
         </div>
     );

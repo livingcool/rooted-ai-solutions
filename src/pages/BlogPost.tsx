@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 // import { blogPosts } from "@/data/blogPosts"; // Deprecated
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin, Copy, Mail, Send } from "lucide-react";
@@ -124,7 +122,6 @@ const BlogPost = () => {
                 }}
             />
             <div className="relative z-10">
-                <Navigation />
 
                 {/* Hero / Header */}
                 {/* Hero / Header */}
@@ -301,7 +298,6 @@ const BlogPost = () => {
                     </div>
                 </article>
 
-                <Footer />
             </div>
         </div>
     );
