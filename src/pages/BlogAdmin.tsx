@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import { blogPosts as initialData } from "@/data/blogPosts";
 import { Upload, Loader2, Image as ImageIcon, Bold, Italic, Link as LinkIcon, CheckCircle2, AlertCircle, Info, Zap, Plus, Trash2 } from "lucide-react";
 
@@ -294,7 +292,6 @@ const BlogAdmin = () => {
     }
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-black">
-            <Navigation />
             <div className="container mx-auto px-4 pt-32 pb-20 max-w-4xl">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold">Blog Admin</h1>
@@ -795,7 +792,6 @@ const BlogAdmin = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 };

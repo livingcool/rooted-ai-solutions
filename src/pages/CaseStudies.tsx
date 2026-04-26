@@ -1,155 +1,245 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import Seo from "@/components/Seo";
-import { ArrowRight, Globe, Factory, Truck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import TiltCard from "@/components/ui/TiltCard";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
-const CaseStudies = () => {
-    return (
-        <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/20">
-            <Seo
-                title="AI Case Studies | RootedAI - Global Success Stories"
-                description="Explore how RootedAI empowers manufacturing in Asia and logistics in the Middle East with cutting-edge AI automation."
-                canonical="https://www.rootedai.co.in/case-studies"
-                keywords={["AI case studies", "manufacturing AI Asia", "logistics automation Middle East", "supply chain AI Singapore", "predictive maintenance Dubai"]}
-                structuredData={{
-                    "@context": "https://schema.org",
-                    "@type": "CollectionPage",
-                    "name": "AI Case Studies - RootedAI",
-                    "description": "Real-world AI automation case studies from manufacturing and logistics sectors.",
-                    "url": "https://www.rootedai.co.in/case-studies",
-                    "publisher": {
-                        "@type": "Organization",
-                        "name": "RootedAI Solutions",
-                        "url": "https://www.rootedai.co.in"
-                    }
-                }}
-            />
-            <Navigation />
+const CASE_STUDIES = [
+  {
+    id:       "cs-01",
+    tag:      "Manufacturing",
+    result:   "34% scrap reduction",
+    headline: "Auto-parts Manufacturer — AI Vision on the Production Line",
+    body:     "A Hosur-based manufacturer was losing ₹40L/month to manual defect detection failures. We deployed a computer vision AI agent on 3 production lines in 5 weeks. Defects caught before final assembly — scrap rate dropped 34%.",
+    stack:    ["Computer Vision", "Edge Inference", "ERP Integration"],
+    bg:       "#F9EFE9",
+  },
+  {
+    id:       "cs-02",
+    tag:      "Logistics",
+    result:   "28% fuel cost reduction",
+    headline: "Chennai 3PL — AI-Optimized Dispatch Routing",
+    body:     "200+ daily deliveries routed manually by a dispatcher. We built an LLM-powered dispatch agent that factors live traffic, vehicle loads, and delivery windows. Fuel costs dropped 28%. Dispatcher moved to exceptions only.",
+    stack:    ["LLM Agents", "Maps API", "WMS Integration"],
+    bg:       "#F0DCC8",
+  },
+  {
+    id:       "cs-03",
+    tag:      "HR Tech",
+    result:   "12× faster candidate screening",
+    headline: "High-Growth Startup — AI Interview Pipeline",
+    body:     "1,200 applications. No HR team to screen them. We built an end-to-end AI hiring pipeline: automated screening, technical assessments, and AI video interviews. 4 days to final shortlist of 18 candidates.",
+    stack:    ["NLP Screening", "AI Interviews", "ATS Integration"],
+    bg:       "#EDD5C0",
+  },
+  {
+    id:       "cs-04",
+    tag:      "Knowledge Ops",
+    result:   "70% faster doc processing",
+    headline: "Industrial Supplier — AI Document Intelligence",
+    body:     "Hundreds of supplier contracts, spec sheets, and compliance docs processed manually each month. We deployed an LLM document agent that extracts, classifies, and routes documents automatically.",
+    stack:    ["RAG Pipeline", "Document AI", "SharePoint Integration"],
+    bg:       "#F5E6C8",
+  },
+];
 
-            <main className="pt-24 pb-16 px-4 md:px-8 max-w-7xl mx-auto space-y-20">
-
-                {/* Header Section */}
-                <section className="text-center space-y-6 max-w-4xl mx-auto">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-sm font-medium">
-                        <Globe className="w-4 h-4" />
-                        <span>Global Impact</span>
-                    </div>
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-                        Transforming Industries <span className="text-primary">Across Continents</span>
-                    </h1>
-                    <p className="text-xl text-muted-foreground">
-                        From manufacturing hubs in Asia to logistics centers in the Middle East, our AI agents are driving efficiency and innovation.
-                    </p>
-                </section>
-
-                {/* Case Study 1: Manufacturing Asia */}
-                <section id="manufacturing-asia" className="grid md:grid-cols-2 gap-12 items-center">
-                    <div className="space-y-6 relative z-10">
-                        <div className="inline-flex items-center gap-2 text-primary font-semibold">
-                            <Factory className="w-5 h-5" />
-                            <span>Manufacturing Intelligence • Asia</span>
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-bold">AI for Manufacturing in Asia</h2>
-                        <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
-                            <p>
-                                In the bustling industrial hubs of Singapore and Vietnam, precision and uptime are paramount. RootedAI deployed a custom suite of
-                                <strong> Predictive Maintenance Agents</strong> for a leading electronics manufacturer.
-                            </p>
-                            <p>
-                                By analyzing sensor data in real-time, our system predicted machine failures 48 hours in advance, reducing downtime by
-                                <span className="text-foreground font-semibold"> 35%</span> and optimizing the supply chain for just-in-time delivery.
-                            </p>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="p-4 rounded-lg bg-card border border-border">
-                                <div className="text-2xl font-bold text-primary">35%</div>
-                                <div className="text-sm text-muted-foreground">Downtime Reduction</div>
-                            </div>
-                            <div className="p-4 rounded-lg bg-card border border-border">
-                                <div className="text-2xl font-bold text-primary">24/7</div>
-                                <div className="text-sm text-muted-foreground">Autonomous Monitoring</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <TiltCard className="h-full min-h-[400px] flex items-center justify-center bg-gradient-to-br from-primary/5 to-transparent border border-primary/10 rounded-2xl p-8">
-                        <div className="relative w-full h-full flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                                <Factory className="w-12 h-12 text-primary" />
-                            </div>
-                            <h3 className="text-2xl font-bold">Singapore Smart Hub</h3>
-                            <p className="text-muted-foreground">Advanced IoT Integration & Anomalous Behavior Detection</p>
-                        </div>
-                    </TiltCard>
-                </section>
-
-                {/* Case Study 2: Logistics Middle East */}
-                <section id="logistics-middle-east" className="grid md:grid-cols-2 gap-12 items-center md:flex-row-reverse">
-                    <div className="md:order-2 space-y-6 relative z-10">
-                        <div className="inline-flex items-center gap-2 text-primary font-semibold">
-                            <Truck className="w-5 h-5" />
-                            <span>Logistics Automation • Middle East</span>
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-bold">Logistics Automation in Dubai</h2>
-                        <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
-                            <p>
-                                Dubai stands as a global gateway for trade. We partnered with a major logistics firm to implement
-                                <strong> Autonomous Supply Chain Agents</strong> that optimize routing and inventory visibility.
-                            </p>
-                            <p>
-                                Our solution integrated with legacy ERP systems to provide real-time tracking from port to warehouse.
-                                The result was a <span className="text-foreground font-semibold">20% reduction in fuel costs</span> and faster turnover times for high-volume shipments.
-                            </p>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="p-4 rounded-lg bg-card border border-border">
-                                <div className="text-2xl font-bold text-primary">20%</div>
-                                <div className="text-sm text-muted-foreground">Fuel Cost Savings</div>
-                            </div>
-                            <div className="p-4 rounded-lg bg-card border border-border">
-                                <div className="text-2xl font-bold text-primary">100%</div>
-                                <div className="text-sm text-muted-foreground">Route Optimization</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <TiltCard className="md:order-1 h-full min-h-[400px] flex items-center justify-center bg-gradient-to-br from-primary/5 to-transparent border border-primary/10 rounded-2xl p-8">
-                        <div className="relative w-full h-full flex flex-col items-center justify-center text-center space-y-4">
-                            <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                                <Truck className="w-12 h-12 text-primary" />
-                            </div>
-                            <h3 className="text-2xl font-bold">Dubai Logistics Corridor</h3>
-                            <p className="text-muted-foreground">AI-Driven Route Planning & Fleet Management</p>
-                        </div>
-                    </TiltCard>
-                </section>
-
-                {/* Call to Action */}
-                <section className="py-20 text-center space-y-8 bg-card rounded-3xl border border-border/50 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-primary/5 blur-3xl pointer-events-none" />
-                    <h2 className="text-3xl font-bold relative z-10">Ready to Scale Your Operations?</h2>
-                    <p className="text-xl text-muted-foreground max-w-2xl mx-auto relative z-10">
-                        Whether you are in Hosur, Singapore, or Dubai, our Engineering Intelligence solutions are built to scale with you.
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-                        <Button size="lg" className="h-12 px-8 text-base">
-                            Contact Our Global Team <ArrowRight className="ml-2 w-4 h-4" />
-                        </Button>
-                        <Button variant="outline" size="lg" className="h-12 px-8 text-base">
-                            Download Whitepaper
-                        </Button>
-                    </div>
-                </section>
-
-            </main>
-            <Footer />
+export default function CaseStudies() {
+  return (
+    <div style={{ background: "#240747" }}>
+      {/* Header */}
+      <div style={{ background: "#240747", padding: "4px 4px 0" }}>
+        <div
+          style={{
+            maxWidth:   1320,
+            margin:     "0 auto",
+            background: "#EDD5C0",
+            padding:    "3.5rem 3.5rem 3rem",
+            display:    "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            flexWrap:   "wrap",
+            gap:        "2rem",
+          }}
+        >
+          <div>
+            <span className="nb-label-orange" style={{ display: "block", marginBottom: "1rem" }}>
+              Case Studies
+            </span>
+            <h1
+              style={{
+                fontFamily:    "var(--font-display)",
+                fontWeight:    900,
+                fontSize:      "clamp(3rem, 6vw, 5.5rem)",
+                color:         "#240747",
+                lineHeight:    0.95,
+                letterSpacing: "-0.04em",
+              }}
+            >
+              Proof in
+              <br />
+              production.
+            </h1>
+          </div>
+          <p
+            style={{
+              fontFamily:    "var(--font-mono)",
+              fontSize:      "0.75rem",
+              color:         "#240747",
+              opacity:       0.55,
+              maxWidth:      320,
+              lineHeight:    1.6,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+            }}
+          >
+            Not demos. Not MVPs. Working systems deployed in real operations.
+          </p>
         </div>
-    );
-};
+      </div>
 
-export default CaseStudies;
+      {/* Case study bento (Z-pattern alternating) */}
+      <div style={{ background: "#240747", padding: "4px" }}>
+        <div style={{ maxWidth: 1320, margin: "0 auto", display: "flex", flexDirection: "column", gap: "4px" }}>
+          {CASE_STUDIES.map((cs, i) => {
+            const isEven = i % 2 === 0;
+            return (
+              <div
+                key={cs.id}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: isEven ? "1fr 320px" : "320px 1fr",
+                  gap:     "4px",
+                  minHeight: 280,
+                }}
+                className="cs-row"
+              >
+                {/* Main tile */}
+                <div
+                  style={{
+                    background:    cs.bg,
+                    padding:       "2.5rem 3rem",
+                    display:       "flex",
+                    flexDirection: "column",
+                    gap:           "1.25rem",
+                    order:         isEven ? 0 : 1,
+                    borderLeft:    "4px solid #F6851B",
+                  }}
+                >
+                  <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
+                    <span className="nb-tag nb-tag-orange">{cs.tag}</span>
+                  </div>
+                  <h2
+                    style={{
+                      fontFamily:    "var(--font-display)",
+                      fontWeight:    800,
+                      fontSize:      "clamp(1.3rem, 2.5vw, 2rem)",
+                      color:         "#240747",
+                      letterSpacing: "-0.03em",
+                      lineHeight:    1.1,
+                    }}
+                  >
+                    {cs.headline}
+                  </h2>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize:   "0.9rem",
+                      color:      "#240747",
+                      opacity:    0.7,
+                      lineHeight: 1.65,
+                      flex:       1,
+                    }}
+                  >
+                    {cs.body}
+                  </p>
+                  <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                    {cs.stack.map((s) => (
+                      <span key={s} className="nb-tag" style={{ fontSize: "0.6rem" }}>{s}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Metric tile */}
+                <div
+                  style={{
+                    background:    "#240747",
+                    padding:       "2.5rem 2rem",
+                    display:       "flex",
+                    flexDirection: "column",
+                    justifyContent:"center",
+                    gap:           "0.75rem",
+                    order:         isEven ? 1 : 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily:    "var(--font-display)",
+                      fontWeight:    900,
+                      fontSize:      "clamp(2rem, 4vw, 3.5rem)",
+                      color:         "#F6851B",
+                      lineHeight:    1,
+                      letterSpacing: "-0.04em",
+                    }}
+                  >
+                    {cs.result}
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize:   "0.65rem",
+                      color:      "#F9EFE9",
+                      opacity:    0.5,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Key Result
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div style={{ background: "#240747", padding: "4px 4px 0" }}>
+        <div
+          style={{
+            maxWidth:   1320,
+            margin:     "0 auto",
+            background: "#F9EFE9",
+            padding:    "3rem 3.5rem",
+            display:    "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap:   "wrap",
+            gap:        "2rem",
+          }}
+        >
+          <h2
+            style={{
+              fontFamily:    "var(--font-display)",
+              fontWeight:    900,
+              fontSize:      "clamp(2rem, 4vw, 3.5rem)",
+              color:         "#240747",
+              lineHeight:    1,
+              letterSpacing: "-0.04em",
+            }}
+          >
+            Your operation
+            <br />
+            could be next.
+          </h2>
+          <Link to="/#contact" className="nb-btn nb-btn-primary">
+            Start a Pilot <ArrowRight size={16} />
+          </Link>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .cs-row { grid-template-columns: 1fr !important; }
+          .cs-row > div { order: 0 !important; }
+        }
+      `}</style>
+    </div>
+  );
+}

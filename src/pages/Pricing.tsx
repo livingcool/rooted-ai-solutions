@@ -1,187 +1,302 @@
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Sparkles, Zap, Shield, Rocket } from "lucide-react";
-import Seo from "@/components/Seo";
+import { Link } from "react-router-dom";
+import { ArrowRight, Check } from "lucide-react";
 
-const Pricing = () => {
-  const plans = [
-    {
-      name: "Starter",
-      tagline: "Less than your daily coffee",
-      description: "Perfect for small businesses getting started with AI",
-      icon: Sparkles,
-      features: [
-        "AI-powered chatbot integration",
-        "Basic process automation",
-        "Email support",
-        "Up to 1,000 monthly interactions",
-        "Single user access",
-        "Standard analytics dashboard",
-      ],
-      popular: false,
-    },
-    {
-      name: "Professional",
-      tagline: "Cheaper than a gym membership",
-      description: "Ideal for growing teams scaling their AI capabilities",
-      icon: Zap,
-      features: [
-        "Everything in Starter",
-        "Advanced AI automation workflows",
-        "Custom model training",
-        "Priority support (24/7)",
-        "Up to 10,000 monthly interactions",
-        "Multi-user access (up to 10)",
-        "Advanced analytics & insights",
-        "API access",
-        "Integration with existing tools",
-      ],
-      popular: true,
-    },
-    {
-      name: "Enterprise",
-      tagline: "Investment that pays for itself",
-      description: "Complete AI transformation for large organizations",
-      icon: Rocket,
-      features: [
-        "Everything in Professional",
-        "Unlimited interactions",
-        "Dedicated AI consultant",
-        "Custom development",
-        "On-premise deployment options",
-        "Unlimited users",
-        "Advanced security & compliance",
-        "SLA guarantees",
-        "White-label solutions",
-        "Quarterly strategy sessions",
-      ],
-      popular: false,
-    },
-  ];
+const PLANS = [
+  {
+    name:  "Pilot",
+    price: "₹2.5L",
+    unit:  "/ project",
+    desc:  "One workflow automated end-to-end. Proven results. Low risk.",
+    features: [
+      "1 AI agent / workflow",
+      "Up to 2 system integrations",
+      "4-week delivery",
+      "Full IP transfer",
+      "30-day post-launch support",
+    ],
+    cta:     "Start a Pilot",
+    href:    "/#contact",
+    bg:      "#F0DCC8",
+    invert:  false,
+  },
+  {
+    name:  "Growth",
+    price: "₹80K",
+    unit:  "/ month",
+    desc:  "Embedded AI engineering team. Ongoing automation & optimization.",
+    features: [
+      "Up to 5 active AI agents",
+      "Unlimited system integrations",
+      "Weekly sprint delivery",
+      "Monthly performance review",
+      "Priority support (4hr SLA)",
+      "Predictive analytics dashboard",
+    ],
+    cta:     "Book a Call",
+    href:    "/#contact",
+    bg:      "#240747",
+    invert:  true,
+    badge:   "MOST POPULAR",
+  },
+  {
+    name:  "Enterprise",
+    price: "Custom",
+    unit:  "",
+    desc:  "Full AI transformation. Dedicated team. Multi-site deployment.",
+    features: [
+      "Unlimited AI agents",
+      "Multi-site & multi-system rollout",
+      "Dedicated ML engineer on-site",
+      "Custom LLM fine-tuning",
+      "24/7 ops monitoring",
+      "Quarterly strategic reviews",
+    ],
+    cta:     "Talk to Sales",
+    href:    "/#contact",
+    bg:      "#F9EFE9",
+    invert:  false,
+  },
+];
 
+export default function Pricing() {
   return (
-    <div className="min-h-screen bg-transparent text-foreground selection:bg-primary/20">
-      <Seo
-        title="Pricing Plans"
-        description="Transparent pricing for AI solutions. Choose from Starter, Professional, or Enterprise plans tailored to your business needs."
-        keywords={[
-          "AI pricing",
-          "software plans",
-          "enterprise AI cost",
-          "chatbot pricing",
-          "automation costs",
-          "affordable AI solutions",
-          "software development rates",
-          "hiring developers cost",
-          "AI consulting fees",
-          "custom software pricing"
-        ]}
-        canonical="https://www.rootedai.co.in/pricing"
-      />
-      <Navigation />
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 px-4">
-        <div className="container mx-auto text-center max-w-4xl">
-          <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full mb-6">
-            <Shield className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">Transparent Pricing</span>
-          </div>
-          <h1 className="text-4xl md:text-6xl font-heading font-bold mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-            AI Solutions That Fit Your Budget
+    <div style={{ background: "#240747" }}>
+      {/* Header */}
+      <div style={{ background: "#240747", padding: "4px 4px 0" }}>
+        <div
+          style={{
+            maxWidth:   1320,
+            margin:     "0 auto",
+            background: "#F9EFE9",
+            padding:    "3.5rem 3.5rem 3rem",
+          }}
+        >
+          <span className="nb-label-orange" style={{ display: "block", marginBottom: "1rem" }}>
+            Pricing
+          </span>
+          <h1
+            style={{
+              fontFamily:    "var(--font-display)",
+              fontWeight:    900,
+              fontSize:      "clamp(3rem, 6vw, 5.5rem)",
+              color:         "#240747",
+              lineHeight:    0.95,
+              letterSpacing: "-0.04em",
+            }}
+          >
+            Simple.
+            <br />
+            Outcome-driven.
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Choose the perfect plan to transform your business with AI automation
+          <p
+            style={{
+              fontFamily:    "var(--font-mono)",
+              fontSize:      "0.78rem",
+              color:         "#240747",
+              opacity:       0.55,
+              marginTop:     "1.25rem",
+              maxWidth:      520,
+              lineHeight:    1.6,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+            }}
+          >
+            No surprise invoices. No endless scope creep. Fixed pilots. Retainer once results are proven.
           </p>
         </div>
-      </section>
+      </div>
 
-      {/* Pricing Cards */}
-      <section className="pb-20 px-4">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid md:grid-cols-3 gap-8 items-stretch">
-            {plans.map((plan, index) => {
-              const Icon = plan.icon;
-              return (
-                <Card
-                  key={index}
-                  className={`relative overflow-hidden transition-all duration-300 hover:scale-105 flex flex-col ${plan.popular
-                    ? "border-primary shadow-lg shadow-primary/20"
-                    : "border-border"
-                    }`}
+      {/* Pricing cards */}
+      <div style={{ background: "#240747", padding: "4px" }}>
+        <div
+          style={{
+            maxWidth: 1320,
+            margin:   "0 auto",
+            display:  "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap:      "4px",
+          }}
+          className="pricing-grid"
+        >
+          {PLANS.map((plan) => (
+            <div
+              key={plan.name}
+              style={{
+                background:    plan.bg,
+                padding:       "3rem 2.5rem",
+                display:       "flex",
+                flexDirection: "column",
+                gap:           "1.5rem",
+                position:      "relative",
+              }}
+            >
+              {/* Popular badge */}
+              {plan.badge && (
+                <div
+                  style={{
+                    position:   "absolute",
+                    top:        "0",
+                    right:      "2rem",
+                    background: "#F6851B",
+                    border:     "2px solid " + (plan.invert ? "#F9EFE9" : "#240747"),
+                    padding:    "0.2rem 0.6rem",
+                    fontFamily: "var(--font-mono)",
+                    fontSize:   "0.6rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color:      "#240747",
+                    transform:  "translateY(-50%)",
+                  }}
                 >
-                  {plan.popular && (
-                    <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1 text-sm font-semibold rounded-bl-lg">
-                      Most Popular
-                    </div>
-                  )}
-                  <CardHeader className="text-center pb-8 pt-12">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Icon className="w-8 h-8 text-primary" />
-                    </div>
-                    <CardTitle className="text-2xl font-heading mb-2">
-                      {plan.name}
-                    </CardTitle>
-                    <div className="text-3xl font-bold text-primary mb-2">
-                      {plan.tagline}
-                    </div>
-                    <CardDescription className="text-base">
-                      {plan.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-1 flex flex-col">
-                    <ul className="space-y-4 mb-8 flex-1">
-                      {plan.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start gap-3">
-                          <Check className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                          <span className="text-sm text-foreground/80">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <a href="#contact" className="block">
-                      <Button
-                        className="w-full button-3d"
-                        variant="default"
-                      >
-                        Get Started
-                      </Button>
-                    </a>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+                  {plan.badge}
+                </div>
+              )}
 
-      {/* FAQ or Additional Info */}
-      <section className="pb-20 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <Card className="bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 border-primary/20">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-heading mb-4">
-                Not Sure Which Plan Is Right?
-              </CardTitle>
-              <CardDescription className="text-lg">
-                Book a free consultation call with our AI experts to discuss your specific needs
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center">
-              <a href="#contact">
-                <Button size="lg" className="button-3d">
-                  Schedule Free Consultation
-                </Button>
-              </a>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+              {/* Name */}
+              <span
+                style={{
+                  fontFamily:    "var(--font-mono)",
+                  fontSize:      "0.65rem",
+                  fontWeight:    700,
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  color:         plan.invert ? "#F6851B" : "#F6851B",
+                }}
+              >
+                {plan.name}
+              </span>
 
-      <Footer />
+              {/* Price */}
+              <div>
+                <span
+                  style={{
+                    fontFamily:    "var(--font-display)",
+                    fontWeight:    900,
+                    fontSize:      "clamp(2.5rem, 4vw, 3.5rem)",
+                    color:         plan.invert ? "#F9EFE9" : "#240747",
+                    letterSpacing: "-0.04em",
+                    lineHeight:    1,
+                  }}
+                >
+                  {plan.price}
+                </span>
+                {plan.unit && (
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize:   "0.75rem",
+                      color:      plan.invert ? "#F9EFE9" : "#240747",
+                      opacity:    0.55,
+                      marginLeft: "0.5rem",
+                    }}
+                  >
+                    {plan.unit}
+                  </span>
+                )}
+              </div>
+
+              {/* Desc */}
+              <p
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize:   "0.9rem",
+                  color:      plan.invert ? "#F9EFE9" : "#240747",
+                  opacity:    plan.invert ? 0.75 : 0.7,
+                  lineHeight: 1.55,
+                  borderTop:  "2px solid " + (plan.invert ? "rgba(249,239,233,0.2)" : "#240747"),
+                  paddingTop: "1.25rem",
+                }}
+              >
+                {plan.desc}
+              </p>
+
+              {/* Features */}
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.75rem", flex: 1 }}>
+                {plan.features.map((f) => (
+                  <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: "0.6rem" }}>
+                    <div
+                      style={{
+                        width:      20,
+                        height:     20,
+                        background: "#F6851B",
+                        border:     "2px solid " + (plan.invert ? "#F9EFE9" : "#240747"),
+                        display:    "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        marginTop:  "1px",
+                      }}
+                    >
+                      <Check size={11} color="#240747" />
+                    </div>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-sans)",
+                        fontSize:   "0.85rem",
+                        color:      plan.invert ? "#F9EFE9" : "#240747",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {f}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <Link
+                to={plan.href}
+                className="nb-btn"
+                style={{
+                  background:  plan.invert ? "#F6851B" : "#240747",
+                  color:       plan.invert ? "#240747" : "#F9EFE9",
+                  border:      "3px solid " + (plan.invert ? "#F9EFE9" : "#240747"),
+                  boxShadow:   plan.invert ? "4px 4px 0 #F9EFE9" : "4px 4px 0 #F6851B",
+                  justifyContent: "center",
+                  marginTop:   "auto",
+                  textDecoration: "none",
+                }}
+              >
+                {plan.cta} <ArrowRight size={15} />
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Note */}
+      <div style={{ background: "#240747", padding: "4px 4px 0" }}>
+        <div
+          style={{
+            maxWidth:  1320,
+            margin:    "0 auto",
+            background:"#EDD5C0",
+            padding:   "2rem 3.5rem",
+          }}
+        >
+          <p
+            style={{
+              fontFamily:    "var(--font-mono)",
+              fontSize:      "0.72rem",
+              color:         "#240747",
+              opacity:       0.6,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              lineHeight:    1.7,
+            }}
+          >
+            All prices in INR. USD engagement pricing available for international clients. Contact us for custom enterprise proposals.
+            IP is always 100% yours. No lock-in contracts.
+          </p>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .pricing-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
-};
-
-export default Pricing;
+}

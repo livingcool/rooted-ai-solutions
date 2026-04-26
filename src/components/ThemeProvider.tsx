@@ -31,21 +31,10 @@ export function ThemeProvider({
   );
 
   useEffect(() => {
+    // Institutional Neobrutalism — always light mode, never dark
     const root = window.document.documentElement;
-
-    root.classList.remove("light", "dark");
-
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-
-      root.classList.add(systemTheme);
-      return;
-    }
-
-    root.classList.add(theme);
+    root.classList.remove("dark");
+    root.classList.add("light");
   }, [theme]);
 
   const value = {
