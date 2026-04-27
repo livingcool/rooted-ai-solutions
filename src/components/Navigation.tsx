@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
+import { useModal } from "@/context/ModalContext";
 
 const NAV_LINKS = [
   { name: "Services",    href: "/services" },
@@ -14,6 +15,7 @@ const Navigation = () => {
   const [scrolled,    setScrolled]    = useState(false);
   const [mobileOpen,  setMobileOpen]  = useState(false);
   const location = useLocation();
+  const { openLeadModal } = useModal();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -63,7 +65,7 @@ const Navigation = () => {
                 lineHeight: 1,
               }}
             >
-              Rooted
+              ROOTED
             </span>
             <span
               style={{
@@ -120,13 +122,13 @@ const Navigation = () => {
 
           {/* CTA + Mobile Toggle */}
           <div className="flex items-center gap-3">
-            <Link
-              to="/#contact"
+            <button
+              onClick={openLeadModal}
               className="hidden md:inline-flex items-center gap-2 nb-btn nb-btn-primary"
-              style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem" }}
+              style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: 'pointer' }}
             >
               Book a Demo <ArrowRight size={14} />
-            </Link>
+            </button>
 
             <button
               className="md:hidden flex items-center justify-center w-10 h-10"
@@ -187,13 +189,13 @@ const Navigation = () => {
             className="px-6 py-8"
             style={{ borderTop: "3px solid #240747" }}
           >
-            <Link
-              to="/#contact"
+            <button
+              onClick={() => { setMobileOpen(false); openLeadModal(); }}
               className="nb-btn nb-btn-primary"
               style={{ width: "100%", justifyContent: "center", fontSize: "1rem" }}
             >
               Book a Demo <ArrowRight size={16} />
-            </Link>
+            </button>
           </div>
         </div>
       )}

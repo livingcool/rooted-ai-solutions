@@ -1,12 +1,16 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, Play, ExternalLink,
   Cpu, Zap, Globe, Brain, Shield, BarChart3,
-  Users, Factory, ChevronRight,
+  Users, Factory, ChevronRight
 } from "lucide-react";
-import { updates } from "@/data/updates";
+import { updates } from "../data/updates";
+import RobotPanel from "../components/RobotPanel";
+import InteractivePipeline from "../components/InteractivePipeline";
+import ClientDossier from "../components/ClientDossier";
+import { useModal } from "@/context/ModalContext";
 
 /* ─────────────────────────────────────────
    TILE COLOURS
@@ -43,7 +47,7 @@ const SERVICES = [
    FRAMER MOTION VARIANTS
 ───────────────────────────────────────── */
 const staggerContainer = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: { staggerChildren: 0.1 },
@@ -51,7 +55,7 @@ const staggerContainer = {
 };
 
 const fadeUp = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 20, opacity: 1 },
   visible: { 
     y: 0, 
     opacity: 1, 
@@ -125,8 +129,6 @@ function VideoPanel() {
 /* ─────────────────────────────────────────
    NOTIFICATION SLIDER
 ───────────────────────────────────────── */
-import { useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
 
 function NotificationSlider() {
   const [index, setIndex] = useState(0);
@@ -204,8 +206,9 @@ const tileObj = (bg: string, extra?: React.CSSProperties): React.CSSProperties =
 });
 
 const sectionWrap: React.CSSProperties = {
-  background: C.cream,
-  padding:    "0 1.5rem 4rem",
+  padding:    "4rem 1.5rem",
+  position: "relative",
+  zIndex: 1
 };
 
 const innerWrap: React.CSSProperties = {
@@ -217,49 +220,54 @@ const innerWrap: React.CSSProperties = {
    PAGE
 ───────────────────────────────────────── */
 export default function Index() {
+  console.log("Index component mounted");
+  const { openLeadModal } = useModal();
   return (
-    <div style={{ background: C.cream }}>
+    <div style={{ position: "relative" }}>
       
       {/* ═════════════════ HERO ═════════════════ */}
-      <section style={{ ...sectionWrap, paddingTop: "3rem" }}>
+      <section style={{ ...sectionWrap, willChange: "transform", paddingTop: "3rem" }}>
         <motion.div style={innerWrap} initial="hidden" animate="visible" variants={staggerContainer}>
           
           <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: 16, alignItems: "stretch" }} className="hero-bento">
             
             {/* ── LEFT TILE ── */}
-            <motion.div variants={fadeUp} style={{ ...tileObj(C.cream), padding: "4rem", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "65vh" }}>
+            <motion.div variants={fadeUp} style={{ ...tileObj(C.purple), padding: "4rem", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "65vh" }}>
               <div>
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "3rem" }}>
-                  Autonomous Ops for the real world
+                  Engineering Intelligence Complexity Simplified
                 </span>
                 
-                <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(3rem, 6vw, 4.5rem)", lineHeight: 1, letterSpacing: "-0.04em", color: C.purple, marginBottom: "2rem", maxWidth: 700 }}>
-                  Hard ops,<br/>
-                  <span style={{ color: C.orange }}>automated.</span>
+                <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(3rem, 6vw, 4.5rem)", lineHeight: 1, letterSpacing: "-0.04em", textTransform: "uppercase", color: C.cream, marginBottom: "2rem", maxWidth: 700 }}>
+                  Your robot works.<br/>
+                  <span style={{ color: C.orange }}>Now make it see.</span>
                 </h1>
 
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", color: C.purple, opacity: 0.7, lineHeight: 1.6, maxWidth: 500, marginBottom: "3rem", fontWeight: 400 }}>
-                  Deploy AI agents that execute complex logistics, manufacturing, and data workflows—with zero fragile prototypes.
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", color: C.cream, opacity: 0.8, lineHeight: 1.6, maxWidth: 500, marginBottom: "3rem", fontWeight: 400 }}>
+                  We help robotics startups deploy perception systems in weeks — not months.
                 </p>
               </div>
 
               <div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "2rem" }}>
                   <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-                    <Link to="/#contact" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase", padding: "1rem 2rem", background: C.orange, color: C.purple, border: `3px solid ${C.purple}`, borderRadius: 12, boxShadow: `5px 5px 0 ${C.purple}`, textDecoration: "none" }}>
+                    <button 
+                      onClick={openLeadModal}
+                      style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase", padding: "1rem 2rem", background: C.orange, color: C.purple, border: `3px solid #110222`, borderRadius: 12, boxShadow: `5px 5px 0 #110222`, textDecoration: "none", cursor: 'pointer' }}
+                    >
                       Book a Demo <ArrowRight size={16} />
-                    </Link>
+                    </button>
                   </motion.div>
                   <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-                    <Link to="/case-studies" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase", padding: "1rem 2rem", background: C.cream, color: C.purple, border: `3px solid ${C.purple}`, borderRadius: 12, boxShadow: `5px 5px 0 ${C.purple}`, textDecoration: "none" }}>
+                    <Link to="/case-studies" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "0.05em", textTransform: "uppercase", padding: "1rem 2rem", background: C.cream, color: C.purple, border: `3px solid #110222`, borderRadius: 12, boxShadow: `5px 5px 0 #110222`, textDecoration: "none" }}>
                       See Our Work
                     </Link>
                   </motion.div>
                 </div>
 
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", paddingTop: "1.5rem", borderTop: `2px solid rgba(36,7,71,0.1)` }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", paddingTop: "1.5rem", borderTop: `2px solid rgba(249, 239, 233, 0.15)` }}>
                   {["No fragile prototypes", "IP fully yours", "4-week deployment"].map((t) => (
-                    <span key={t} style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", fontWeight: 600, color: C.purple, opacity: 0.6 }}>
+                    <span key={t} style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", fontWeight: 600, color: C.cream, opacity: 0.7 }}>
                       ✓ {t}
                     </span>
                   ))}
@@ -270,9 +278,9 @@ export default function Index() {
             {/* ── RIGHT COLUMN ── */}
             <motion.div variants={fadeUp} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div style={{ flex: 3 }}>
-                <VideoPanel />
+                <RobotPanel />
               </div>
-              {/* Notification Slider (replaces the static 40% metric) */}
+              {/* Notification Slider */}
               <motion.div whileHover="hover" initial="rest" animate="rest" variants={tileHover} style={{ ...tileObj(C.blush), padding: "2rem", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", minHeight: 160 }}>
                  <NotificationSlider />
               </motion.div>
@@ -281,81 +289,75 @@ export default function Index() {
         </motion.div>
       </section>
 
-      {/* ═════════════════ METRICS (Z-Pattern dynamic grid) ═════════════════ */}
-      <section style={sectionWrap}>
-        <motion.div style={innerWrap} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gridAutoRows: "minmax(180px, auto)", gap: 16 }} className="zbento-grid">
-            
-            {/* Large primary metric - spans 2 cols, 2 rows */}
-            <motion.div variants={fadeUp} style={{ ...tileObj(C.purple), gridColumn: "span 2", gridRow: "span 2", padding: "4rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.orange, fontWeight: 700 }}>Results</span>
-              <div>
-                <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(3rem, 6vw, 5rem)", color: C.cream, lineHeight: 1, letterSpacing: "-0.04em", marginBottom: "1rem" }}>40%</div>
-                <div style={{ fontFamily: "var(--font-sans)", fontSize: "1.2rem", color: C.cream, opacity: 0.8, fontWeight: 500 }}>Risk Reduction across enterprise deployments.</div>
-              </div>
+
+      {/* ═════════════════ WHO WE WORK WITH (Client Dossier) ═════════════════ */}
+      <section style={{ ...sectionWrap, willChange: "transform" }}>
+        <motion.div style={innerWrap} initial="hidden" animate="visible" variants={staggerContainer}>
+          <motion.div variants={fadeUp}>
+            <ClientDossier />
+          </motion.div>
+        </motion.div>
+      </section>
+
+
+      {/* ═════════════════ WHAT WE DO (Pipeline Workflow) ═════════════════ */}
+      <section style={{ ...sectionWrap, willChange: "transform", marginTop: "-3rem" }}>
+        <motion.div style={innerWrap} initial="hidden" animate="visible" variants={staggerContainer}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+            {/* Centered Progressive Pipeline Section */}
+            <motion.div variants={fadeUp} style={{ ...tileObj(C.purple), padding: "4rem", textAlign: "center", marginBottom: "1rem" }}>
+                 <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", letterSpacing: "0.25em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "2rem" }}>
+                   What we do
+                 </span>
+                 <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(3rem, 5vw, 4.5rem)", lineHeight: 0.85, letterSpacing: "-0.04em" }}>
+                   <span style={{ color: C.cream, display: "block", paddingBottom: "0.3rem" }}>From inputs to</span>
+                   <span style={{ color: C.orange, display: "block" }}>system integration.</span>
+                 </h2>
+                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.2rem", color: C.cream, opacity: 0.8, maxWidth: 600, margin: "2rem auto 0 auto", fontWeight: 500 }}>
+                   Click below to explore our tactical lifecycle, and exact operational benefits.
+                 </p>
             </motion.div>
 
-            {/* Top right small */}
-            <motion.div variants={fadeUp} style={{ ...tileObj(C.parchment), padding: "2rem", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "2.5rem", color: C.purple, lineHeight: 1, letterSpacing: "-0.04em" }}>3×</div>
-              <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: C.purple, opacity: 0.6, marginTop: "0.5rem", fontWeight: 500 }}>Faster Deployment</div>
+            {/* Expandable Bento Interactive Pipeline */}
+            <motion.div variants={fadeUp}>
+               <InteractivePipeline />
             </motion.div>
 
-            {/* Bottom right small */}
-            <motion.div variants={fadeUp} style={{ ...tileObj(C.cream), padding: "2rem", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "2.5rem", color: C.purple, lineHeight: 1, letterSpacing: "-0.04em" }}>98%</div>
-              <div style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: C.purple, opacity: 0.6, marginTop: "0.5rem", fontWeight: 500 }}>Client Retention</div>
-            </motion.div>
+
+
           </div>
         </motion.div>
       </section>
 
-      {/* ═════════════════ PROBLEM (Z-Flip Layout) ═════════════════ */}
-      <section style={sectionWrap}>
-        <motion.div style={innerWrap} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 16 }} className="zbento-grid">
-            
-            {/* Left large horizontal span */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }} className="sub-grid-mb">
-              <motion.div variants={fadeUp} style={{ ...tileObj(C.amber), gridColumn: "span 2", padding: "3rem", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: 280 }}>
-                 <div>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.purple, fontWeight: 700, display: "block", marginBottom: "1.5rem" }}>
-                      The Problem
-                    </span>
-                    <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(2rem, 3.5vw, 3rem)", color: C.purple, lineHeight: 1.1, letterSpacing: "-0.03em", maxWidth: 500 }}>
-                      Why AI projects fail <br/><span style={{ color: C.orange }}>in production.</span>
-                    </h2>
-                 </div>
+
+      {/* ═════════════════ INDUSTRIES ═════════════════ */}
+      <section style={{ ...sectionWrap, willChange: "transform" }}>
+        <motion.div style={innerWrap} initial="hidden" animate="visible" variants={staggerContainer}>
+          <motion.div variants={fadeUp} style={{ ...tileObj(C.parchment), padding: "3rem", marginBottom: 16 }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "0.75rem" }}>Industries</span>
+            <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(2rem, 4vw, 3rem)", color: C.purple, letterSpacing: "-0.03em", lineHeight: 1 }}>Built for operations.</h2>
+          </motion.div>
+          
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }} className="zbento-grid">
+            {[
+              { icon: Factory, name: "Manufacturing",  desc: "Line-level AI monitoring.", bg: C.cream     },
+              { icon: Zap,     name: "Logistics",       desc: "Routing & warehouse automation.", bg: C.blush     },
+              { icon: Users,   name: "HR & Talent",     desc: "AI-driven talent pipelines.",  bg: C.amber     },
+              { icon: Brain,   name: "Knowledge",   desc: "LLMs over internal data.",   bg: C.parchment },
+            ].map((ind) => (
+              <motion.div key={ind.name} variants={fadeUp} whileHover={{ y: -5 }} style={{ ...tileObj(ind.bg), padding: "2.5rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <ind.icon size={28} color={C.orange} />
+                <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.1rem", color: C.purple, letterSpacing: "-0.02em" }}>{ind.name}</h3>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: C.purple, opacity: 0.7, lineHeight: 1.5 }}>{ind.desc}</p>
               </motion.div>
-
-              <motion.div variants={fadeUp} whileHover="hover" initial="rest" animate="rest" style={{ ...tileObj(C.cream), padding: "2.5rem" }}>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "3rem", color: C.orange, lineHeight: 1, letterSpacing: "-0.05em", display: "block", marginBottom: "1.5rem" }}>01</span>
-                <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.2rem", color: C.purple, letterSpacing: "-0.02em", marginBottom: "1rem" }}>The Lab/Prod Gap</h3>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.95rem", color: C.purple, opacity: 0.7, lineHeight: 1.5 }}>Passes tests, fails on the factory floor.</p>
-              </motion.div>
-
-              <motion.div variants={fadeUp} whileHover="hover" initial="rest" animate="rest" style={{ ...tileObj(C.cream), padding: "2.5rem" }}>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "3rem", color: C.orange, lineHeight: 1, letterSpacing: "-0.05em", display: "block", marginBottom: "1.5rem" }}>02</span>
-                <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.2rem", color: C.purple, letterSpacing: "-0.02em", marginBottom: "1rem" }}>The Hiring Wall</h3>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.95rem", color: C.purple, opacity: 0.7, lineHeight: 1.5 }}>Senior engineers take 6 months to hire & ramp.</p>
-              </motion.div>
-            </div>
-
-            {/* Right vertical tower piece */}
-            <motion.div variants={fadeUp} style={{ ...tileObj(C.purple), padding: "3rem", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "3rem", color: C.orange, lineHeight: 1, letterSpacing: "-0.05em", display: "block", marginBottom: "1.5rem" }}>03</span>
-                <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.5rem", color: C.cream, letterSpacing: "-0.02em", marginBottom: "1.5rem" }}>The Stack Puzzle</h3>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "1rem", color: C.cream, opacity: 0.7, lineHeight: 1.6, marginBottom: "2rem" }}>LLMs + data pipelines + enterprise integration taking weeks.</p>
-                <p style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.1rem", color: C.orange }}>We do it in days.</p>
-            </motion.div>
-
+            ))}
           </div>
         </motion.div>
       </section>
 
       {/* ═════════════════ SERVICES (Dynamic Layout) ═════════════════ */}
-      <section style={sectionWrap}>
-        <motion.div style={innerWrap} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer}>
+      <section style={{ ...sectionWrap, willChange: "transform" }}>
+        <motion.div style={innerWrap} initial="hidden" animate="visible" variants={staggerContainer}>
           <motion.div variants={fadeUp} style={{ ...tileObj(C.cream), padding: "3rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1.5rem", marginBottom: 16 }}>
             <div>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "0.75rem" }}>What We Build</span>
@@ -400,34 +402,9 @@ export default function Index() {
         </motion.div>
       </section>
 
-      {/* ═════════════════ INDUSTRIES ═════════════════ */}
-      <section style={sectionWrap}>
-        <motion.div style={innerWrap} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer}>
-          <motion.div variants={fadeUp} style={{ ...tileObj(C.parchment), padding: "3rem", marginBottom: 16 }}>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "0.75rem" }}>Industries</span>
-            <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(2rem, 4vw, 3rem)", color: C.purple, letterSpacing: "-0.03em", lineHeight: 1 }}>Built for operations.</h2>
-          </motion.div>
-          
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }} className="zbento-grid">
-            {[
-              { icon: Factory, name: "Manufacturing",  desc: "Line-level AI monitoring.", bg: C.cream     },
-              { icon: Zap,     name: "Logistics",       desc: "Routing & warehouse automation.", bg: C.blush     },
-              { icon: Users,   name: "HR & Talent",     desc: "AI-driven talent pipelines.",  bg: C.amber     },
-              { icon: Brain,   name: "Knowledge",   desc: "LLMs over internal data.",   bg: C.parchment },
-            ].map((ind) => (
-              <motion.div key={ind.name} variants={fadeUp} whileHover={{ y: -5 }} style={{ ...tileObj(ind.bg), padding: "2.5rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <ind.icon size={28} color={C.orange} />
-                <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.1rem", color: C.purple, letterSpacing: "-0.02em" }}>{ind.name}</h3>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: C.purple, opacity: 0.7, lineHeight: 1.5 }}>{ind.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
-
       {/* ═════════════════ CTA ═════════════════ */}
-      <section id="contact" style={{ ...sectionWrap, paddingBottom: "5rem" }}>
-        <motion.div style={innerWrap} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}>
+      <section id="contact" style={{ ...sectionWrap, willChange: "transform", paddingBottom: "5rem" }}>
+        <motion.div style={innerWrap} initial="hidden" animate="visible" viewport={{ once: true }} variants={staggerContainer}>
           <motion.div variants={fadeUp} style={{ ...tileObj(C.cream), padding: "5rem 4rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "3rem" }}>
             <div>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "1rem" }}>Deploy</span>
@@ -437,9 +414,12 @@ export default function Index() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link to="/#contact" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1rem", letterSpacing: "0.05em", textTransform: "uppercase", padding: "1.2rem 2.5rem", background: C.orange, color: C.purple, border: `3px solid ${C.purple}`, borderRadius: 14, boxShadow: `6px 6px 0 ${C.purple}`, textDecoration: "none" }}>
+                <button 
+                  onClick={openLeadModal}
+                  style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1rem", letterSpacing: "0.05em", textTransform: "uppercase", padding: "1.2rem 2.5rem", background: C.orange, color: C.purple, border: `3px solid ${C.purple}`, borderRadius: 14, boxShadow: `6px 6px 0 ${C.purple}`, textDecoration: "none", cursor: 'pointer' }}
+                >
                   Book Discovery Call <ArrowRight size={18} />
-                </Link>
+                </button>
               </motion.div>
               <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: C.purple, opacity: 0.5, letterSpacing: "0.1em", textTransform: "uppercase", paddingLeft: "0.5rem" }}>
                 Limited slots available.
@@ -452,12 +432,14 @@ export default function Index() {
       <style>{`
         @media (max-width: 1024px) {
           .hero-bento, .problem-bento { grid-template-columns: 1fr !important; }
+          .pipeline-grid { grid-template-columns: repeat(3, 1fr) !important; }
+          .pipeline-arrow { display: none !important; }
         }
         @media (max-width: 768px) {
           .zbento-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
         @media (max-width: 600px) {
-          .zbento-grid, .sub-grid-mb { grid-template-columns: 1fr !important; }
+          .zbento-grid, .sub-grid-mb, .pipeline-grid { grid-template-columns: 1fr !important; }
           .zbento-grid > div { grid-column: auto !important; grid-row: auto !important; }
         }
       `}</style>
