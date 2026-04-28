@@ -11,6 +11,8 @@ import RobotPanel from "../components/RobotPanel";
 import InteractivePipeline from "../components/InteractivePipeline";
 import ClientDossier from "../components/ClientDossier";
 import { useModal } from "@/context/ModalContext";
+import Testimonials from "../components/Testimonials";
+
 
 /* ─────────────────────────────────────────
    TILE COLOURS
@@ -330,29 +332,11 @@ export default function Index() {
       </section>
 
 
-      {/* ═════════════════ INDUSTRIES ═════════════════ */}
+      {/* ═════════════════ TESTIMONIALS ═════════════════ */}
       <section style={{ ...sectionWrap, willChange: "transform" }}>
-        <motion.div style={innerWrap} initial="hidden" animate="visible" variants={staggerContainer}>
-          <motion.div variants={fadeUp} style={{ ...tileObj(C.parchment), padding: "3rem", marginBottom: 16 }}>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "0.75rem" }}>Industries</span>
-            <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(2rem, 4vw, 3rem)", color: C.purple, letterSpacing: "-0.03em", lineHeight: 1 }}>Built for operations.</h2>
-          </motion.div>
-          
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }} className="zbento-grid">
-            {[
-              { icon: Factory, name: "Manufacturing",  desc: "Line-level AI monitoring.", bg: C.cream     },
-              { icon: Zap,     name: "Logistics",       desc: "Routing & warehouse automation.", bg: C.blush     },
-              { icon: Users,   name: "HR & Talent",     desc: "AI-driven talent pipelines.",  bg: C.amber     },
-              { icon: Brain,   name: "Knowledge",   desc: "LLMs over internal data.",   bg: C.parchment },
-            ].map((ind) => (
-              <motion.div key={ind.name} variants={fadeUp} whileHover={{ y: -5 }} style={{ ...tileObj(ind.bg), padding: "2.5rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <ind.icon size={28} color={C.orange} />
-                <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.1rem", color: C.purple, letterSpacing: "-0.02em" }}>{ind.name}</h3>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.85rem", color: C.purple, opacity: 0.7, lineHeight: 1.5 }}>{ind.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        <div style={innerWrap}>
+          <Testimonials />
+        </div>
       </section>
 
       {/* ═════════════════ SERVICES (Dynamic Layout) ═════════════════ */}

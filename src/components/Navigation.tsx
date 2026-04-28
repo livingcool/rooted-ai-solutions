@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
+import { Menu, X, ChevronDown, ArrowRight, Linkedin, Twitter, Github } from "lucide-react";
+
 import { useModal } from "@/context/ModalContext";
 
 const NAV_LINKS = [
@@ -184,9 +185,9 @@ const Navigation = () => {
             ))}
           </div>
 
-          {/* Bottom CTA */}
+          {/* Bottom CTA + Socials */}
           <div
-            className="px-6 py-8"
+            className="px-6 py-8 flex flex-col gap-6"
             style={{ borderTop: "3px solid #240747" }}
           >
             <button
@@ -196,6 +197,29 @@ const Navigation = () => {
             >
               Book a Demo <ArrowRight size={16} />
             </button>
+            <div className="flex justify-center gap-6">
+              {[
+                { icon: Linkedin, href: "https://www.linkedin.com/company/rootdai", label: "LinkedIn" },
+                { icon: Github,   href: "https://github.com/rootedai",               label: "GitHub"   },
+                { icon: Twitter,  href: "https://x.com/rootedai2025",                label: "Twitter"  },
+              ].map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 flex items-center justify-center"
+                  style={{
+                    border: "3px solid #240747",
+                    background: "#F9EFE9",
+                    textDecoration: "none",
+                  }}
+                  aria-label={label}
+                >
+                  <Icon size={20} color="#240747" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       )}

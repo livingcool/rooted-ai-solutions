@@ -90,13 +90,15 @@ export default function Footer() {
             {/* Social links */}
             <div style={{ display: "flex", gap: "0.75rem" }}>
               {[
-                { icon: Linkedin, href: "#", label: "LinkedIn" },
-                { icon: Github,   href: "#", label: "GitHub"   },
-                { icon: Twitter,  href: "#", label: "Twitter"  },
+                { icon: Linkedin, href: "https://www.linkedin.com/company/rootdai", label: "LinkedIn" },
+                { icon: Github,   href: "https://github.com/rootedai",               label: "GitHub"   },
+                { icon: Twitter,  href: "https://x.com/rootedai2025",                label: "Twitter"  },
               ].map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   style={{
                     width:      36,
