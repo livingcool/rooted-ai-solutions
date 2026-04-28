@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
+import { Menu, X, ChevronDown, ArrowRight, Linkedin, Twitter, Github } from "lucide-react";
+
+import { useModal } from "@/context/ModalContext";
 
 const NAV_LINKS = [
   { name: "Services",    href: "/services" },
@@ -14,6 +16,7 @@ const Navigation = () => {
   const [scrolled,    setScrolled]    = useState(false);
   const [mobileOpen,  setMobileOpen]  = useState(false);
   const location = useLocation();
+  const { openLeadModal } = useModal();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -63,7 +66,7 @@ const Navigation = () => {
                 lineHeight: 1,
               }}
             >
-              Rooted
+              ROOTED
             </span>
             <span
               style={{
@@ -120,13 +123,13 @@ const Navigation = () => {
 
           {/* CTA + Mobile Toggle */}
           <div className="flex items-center gap-3">
-            <Link
-              to="/#contact"
+            <button
+              onClick={openLeadModal}
               className="hidden md:inline-flex items-center gap-2 nb-btn nb-btn-primary"
-              style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem" }}
+              style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: 'pointer' }}
             >
               Book a Demo <ArrowRight size={14} />
-            </Link>
+            </button>
 
             <button
               className="md:hidden flex items-center justify-center w-10 h-10"
@@ -182,18 +185,41 @@ const Navigation = () => {
             ))}
           </div>
 
-          {/* Bottom CTA */}
+          {/* Bottom CTA + Socials */}
           <div
-            className="px-6 py-8"
+            className="px-6 py-8 flex flex-col gap-6"
             style={{ borderTop: "3px solid #240747" }}
           >
-            <Link
-              to="/#contact"
+            <button
+              onClick={() => { setMobileOpen(false); openLeadModal(); }}
               className="nb-btn nb-btn-primary"
               style={{ width: "100%", justifyContent: "center", fontSize: "1rem" }}
             >
               Book a Demo <ArrowRight size={16} />
-            </Link>
+            </button>
+            <div className="flex justify-center gap-6">
+              {[
+                { icon: Linkedin, href: "https://www.linkedin.com/company/rootdai", label: "LinkedIn" },
+                { icon: Github,   href: "https://github.com/rootedai",               label: "GitHub"   },
+                { icon: Twitter,  href: "https://x.com/rootedai2025",                label: "Twitter"  },
+              ].map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 flex items-center justify-center"
+                  style={{
+                    border: "3px solid #240747",
+                    background: "#F9EFE9",
+                    textDecoration: "none",
+                  }}
+                  aria-label={label}
+                >
+                  <Icon size={20} color="#240747" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       )}
