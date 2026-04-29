@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { ArrowRight, Linkedin, Github, Twitter } from "lucide-react";
+import { useModal } from "@/context/ModalContext";
 
 const FOOTER_LINKS = {
   Services: [
-    { name: "AI Agents",            href: "/services/ai-agents" },
-    { name: "Process Automation",   href: "/services/process-automation" },
-    { name: "Web Solutions",        href: "/services/web-solutions" },
-    { name: "NLP Systems",          href: "/services/nlp-systems" },
-    { name: "Predictive Analytics", href: "/services/predictive-analytics" },
+    { name: "AI Agents",            href: "/services/AIAgents" },
+    { name: "Process Automation",   href: "/services/ProcessAutomation" },
+    { name: "Web Solutions",        href: "/services/WebSolutions" },
+    { name: "NLP Systems",          href: "/services/NLPSystems" },
+    { name: "Predictive Analytics", href: "/services/PredictiveAnalytics" },
   ],
   Company: [
     { name: "About",        href: "/#about" },
@@ -21,6 +22,7 @@ const FOOTER_LINKS = {
 };
 
 export default function Footer() {
+  const { openLeadModal } = useModal();
   return (
     <footer style={{ background: "#240747" }}>
       {/* Main footer content */}
@@ -122,13 +124,13 @@ export default function Footer() {
             </div>
 
             {/* CTA */}
-            <Link
-              href="/#contact"
+            <button
+              onClick={openLeadModal}
               className="nb-btn nb-btn-primary"
               style={{ fontSize: "0.75rem", padding: "0.65rem 1.2rem", marginTop: "auto" }}
             >
               Book a Demo <ArrowRight size={13} />
-            </Link>
+            </button>
           </div>
 
           {/* Link columns */}

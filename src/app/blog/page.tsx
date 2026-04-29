@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock, User, ChevronRight, Mail, Sparkles } from "lucide-react";
+import { useModal } from "@/context/ModalContext";
 
 export default function BlogListing() {
+    const { openLeadModal } = useModal();
     const [posts, setPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -193,7 +195,10 @@ export default function BlogListing() {
                                     placeholder="your@enterprise.com" 
                                     className="flex-1 bg-[#F9EFE9] border-3 border-[#240747] px-6 py-4 font-bold text-[#240747] focus:outline-none focus:bg-white transition-colors rounded-xl shadow-[4px_4px_0_#240747]"
                                 />
-                                <button className="nb-btn nb-btn-inverted rounded-xl">
+                                <button 
+                                    onClick={openLeadModal}
+                                    className="nb-btn nb-btn-inverted rounded-xl"
+                                >
                                     Join <ArrowRight size={20} />
                                 </button>
                             </form>

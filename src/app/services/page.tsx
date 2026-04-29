@@ -2,14 +2,14 @@ import Link from "next/link";
 import { ArrowRight, Cpu, Zap, Globe, Brain, Shield, BarChart3, Users, Lock } from "lucide-react";
 
 const SERVICES = [
-  { icon: Cpu, num: "01", title: "AI Agents", desc: "Deploy autonomous LLM agents that handle complex, multi-step operational workflows without human intervention.", href: "/services/ai-agents", bg: "#F9EFE9" },
-  { icon: Zap, num: "02", title: "Process Automation", desc: "End-to-end workflow automation connecting your existing tools, databases, and ERPs through intelligent orchestration.", href: "/services/process-automation", bg: "#F0DCC8" },
-  { icon: Globe, num: "03", title: "Web Solutions", desc: "High-performance web platforms and internal tools built for industrial-grade reliability and scale.", href: "/services/web-solutions", bg: "#EDD5C0" },
-  { icon: Brain, num: "04", title: "NLP Systems", desc: "Custom language models fine-tuned on your operational data for document intelligence and knowledge extraction.", href: "/services/nlp-systems", bg: "#F5E6C8" },
-  { icon: BarChart3, num: "05", title: "Predictive Analytics", desc: "ML pipelines that forecast failures, demand spikes, and bottlenecks before they cost you downtime.", href: "/services/predictive-analytics", bg: "#F9EFE9" },
-  { icon: Shield, num: "06", title: "Enterprise Security", desc: "AI-native security monitoring, anomaly detection, and compliance automation for regulated industries.", href: "/services/enterprise-security", bg: "#F0DCC8" },
-  { icon: Users, num: "07", title: "Outsourcing", desc: "Embedded AI engineering teams that plug into your org chart and deliver as a managed capability.", href: "/services/outsourcing", bg: "#EDD5C0" },
-  { icon: Lock, num: "08", title: "AI Safety", desc: "Guardrails, evaluation frameworks, and red-teaming protocols to ensure your AI systems behave reliably.", href: "/services/ai-safety", bg: "#F5E6C8" },
+  { icon: Cpu, num: "01", title: "AI Agents", desc: "Deploy autonomous LLM agents that handle complex, multi-step operational workflows without human intervention.", href: "/services/AIAgents", bg: "#F9EFE9" },
+  { icon: Zap, num: "02", title: "Process Automation", desc: "End-to-end workflow automation connecting your existing tools, databases, and ERPs through intelligent orchestration.", href: "/services/ProcessAutomation", bg: "#F0DCC8" },
+  { icon: Globe, num: "03", title: "Web Solutions", desc: "High-performance web platforms and internal tools built for industrial-grade reliability and scale.", href: "/services/WebSolutions", bg: "#EDD5C0" },
+  { icon: Brain, num: "04", title: "NLP Systems", desc: "Custom language models fine-tuned on your operational data for document intelligence and knowledge extraction.", href: "/services/NLPSystems", bg: "#F5E6C8" },
+  { icon: BarChart3, num: "05", title: "Predictive Analytics", desc: "ML pipelines that forecast failures, demand spikes, and bottlenecks before they cost you downtime.", href: "/services/PredictiveAnalytics", bg: "#F9EFE9" },
+  { icon: Shield, num: "06", title: "Enterprise Security", desc: "AI-native security monitoring, anomaly detection, and compliance automation for regulated industries.", href: "/services/EnterpriseSecurity", bg: "#F0DCC8" },
+  { icon: Users, num: "07", title: "Outsourcing", desc: "Embedded AI engineering teams that plug into your org chart and deliver as a managed capability.", href: "/services/Outsourcing", bg: "#EDD5C0" },
+  { icon: Lock, num: "08", title: "AI Safety", desc: "Guardrails, evaluation frameworks, and red-teaming protocols to ensure your AI systems behave reliably.", href: "/services/AISafety", bg: "#F5E6C8" },
 ];
 
 export default function ServicesPage() {

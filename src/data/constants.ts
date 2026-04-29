@@ -19,10 +19,10 @@ export const METRICS = [
 ];
 
 export const SERVICES = [
-  { icon: Cpu,       title: "AI Agents",            href: "/services/ai-agents",            bg: C.cream     },
-  { icon: Zap,       title: "Process Automation",   href: "/services/process-automation",   bg: C.parchment },
-  { icon: Globe,     title: "Web Solutions",         href: "/services/web-solutions",        bg: C.blush     },
-  { icon: Brain,     title: "NLP Systems",           href: "/services/nlp-systems",          bg: C.amber     },
-  { icon: BarChart3, title: "Predict Analytics",  href: "/services/predictive-analytics", bg: C.cream     },
-  { icon: Shield,    title: "Enterprise Sec",   href: "/services/enterprise-security",  bg: C.parchment },
+  { icon: Cpu,       title: "AI Agents",            href: "/services/AIAgents",            bg: C.cream     },
+  { icon: Zap,       title: "Process Automation",   href: "/services/ProcessAutomation",   bg: C.parchment },
+  { icon: Globe,     title: "Web Solutions",         href: "/services/WebSolutions",        bg: C.blush     },
+  { icon: Brain,     title: "NLP Systems",           href: "/services/NLPSystems",          bg: C.amber     },
+  { icon: BarChart3, title: "Predict Analytics",  href: "/services/PredictiveAnalytics", bg: C.cream     },
+  { icon: Shield,    title: "Enterprise Sec",   href: "/services/EnterpriseSecurity",  bg: C.parchment },
 ];

@@ -1,6 +1,7 @@
 // Shared service detail page template
 import Link from "next/link";
 import { ArrowRight, LucideIcon } from "lucide-react";
+import { useModal } from "@/context/ModalContext";
 
 interface ServicePageProps {
   tag:        string;
@@ -14,6 +15,7 @@ interface ServicePageProps {
 }
 
 export function ServiceDetailPage({ tag, headline, subline, body, features, useCases, icon: Icon, heroBg }: ServicePageProps) {
+  const { openLeadModal } = useModal();
   const tileBgs = ["#F9EFE9", "#F0DCC8", "#EDD5C0", "#F5E6C8"];
   return (
     <div style={{ background: "#240747" }}>
@@ -34,12 +36,12 @@ export function ServiceDetailPage({ tag, headline, subline, body, features, useC
               <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "#F9EFE9", opacity: 0.45, letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, marginBottom: "1.5rem" }}>
                 Factory-floor-ready. Deployed in weeks. IP fully yours.
               </p>
-              <Link 
-                href="/#contact" 
+              <button 
+                onClick={openLeadModal}
                 className="nb-btn nb-btn-primary w-full shadow-[4px_4px_0_#F9EFE9] border-[#F9EFE9] hover:bg-[#F9EFE9] hover:text-[#240747] transition-all"
               >
                 Start a Pilot <ArrowRight size={14} />
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -79,7 +81,7 @@ export function ServiceDetailPage({ tag, headline, subline, body, features, useC
       <div style={{ background: "#240747", padding: "4px 4px 0" }}>
         <div style={{ maxWidth: 1320, margin: "0 auto", background: "#F9EFE9", padding: "3rem 3.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "2rem" }}>
           <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(2rem, 4vw, 3.5rem)", color: "#240747", lineHeight: 1, letterSpacing: "-0.04em" }}>Ready to see<br />this in action?</h2>
-          <Link href="/#contact" className="nb-btn nb-btn-primary">Book a Discovery Call <ArrowRight size={16} /></Link>
+          <button onClick={openLeadModal} className="nb-btn nb-btn-primary">Book a Discovery Call <ArrowRight size={16} /></button>
         </div>
       </div>
 

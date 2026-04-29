@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { METRICS, SERVICES } from "@/data/constants";
+import { useModal } from "@/context/ModalContext";
 
 // Dynamic imports for heavy client components
 const HeroSection = dynamic(() => import("@/components/landing/HeroSection"), { ssr: true });
@@ -61,6 +62,7 @@ const innerWrap: React.CSSProperties = {
 };
 
 export default function LandingPage() {
+  const { openLeadModal } = useModal();
   React.useEffect(() => {
     console.log("LandingPage (App Router) mounted");
   }, []);
@@ -71,14 +73,14 @@ export default function LandingPage() {
       <HeroSection />
 
       {/* ═════════════════ WHO WE WORK WITH (Client Dossier) ═════════════════ */}
-      <section style={sectionWrap}>
+      <section id="about" style={sectionWrap}>
         <div style={innerWrap}>
           <ClientDossier />
         </div>
       </section>
 
       {/* ═════════════════ WHAT WE DO (Pipeline Workflow) ═════════════════ */}
-      <section style={{ ...sectionWrap, marginTop: "-3rem" }}>
+      <section id="how-it-works" style={{ ...sectionWrap, marginTop: "-3rem" }}>
         <div style={innerWrap}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
             <div style={{ ...tileObj(C.purple), padding: "4rem", textAlign: "center", marginBottom: "1rem" }}>
@@ -159,6 +161,7 @@ export default function LandingPage() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <button 
+                onClick={openLeadModal}
                 className="nb-btn nb-btn-primary text-lg px-10 py-5"
               >
                 Book Discovery Call <ArrowRight size={18} />
