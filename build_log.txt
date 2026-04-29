@@ -1,26 +1,26 @@
 
-> vite_react_shadcn_ts@0.0.0 build
-> next build
+> rooted-ai-solutions@0.0.0 build
+> next build && rm -rf dist && mv out dist
 
   ▲ Next.js 14.2.3
   - Environments: .env
 
    Creating an optimized production build ...
+Browserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
  ✓ Compiled successfully
    Linting and checking validity of types ...
-Failed to compile.
+   Collecting page data ...
 
-./src/components/admin/dashboard/CandidateDetailDialog.tsx:273:33
-Type error: No overload matches this call.
-  Overload 1 of 2, '(relation: "contact_submissions" | "documents" | "newsletter_subscriptions" | "user_roles"): PostgrestQueryBuilder<{ PostgrestVersion: "13.0.5"; }, { Tables: { contact_submissions: { Row: { business_type: string; ... 9 more ...; updated_at: string; }; Insert: { ...; }; Update: { ...; }; Relationships: []; }; documents: { ...; }; newsletter_subscriptions: { ...; }; user_roles: { ...; }; }; Views: {}; Functions: { ...; }; Enums: { ...; }; CompositeTypes: {}; }, { ...; } | ... 2 more ... | { ...; }, "contact_submissions" | ... 2 more ... | "user_roles", []>', gave the following error.
-    Argument of type '"applications"' is not assignable to parameter of type '"contact_submissions" | "documents" | "newsletter_subscriptions" | "user_roles"'.
-  Overload 2 of 2, '(relation: never): PostgrestQueryBuilder<{ PostgrestVersion: "13.0.5"; }, { Tables: { contact_submissions: { Row: { business_type: string; company: string; created_at: string; email: string; id: string; message: string; ... 4 more ...; updated_at: string; }; Insert: { ...; }; Update: { ...; }; Relationships: []; }; documents: { ...; }; newsletter_subscriptions: { ...; }; user_roles: { ...; }; }; Views: {}; Functions: { ...; }; Enums: { ...; }; CompositeTypes: {}; }, never, never, never>', gave the following error.
-    Argument of type '"applications"' is not assignable to parameter of type 'never'.
-
-[0m [90m 271 |[39m             [36mconst[39m frontendUrl [33m=[39m process[33m.[39menv[33m.[39m[33mNEXT_PUBLIC_FRONTEND_URL[39m [33m||[39m window[33m.[39mlocation[33m.[39morigin[33m;[39m[0m
-[0m [90m 272 |[39m[0m
-[0m[31m[1m>[22m[39m[90m 273 |[39m             [36mawait[39m supabase[33m.[39m[36mfrom[39m([32m'applications'[39m)[33m.[39mupdate({ status[33m:[39m [32m'Technical Round'[39m })[33m.[39meq([32m'id'[39m[33m,[39m selectedApp[33m.[39mid)[33m;[39m[0m
-[0m [90m     |[39m                                 [31m[1m^[22m[39m[0m
-[0m [90m 274 |[39m[0m
-[0m [90m 275 |[39m             [36mconst[39m emailSubject [33m=[39m [32m`🎉 Technical Round Invitation - ${jobTitle}`[39m[33m;[39m[0m
-[0m [90m 276 |[39m             [36mconst[39m emailBody [33m=[39m [32m`<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.button{display:inline-block;padding:15px 30px;background:#667eea;color:white;text-decoration:none;border-radius:5px;margin:20px 0;font-weight:bold}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎉 Congratulations!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Great news! After carefully reviewing your communication assessment, we're impressed with your responses and would like to invite you to the <strong>Technical Round</strong> for the <strong>${jobTitle}</strong> position.</p><p>Your communication skills and personal growth mindset stood out, and we're excited to see your technical capabilities!</p><p style="text-align:center;"><a href="${frontendUrl}/candidate-status" class="button">Access Your Dashboard</a></p><p><strong>Next Steps:</strong></p><ul><li>Click the button above to access your candidate dashboard</li><li>Review the technical problem statement</li><li>Submit your solution via GitHub</li></ul><p>Best of luck with your technical assessment!</p><p>Warm regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`[39m[33m;[39m[0m
+> Build error occurred
+Error: Page "/blog/[slug]" is missing "generateStaticParams()" so it cannot be used with "output: export" config.
+    at /Users/ranjithchowshi/Ganesh/rooted-ai-solutions/node_modules/next/dist/build/index.js:1294:59
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Span.traceAsyncFn (/Users/ranjithchowshi/Ganesh/rooted-ai-solutions/node_modules/next/dist/trace/trace.js:154:20)
+    at async Promise.all (index 10)
+    at async /Users/ranjithchowshi/Ganesh/rooted-ai-solutions/node_modules/next/dist/build/index.js:1172:17
+    at async Span.traceAsyncFn (/Users/ranjithchowshi/Ganesh/rooted-ai-solutions/node_modules/next/dist/trace/trace.js:154:20)
+    at async /Users/ranjithchowshi/Ganesh/rooted-ai-solutions/node_modules/next/dist/build/index.js:1095:124
+    at async Span.traceAsyncFn (/Users/ranjithchowshi/Ganesh/rooted-ai-solutions/node_modules/next/dist/trace/trace.js:154:20)
+    at async build (/Users/ranjithchowshi/Ganesh/rooted-ai-solutions/node_modules/next/dist/build/index.js:366:9)
