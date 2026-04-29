@@ -1,5 +1,10 @@
+
+
+'use client';
+
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown, ArrowRight, Linkedin, Twitter, Github } from "lucide-react";
 
 import { useModal } from "@/context/ModalContext";
@@ -10,12 +15,13 @@ const NAV_LINKS = [
   { name: "Use Cases",   href: "/case-studies" },
   { name: "About",       href: "/#about" },
   { name: "Blog",        href: "/blog" },
+  { name: "Careers",     href: "/careers" },
 ];
 
 const Navigation = () => {
   const [scrolled,    setScrolled]    = useState(false);
   const [mobileOpen,  setMobileOpen]  = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
   const { openLeadModal } = useModal();
 
   useEffect(() => {
@@ -26,7 +32,7 @@ const Navigation = () => {
 
   useEffect(() => {
     setMobileOpen(false);
-  }, [location.pathname]);
+  }, [pathname]);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -51,11 +57,11 @@ const Navigation = () => {
           className="flex items-center justify-between px-8 h-[72px]"
         >
           {/* Logo */}
-          <Link
-            to="/"
-            className="flex items-center gap-1 no-underline"
-            style={{ textDecoration: "none" }}
-          >
+            <Link
+              href="/"
+              className="flex items-center gap-1 no-underline"
+              style={{ textDecoration: "none" }}
+            >
             <span
               style={{
                 fontFamily: "var(--font-display)",
@@ -85,11 +91,11 @@ const Navigation = () => {
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => {
-              const isActive = location.pathname === link.href;
+              const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.name}
-                  to={link.href}
+                  href={link.href}
                   style={{
                     fontFamily:    "var(--font-display)",
                     fontWeight:    700,
@@ -165,12 +171,12 @@ const Navigation = () => {
             {NAV_LINKS.map((link, i) => (
               <Link
                 key={link.name}
-                to={link.href}
+                href={link.href}
                 style={{
                   fontFamily:    "var(--font-display)",
                   fontWeight:    800,
                   fontSize:      "2.2rem",
-                  color:         location.pathname === link.href ? "#F6851B" : "#240747",
+                  color:         pathname === link.href ? "#F6851B" : "#240747",
                   textDecoration: "none",
                   letterSpacing: "-0.03em",
                   lineHeight:    1.1,

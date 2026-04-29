@@ -1,5 +1,7 @@
+
+
 import React, { useState, useRef, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'next/link';
 import Webcam from 'react-webcam';
 import { Mic, MicOff, Video, VideoOff, Send, MessageSquare, Clock, LogOut } from 'lucide-react';
 

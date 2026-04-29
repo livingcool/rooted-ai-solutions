@@ -1,7 +1,9 @@
+
+
 import { useEffect, useState } from "react";
 // import { blogPosts } from "@/data/blogPosts"; // Deprecated
 import { supabase } from "@/integrations/supabase/client";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { ArrowRight, Calendar, Clock, User } from "lucide-react";
 import Seo from "@/components/Seo";
 import TiltCard from "@/components/ui/TiltCard";

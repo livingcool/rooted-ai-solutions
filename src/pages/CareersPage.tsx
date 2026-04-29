@@ -1,32 +1,32 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { ArrowRight, MapPin, Clock, Briefcase } from "lucide-react";
 
 const OPEN_ROLES = [
   {
     title:     "Senior AI/ML Engineer",
     type:      "Full-time",
-    location:  "Hosur / Remote",
+    location:  "Remote",
     dept:      "Engineering",
     bg:        "#F9EFE9",
   },
   {
     title:     "LLM Systems Engineer",
     type:      "Full-time",
-    location:  "Chennai / Remote",
+    location:  "Remote",
     dept:      "Engineering",
     bg:        "#F0DCC8",
   },
   {
     title:     "Full Stack Developer (React + Node)",
     type:      "Full-time",
-    location:  "Bangalore / Remote",
+    location:  "Remote",
     dept:      "Engineering",
     bg:        "#EDD5C0",
   },
   {
     title:     "Business Development Manager",
     type:      "Full-time",
-    location:  "Chennai",
+    location:  "Remote",
     dept:      "Sales",
     bg:        "#F5E6C8",
   },
@@ -244,7 +244,7 @@ export default function CareersPage() {
             </h2>
           </div>
           <a
-            href="mailto:careers@rootedai.com"
+            href="mailto:careers@rootedai.co.in"
             className="nb-btn"
             style={{
               background: "#F6851B",
@@ -254,7 +254,7 @@ export default function CareersPage() {
               textDecoration: "none",
             }}
           >
-            careers@rootedai.com <ArrowRight size={15} />
+            careers@rootedai.co.in <ArrowRight size={15} />
           </a>
         </div>
       </div>

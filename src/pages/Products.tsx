@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
 
 const PRODUCTS = [

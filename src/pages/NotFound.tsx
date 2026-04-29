@@ -1,4 +1,5 @@
-import { useLocation, Link } from "react-router-dom";
+
+import { useLocation, Link } from "next/link";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft } from "lucide-react";

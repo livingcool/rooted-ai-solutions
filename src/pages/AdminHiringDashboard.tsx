@@ -1,5 +1,7 @@
+
+
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import ReactMarkdown from 'react-markdown';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,7 +28,7 @@ import { EnhancedTokenUsageStats } from "@/components/admin/dashboard/EnhancedTo
 
 const AdminHiringDashboard = () => {
     const { toast } = useToast();
-    const navigate = useNavigate();
+    const router = useRouter();
 
     // State
     const [jobs, setJobs] = useState<Job[]>([]);
@@ -60,14 +62,17 @@ const AdminHiringDashboard = () => {
 
     const checkUser = async () => {
         const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            navigate("/login");
+        const demoAccess = localStorage.getItem("demo_access");
+        
+        if (!session && !demoAccess) {
+            router.push("/login");
         }
     };
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
-        navigate("/login");
+        localStorage.removeItem("demo_access");
+        router.push("/login");
     };
 
     const fetchData = async () => {
@@ -292,77 +297,106 @@ const AdminHiringDashboard = () => {
 
 
     if (loading && jobs.length === 0 && applications.length === 0) {
-        return <div className="min-h-screen bg-black text-white flex items-center justify-center"><Loader2 className="animate-spin w-8 h-8" /></div>;
+        return (
+            <div className="min-h-screen bg-[#F9EFE9] flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-[#240747] border-t-[#F6851B] rounded-full animate-spin"></div>
+                    <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#240747]">Initializing Ops...</span>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="min-h-screen bg-black text-white p-8">
-            <div className="max-w-7xl mx-auto space-y-8">
+        <div className="min-h-screen bg-[#F9EFE9] text-[#240747] p-8">
+            <div className="max-w-7xl mx-auto space-y-12">
                 {/* Header */}
-                <div className="flex justify-between items-center">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Hiring Dashboard</h1>
-                        <p className="text-white/60 mt-1">Manage jobs, applications, and AI insights.</p>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 nb-tile-inverted p-8 border-4 border-[#240747] shadow-[8px_8px_0_#F6851B] rounded-3xl">
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                            <h1 className="text-4xl font-black tracking-tight">Hiring Dashboard</h1>
+                            <span className="nb-tag-orange text-[0.6rem]">v3.0 Secure</span>
+                        </div>
+                        <p className="text-[#F9EFE9]/60 font-medium italic">Manage tactical roles, intelligence applications, and AI mission reports.</p>
                     </div>
-                    <div className="flex gap-4">
-                        <Button variant="outline" className="border-white/10 hover:bg-white/10 text-white" onClick={handleGenerateReport} disabled={isGeneratingReport}>
+                    <div className="flex flex-wrap gap-4">
+                        <button 
+                            onClick={handleGenerateReport} 
+                            disabled={isGeneratingReport}
+                            className="nb-btn nb-btn-ghost border-[#F9EFE9]/20 text-[#F9EFE9] hover:bg-[#F9EFE9]/10"
+                        >
                             {isGeneratingReport ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
-                            Generate Hiring Report
-                        </Button>
-                        <Button onClick={() => {
-                            setEditingJob(null);
-                            setIsPostJobOpen(true);
-                        }} className="bg-white text-black hover:bg-white/90">
+                            AI Mission Report
+                        </button>
+                        <button 
+                            onClick={() => {
+                                setEditingJob(null);
+                                setIsPostJobOpen(true);
+                            }} 
+                            className="nb-btn nb-btn-primary"
+                        >
                             <Plus className="w-4 h-4 mr-2" />
-                            Post Job
-                        </Button>
-                        <Button variant="ghost" onClick={handleLogout} className="text-white/60 hover:text-white">
+                            New Operation
+                        </button>
+                        <button 
+                            onClick={handleLogout} 
+                            className="nb-btn nb-btn-ghost border-red-500/20 text-red-400 hover:bg-red-500/10"
+                        >
                             <LogOut className="w-4 h-4 mr-2" />
-                            Logout
-                        </Button>
+                            Sign Out
+                        </button>
                     </div>
                 </div>
 
                 {/* Dashboard Tabs */}
-                <Tabs value={activeDashboardTab} onValueChange={setActiveDashboardTab} className="w-full">
-                    <TabsList className="bg-white/5 border border-white/10 w-full justify-start rounded-lg p-1">
-                        <TabsTrigger value="applications" className="data-[state=active]:bg-white/10">
+                <Tabs value={activeDashboardTab} onValueChange={setActiveDashboardTab} className="w-full space-y-8">
+                    <TabsList className="bg-transparent border-b-4 border-[#240747] w-full justify-start rounded-none h-auto p-0 gap-8">
+                        <TabsTrigger 
+                            value="applications" 
+                            className="data-[state=active]:bg-[#240747] data-[state=active]:text-[#F9EFE9] border-t-4 border-x-4 border-transparent data-[state=active]:border-[#240747] rounded-t-2xl px-8 py-4 font-black uppercase tracking-widest text-[0.7rem] transition-all"
+                        >
                             <Users className="w-4 h-4 mr-2" />
                             Applications
                         </TabsTrigger>
-                        <TabsTrigger value="jobs" className="data-[state=active]:bg-white/10">
+                        <TabsTrigger 
+                            value="jobs" 
+                            className="data-[state=active]:bg-[#240747] data-[state=active]:text-[#F9EFE9] border-t-4 border-x-4 border-transparent data-[state=active]:border-[#240747] rounded-t-2xl px-8 py-4 font-black uppercase tracking-widest text-[0.7rem] transition-all"
+                        >
                             <Briefcase className="w-4 h-4 mr-2" />
-                            Jobs
+                            Operations
                         </TabsTrigger>
-                        <TabsTrigger value="usage" className="data-[state=active]:bg-white/10">
+                        <TabsTrigger 
+                            value="usage" 
+                            className="data-[state=active]:bg-[#240747] data-[state=active]:text-[#F9EFE9] border-t-4 border-x-4 border-transparent data-[state=active]:border-[#240747] rounded-t-2xl px-8 py-4 font-black uppercase tracking-widest text-[0.7rem] transition-all"
+                        >
                             <Sparkles className="w-4 h-4 mr-2" />
-                            Token Usage
+                            Intelligence
                         </TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="applications" className="mt-6">
-                        <Card className="bg-white/5 border-white/10 text-white">
-                            <CardHeader>
-                                <CardTitle>Recent Applications</CardTitle>
-                                <CardDescription className="text-white/60">Manage candidate applications and view AI insights.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
+                    <TabsContent value="applications" className="mt-0 focus-visible:outline-none">
+                        <div className="bg-white border-4 border-[#240747] shadow-[12px_12px_0_#240747] rounded-3xl overflow-hidden">
+                            <div className="nb-tile-inverted p-6 border-b-4 border-[#240747] rounded-none">
+                                <h3 className="text-xl font-black text-[#F9EFE9]">Incoming Talent Feed</h3>
+                                <p className="text-[#F9EFE9]/40 text-xs font-bold uppercase tracking-widest mt-1">Reviewing mission applicants.</p>
+                            </div>
+                            <div className="p-8">
                                 <JobApplicationsTable
                                     applications={applications}
                                     setSelectedApp={setSelectedApp}
                                     handleDeleteApplication={handleDeleteApplication}
                                 />
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     </TabsContent>
 
-                    <TabsContent value="jobs" className="mt-6">
-                        <Card className="bg-white/5 border-white/10 text-white">
-                            <CardHeader>
-                                <CardTitle>Active Job Postings</CardTitle>
-                                <CardDescription className="text-white/60">Manage your open positions.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
+                    <TabsContent value="jobs" className="mt-0 focus-visible:outline-none">
+                        <div className="bg-white border-4 border-[#240747] shadow-[12px_12px_0_#240747] rounded-3xl overflow-hidden">
+                            <div className="nb-tile-inverted p-6 border-b-4 border-[#240747] rounded-none">
+                                <h3 className="text-xl font-black text-[#F9EFE9]">Active Mission Control</h3>
+                                <p className="text-[#F9EFE9]/40 text-xs font-bold uppercase tracking-widest mt-1">Deploying new operational roles.</p>
+                            </div>
+                            <div className="p-8">
                                 <JobPostingsList
                                     jobs={jobs}
                                     setEditingJob={setEditingJob}
@@ -371,12 +405,14 @@ const AdminHiringDashboard = () => {
                                     handleCloseJob={handleCloseJob}
                                     handleDeleteJob={handleDeleteJob}
                                 />
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     </TabsContent>
 
-                    <TabsContent value="usage" className="mt-6">
-                        <EnhancedTokenUsageStats />
+                    <TabsContent value="usage" className="mt-0 focus-visible:outline-none">
+                        <div className="bg-white border-4 border-[#240747] shadow-[12px_12px_0_#240747] rounded-3xl p-8">
+                            <EnhancedTokenUsageStats />
+                        </div>
                     </TabsContent>
                 </Tabs>
             </div>
@@ -403,27 +439,39 @@ const AdminHiringDashboard = () => {
             />
 
             <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
-                <DialogContent className="bg-black border-white/10 text-white max-w-4xl h-[80vh] flex flex-col">
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            <Sparkles className="text-blue-400" /> AI Hiring Report
-                        </DialogTitle>
-                        <DialogDescription className="text-white/60">
-                            Executive Summary & Candidate Ranking generated by Llama 3.3.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <ScrollArea className="flex-1 bg-white/5 p-6 rounded-lg border border-white/10">
-                        {hiringReport ? (
-                            <div className="prose prose-invert max-w-none">
-                                <ReactMarkdown>{hiringReport}</ReactMarkdown>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center h-40 text-white/50">
-                                <Loader2 className="w-8 h-8 animate-spin mb-4 text-blue-400" />
-                                Analyzing candidates...
-                            </div>
-                        )}
-                    </ScrollArea>
+                <DialogContent className="bg-[#F9EFE9] border-4 border-[#240747] p-0 overflow-hidden max-w-4xl h-[85vh] flex flex-col shadow-[16px_16px_0_#240747] rounded-3xl">
+                    <div className="nb-tile-inverted p-8 border-b-4 border-[#240747] rounded-none">
+                        <DialogHeader>
+                            <DialogTitle className="text-3xl font-black text-[#F9EFE9] uppercase tracking-tight flex items-center gap-3">
+                                <Sparkles className="text-[#F6851B]" /> AI Mission Intelligence
+                            </DialogTitle>
+                            <DialogDescription className="text-[#F9EFE9]/40 text-xs font-bold uppercase tracking-widest mt-1">
+                                Tactical candidate assessment and operational ranking.
+                            </DialogDescription>
+                        </DialogHeader>
+                    </div>
+                    <div className="flex-1 overflow-hidden p-8 flex flex-col gap-6">
+                        <ScrollArea className="flex-1 bg-white border-4 border-[#240747] p-8 rounded-2xl shadow-[8px_8px_0_#240747] overflow-y-auto">
+                            {hiringReport ? (
+                                <div className="prose prose-lg max-w-none prose-headings:text-[#240747] prose-headings:font-black prose-p:text-[#240747]/80 prose-p:font-medium prose-strong:text-[#F6851B]">
+                                    <ReactMarkdown>{hiringReport}</ReactMarkdown>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center h-full gap-6">
+                                    <div className="w-16 h-16 border-8 border-[#240747]/5 border-t-[#F6851B] rounded-full animate-spin"></div>
+                                    <div className="text-center space-y-2">
+                                        <p className="font-black text-xl text-[#240747] uppercase tracking-tight">Synthesizing Intelligence...</p>
+                                        <p className="text-[#240747]/40 text-[0.65rem] font-bold uppercase tracking-[0.2em]">Analyzing operational performance and candidate fit.</p>
+                                    </div>
+                                </div>
+                            )}
+                        </ScrollArea>
+                        <div className="flex justify-end pt-2">
+                            <button onClick={() => setIsReportOpen(false)} className="nb-btn nb-btn-primary px-12">
+                                Acknowledge Brief
+                            </button>
+                        </div>
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

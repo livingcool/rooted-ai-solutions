@@ -1,8 +1,12 @@
+"use client";
+
+
+
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useOutsideClick } from '../hooks/use-outside-click';
 import { X, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { createPortal } from 'react-dom';
 import {
   FaRobot, FaTriangleExclamation, FaSeedling,
@@ -348,7 +352,7 @@ const DossierModal = ({
               {/* CTA */}
               <div style={{ marginTop: '2rem' }}>
                 <Link
-                  to="/#contact"
+                  href="/#contact"
                   onClick={onClose}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '0.5rem',

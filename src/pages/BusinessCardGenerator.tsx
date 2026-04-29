@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,8 +13,8 @@ const BusinessCardGenerator = () => {
         title: "Chief AI Officer",
         company: "RootedAI Solutions",
         phone: "+91 98765 43210",
-        email: "john.doe@rootedai.com",
-        website: "www.rootedai.com",
+        email: "john.doe@rootedai.co.in",
+        website: "www.rootedai.co.in",
         address: "Bangalore, India",
     });
 
@@ -217,7 +218,7 @@ const BusinessCardGenerator = () => {
                                         type="email"
                                         value={formData.email}
                                         onChange={handleInputChange}
-                                        placeholder="john@rootedai.com"
+                                        placeholder="john@rootedai.co.in"
                                         className="bg-black/20 border-white/10 focus-visible:ring-primary/50"
                                     />
                                 </div>
@@ -233,7 +234,7 @@ const BusinessCardGenerator = () => {
                                         name="website"
                                         value={formData.website}
                                         onChange={handleInputChange}
-                                        placeholder="www.rootedai.com"
+                                        placeholder="www.rootedai.co.in"
                                         className="bg-black/20 border-white/10 focus-visible:ring-primary/50"
                                     />
                                 </div>

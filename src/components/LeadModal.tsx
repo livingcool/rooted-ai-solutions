@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 interface LeadModalProps {
   isOpen: boolean;
@@ -20,9 +22,17 @@ const C = {
 export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = React.useRef<ReCAPTCHA>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (!captchaToken) {
+      toast.error("Please complete the reCAPTCHA verification");
+      return;
+    }
+
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -155,7 +165,15 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                       required
                       rows={4}
                       style={{ ...inputStyle, resize: 'none' }}
-                      placeholder="Briefly describe your hardware perception challenges..."
+                    />
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}>
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                      onChange={(token) => setCaptchaToken(token)}
+                      theme="light"
                     />
                   </div>
 

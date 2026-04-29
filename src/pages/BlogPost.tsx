@@ -1,5 +1,7 @@
+
+
 import { useEffect, useState } from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link, Navigate } from "next/link";
 // import { blogPosts } from "@/data/blogPosts"; // Deprecated
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin, Copy, Mail, Send } from "lucide-react";

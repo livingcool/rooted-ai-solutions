@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,8 +9,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Lock, ArrowRight } from "lucide-react";
 
 const AdminPassSet = () => {
-    const { orgSlug } = useParams();
-    const navigate = useNavigate();
+    const params = useParams();
+    const orgSlug = params?.orgSlug;
+    const router = useRouter();
     const { toast } = useToast();
 
     const [password, setPassword] = useState("");
@@ -53,7 +55,7 @@ const AdminPassSet = () => {
             // Redirect to the organization dashboard
             // Assuming existing route architecture supports /:orgSlug or similar
             // If not, we might need to adjust, but based on request:
-            navigate(`/${orgSlug}`);
+            router.push(`/${orgSlug}`);
 
         } catch (error: any) {
             console.error("Error setting password:", error);
@@ -68,60 +70,60 @@ const AdminPassSet = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background px-4">
-            {/* Background effects similar to other auth pages if possible, 
-            but keeping it simple and clean for now as requested "change the ui accordingly" 
-        */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background -z-10" />
-
-            <Card className="w-full max-w-md border-white/10 bg-black/40 backdrop-blur-xl">
-                <CardHeader className="space-y-1 text-center">
-                    <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-4">
-                        <Lock className="w-8 h-8 text-primary" />
+        <div className="min-h-screen bg-[#F9EFE9] flex items-center justify-center p-6">
+            <div className="absolute inset-0 bg-[#240747]/5 -z-10" />
+            <Card className="w-full max-w-md bg-white border-4 border-[#240747] shadow-[12px_12px_0_#240747] rounded-3xl overflow-hidden">
+                <CardHeader className="nb-tile-inverted p-8 border-b-4 border-[#240747] rounded-none">
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 bg-[#F6851B] rounded-xl flex items-center justify-center text-[#240747]">
+                            <Lock className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <CardTitle className="text-2xl font-black uppercase tracking-tight">Security Protocol</CardTitle>
+                            <CardDescription className="text-[#F9EFE9]/40 text-xs font-bold uppercase tracking-widest mt-0.5">
+                                Set Access Key for {orgSlug?.toString().replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            </CardDescription>
+                        </div>
                     </div>
-                    <CardTitle className="text-2xl font-bold tracking-tight">
-                        Set Admin Password
-                    </CardTitle>
-                    <CardDescription>
-                        Secure your admin account for {orgSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    </CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-2">
+                <CardContent className="p-8">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-3">
+                            <label className="text-[0.6rem] font-black uppercase tracking-widest text-[#240747]/40 ml-1">New Access Key</label>
                             <Input
                                 type="password"
-                                placeholder="New Password"
+                                placeholder="Min 6 characters"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
-                                className="bg-white/5 border-white/10"
+                                className="bg-[#F9EFE9] border-2 border-[#240747] p-4 h-auto rounded-xl font-bold focus:outline-none focus:ring-4 focus:ring-[#F6851B]/20 transition-all shadow-[4px_4px_0_#240747]"
                             />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
+                            <label className="text-[0.6rem] font-black uppercase tracking-widest text-[#240747]/40 ml-1">Confirm Access Key</label>
                             <Input
                                 type="password"
-                                placeholder="Confirm Password"
+                                placeholder="Re-enter key"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 required
-                                className="bg-white/5 border-white/10"
+                                className="bg-[#F9EFE9] border-2 border-[#240747] p-4 h-auto rounded-xl font-bold focus:outline-none focus:ring-4 focus:ring-[#F6851B]/20 transition-all shadow-[4px_4px_0_#240747]"
                             />
                         </div>
-                        <Button
+                        <button
                             type="submit"
-                            className="w-full"
+                            className="w-full nb-btn nb-btn-primary h-14 text-lg font-black uppercase tracking-tight mt-4 flex items-center justify-center gap-2"
                             disabled={isLoading}
                         >
                             {isLoading ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                <Loader2 className="h-5 w-5 animate-spin" />
                             ) : (
                                 <>
-                                    Set Password & Continue
-                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                    Finalize Credential
+                                    <ArrowRight className="h-5 w-5" />
                                 </>
                             )}
-                        </Button>
+                        </button>
                     </form>
                 </CardContent>
             </Card>

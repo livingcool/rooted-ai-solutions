@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { motion } from "framer-motion";
 import { Star, Quote, ExternalLink, ShieldCheck, Award, MessageSquare } from "lucide-react";

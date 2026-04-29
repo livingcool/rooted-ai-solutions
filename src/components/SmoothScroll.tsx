@@ -1,3 +1,6 @@
+
+'use client';
+
 import { ReactNode, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';

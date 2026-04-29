@@ -437,28 +437,30 @@ export const CandidateDetailDialog = ({
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="bg-black border-white/10 text-white max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-                    <DialogHeader>
-                        <DialogTitle>Candidate Performance Dashboard</DialogTitle>
-                        <DialogDescription className="text-white/60">
-                            Comprehensive analysis of candidate profile and assessment.
-                        </DialogDescription>
-                    </DialogHeader>
+                <DialogContent className="bg-[#F9EFE9] border-4 border-[#240747] p-0 overflow-hidden max-w-5xl max-h-[90vh] flex flex-col shadow-[16px_16px_0_#240747] rounded-3xl">
+                    <div className="nb-tile-inverted p-8 border-b-4 border-[#240747] rounded-none">
+                        <DialogHeader>
+                            <DialogTitle className="text-3xl font-black text-[#F9EFE9] uppercase tracking-tight">Candidate Profile: {selectedApp.full_name}</DialogTitle>
+                            <DialogDescription className="text-[#F9EFE9]/40 text-xs font-bold uppercase tracking-widest mt-1">
+                                Tactical performance analysis and operational assessment.
+                            </DialogDescription>
+                        </DialogHeader>
+                    </div>
                     <div className="flex-1 overflow-y-auto pr-4 min-h-0">
                         <div className="space-y-8 p-1">
                             {/* Header Section */}
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h3 className="text-2xl font-bold">{selectedApp.full_name}</h3>
-                                    <div className="flex items-center gap-4 mt-1 text-white/60">
-                                        <span>{selectedApp.email}</span>
+                                    <h3 className="text-4xl font-black text-[#240747]">{selectedApp.full_name}</h3>
+                                    <div className="flex items-center gap-4 mt-2 text-[#240747]/60 font-bold">
+                                        <span className="flex items-center gap-2"><Globe size={14} className="text-[#F6851B]" /> {selectedApp.email}</span>
                                         <span>•</span>
-                                        <span>{selectedApp.phone}</span>
+                                        <span className="flex items-center gap-2"><Briefcase size={14} className="text-[#F6851B]" /> {selectedApp.phone}</span>
                                     </div>
-                                    <div className="flex flex-col items-start gap-3 mt-2">
-                                        <Badge className={`${getStatusColor(selectedApp.status)} border-0 px-3 py-1 text-sm`}>
+                                    <div className="flex flex-col items-start gap-3 mt-4">
+                                        <span className={`nb-tag-orange text-sm px-4 py-1`}>
                                             {selectedApp.status}
-                                        </Badge>
+                                        </span>
                                     </div>
                                 </div>
 
@@ -554,55 +556,56 @@ export const CandidateDetailDialog = ({
                             </div>
 
                             {/* Metrics Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <Card className="bg-white/5 border-white/10">
-                                    <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-white/60">Resume Match</CardTitle></CardHeader>
-                                    <CardContent>
-                                        <div className="flex items-end justify-between">
-                                            <div className="text-3xl font-bold">{selectedApp.ai_score || 0}%</div>
-                                            <div className={`text-sm mb-1 ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>
-                                                {selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'Excellent' : 'Good'}
-                                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="bg-white border-4 border-[#240747] p-6 shadow-[8px_8px_0_#240747] rounded-2xl">
+                                    <h4 className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B] mb-4">Resume Integrity</h4>
+                                    <div className="flex items-end justify-between">
+                                        <div className="text-4xl font-black text-[#240747]">{selectedApp.ai_score || 0}%</div>
+                                        <div className={`text-xs font-black uppercase tracking-widest ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'text-green-600' : 'text-orange-500'}`}>
+                                            {selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'Optimal' : 'Standard'}
                                         </div>
-                                        <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
-                                            <div className={`h-full rounded-full ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'bg-green-500' : 'bg-yellow-500'}`} style={{ width: `${selectedApp.ai_score || 0}%` }} />
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                                <Card className="bg-white/5 border-white/10">
-                                    <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-white/60">Communication</CardTitle></CardHeader>
-                                    <CardContent>
-                                        {(() => {
-                                            const interviews = (selectedApp as any).interviews || [];
-                                            const score = interviews.length > 0 ? interviews[0].ai_score : 0;
-                                            return (
-                                                <>
-                                                    <div className="flex items-end justify-between">
-                                                        <div className="text-3xl font-bold">{score > 0 ? `${score}%` : 'N/A'}</div>
-                                                        {score > 0 && <div className={`text-sm mb-1 ${score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>{score >= 80 ? 'Excellent' : 'Average'}</div>}
-                                                    </div>
-                                                    <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
-                                                        <div className={`h-full rounded-full ${score >= 80 ? 'bg-white' : 'bg-white/40'}`} style={{ width: `${score}%` }} />
-                                                    </div>
-                                                </>
-                                            );
-                                        })()}
-                                    </CardContent>
-                                </Card>
-                                <Card className="bg-white/5 border-white/10">
-                                    <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-white/60">Timeline</CardTitle></CardHeader>
-                                    <CardContent>
-                                        <div className="space-y-2 text-sm">
-                                            <div className="flex justify-between"><span className="text-white/60">Applied</span><span>{new Date(selectedApp.created_at).toLocaleDateString()}</span></div>
-                                            {(selectedApp as any).communication_deadline && (
-                                                <div className="flex justify-between">
-                                                    <span className="text-white/60">Deadline</span>
-                                                    <span className={new Date((selectedApp as any).communication_deadline) < new Date() ? 'text-red-400' : ''}>{new Date((selectedApp as any).communication_deadline).toLocaleDateString()}</span>
+                                    </div>
+                                    <div className="h-4 bg-[#240747]/5 border-2 border-[#240747] rounded-full mt-4 overflow-hidden">
+                                        <div className={`h-full ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'bg-[#F6851B]' : 'bg-[#240747]'}`} style={{ width: `${selectedApp.ai_score || 0}%` }} />
+                                    </div>
+                                </div>
+
+                                <div className="bg-white border-4 border-[#240747] p-6 shadow-[8px_8px_0_#240747] rounded-2xl">
+                                    <h4 className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B] mb-4">Communication Clarity</h4>
+                                    {(() => {
+                                        const interviews = (selectedApp as any).interviews || [];
+                                        const score = interviews.length > 0 ? interviews[0].ai_score : 0;
+                                        return (
+                                            <>
+                                                <div className="flex items-end justify-between">
+                                                    <div className="text-4xl font-black text-[#240747]">{score > 0 ? `${score}%` : 'N/A'}</div>
+                                                    {score > 0 && <div className={`text-xs font-black uppercase tracking-widest ${score >= 80 ? 'text-green-600' : 'text-orange-500'}`}>{score >= 80 ? 'Optimal' : 'Standard'}</div>}
                                                 </div>
-                                            )}
+                                                <div className="h-4 bg-[#240747]/5 border-2 border-[#240747] rounded-full mt-4 overflow-hidden">
+                                                    <div className={`h-full ${score >= 80 ? 'bg-[#F6851B]' : 'bg-[#240747]/40'}`} style={{ width: `${score}%` }} />
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
+                                </div>
+
+                                <div className="bg-white border-4 border-[#240747] p-6 shadow-[8px_8px_0_#240747] rounded-2xl">
+                                    <h4 className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B] mb-4">Deployment Log</h4>
+                                    <div className="space-y-3 text-xs font-bold text-[#240747]">
+                                        <div className="flex justify-between border-b border-[#240747]/10 pb-2">
+                                            <span className="opacity-50 uppercase tracking-widest">Applied</span>
+                                            <span>{new Date(selectedApp.created_at).toLocaleDateString()}</span>
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                        {(selectedApp as any).communication_deadline && (
+                                            <div className="flex justify-between">
+                                                <span className="opacity-50 uppercase tracking-widest">Deadline</span>
+                                                <span className={new Date((selectedApp as any).communication_deadline) < new Date() ? 'text-red-600' : ''}>
+                                                    {new Date((selectedApp as any).communication_deadline).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Stepper */}

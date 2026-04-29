@@ -32,18 +32,12 @@ const Seo = ({
             {/* Basic Meta Tags */}
             <title>{title.includes('RootedAI') ? title : `${title} | RootedAI`}</title>
             <meta name="description" content={description} />
-            <meta name="keywords" content={[...(keywords || []), "Engineering Intelligence", "Complexity Simplified", "Autonomous Automation", "AI Safety", "Data Archaeology", "RootedAI"].join(', ')} />
+            <meta name="keywords" content={[...(keywords || []), "Robotics AI", "Computer Vision", "Perception Systems", "AI Engineering", "RootedAI"].join(', ')} />
             <link rel="canonical" href={fullUrl} />
-
-            {/* Geo Tags */}
-            <meta name="geo.region" content={structuredData?.["address"]?.["addressRegion"] || "IN-TN"} />
-            <meta name="geo.placename" content={structuredData?.["address"]?.["addressLocality"] || "Hosur"} />
-            <meta name="geo.position" content={structuredData?.["geo"] ? `${structuredData["geo"]["latitude"]};${structuredData["geo"]["longitude"]}` : "12.7409;77.8253"} />
-            <meta name="ICBM" content={structuredData?.["geo"] ? `${structuredData["geo"]["latitude"]}, ${structuredData["geo"]["longitude"]}` : "12.7409, 77.8253"} />
 
             {/* Open Graph Tags */}
             <meta property="og:title" content={title} />
-            <meta property="og:site_name" content="RootedAI" />
+            <meta property="og:site_name" content="Rooted AI Solutions" />
             <meta property="og:description" content={description} />
             <meta property="og:image" content={siteUrl + ogImage} />
             <meta property="og:url" content={fullUrl} />

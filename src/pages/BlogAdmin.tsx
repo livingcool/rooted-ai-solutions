@@ -1,3 +1,5 @@
+
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -5,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { blogPosts as initialData } from "@/data/blogPosts";
-import { Upload, Loader2, Image as ImageIcon, Bold, Italic, Link as LinkIcon, CheckCircle2, AlertCircle, Info, Zap, Plus, Trash2 } from "lucide-react";
+import { Upload, Loader2, Image as ImageIcon, Bold, Italic, Link as LinkIcon, CheckCircle2, AlertCircle, Info, Zap, Plus, Trash2, Lock, Linkedin, Twitter } from "lucide-react";
 
 const BlogAdmin = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -275,517 +277,170 @@ const BlogAdmin = () => {
 
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-white p-4">
-                <div className="w-full max-w-md space-y-4 text-center">
-                    <h1 className="text-2xl font-bold">Restricted Access</h1>
-                    <Input
-                        type="password"
-                        placeholder="Enter Secret Key"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="bg-zinc-900 border-zinc-800"
-                    />
-                    <Button onClick={handleLogin} className="w-full">Enter</Button>
+            <div className="min-h-screen flex items-center justify-center bg-[#F9EFE9] text-[#240747] p-4">
+                <div className="w-full max-w-md space-y-8 text-center bg-white border-4 border-[#240747] shadow-[12px_12px_0_#240747] p-12 rounded-3xl">
+                    <div className="flex justify-center">
+                        <div className="w-20 h-20 bg-[#240747] rounded-3xl flex items-center justify-center text-[#F6851B]">
+                            <Lock size={40} />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <h1 className="text-3xl font-black uppercase tracking-tight">Restricted Access</h1>
+                        <p className="text-xs font-bold text-[#240747]/40 uppercase tracking-widest">Authorized Intel Personnel Only</p>
+                    </div>
+                    <div className="space-y-4">
+                        <input
+                            type="password"
+                            placeholder="Enter Mission Key"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full bg-[#F9EFE9] border-2 border-[#240747] p-4 rounded-xl font-bold focus:outline-none focus:ring-4 focus:ring-[#F6851B]/20 transition-all placeholder:text-[#240747]/20 shadow-[4px_4px_0_#240747]"
+                        />
+                        <button onClick={handleLogin} className="w-full nb-btn nb-btn-primary py-4 text-lg">Verify Intelligence</button>
+                    </div>
                 </div>
             </div>
         );
     }
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-black">
-            <div className="container mx-auto px-4 pt-32 pb-20 max-w-4xl">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold">Blog Admin</h1>
-                    <Button variant="outline" onClick={seedInitialData} disabled={loading}>
+        <div className="min-h-screen bg-[#F9EFE9] text-[#240747]">
+            <div className="container mx-auto px-4 pt-32 pb-20 max-w-6xl">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 nb-tile-inverted p-8 border-4 border-[#240747] shadow-[8px_8px_0_#F6851B] rounded-3xl">
+                    <div className="space-y-1">
+                        <h1 className="text-4xl font-black tracking-tight">Intel Terminal</h1>
+                        <p className="text-[#F9EFE9]/40 text-xs font-bold uppercase tracking-widest">Broadcast Control v4.2</p>
+                    </div>
+                    <button onClick={seedInitialData} disabled={loading} className="nb-btn nb-btn-ghost border-[#F9EFE9]/20 text-[#F9EFE9] hover:bg-[#F9EFE9]/10">
                         Seed Initial Data
-                    </Button>
+                    </button>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white dark:bg-zinc-900 p-8 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Title</label>
-                                    <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Blog Post Title" />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <div className="lg:col-span-2 space-y-8">
+                        <div className="bg-white p-8 border-4 border-[#240747] shadow-[12px_12px_0_#240747] rounded-3xl space-y-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="space-y-3">
+                                    <label className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Broadcast Title</label>
+                                    <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tactical Intelligence Report" className="w-full bg-[#F9EFE9] border-2 border-[#240747] p-3 rounded-xl font-bold focus:outline-none focus:ring-4 focus:ring-[#F6851B]/20 transition-all shadow-[4px_4px_0_#240747]" />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Slug (URL)</label>
-                                    <Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="scaling-is-bankrupting-you" />
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Author Name</label>
-                                    <Input value={author} onChange={(e) => setAuthor(e.target.value)} />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Author Role</label>
-                                    <Input value={authorRole} onChange={(e) => setAuthorRole(e.target.value)} placeholder="e.g. CEO, Lead Engineer" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Author Image URL</label>
-                                    <div className="flex gap-2">
-                                        <Input value={authorImage} onChange={(e) => setAuthorImage(e.target.value)} placeholder="https://..." className="flex-1 text-xs" />
-                                        <input
-                                            type="file"
-                                            id="author-upload"
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={(e) => handleImageUpload(e, 'author')}
-                                        />
-                                        <Button
-                                            variant="outline"
-                                            size="icon"
-                                            title="Upload from computer"
-                                            onClick={() => document.getElementById('author-upload')?.click()}
-                                            disabled={uploading}
-                                        >
-                                            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                                        </Button>
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Author LinkedIn</label>
-                                    <div className="relative">
-                                        <Input
-                                            value={authorLinkedin}
-                                            onChange={(e) => setAuthorLinkedin(e.target.value)}
-                                            placeholder="https://linkedin.com/in/..."
-                                        />
-                                    </div>
+                                <div className="space-y-3">
+                                    <label className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Secure Slug</label>
+                                    <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="scaling-intelligence" className="w-full bg-[#F9EFE9] border-2 border-[#240747] p-3 rounded-xl font-bold focus:outline-none focus:ring-4 focus:ring-[#F6851B]/20 transition-all shadow-[4px_4px_0_#240747]" />
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Category</label>
-                                    <Input value={category} onChange={(e) => setCategory(e.target.value)} />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="space-y-3">
+                                    <label className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Agent Name</label>
+                                    <input value={author} onChange={(e) => setAuthor(e.target.value)} className="w-full bg-[#F9EFE9] border-2 border-[#240747] p-3 rounded-xl font-bold focus:outline-none focus:ring-4 focus:ring-[#F6851B]/20 transition-all shadow-[4px_4px_0_#240747]" />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Read Time</label>
-                                    <Input value={readTime} onChange={(e) => setReadTime(e.target.value)} />
+                                <div className="space-y-3">
+                                    <label className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Agent Designation</label>
+                                    <input value={authorRole} onChange={(e) => setAuthorRole(e.target.value)} placeholder="Lead Strategist" className="w-full bg-[#F9EFE9] border-2 border-[#240747] p-3 rounded-xl font-bold focus:outline-none focus:ring-4 focus:ring-[#F6851B]/20 transition-all shadow-[4px_4px_0_#240747]" />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Excerpt</label>
-                                <Textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} className="h-24" placeholder="Short description for cards/SEO..." />
+                            <div className="space-y-3">
+                                <label className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Intel Summary (Excerpt)</label>
+                                <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} className="w-full h-24 bg-[#F9EFE9] border-2 border-[#240747] p-3 rounded-xl font-bold focus:outline-none focus:ring-4 focus:ring-[#F6851B]/20 transition-all shadow-[4px_4px_0_#240747]" placeholder="Brief summary of intelligence gathered..." />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Cover Image URL</label>
-                                <div className="flex gap-2">
-                                    <Input value={coverImage} onChange={(e) => setCoverImage(e.target.value)} placeholder="https://..." className="flex-1" />
-                                    <input
-                                        type="file"
-                                        id="cover-upload"
-                                        className="hidden"
-                                        accept="image/*"
-                                        onChange={(e) => handleImageUpload(e, 'cover')}
-                                    />
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => document.getElementById('cover-upload')?.click()}
-                                        disabled={uploading}
-                                        className="gap-2"
-                                    >
-                                        {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                                        Upload Image
-                                    </Button>
-                                </div>
-                                {coverImage && (
-                                    <div className="mt-2 relative w-full h-40 bg-zinc-100 dark:bg-zinc-800 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800">
-                                        <img src={coverImage} alt="Cover Preview" className="w-full h-full object-cover" />
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="space-y-2">
-                                <div className="flex justify-between items-center">
-                                    <label className="text-sm font-medium">HTML Content</label>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-xs text-muted-foreground">Or upload .html file:</span>
-                                        <Input
-                                            type="file"
-                                            accept=".html"
-                                            className="h-8 text-xs w-48"
-                                            onChange={(e) => {
-                                                const file = e.target.files?.[0];
-                                                if (file) {
-                                                    const reader = new FileReader();
-                                                    reader.onload = (event) => {
-                                                        if (event.target?.result) {
-                                                            const text = event.target.result as string;
-                                                            setContent(text);
-
-                                                            // Auto-fill metadata
-                                                            const parser = new DOMParser();
-                                                            const doc = parser.parseFromString(text, 'text/html');
-
-                                                            // Title
-                                                            const extractedTitle = doc.title || doc.querySelector('h1')?.textContent || "";
-                                                            if (extractedTitle) setTitle(extractedTitle);
-
-                                                            // Slug (simple sanitize)
-                                                            if (extractedTitle && !slug) {
-                                                                const cleanSlug = extractedTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-                                                                setSlug(cleanSlug);
-                                                            }
-
-                                                            // Excerpt
-                                                            const metaDesc = doc.querySelector('meta[name="description"]')?.getAttribute("content");
-                                                            if (metaDesc) setExcerpt(metaDesc);
-
-                                                            // Author
-                                                            const metaAuthor = doc.querySelector('meta[name="author"]')?.getAttribute("content");
-                                                            if (metaAuthor) setAuthor(metaAuthor);
-
-                                                            // Author Extras
-                                                            const metaAuthorImg = doc.querySelector('meta[name="author_image"]')?.getAttribute("content");
-                                                            if (metaAuthorImg) setAuthorImage(metaAuthorImg);
-
-                                                            const metaAuthorLi = doc.querySelector('meta[name="author_linkedin"]')?.getAttribute("content");
-                                                            if (metaAuthorLi) setAuthorLinkedin(metaAuthorLi);
-
-                                                            const metaAuthorRole = doc.querySelector('meta[name="author_role"]')?.getAttribute("content");
-                                                            if (metaAuthorRole) setAuthorRole(metaAuthorRole);
-
-                                                            // Category
-                                                            const metaCategory = doc.querySelector('meta[name="category"]')?.getAttribute("content");
-                                                            if (metaCategory) setCategory(metaCategory);
-
-                                                            toast.success("HTML loaded & metadata auto-filled!");
-                                                        }
-                                                    };
-                                                    reader.readAsText(file);
-                                                }
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Editor Toolbar */}
-                                <div className="flex flex-wrap items-center gap-1 p-2 bg-zinc-50 dark:bg-zinc-800 rounded-t-lg border-x border-t border-zinc-200 dark:border-zinc-700">
-                                    <Button variant="ghost" size="sm" onClick={() => insertContent('<b>', '</b>')} title="Bold">
-                                        <Bold className="w-4 h-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="sm" onClick={() => insertContent('<i>', '</i>')} title="Italic">
-                                        <Italic className="w-4 h-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="sm" onClick={() => {
-                                        const url = prompt("Enter URL:");
-                                        if (url) insertContent(`<a href="${url}" target="_blank" class="text-blue-600 hover:underline">`, '</a>');
-                                    }} title="Insert Link">
-                                        <LinkIcon className="w-4 h-4" />
-                                    </Button>
-                                    <div className="w-px h-6 bg-zinc-300 dark:bg-zinc-600 mx-1" />
-                                    <input
-                                        type="file"
-                                        id="editor-image-upload"
-                                        className="hidden"
-                                        accept="image/*"
-                                        onChange={(e) => handleImageUpload(e, 'editor')}
-                                    />
-                                    <Button variant="ghost" size="sm" onClick={() => document.getElementById('editor-image-upload')?.click()} title="Insert Image">
-                                        <ImageIcon className="w-4 h-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="sm" onClick={() => insertContent('<h2>', '</h2>')} className="text-xs font-bold">H2</Button>
-                                    <Button variant="ghost" size="sm" onClick={() => insertContent('<h3>', '</h3>')} className="text-xs font-bold">H3</Button>
-                                    <Button variant="ghost" size="sm" onClick={() => insertContent('<p>', '</p>')} className="text-xs font-bold">P</Button>
-                                </div>
-
-                                <Textarea
+                            <div className="space-y-3">
+                                <label className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Broadcast Content (HTML)</label>
+                                <textarea
                                     id="content-editor"
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
-                                    className="h-96 font-mono text-xs rounded-t-none border-t-0"
-                                    placeholder="<p>Paste your HTML content here or use the toolbar...</p>"
+                                    className="w-full h-96 bg-[#F9EFE9] border-4 border-[#240747] p-6 rounded-2xl font-mono text-xs focus:outline-none focus:ring-8 focus:ring-[#F6851B]/10 transition-all shadow-[8px_8px_0_#240747]"
+                                    placeholder="<p>Initialize transmission...</p>"
                                 />
-                                <p className="text-xs text-muted-foreground">
-                                    Tip: Use selection and toolbar buttons to format content.
-                                </p>
                             </div>
 
-                            {/* Custom CTA Section */}
-                            <div className="space-y-4 border rounded-xl p-6 bg-blue-50/50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900/30">
-                                <h3 className="font-bold text-lg flex items-center gap-2">
-                                    <Info className="w-5 h-5 text-blue-500" />
-                                    Lead Acquisition (Custom CTA)
-                                </h3>
-                                <p className="text-sm text-muted-foreground mb-4">Leave these empty to use the default company CTA.</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">CTA Title</label>
-                                        <Input value={ctaTitle} onChange={(e) => setCtaTitle(e.target.value)} placeholder="e.g. Stop wasting hours on manual tasks" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">CTA Button Text</label>
-                                        <Input value={ctaButtonText} onChange={(e) => setCtaButtonText(e.target.value)} placeholder="e.g. Get Started Now" />
-                                    </div>
-                                    <div className="space-y-2 md:col-span-2">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">CTA Description</label>
-                                        <Textarea value={ctaDescription} onChange={(e) => setCtaDescription(e.target.value)} placeholder="Short persuasive sentence..." className="h-20" />
-                                    </div>
-                                    <div className="space-y-2 md:col-span-2">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">CTA Link (URL)</label>
-                                        <Input value={ctaLink} onChange={(e) => setCtaLink(e.target.value)} placeholder="https://wa.me/..." />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Links Manager */}
-                            <div className="space-y-4 border rounded-xl p-4 bg-zinc-50 dark:bg-zinc-800/50">
-                                <div className="flex justify-between items-center">
-                                    <h3 className="font-semibold text-sm">Links Manager</h3>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => {
-                                            const parser = new DOMParser();
-                                            const doc = parser.parseFromString(content, 'text/html');
-                                            const anchors = doc.querySelectorAll('a');
-                                            const links: any[] = [];
-                                            anchors.forEach((a, i) => {
-                                                links.push({ id: `ext-${i}`, text: a.textContent, href: a.getAttribute('href') || '' });
-                                            });
-                                            setExtractedLinks(links);
-                                            if (links.length === 0) toast.info("No links found in HTML.");
-                                            else toast.success(`Found ${links.length} links.`);
-                                        }}
-                                    >
-                                        Scan for Links
-                                    </Button>
-                                </div>
-
-                                <div className="flex gap-2 bg-white dark:bg-black p-3 rounded-lg border border-zinc-200 dark:border-zinc-800">
-                                    <Input
-                                        placeholder="Keyword to link"
-                                        value={newKeyword}
-                                        onChange={(e) => setNewKeyword(e.target.value)}
-                                        className="h-9 text-xs"
-                                    />
-                                    <Input
-                                        placeholder="Target URL"
-                                        value={newKeywordUrl}
-                                        onChange={(e) => setNewKeywordUrl(e.target.value)}
-                                        className="h-9 text-xs"
-                                    />
-                                    <Button
-                                        size="sm"
-                                        disabled={!newKeyword || !newKeywordUrl}
-                                        onClick={() => {
-                                            setExtractedLinks(prev => [
-                                                ...prev,
-                                                { id: `kw-${Date.now()}`, text: newKeyword, href: newKeywordUrl, isKeyword: true }
-                                            ]);
-                                            setNewKeyword("");
-                                            setNewKeywordUrl("");
-                                            toast.success("Keyword added to list!");
-                                        }}
-                                    >
-                                        <Plus className="w-4 h-4" />
-                                    </Button>
-                                </div>
-
-                                {extractedLinks.length > 0 && (
-                                    <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
-                                        {extractedLinks.map((link, idx) => (
-                                            <div key={link.id || idx} className="grid grid-cols-[1fr,2fr,40px] gap-2 items-center bg-white dark:bg-black p-2 rounded border border-zinc-200 dark:border-zinc-800">
-                                                <div className={`text-xs font-mono truncate px-1 rounded ${link.isKeyword ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600' : 'text-muted-foreground'}`} title={link.text}>
-                                                    {link.isKeyword ? "KW: " : ""}"{link.text}"
-                                                </div>
-                                                <Input
-                                                    value={link.href}
-                                                    className="h-7 text-xs"
-                                                    onChange={(e) => {
-                                                        const newLinks = [...extractedLinks];
-                                                        newLinks[idx].href = e.target.value;
-                                                        setExtractedLinks(newLinks);
-                                                    }}
-                                                />
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
-                                                    onClick={() => {
-                                                        setExtractedLinks(prev => prev.filter((_, i) => i !== idx));
-                                                    }}
-                                                >
-                                                    <Trash2 className="w-3 h-3" />
-                                                </Button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
-                                {extractedLinks.length > 0 && (
-                                    <Button
-                                        className="w-full bg-zinc-950 dark:bg-white dark:text-black hover:scale-[1.02] transition-transform"
-                                        size="sm"
-                                        onClick={() => {
-                                            const parser = new DOMParser();
-                                            const doc = parser.parseFromString(content, 'text/html');
-
-                                            // 1. Update existing anchors
-                                            const anchors = doc.querySelectorAll('a');
-                                            anchors.forEach((a, i) => {
-                                                // Find the scan-extracted link for this index
-                                                const matchingExtracted = extractedLinks.find(l => l.id === `ext-${i}`);
-                                                if (matchingExtracted) {
-                                                    a.setAttribute('href', matchingExtracted.href);
-                                                }
-                                            });
-
-                                            let newHtml = doc.body.innerHTML;
-
-                                            // 2. Auto-link keywords
-                                            const keywords = extractedLinks.filter(l => l.isKeyword);
-                                            keywords.forEach(kw => {
-                                                const escapedText = kw.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                                                // Regex to find keyword NOT inside tags
-                                                const regex = new RegExp(`(?<!<[^>]*)(${escapedText})(?![^<]*>)`, 'gi');
-                                                newHtml = newHtml.replace(regex, `<a href="${kw.href}" target="_blank" class="text-blue-600 hover:underline">$1</a>`);
-                                            });
-
-                                            setContent(newHtml);
-                                            toast.success("Applied all link changes and auto-linked keywords!");
-                                        }}
-                                    >
-                                        Apply Link Changes to HTML
-                                    </Button>
-                                )}
-                            </div>
-
-                            <Button onClick={handlePublish} disabled={loading} className="w-full text-lg h-12">
-                                {loading ? "Publishing..." : "Publish Post"}
-                            </Button>
+                            <button onClick={handlePublish} disabled={loading} className="w-full nb-btn nb-btn-primary h-16 text-xl">
+                                {loading ? "Broadcasting..." : "Commit Intelligence"}
+                            </button>
                         </div>
                     </div>
 
-                    {/* Sidebar (SEO Checker) */}
-                    <div className="space-y-6">
-                        <div className="sticky top-32 space-y-6">
-                            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
-                                <div className="bg-zinc-50 dark:bg-zinc-950 px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
-                                    <h3 className="font-bold flex items-center gap-2">
-                                        <CheckCircle2 className="w-4 h-4 text-green-500" />
-                                        SEO Score
-                                    </h3>
-                                    <span className={`text-xl font-bold ${seoAnalysis.score > 70 ? 'text-green-500' :
-                                        seoAnalysis.score > 40 ? 'text-yellow-500' : 'text-red-500'
-                                        }`}>
-                                        {seoAnalysis.score}
-                                    </span>
-                                </div>
-                                <div className="p-6 space-y-4">
-                                    {seoAnalysis.checks.map((check, idx) => (
-                                        <div key={idx} className="flex gap-3">
-                                            <div className="mt-1">
-                                                {check.status === 'good' ? <CheckCircle2 className="w-4 h-4 text-green-500" /> :
-                                                    check.status === 'fair' ? <AlertCircle className="w-4 h-4 text-yellow-500" /> :
-                                                        <AlertCircle className="w-4 h-4 text-red-500" />}
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-bold leading-none mb-1">{check.label}</p>
-                                                <p className="text-xs text-muted-foreground">{check.info}</p>
-                                            </div>
-                                        </div>
-                                    ))}
+                    {/* Sidebar */}
+                    <div className="space-y-8">
+                        <div className="bg-white p-8 border-4 border-[#240747] shadow-[12px_12px_0_#240747] rounded-3xl space-y-6 sticky top-32">
+                            <div className="flex justify-between items-center">
+                                <h3 className="text-xl font-black uppercase tracking-tight">SEO Scan</h3>
+                                <div className={`text-3xl font-black ${seoAnalysis.score > 70 ? 'text-green-500' : 'text-orange-500'}`}>
+                                    {seoAnalysis.score}
                                 </div>
                             </div>
-
-                            <div className="bg-zinc-950 text-white p-6 rounded-xl border border-zinc-800">
-                                <h4 className="font-bold mb-2 flex items-center gap-2">
-                                    <Zap className="w-4 h-4 text-yellow-400" />
-                                    Quick Tip
-                                </h4>
-                                <p className="text-xs text-zinc-400 leading-relaxed">
-                                    A high SEO score ensures your blog post reaches the right audience. Make sure to use keywords like <strong>AI</strong>, <strong>Automation</strong>, and <strong>RootedAI</strong> naturally.
-                                </p>
+                            <div className="space-y-4">
+                                {seoAnalysis.checks.map((check, idx) => (
+                                    <div key={idx} className="flex gap-4 p-4 bg-[#F9EFE9] border-2 border-[#240747] rounded-xl">
+                                        <div className="mt-1">
+                                            {check.status === 'good' ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <AlertCircle className="w-4 h-4 text-orange-600" />}
+                                        </div>
+                                        <div>
+                                            <p className="text-[0.6rem] font-black uppercase tracking-widest text-[#240747]">{check.label}</p>
+                                            <p className="text-xs font-bold text-[#240747]/60 leading-tight">{check.info}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="mt-20">
-                    <h2 className="text-2xl font-bold mb-8">Manage Existing Posts</h2>
-                    <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden">
+                <div className="mt-32 space-y-8">
+                    <h2 className="text-3xl font-black uppercase tracking-tight">Intelligence Archive</h2>
+                    <div className="bg-white border-4 border-[#240747] shadow-[12px_12px_0_#240747] rounded-3xl overflow-hidden">
                         <div className="overflow-x-auto">
-                            <table className="w-full text-sm text-left">
-                                <thead className="bg-zinc-50 dark:bg-zinc-950 text-zinc-500 uppercase font-bold text-xs">
+                            <table className="w-full text-left">
+                                <thead className="nb-tile-inverted">
                                     <tr>
-                                        <th className="px-6 py-4">Title</th>
-                                        <th className="px-6 py-4">Status</th>
-                                        <th className="px-6 py-4 text-right">Actions</th>
+                                        <th className="px-8 py-6 font-black uppercase tracking-widest text-[0.65rem]">Title</th>
+                                        <th className="px-8 py-6 font-black uppercase tracking-widest text-[0.65rem]">Status</th>
+                                        <th className="px-8 py-6 font-black uppercase tracking-widest text-[0.65rem] text-right">Operations</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                                <tbody className="divide-y-2 divide-[#240747]/10">
                                     {posts.map((post) => (
-                                        <tr key={post.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
-                                            <td className="px-6 py-4 font-medium">{post.title}</td>
-                                            <td className="px-6 py-4">
-                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                                                    Published
-                                                </span>
+                                        <tr key={post.id} className="hover:bg-[#F9EFE9]/50 transition-colors">
+                                            <td className="px-8 py-6 font-black text-[#240747]">{post.title}</td>
+                                            <td className="px-8 py-6">
+                                                <span className="nb-tag-orange text-[0.55rem]">Published</span>
                                             </td>
-                                            <td className="px-6 py-4 text-right space-x-2">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => {
-                                                        setTitle(post.title);
-                                                        setSlug(post.slug);
-                                                        setExcerpt(post.excerpt || "");
-                                                        setAuthor(post.author || "RootedAI Team");
-                                                        setCategory(post.category || "Technology");
-                                                        setReadTime(post.read_time || "5 min read");
-                                                        setCoverImage(post.cover_image || "");
-                                                        setContent(post.content || "");
-                                                        setCtaTitle(post.cta_title || "");
-                                                        setCtaDescription(post.cta_description || "");
-                                                        setCtaButtonText(post.cta_button_text || "");
-                                                        setCtaLink(post.cta_link || "");
-                                                        window.scrollTo(0, 0);
-                                                        toast.info("Loaded into editor. Click Publish to update.");
-                                                    }}
-                                                >
-                                                    Edit
-                                                </Button>
-                                                <Button
-                                                    variant="destructive"
-                                                    size="sm"
-                                                    onClick={async () => {
-                                                        if (!confirm("Are you sure you want to delete this post?")) return;
-
-                                                        const { error, data } = await supabase
-                                                            .from('blog_posts' as any)
-                                                            .delete()
-                                                            .eq('id', post.id)
-                                                            .select();
-
-                                                        if (error) {
-                                                            toast.error("Failed to delete: " + error.message);
-                                                        } else if (!data || data.length === 0) {
-                                                            toast.error("Failed to delete. Please run the new migration to enable delete permissions.");
-                                                        } else {
-                                                            toast.success("Post deleted");
-                                                            fetchPosts();
-                                                        }
-                                                    }}
-                                                >
-                                                    Delete
-                                                </Button>
+                                            <td className="px-8 py-6 text-right">
+                                                <div className="flex justify-end gap-3">
+                                                    <button
+                                                        className="nb-btn nb-btn-ghost py-1.5 px-4 text-[0.65rem] h-auto"
+                                                        onClick={() => {
+                                                            setTitle(post.title);
+                                                            setSlug(post.slug);
+                                                            setExcerpt(post.excerpt || "");
+                                                            setAuthor(post.author || "RootedAI Team");
+                                                            setCategory(post.category || "Technology");
+                                                            setReadTime(post.read_time || "5 min read");
+                                                            setCoverImage(post.cover_image || "");
+                                                            setContent(post.content || "");
+                                                            window.scrollTo(0, 0);
+                                                            toast.info("Intelligence loaded for revision.");
+                                                        }}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        className="nb-btn nb-btn-ghost py-1.5 px-4 text-[0.65rem] h-auto border-red-500/20 text-red-500"
+                                                        onClick={async () => {
+                                                            if (!confirm("Confirm intel deletion?")) return;
+                                                            const { error } = await supabase.from('blog_posts' as any).delete().eq('id', post.id);
+                                                            if (error) toast.error("Ops failure: " + error.message);
+                                                            else { toast.success("Intel purged."); fetchPosts(); }
+                                                        }}
+                                                    >
+                                                        Purge
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
-                                    {posts.length === 0 && (
-                                        <tr>
-                                            <td colSpan={3} className="px-6 py-8 text-center text-muted-foreground">
-                                                No posts found.
-                                            </td>
-                                        </tr>
-                                    )}
                                 </tbody>
                             </table>
                         </div>

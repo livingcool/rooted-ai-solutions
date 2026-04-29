@@ -1,5 +1,7 @@
+
+
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "next/link";
 import { supabase } from "@/integrations/supabase/client";
 import { Job } from "@/types/hiring";
 import { Button } from "@/components/ui/button";

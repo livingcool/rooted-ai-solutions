@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+'use client';
+
+import Link from "next/link";
 import { ArrowRight, Linkedin, Github, Twitter } from "lucide-react";
 
 const FOOTER_LINKS = {
@@ -15,12 +17,6 @@ const FOOTER_LINKS = {
     { name: "Blog",         href: "/blog" },
     { name: "Careers",      href: "/careers" },
     { name: "Pricing",      href: "/pricing" },
-  ],
-  Locations: [
-    { name: "Hosur",      href: "/locations/hosur" },
-    { name: "Coimbatore", href: "/locations/coimbatore" },
-    { name: "Bangalore",  href: "/locations/bangalore" },
-    { name: "Chennai",    href: "/locations/chennai" },
   ],
 };
 
@@ -127,7 +123,7 @@ export default function Footer() {
 
             {/* CTA */}
             <Link
-              to="/#contact"
+              href="/#contact"
               className="nb-btn nb-btn-primary"
               style={{ fontSize: "0.75rem", padding: "0.65rem 1.2rem", marginTop: "auto" }}
             >
@@ -166,7 +162,7 @@ export default function Footer() {
                 {links.map((link) => (
                   <Link
                     key={link.name}
-                    to={link.href}
+                    href={link.href}
                     style={{
                       fontFamily:    "var(--font-display)",
                       fontWeight:    600,
@@ -211,13 +207,13 @@ export default function Footer() {
               textTransform: "uppercase",
             }}
           >
-            © {new Date().getFullYear()} RootedAI. Chennai, India → Serving Global Enterprises.
+            © {new Date().getFullYear()} RootedAI. Serving Global Enterprises.
           </p>
           <div style={{ display: "flex", gap: "1.5rem" }}>
             {["Privacy", "Terms", "FAQ"].map((item) => (
               <Link
                 key={item}
-                to={`/${item.toLowerCase()}`}
+                href={`/${item.toLowerCase()}`}
                 style={{
                   fontFamily:    "var(--font-mono)",
                   fontSize:      "0.62rem",

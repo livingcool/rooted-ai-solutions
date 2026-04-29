@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { ArrowRight, Cpu, Zap, Globe, Brain, Shield, BarChart3, Users, Lock } from "lucide-react";
 
 const SERVICES = [

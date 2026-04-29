@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -215,7 +216,7 @@ export default function FAQ() {
             </p>
           </div>
           <a
-            href="mailto:hello@rootedai.com"
+            href="mailto:hello@rootedai.co.in"
             className="nb-btn nb-btn-primary"
             style={{ textDecoration: "none" }}
           >

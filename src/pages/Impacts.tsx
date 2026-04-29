@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { ArrowRight, TrendingUp, Clock, DollarSign, Shield, Users, Zap } from "lucide-react";
 
 const METRICS = [
@@ -14,14 +14,14 @@ const CASE_HIGHLIGHTS = [
   {
     industry:  "Manufacturing",
     headline:  "Line-level defect detection reduced scrap rate by 34%",
-    detail:    "A Hosur-based auto-parts manufacturer deployed our vision AI agent across 3 production lines.",
+    detail:    "An industrial auto-parts manufacturer deployed our vision AI agent across 3 production lines.",
     metric:    "34% scrap reduction",
     bg:        "#F9EFE9",
   },
   {
     industry:  "Logistics",
     headline:  "AI dispatch routing cut fuel costs by 28% in 6 weeks",
-    detail:    "A Chennai 3PL operator automated route optimization for 200+ daily deliveries.",
+    detail:    "A leading 3PL operator automated route optimization for 200+ daily deliveries.",
     metric:    "28% fuel savings",
     bg:        "#EDD5C0",
   },

@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'next/link';
 import { Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
 const FinalInterviewLogin = () => {
