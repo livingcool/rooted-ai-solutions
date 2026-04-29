@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 
@@ -58,7 +60,7 @@ const PLANS = [
   },
 ];
 
-export default function Pricing() {
+export default function PricingPage() {
   return (
     <div style={{ background: "#240747" }}>
       {/* Header */}
@@ -246,7 +248,7 @@ export default function Pricing() {
 
               {/* CTA */}
               <Link
-                to={plan.href}
+                href={plan.href}
                 className="nb-btn"
                 style={{
                   background:  plan.invert ? "#F6851B" : "#240747",

@@ -1,10 +1,11 @@
+'use client';
 
 import React, { useState } from 'react';
-import { useNavigate } from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
-const FinalInterviewLogin = () => {
-    const navigate = useNavigate();
+export default function FinalInterviewLoginPage() {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [passcode, setPasscode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -29,8 +30,7 @@ const FinalInterviewLogin = () => {
             }
 
             if (data.token) {
-                // Success - Redirect to Interview Room
-                navigate(`/final-interview?token=${data.token}`);
+                router.push(`/final-interview?token=${data.token}`);
             }
         } catch (err: any) {
             setError(err.message);
@@ -41,7 +41,6 @@ const FinalInterviewLogin = () => {
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
-            {/* Background Effects */}
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-900/20 rounded-full blur-3xl animate-pulse"></div>
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-900/20 rounded-full blur-3xl animate-pulse delay-700"></div>
 
@@ -115,6 +114,4 @@ const FinalInterviewLogin = () => {
             </div>
         </div>
     );
-};
-
-export default FinalInterviewLogin;
+}

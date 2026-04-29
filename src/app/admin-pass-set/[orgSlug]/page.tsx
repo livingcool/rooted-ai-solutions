@@ -1,3 +1,4 @@
+'use client';
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -7,8 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Lock, ArrowRight } from "lucide-react";
+import React from "react";
 
-const AdminPassSet = () => {
+export default function AdminPassSetPage() {
     const params = useParams();
     const orgSlug = params?.orgSlug;
     const router = useRouter();
@@ -52,9 +54,6 @@ const AdminPassSet = () => {
                 description: "Redirecting to your dashboard...",
             });
 
-            // Redirect to the organization dashboard
-            // Assuming existing route architecture supports /:orgSlug or similar
-            // If not, we might need to adjust, but based on request:
             router.push(`/${orgSlug}`);
 
         } catch (error: any) {
@@ -129,6 +128,4 @@ const AdminPassSet = () => {
             </Card>
         </div>
     );
-};
-
-export default AdminPassSet;
+}

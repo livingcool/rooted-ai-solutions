@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { JobApplication } from "@/types/hiring";
-import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send, Sparkles, CheckCircle, XCircle, MoreVertical, MoveRight, Check, X, RefreshCcw } from "lucide-react";
+import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send, Sparkles, CheckCircle, XCircle, MoreVertical, MoveRight, Check, X, RefreshCcw, Briefcase } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getStatusColor } from "@/utils/adminUtils";
 import { InterviewInviteDialog } from "./InterviewInviteDialog";
@@ -268,9 +268,9 @@ export const CandidateDetailDialog = ({
         try {
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
-            const frontendUrl = import.meta.env.VITE_FRONTEND_URL || window.location.origin;
+            const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || window.location.origin;
 
-            await supabase.from('applications').update({ status: 'Technical Round' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Technical Round' }).eq('id', selectedApp.id);
 
             const emailSubject = `🎉 Technical Round Invitation - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.button{display:inline-block;padding:15px 30px;background:#667eea;color:white;text-decoration:none;border-radius:5px;margin:20px 0;font-weight:bold}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎉 Congratulations!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Great news! After carefully reviewing your communication assessment, we're impressed with your responses and would like to invite you to the <strong>Technical Round</strong> for the <strong>${jobTitle}</strong> position.</p><p>Your communication skills and personal growth mindset stood out, and we're excited to see your technical capabilities!</p><p style="text-align:center;"><a href="${frontendUrl}/candidate-status" class="button">Access Your Dashboard</a></p><p><strong>Next Steps:</strong></p><ul><li>Click the button above to access your candidate dashboard</li><li>Review the technical problem statement</li><li>Submit your solution via GitHub</li></ul><p>Best of luck with your technical assessment!</p><p>Warm regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -294,7 +294,7 @@ export const CandidateDetailDialog = ({
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
 
-            await supabase.from('applications').update({ status: 'Rejected' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Rejected' }).eq('id', selectedApp.id);
 
             const emailSubject = `Update on Your Application - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:#4a5568;color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>Application Update</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Thank you for taking the time to complete the communication assessment for the <strong>${jobTitle}</strong> position at RootedAI.</p><p>After careful consideration of all candidates, we have decided to move forward with other applicants whose qualifications more closely match our current needs.</p><p>We genuinely appreciate your interest in RootedAI and the effort you put into your application. We encourage you to apply for future opportunities that match your skills and experience.</p><p>We wish you all the best in your job search and future endeavors.</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -318,9 +318,9 @@ export const CandidateDetailDialog = ({
         try {
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
-            const frontendUrl = import.meta.env.VITE_FRONTEND_URL || window.location.origin;
+            const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || window.location.origin;
 
-            await supabase.from('applications').update({ status: 'Final Interview' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Final Interview' }).eq('id', selectedApp.id);
 
             const emailSubject = `🎉 Final Interview Invitation - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.button{display:inline-block;padding:15px 30px;background:#667eea;color:white;text-decoration:none;border-radius:5px;margin:20px 0;font-weight:bold}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎉 Excellent Work!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Congratulations! Your technical assessment was impressive, and we would love to invite you to the <strong>Final Interview</strong> for the <strong>${jobTitle}</strong> position.</p><p>This is the last step in our hiring process. We're excited to meet you!</p><p style="text-align:center;"><a href="${frontendUrl}/final-interview-login" class="button">Schedule Your Interview</a></p><p><strong>Next Steps:</strong></p><ul><li>Click the button above to access the scheduling portal</li><li>Choose a convenient time slot</li><li>Complete the final interview</li></ul><p>Looking forward to speaking with you!</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -344,7 +344,7 @@ export const CandidateDetailDialog = ({
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
 
-            await supabase.from('applications').update({ status: 'Rejected' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Rejected' }).eq('id', selectedApp.id);
 
             const emailSubject = `Update on Your Application - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:#4a5568;color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>Application Update</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Thank you for completing the technical assessment for the <strong>${jobTitle}</strong> position at RootedAI.</p><p>After careful review of your submission, we have decided to move forward with other candidates whose experience more closely aligns with our current needs.</p><p>We appreciate the time and effort you invested in this process and encourage you to apply for future opportunities that match your skills.</p><p>We wish you the very best in your career.</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -369,7 +369,7 @@ export const CandidateDetailDialog = ({
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
 
-            await supabase.from('applications').update({ status: 'Offered' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Offered' }).eq('id', selectedApp.id);
 
             const emailSubject = `🎊 Job Offer - ${jobTitle} at RootedAI`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.highlight{background:#d1fae5;padding:20px;border-left:4px solid #10b981;margin:20px 0}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎊 Congratulations!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>We are thrilled to extend an offer for the <strong>${jobTitle}</strong> position at RootedAI Solutions!</p><div class="highlight"><p><strong>What's Next:</strong></p><ul><li>Our HR team will contact you within 24 hours with offer details</li><li>You'll receive the formal offer letter via email</li><li>We'll discuss compensation, benefits, and start date</li></ul></div><p>Your performance throughout the hiring process has been outstanding, and we're excited to have you join our team!</p><p>Welcome to RootedAI! 🚀</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -393,7 +393,7 @@ export const CandidateDetailDialog = ({
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
 
-            await supabase.from('applications').update({ status: 'Rejected' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Rejected' }).eq('id', selectedApp.id);
 
             const emailSubject = `Update on Your Application - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:#4a5568;color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>Application Update</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Thank you for taking the time to complete the final interview for the <strong>${jobTitle}</strong> position at RootedAI.</p><p>After thorough consideration, we have decided to proceed with another candidate for this role.</p><p>We were impressed by your skills and experience, and we encourage you to apply for future positions that align with your background.</p><p>Thank you again for your interest in RootedAI, and we wish you continued success.</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -652,7 +652,7 @@ export const CandidateDetailDialog = ({
                                             <div className="flex justify-between items-center">
                                                 <h4 className="font-semibold text-white">AI Resume Analysis</h4>
                                                 <Button
-                                                    size="xs"
+                                                    size="sm"
                                                     variant="outline"
                                                     className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
                                                     disabled={loading}
@@ -758,7 +758,7 @@ export const CandidateDetailDialog = ({
                                                         </Badge>
                                                     )}
                                                     <Button
-                                                        size="xs"
+                                                        size="sm"
                                                         variant="outline"
                                                         className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
                                                         disabled={loading}
@@ -834,7 +834,7 @@ export const CandidateDetailDialog = ({
                                                 <CardTitle>Submission {i + 1}</CardTitle>
                                                 <div className="flex items-center gap-2">
                                                     <Button
-                                                        size="xs"
+                                                        size="sm"
                                                         variant="outline"
                                                         className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
                                                         disabled={loading}
@@ -986,7 +986,7 @@ export const CandidateDetailDialog = ({
                                                     <CardTitle>Interview Session</CardTitle>
                                                     <div className="flex gap-2 items-center">
                                                         <Button
-                                                            size="xs"
+                                                            size="sm"
                                                             variant="outline"
                                                             className="text-white/60 hover:text-white border-white/10 bg-transparent text-xs h-7"
                                                             disabled={loading}

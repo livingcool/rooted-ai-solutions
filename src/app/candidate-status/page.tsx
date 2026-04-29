@@ -1,31 +1,40 @@
-
+'use client';
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "next/link";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-const CandidateStatus = () => {
-    const navigate = useNavigate();
+export default function CandidateStatusPage() {
+    const router = useRouter();
     const [application, setApplication] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
-    const applicationId = sessionStorage.getItem('candidateId');
+    // Use a state for applicationId to avoid SSR issues with sessionStorage
+    const [applicationId, setApplicationId] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!applicationId) {
-            navigate('/candidate-login');
+        const id = sessionStorage.getItem('candidateId');
+        setApplicationId(id);
+        
+        if (!id) {
+            router.push('/candidate-login');
             return;
         }
-        fetchStatus();
+    }, [router]);
+
+    useEffect(() => {
+        if (applicationId) {
+            fetchStatus();
+        }
     }, [applicationId]);
 
     const fetchStatus = async () => {
         try {
             const { data, error } = await supabase
-                .from('applications')
+                .from('applications' as any)
                 .select('*, jobs(title)')
                 .eq('id', applicationId)
                 .single();
@@ -60,7 +69,7 @@ const CandidateStatus = () => {
                     title: "Technical Round Invitation",
                     description: "You have been invited to the Technical Round. Please proceed to the assessment.",
                     action: (
-                        <Button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => navigate('/technical-assessment')}>
+                        <Button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => router.push('/technical-assessment')}>
                             Start Technical Assessment
                         </Button>
                     )
@@ -72,7 +81,7 @@ const CandidateStatus = () => {
                     title: "Communication Round Invitation",
                     description: "You have been invited to the Communication Round. Please proceed to the assessment.",
                     action: (
-                        <Button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => navigate('/assessment')}>
+                        <Button className="mt-6 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => router.push('/assessment')}>
                             Start Communication Assessment
                         </Button>
                     )
@@ -135,13 +144,11 @@ const CandidateStatus = () => {
 
                 <Button variant="link" className="mt-8 text-white/40 hover:text-white" onClick={() => {
                     sessionStorage.removeItem('candidateId');
-                    navigate('/');
+                    router.push('/');
                 }}>
                     Back to Home
                 </Button>
             </div>
         </div>
     );
-};
-
-export default CandidateStatus;
+}

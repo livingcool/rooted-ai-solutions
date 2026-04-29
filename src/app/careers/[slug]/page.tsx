@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export default function JobDetailPage() {
     const params = useParams();
-    const slugOrId = params?.slug;
+    const slugOrId = Array.isArray(params?.slug) ? params.slug[0] : (params?.slug as string || "");
     const router = useRouter();
     const [job, setJob] = useState<any>(null);
     const [loading, setLoading] = useState(true);

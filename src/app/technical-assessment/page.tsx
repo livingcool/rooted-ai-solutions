@@ -1,7 +1,7 @@
-
+'use client';
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,8 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Upload, Github } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const TechnicalAssessment = () => {
-    const navigate = useNavigate();
+export default function TechnicalAssessmentPage() {
+    const router = useRouter();
     const { toast } = useToast();
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -27,30 +27,35 @@ const TechnicalAssessment = () => {
         costAnalysis: ""
     });
 
-    // Get ID from session
-    const applicationId = sessionStorage.getItem('candidateId');
+    const [applicationId, setApplicationId] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!applicationId) {
-            navigate('/candidate-login');
+        const id = sessionStorage.getItem('candidateId');
+        setApplicationId(id);
+        if (!id) {
+            router.push('/candidate-login');
             return;
         }
-        fetchApplication();
+    }, [router]);
+
+    useEffect(() => {
+        if (applicationId) {
+            fetchApplication();
+        }
     }, [applicationId]);
 
     const fetchApplication = async () => {
         try {
             const { data, error } = await supabase
-                .from('applications')
+                .from('applications' as any)
                 .select('*, jobs(title, technical_problem_statement)')
                 .eq('id', applicationId)
                 .single();
 
             if (error) throw error;
 
-            // Check Status to prevent re-entry
             if ((data as any).status !== 'Technical Round') {
-                navigate('/candidate-status');
+                router.push('/candidate-status');
                 return;
             }
 
@@ -69,7 +74,6 @@ const TechnicalAssessment = () => {
 
     const [videoFrames, setVideoFrames] = useState<string[]>([]);
 
-    // Helper to extract 3 frames from video
     const extractFrames = async (file: File): Promise<string[]> => {
         return new Promise((resolve) => {
             const video = document.createElement('video');
@@ -77,7 +81,6 @@ const TechnicalAssessment = () => {
             const ctx = canvas.getContext('2d');
             const frames: string[] = [];
 
-            // Create object URL
             video.src = URL.createObjectURL(file);
             video.muted = true;
             video.playsInline = true;
@@ -94,25 +97,24 @@ const TechnicalAssessment = () => {
                         video.onseeked = () => {
                             if (ctx) {
                                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                frames.push(canvas.toDataURL('image/jpeg', 0.7)); // Compress to 70% quality
+                                frames.push(canvas.toDataURL('image/jpeg', 0.7));
                             }
                             res();
                         };
                     });
                 };
 
-                // Capture at 20%, 50%, 80%
                 await seekAndCapture(duration * 0.2);
                 await seekAndCapture(duration * 0.5);
                 await seekAndCapture(duration * 0.8);
 
-                URL.revokeObjectURL(video.src); // Cleanup
+                URL.revokeObjectURL(video.src);
                 resolve(frames);
             };
 
             video.onerror = () => {
                 console.error("Error loading video for frame extraction");
-                resolve([]); // Resolve empty on error to not block submission
+                resolve([]);
             }
         });
     };
@@ -126,9 +128,7 @@ const TechnicalAssessment = () => {
             let documentationUrl = "";
             let capturedFrames: string[] = [];
 
-            // Upload Video if present
             if (videoFile) {
-                // 1. Extract Frames immediately (Client-side)
                 if (videoFrames.length === 0) {
                     toast({ title: "Processing Video...", description: "Analyzing video frames for AI review..." });
                     capturedFrames = await extractFrames(videoFile);
@@ -137,20 +137,16 @@ const TechnicalAssessment = () => {
                     capturedFrames = videoFrames;
                 }
 
-                // 2. Upload to Storage
                 const fileExt = videoFile.name.split('.').pop();
                 const fileName = `${applicationId}/technical_${Date.now()}.${fileExt}`;
                 const { error: uploadError } = await supabase.storage
-                    .from('technical-submissions')
-                    .upload(fileName, videoFile, {
-                        upsert: true
-                    });
+                    .from('technical-submissions' as any)
+                    .upload(fileName, videoFile, { upsert: true });
 
                 if (uploadError) throw uploadError;
                 videoUrl = fileName;
             }
 
-            // Upload Documentation if present
             if (documentationFile) {
                 const fileExt = documentationFile.name.split('.').pop()?.toLowerCase();
                 const allowedExts = ['pdf', 'doc', 'docx', 'ppt', 'pptx'];
@@ -161,18 +157,15 @@ const TechnicalAssessment = () => {
 
                 const docFileName = `${applicationId}/documentation_${Date.now()}.${fileExt}`;
                 const { error: docUploadError } = await supabase.storage
-                    .from('technical-documentation')
+                    .from('technical-documentation' as any)
                     .upload(docFileName, documentationFile, { upsert: true });
 
                 if (docUploadError) throw docUploadError;
                 documentationUrl = docFileName;
             }
 
-            // Save to Database
-            // 3. Update Existing Technical Assessment (Prevent Duplicates)
-            // Retrieve the pending assessment ID first
             const { data: existingAssessment, error: fetchError } = await supabase
-                .from('technical_assessments')
+                .from('technical_assessments' as any)
                 .select('id')
                 .eq('application_id', applicationId)
                 .order('created_at', { ascending: false })
@@ -182,7 +175,7 @@ const TechnicalAssessment = () => {
             if (fetchError || !existingAssessment) throw new Error("Could not find assessment record to update.");
 
             const { error: dbError } = await supabase
-                .from('technical_assessments')
+                .from('technical_assessments' as any)
                 .update({
                     video_url: videoUrl,
                     documentation_url: documentationUrl,
@@ -191,19 +184,17 @@ const TechnicalAssessment = () => {
                     tech_stack: formData.techStack,
                     process_flow: formData.processFlow,
                     cost_analysis: formData.costAnalysis,
-                    status: 'Submitted', // Ready for AI
+                    status: 'Submitted',
                     submitted_at: new Date().toISOString()
                 })
-                .eq('id', existingAssessment.id);
+                .eq('id', (existingAssessment as any).id);
 
             if (dbError) throw dbError;
 
-            // Trigger AI Analysis with Specific Assessment ID
-            // We use 'force: true' to ensure it runs immediately
             supabase.functions.invoke('analyze-technical-submission', {
                 body: {
                     applicationId,
-                    assessmentId: existingAssessment.id,
+                    assessmentId: (existingAssessment as any).id,
                     frames: capturedFrames,
                     force: true
                 }
@@ -211,15 +202,14 @@ const TechnicalAssessment = () => {
                 if (error) console.error("Error triggering AI analysis:", error);
             });
 
-            // Update Application Status
-            await supabase.from('applications').update({ status: 'Technical Round Completed' }).eq('id', applicationId);
+            await supabase.from('applications' as any).update({ status: 'Technical Round Completed' }).eq('id', applicationId);
 
             toast({
                 title: "Assessment Submitted",
                 description: "Your technical assessment has been submitted successfully.",
             });
 
-            navigate('/candidate-status'); // Navigate to status page
+            router.push('/candidate-status');
 
         } catch (error: any) {
             console.error("Error submitting assessment:", error);
@@ -245,7 +235,6 @@ const TechnicalAssessment = () => {
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
-            {/* Background Effect */}
             <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
                 <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2" />
                 <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 translate-y-1/2" />
@@ -268,8 +257,6 @@ const TechnicalAssessment = () => {
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6">
-
-                            {/* GitHub URL */}
                             <div className="space-y-2">
                                 <Label htmlFor="githubUrl">GitHub Repository URL</Label>
                                 <div className="relative">
@@ -285,7 +272,6 @@ const TechnicalAssessment = () => {
                                 </div>
                             </div>
 
-                            {/* Video Upload */}
                             <div className="space-y-2">
                                 <Label htmlFor="video">Demo Video (Optional)</Label>
                                 <div className="border-2 border-dashed border-white/10 rounded-lg p-6 text-center hover:bg-white/5 transition-colors cursor-pointer relative">
@@ -300,15 +286,9 @@ const TechnicalAssessment = () => {
                                     <p className="text-sm text-white/60">
                                         {videoFile ? videoFile.name : "Click to upload 1-minute demo video (Max 50MB)"}
                                     </p>
-                                    {videoFile && (
-                                        <p className="text-xs text-yellow-400 mt-2">
-                                            Note: Large videos may take a few minutes to upload. Please be patient after clicking Submit.
-                                        </p>
-                                    )}
                                 </div>
                             </div>
 
-                            {/* Documentation Upload */}
                             <div className="space-y-2">
                                 <Label htmlFor="documentation">Project Documentation (Optional)</Label>
                                 <div className="border-2 border-dashed border-white/10 rounded-lg p-6 text-center hover:bg-white/5 transition-colors cursor-pointer relative">
@@ -323,13 +303,9 @@ const TechnicalAssessment = () => {
                                     <p className="text-sm text-white/60">
                                         {documentationFile ? documentationFile.name : "Upload documentation (PDF, DOC, PPT)"}
                                     </p>
-                                    <p className="text-xs text-white/40 mt-1">
-                                        Accepted formats: PDF, DOC, DOCX, PPT, PPTX
-                                    </p>
                                 </div>
                             </div>
 
-                            {/* Text Areas */}
                             <div className="grid gap-6 md:grid-cols-2">
                                 <div className="space-y-2">
                                     <Label htmlFor="techStack">Tech Stack Used</Label>
@@ -377,14 +353,7 @@ const TechnicalAssessment = () => {
                             </div>
 
                             <Button type="submit" className="w-full bg-white text-black hover:bg-white/90" disabled={submitting}>
-                                {submitting ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                                        {videoFile ? "Uploading Video & Submitting..." : "Submitting Assessment..."}
-                                    </>
-                                ) : (
-                                    "Submit Assessment"
-                                )}
+                                {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Submit Assessment"}
                             </Button>
                         </form>
                     </CardContent>
@@ -392,6 +361,4 @@ const TechnicalAssessment = () => {
             </div>
         </div>
     );
-};
-
-export default TechnicalAssessment;
+}

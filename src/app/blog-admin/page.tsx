@@ -1,4 +1,4 @@
-
+'use client';
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { blogPosts as initialData } from "@/data/blogPosts";
 import { Upload, Loader2, Image as ImageIcon, Bold, Italic, Link as LinkIcon, CheckCircle2, AlertCircle, Info, Zap, Plus, Trash2, Lock, Linkedin, Twitter } from "lucide-react";
 
-const BlogAdmin = () => {
+export default function BlogAdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState("");
 
@@ -24,7 +24,7 @@ const BlogAdmin = () => {
     const [category, setCategory] = useState("Technology");
     const [readTime, setReadTime] = useState("5 min read");
     const [coverImage, setCoverImage] = useState("");
-    const [content, setContent] = useState(""); // This will hold the HTML
+    const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [posts, setPosts] = useState<any[]>([]);
     const [extractedLinks, setExtractedLinks] = useState<any[]>([]);
@@ -57,7 +57,7 @@ const BlogAdmin = () => {
     };
 
     const handleLogin = () => {
-        if (password === "G22a05n@03") { // Simple hardcoded secret for the "secret url"
+        if (password === "G22a05n@03") {
             setIsAuthenticated(true);
             toast.success("Welcome, Admin.");
         } else {
@@ -98,23 +98,18 @@ const BlogAdmin = () => {
             toast.success("Blog post published successfully!");
 
             // Trigger Newsletter
-            toast.promise(
-                supabase.functions.invoke('notify-subscribers', {
-                    body: {
-                        record: {
-                            title,
-                            slug,
-                            excerpt,
-                            cover_image: coverImage
-                        }
+            supabase.functions.invoke('notify-subscribers', {
+                body: {
+                    record: {
+                        title,
+                        slug,
+                        excerpt,
+                        cover_image: coverImage
                     }
-                }),
-                {
-                    loading: 'Sending newsletter to subscribers...',
-                    success: 'Newsletter queued!',
-                    error: 'Failed to trigger newsletter.'
                 }
-            );
+            }).then(({ error }) => {
+                if (error) console.error("Error triggering newsletter:", error);
+            });
 
             // Reset form
             setTitle("");
@@ -139,7 +134,7 @@ const BlogAdmin = () => {
         setLoading(true);
         try {
             for (const post of initialData) {
-                const { error } = await supabase
+                await supabase
                     .from('blog_posts' as any)
                     .upsert({
                         title: post.title,
@@ -151,8 +146,6 @@ const BlogAdmin = () => {
                         cover_image: post.coverImage,
                         content: post.content,
                     }, { onConflict: 'slug' });
-
-                if (error) console.error("Error seeding post:", post.title, error);
             }
             toast.success("Initial data seeded!");
             fetchPosts();
@@ -161,67 +154,6 @@ const BlogAdmin = () => {
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleImageUpload = async (event: any, field: 'cover' | 'author' | 'editor') => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        setUploading(true);
-        const toastId = toast.loading("Uploading image...");
-
-        try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const filePath = `${fileName}`;
-
-            const { error: uploadError } = await supabase.storage
-                .from('blog_images')
-                .upload(filePath, file);
-
-            if (uploadError) throw uploadError;
-
-            const { data } = supabase.storage
-                .from('blog_images')
-                .getPublicUrl(filePath);
-
-            if (field === 'cover') {
-                setCoverImage(data.publicUrl);
-            } else if (field === 'author') {
-                setAuthorImage(data.publicUrl);
-            } else {
-                // In-editor image insertion
-                insertContent(`<img src="${data.publicUrl}" alt="Blog Image" class="w-full rounded-2xl my-8" />\n`);
-            }
-            toast.success("Image uploaded!", { id: toastId });
-        } catch (error: any) {
-            console.error("Upload error:", error);
-            toast.error("Upload failed.", { id: toastId });
-        } finally {
-            setUploading(false);
-        }
-    };
-
-    const insertContent = (before: string, after: string = "") => {
-        const textarea = document.getElementById('content-editor') as HTMLTextAreaElement;
-        if (!textarea) {
-            // Fallback if not found
-            setContent(prev => prev + before + after);
-            return;
-        }
-
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = textarea.value;
-        const selectedText = text.substring(start, end);
-        const newText = text.substring(0, start) + before + selectedText + after + text.substring(end);
-
-        setContent(newText);
-
-        setTimeout(() => {
-            textarea.focus();
-            textarea.setSelectionRange(start + before.length, end + before.length);
-        }, 10);
     };
 
     const updateSeoScore = () => {
@@ -302,6 +234,7 @@ const BlogAdmin = () => {
             </div>
         );
     }
+
     return (
         <div className="min-h-screen bg-[#F9EFE9] text-[#240747]">
             <div className="container mx-auto px-4 pt-32 pb-20 max-w-6xl">
@@ -362,7 +295,6 @@ const BlogAdmin = () => {
                         </div>
                     </div>
 
-                    {/* Sidebar */}
                     <div className="space-y-8">
                         <div className="bg-white p-8 border-4 border-[#240747] shadow-[12px_12px_0_#240747] rounded-3xl space-y-6 sticky top-32">
                             <div className="flex justify-between items-center">
@@ -449,6 +381,4 @@ const BlogAdmin = () => {
             </div>
         </div>
     );
-};
-
-export default BlogAdmin;
+}

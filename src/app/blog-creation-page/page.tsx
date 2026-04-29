@@ -1,7 +1,7 @@
 'use client';
 
-import BlogAdmin from "@/pages/BlogAdmin";
+import BlogAdminPage from "../blog-admin/page";
 
-export default function BlogAdminPage() {
-    return <BlogAdmin />;
+export default function BlogAdminPageWrapper() {
+    return <BlogAdminPage />;
 }

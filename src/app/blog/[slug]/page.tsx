@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin, Copy, Mail, Send, Sparkles, ChevronRight, Share2 } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, User, Facebook, Twitter, Linkedin, Copy, Mail, Send } from "lucide-react";
+import Seo from "@/components/Seo";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
-export default function BlogPost() {
-    const params = useParams();
-    const slug = params?.slug;
+export default function BlogPostPage() {
+    const { slug } = useParams();
     const router = useRouter();
     const [post, setPost] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -18,6 +19,9 @@ export default function BlogPost() {
     const [toc, setToc] = useState<any[]>([]);
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
+            window.scrollTo(0, 0);
+        }
         if (slug) fetchPost();
     }, [slug]);
 
@@ -31,14 +35,14 @@ export default function BlogPost() {
 
             if (error) {
                 console.error('Error fetching post:', error);
-                router.push('/blog');
+                router.replace("/blog");
             } else {
                 setPost(data);
                 processContent((data as any).content);
             }
         } catch (error) {
             console.error('Error:', error);
-            router.push('/blog');
+            router.replace("/blog");
         } finally {
             setLoading(false);
         }
@@ -49,33 +53,34 @@ export default function BlogPost() {
 
         let cleanHtml = htmlContent.replace(/MetaTitle\s*:.*?(<br>|<\/p>)/i, '').replace(/MetaDescription\s*:.*?(<br>|<\/p>)/i, '');
 
-        if (typeof window !== 'undefined') {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(cleanHtml, 'text/html');
-            const headings = doc.querySelectorAll('h2, h3');
-            const tocItems: any[] = [];
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(cleanHtml, 'text/html');
+        const headings = doc.querySelectorAll('h2, h3');
+        const tocItems: any[] = [];
 
-            headings.forEach((heading, index) => {
-                const id = `heading-${index}`;
-                heading.id = id;
-                heading.classList.add('scroll-mt-32');
-                const fullText = heading.textContent || "";
-                const text = fullText.length > 50 ? fullText.substring(0, 50) + "..." : fullText;
-                tocItems.push({ id, text, level: heading.tagName.toLowerCase() });
+        headings.forEach((heading, index) => {
+            const id = `heading-${index}`;
+            heading.id = id;
+            heading.classList.add('scroll-mt-32');
+
+            const fullText = heading.textContent || "";
+            const text = fullText.length > 50 ? fullText.substring(0, 50) + "..." : fullText;
+
+            tocItems.push({
+                id,
+                text,
+                level: heading.tagName.toLowerCase()
             });
+        });
 
-            setProcessedContent(doc.body.innerHTML);
-            setToc(tocItems);
-        }
+        setProcessedContent(doc.body.innerHTML);
+        setToc(tocItems);
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#F9EFE9]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-4 border-[#240747] border-t-[#F6851B] rounded-full animate-spin"></div>
-                    <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#240747]">Synchronizing Intelligence...</span>
-                </div>
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black dark:border-white"></div>
             </div>
         );
     }
@@ -83,164 +88,210 @@ export default function BlogPost() {
     if (!post) return null;
 
     const handleShare = () => {
-        navigator.clipboard.writeText(window.location.href);
-        toast.success("Link copied to clipboard!");
+        if (typeof window !== 'undefined') {
+            navigator.clipboard.writeText(window.location.href);
+            toast.success("Link copied to clipboard!");
+        }
     };
 
     return (
-        <div className="min-h-screen bg-[#F9EFE9] text-[#240747]">
-            {/* ── Article Header ── */}
-            <header className="pt-32 pb-20 border-b-4 border-[#240747] bg-[#F9EFE9] blog-hero relative overflow-hidden">
-                <div className="container mx-auto px-6 max-w-7xl relative z-10">
-                    <Link href="/blog" className="nb-btn nb-btn-ghost mb-12 inline-flex items-center gap-2 py-2 px-4 text-xs">
-                        <ArrowLeft size={14} /> Back to Intel Log
-                    </Link>
+        <div className="min-h-screen relative bg-white dark:bg-black">
+            <Seo
+                title={`${post.title} | RootedAI Blog`}
+                description={post.excerpt}
+                canonical={`https://www.rootedai.co.in/blog/${post.slug}`}
+                ogImage={post.cover_image}
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "BlogPosting",
+                    "headline": post.title,
+                    "description": post.excerpt,
+                    "image": post.cover_image,
+                    "url": `https://www.rootedai.co.in/blog/${post.slug}`,
+                    "datePublished": post.created_at,
+                    "author": {
+                        "@type": "Organization",
+                        "name": "RootedAI Solutions",
+                        "url": "https://www.rootedai.co.in"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "RootedAI Solutions",
+                        "url": "https://www.rootedai.co.in",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "https://www.rootedai.co.in/logo.png"
+                        }
+                    }
+                }}
+            />
+            <div className="relative z-10">
+                <header className="pt-32 pb-20 relative bg-white dark:bg-zinc-950 text-foreground border-b border-zinc-100 dark:border-zinc-800">
+                    <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+                        <Link href="/blog" className="inline-flex items-center text-sm text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors mb-8 group">
+                            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+                            Back to Insights
+                        </Link>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                        <div className="lg:col-span-8 space-y-8">
-                            <div className="flex items-center gap-4">
-                                <span className="nb-tag-orange">{post.category || "Artificial Intelligence"}</span>
-                                <span className="text-[0.65rem] font-bold uppercase tracking-[0.2em] opacity-40">Insight ID: {post.id?.slice(0,8)}</span>
+                        <div className="space-y-6 max-w-4xl">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-800 text-xs font-bold uppercase tracking-wider">
+                                {post.category || "Artificial Intelligence"}
                             </div>
-                            
-                            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight">
+
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold tracking-tight leading-tight text-zinc-900 dark:text-white">
                                 {post.title}
                             </h1>
 
-                            <div className="flex flex-wrap items-center gap-8 pt-8 border-t-2 border-[#240747]/10">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-14 h-14 rounded-2xl border-2 border-[#240747] overflow-hidden bg-[#F6851B]/10">
-                                        {post.author_image ? (
-                                            <img src={post.author_image} alt={post.author} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-xl font-bold">{post.author?.charAt(0)}</div>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <div className="font-black text-lg leading-none mb-1">{post.author || "RootedAI Team"}</div>
-                                        <div className="text-[0.65rem] font-bold uppercase tracking-widest opacity-50">{post.author_role || "Strategic Engineer"}</div>
-                                    </div>
-                                </div>
+                            <div className="flex flex-wrap items-center gap-6 pt-6 mt-6 border-t border-zinc-100 dark:border-zinc-900">
+                                <div className="flex items-center gap-3">
+                                    {post.author_image ? (
+                                        <img
+                                            src={post.author_image}
+                                            alt={post.author}
+                                            className="w-12 h-12 rounded-full object-cover border border-zinc-200 dark:border-zinc-800"
+                                        />
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center overflow-hidden">
+                                            <User className="w-6 h-6 text-zinc-400 dark:text-zinc-600" />
+                                        </div>
+                                    )}
 
-                                <div className="flex items-center gap-8 text-[0.7rem] font-bold uppercase tracking-wider opacity-60">
-                                    <div className="flex items-center gap-2"><Calendar size={14} className="text-[#F6851B]" /> {new Date(post.published_at).toLocaleDateString()}</div>
-                                    <div className="flex items-center gap-2"><Clock size={14} className="text-[#F6851B]" /> {post.read_time}</div>
+                                    <div>
+                                        <div className="mb-0.5">
+                                            {post.author_linkedin ? (
+                                                <a href={post.author_linkedin} target="_blank" rel="noopener noreferrer" className="font-bold text-base text-zinc-900 dark:text-white leading-none hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2 group/author">
+                                                    {post.author || "RootedAI Team"}
+                                                    <Linkedin className="w-3 h-3 text-zinc-400 group-hover/author:text-blue-500 transition-colors" />
+                                                </a>
+                                            ) : (
+                                                <div className="font-bold text-base text-zinc-900 dark:text-white leading-none">
+                                                    {post.author || "RootedAI Team"}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {post.author_role && (
+                                            <div className="text-xs text-zinc-500 font-medium mb-1">
+                                                {post.author_role}
+                                            </div>
+                                        )}
+
+                                        <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+                                            <span>{new Date(post.published_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                            <span className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+                                            <span>{post.read_time}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                {/* Decorative Elements */}
-                <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#F6851B] opacity-5 rounded-full blur-3xl"></div>
-            </header>
+                </header>
 
-            {/* ── Main Content ── */}
-            <main className="py-20">
-                <div className="container mx-auto px-6 max-w-7xl">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                        {/* Sidebar */}
-                        <aside className="hidden lg:block lg:col-span-3">
-                            <div className="sticky top-32 space-y-12">
-                                <div className="space-y-4">
-                                    <h4 className="text-[0.6rem] font-black uppercase tracking-[0.2em] text-[#F6851B]">On this frequency</h4>
-                                    <nav className="flex flex-col gap-3">
+                <article className="py-16 md:py-24">
+                    <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                            <aside className="hidden lg:block lg:col-span-3">
+                                <div className="sticky top-32 space-y-4">
+                                    <p className="text-sm font-bold uppercase tracking-wider text-muted-foreground border-l-4 border-blue-600 pl-3">
+                                        In this Post
+                                    </p>
+                                    <nav className="flex flex-col space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
                                         {toc.map((item: any, idx: number) => (
-                                            <a 
-                                                key={idx} 
-                                                href={`#${item.id}`} 
-                                                className={`text-xs font-bold hover:text-[#F6851B] transition-colors leading-tight ${item.level === 'h3' ? 'pl-4 opacity-60' : ''}`}
+                                            <a
+                                                key={idx}
+                                                href={`#${item.id}`}
+                                                className={`hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-2 ${item.level === 'h3' ? 'pl-4' : ''}`}
                                             >
                                                 {item.text}
                                             </a>
                                         ))}
                                     </nav>
-                                </div>
 
-                                <div className="space-y-4">
-                                    <h4 className="text-[0.6rem] font-black uppercase tracking-[0.2em] text-[#F6851B]">Broadcast</h4>
+                                    <div className="pt-8 mt-8 border-t border-zinc-200 dark:border-zinc-800">
+                                        <p className="text-xs font-semibold mb-3 text-muted-foreground">SHARE</p>
+                                        <div className="flex gap-2">
+                                            <Button variant="outline" size="icon" onClick={handleShare} className="rounded-full w-8 h-8">
+                                                <Copy className="w-4 h-4" />
+                                            </Button>
+                                            <Button variant="outline" size="icon" className="rounded-full w-8 h-8 text-blue-500 hover:text-blue-600">
+                                                <Twitter className="w-4 h-4" />
+                                            </Button>
+                                            <Button variant="outline" size="icon" className="rounded-full w-8 h-8 text-blue-700 hover:text-blue-800">
+                                                <Linkedin className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-8 mt-8 border-t border-zinc-200 dark:border-zinc-800">
+                                        <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                                            <h4 className="font-bold mb-2 flex items-center gap-2">
+                                                <Mail className="w-4 h-4 text-blue-600" />
+                                                Stay Updated
+                                            </h4>
+                                            <p className="text-xs text-muted-foreground mb-4">Get the latest AI insights delivered to your inbox.</p>
+                                            <div className="space-y-2">
+                                                <Input
+                                                    placeholder="Enter your email"
+                                                    className="h-9 text-xs bg-white dark:bg-black"
+                                                />
+                                                <Button className="w-full h-9 text-xs gap-2" onClick={() => toast.success("Subscribed successfully!")}>
+                                                    Subscribe
+                                                    <Send className="w-3 h-3" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aside>
+
+                            <div className="lg:col-span-8 lg:col-start-4">
+                                <div
+                                    className="prose prose-lg dark:prose-invert max-w-none 
+                                        font-sans
+                                        prose-headings:font-heading prose-headings:font-bold prose-headings:text-zinc-900 dark:prose-headings:text-zinc-50
+                                        prose-p:leading-relaxed prose-p:text-zinc-700 dark:prose-p:text-zinc-300 prose-p:mb-6
+                                        prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-medium prose-a:no-underline hover:prose-a:underline
+                                        prose-li:text-zinc-700 dark:prose-li:text-zinc-300
+                                        prose-img:rounded-2xl prose-img:shadow-lg prose-img:my-10"
+                                    dangerouslySetInnerHTML={{ __html: processedContent }}
+                                />
+
+                                <div className="lg:hidden mt-8 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+                                    <h4 className="text-lg font-bold mb-4">Share this insight</h4>
                                     <div className="flex gap-2">
-                                        <button onClick={handleShare} className="nb-btn nb-btn-ghost p-3 rounded-xl"><Share2 size={16} /></button>
-                                        <button className="nb-btn nb-btn-ghost p-3 rounded-xl"><Twitter size={16} /></button>
-                                        <button className="nb-btn nb-btn-ghost p-3 rounded-xl"><Linkedin size={16} /></button>
+                                        <Button variant="outline" size="icon" onClick={handleShare} className="rounded-full">
+                                            <Copy className="w-4 h-4" />
+                                        </Button>
+                                        <Button variant="outline" size="icon" className="rounded-full text-blue-500">
+                                            <Twitter className="w-4 h-4" />
+                                        </Button>
                                     </div>
                                 </div>
-                            </div>
-                        </aside>
 
-                        {/* Article body */}
-                        <div className="lg:col-span-8">
-                            {post.cover_image && (
-                                <div className="mb-16 rounded-3xl overflow-hidden border-4 border-[#240747] shadow-[12px_12px_0_#240747]">
-                                    <img src={post.cover_image} alt={post.title} className="w-full aspect-video object-cover" />
-                                </div>
-                            )}
-
-                            <div 
-                                className="prose prose-lg max-w-none 
-                                    prose-headings:font-black prose-headings:text-[#240747] prose-headings:tracking-tight
-                                    prose-p:text-[#240747]/80 prose-p:font-medium prose-p:leading-relaxed
-                                    prose-strong:text-[#240747] prose-strong:font-black
-                                    prose-a:text-[#F6851B] prose-a:font-black prose-a:no-underline hover:prose-a:underline
-                                    prose-blockquote:border-l-8 prose-blockquote:border-[#F6851B] prose-blockquote:bg-[#240747]/5 prose-blockquote:p-8 prose-blockquote:rounded-r-2xl prose-blockquote:font-black prose-blockquote:text-2xl
-                                    prose-img:rounded-3xl prose-img:border-4 prose-img:border-[#240747] prose-img:shadow-[8px_8px_0_#F6851B]
-                                "
-                                dangerouslySetInnerHTML={{ __html: processedContent }}
-                            />
-
-                            {/* Author Footer */}
-                            <div className="mt-24 p-10 bg-[#240747] rounded-3xl text-[#F9EFE9] flex flex-col md:flex-row gap-8 items-center border-4 border-[#240747] shadow-[16px_16px_0_#F6851B]">
-                                <div className="w-24 h-24 rounded-2xl border-4 border-[#F6851B] overflow-hidden flex-shrink-0">
-                                    {post.author_image ? (
-                                        <img src={post.author_image} alt={post.author} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-3xl font-bold bg-[#F6851B] text-[#240747]">{post.author?.charAt(0)}</div>
-                                    )}
-                                </div>
-                                <div className="space-y-4 text-center md:text-left">
-                                    <div>
-                                        <h4 className="text-2xl font-black">{post.author || "RootedAI Team"}</h4>
-                                        <p className="text-[0.7rem] font-bold uppercase tracking-widest text-[#F6851B]">{post.author_role || "Strategic Engineer"}</p>
+                                <div className="mt-20 bg-zinc-950 dark:bg-zinc-900 text-white p-8 md:p-12 rounded-3xl relative overflow-hidden group shadow-2xl">
+                                    <div className="relative z-10 space-y-6">
+                                        <h3 className="text-2xl md:text-3xl font-heading font-bold">
+                                            {post.cta_title || "Ready to stop drowning in manual work?"}
+                                        </h3>
+                                        <p className="text-zinc-400 max-w-lg">
+                                            {post.cta_description || "Book a free strategy session to see which of your workflows can be fully autonomous in just 2 weeks."}
+                                        </p>
+                                        <Button
+                                            size="lg"
+                                            className="bg-white text-black hover:bg-zinc-200 hover:scale-105 transition-all font-bold px-8 rounded-full"
+                                            onClick={() => window.open(post.cta_link || "https://wa.me/917904168521", "_blank")}
+                                        >
+                                            {post.cta_button_text || "Book Strategy Call"}
+                                        </Button>
                                     </div>
-                                    <p className="opacity-70 text-sm leading-relaxed max-w-lg">
-                                        Engineering intelligence and solving high-stakes problems across industrial sectors. 
-                                        Part of the tactical team at Rooted AI Solutions.
-                                    </p>
-                                    {post.author_linkedin && (
-                                        <a href={post.author_linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-black text-[#F6851B] hover:underline">
-                                            Connect on LinkedIn <ArrowRight size={14} />
-                                        </a>
-                                    )}
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 blur-3xl rounded-full -mr-16 -mt-16 pointer-events-none" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </main>
-
-            {/* ── Final CTA ── */}
-            <section className="py-24 border-t-4 border-[#240747] bg-[#240747]">
-                <div className="container mx-auto px-6 max-w-5xl">
-                    <div className="bg-[#F6851B] border-4 border-[#240747] p-8 md:p-16 relative overflow-hidden shadow-[16px_16px_0_#F9EFE9] rounded-3xl text-[#240747]">
-                        <div className="relative z-10 space-y-8 max-w-2xl">
-                            <h2 className="text-4xl md:text-6xl font-black leading-none">
-                                {post.cta_title || "Ready to scale your intelligence?"}
-                            </h2>
-                            <p className="text-xl font-medium opacity-80 leading-relaxed">
-                                {post.cta_description || "Let's discuss how we can train custom models for your specific enterprise needs."}
-                            </p>
-                            <div className="pt-4">
-                                <a 
-                                    href={post.cta_link || "https://wa.me/917904168521"} 
-                                    className="nb-btn nb-btn-primary text-xl px-12 py-6 rounded-2xl border-[#240747]"
-                                >
-                                    {post.cta_button_text || "Book Strategy Call"} <ArrowRight size={24} className="ml-2" />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </article>
+            </div>
         </div>
     );
 }

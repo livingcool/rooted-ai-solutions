@@ -1,3 +1,4 @@
+'use client';
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -37,7 +38,7 @@ const FAQS = [
   },
 ];
 
-export default function FAQ() {
+export default function FAQPage() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (

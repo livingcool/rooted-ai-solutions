@@ -55,16 +55,16 @@ export const EnhancedTokenUsageStats = () => {
         setLoading(true);
         try {
             const { data, error } = await supabase
-                .from('ai_usage_logs')
+                .from('ai_usage_logs' as any)
                 .select('*')
                 .order('created_at', { ascending: false })
                 .limit(500);
 
             if (error) throw error;
 
-            setLogs(data || []);
-            calculateCost(data || []);
-            calculateWhisperStats(data || []);
+            setLogs((data as any) || []);
+            calculateCost((data as any) || []);
+            calculateWhisperStats((data as any) || []);
         } catch (error: any) {
             console.error("Error fetching logs:", error);
         } finally {

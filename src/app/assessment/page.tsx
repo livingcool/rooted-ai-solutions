@@ -1,15 +1,15 @@
-
+'use client';
 
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Mic, Square } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const Interview = () => {
-    const navigate = useNavigate();
+export default function AssessmentPage() {
+    const router = useRouter();
     const { toast } = useToast();
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -20,8 +20,7 @@ const Interview = () => {
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const chunksRef = useRef<Blob[]>([]);
 
-    // Get ID from session
-    const applicationId = sessionStorage.getItem('candidateId');
+    const [applicationId, setApplicationId] = useState<string | null>(null);
 
     const QUESTIONS = [
         "Tell us about yourself and your background.",
@@ -37,11 +36,18 @@ const Interview = () => {
     const [timeLeft, setTimeLeft] = useState(60); // 1 minute per question
 
     useEffect(() => {
-        if (!applicationId) {
-            navigate('/candidate-login');
+        const id = sessionStorage.getItem('candidateId');
+        setApplicationId(id);
+        if (!id) {
+            router.push('/candidate-login');
             return;
         }
-        fetchApplication();
+    }, [router]);
+
+    useEffect(() => {
+        if (applicationId) {
+            fetchApplication();
+        }
     }, [applicationId]);
 
     // Timer Logic
@@ -68,11 +74,9 @@ const Interview = () => {
 
             if (error) throw error;
 
-            // Check Status to prevent re-entry
-            // Allow 'Applied' (for testing) and 'Invited to Interview' (or 'Interview Sent')
             const allowedStatuses = ['Applied', 'Interview Sent', 'Invited to Interview'];
             if (!allowedStatuses.includes((data as any).status)) {
-                navigate('/candidate-status');
+                router.push('/candidate-status');
                 return;
             }
 
@@ -124,7 +128,6 @@ const Interview = () => {
         if (mediaRecorderRef.current && recording) {
             mediaRecorderRef.current.stop();
             setRecording(false);
-            // Stop all tracks
             mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
         }
     };
@@ -134,7 +137,6 @@ const Interview = () => {
         setSubmitting(true);
 
         try {
-            // Upload Audio
             const fileName = `${applicationId}/${Date.now()}_q${currentQuestionIndex + 1}.webm`;
             const { error: uploadError } = await supabase.storage
                 .from('interview-recordings')
@@ -142,14 +144,13 @@ const Interview = () => {
 
             if (uploadError) throw uploadError;
 
-            // Save to Database
             const { data, error: dbError } = await supabase
                 .from('interviews' as any)
                 .insert({
                     application_id: applicationId,
                     question: QUESTIONS[currentQuestionIndex],
                     audio_url: fileName,
-                    ai_score: 0, // Initial score, will be updated by AI
+                    ai_score: 0,
                     ai_feedback: "AI analysis pending..."
                 })
                 .select()
@@ -157,37 +158,23 @@ const Interview = () => {
 
             if (dbError) throw dbError;
 
-            // Trigger AI Analysis
-            // Trigger AI Analysis
-            // Trigger AI Analysis
             supabase.functions.invoke('analyze-interview', {
                 body: {
                     interviewId: (data as any).id,
                     audioUrl: fileName,
                     question: QUESTIONS[currentQuestionIndex]
                 }
-            }).then(async ({ error }) => {
+            }).then(({ error }) => {
                 if (error) {
                     console.error("Error triggering AI analysis:", error);
-                    if ('context' in error && typeof (error as any).context.json === 'function') {
-                        try {
-                            const body = await (error as any).context.json();
-                            console.error("Function error details:", JSON.stringify(body, null, 2));
-                        } catch (e) {
-                            console.error("Could not parse error body:", e);
-                        }
-                    }
                 }
             });
-
-            if (dbError) throw dbError;
 
             toast({
                 title: "Answer Saved",
                 description: "Proceeding to next question...",
             });
 
-            // Reset for next question
             setAudioBlob(null);
             setAudioUrl(null);
 
@@ -195,14 +182,12 @@ const Interview = () => {
                 setCurrentQuestionIndex(prev => prev + 1);
                 setTimeLeft(60);
             } else {
-                // Finished
                 toast({
                     title: "Assessment Complete",
                     description: "Thank you for completing the interview!",
                 });
-                // Update application status
                 await supabase.from('applications' as any).update({ status: 'Communication Round Completed' }).eq('id', applicationId);
-                navigate('/'); // Or a success page
+                router.push('/candidate-status');
             }
 
         } catch (error: any) {
@@ -235,14 +220,12 @@ const Interview = () => {
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 relative overflow-hidden">
-            {/* Monochrome Background Effect */}
             <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
                 <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2" />
                 <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 translate-y-1/2" />
             </div>
 
             <div className="z-10 w-full max-w-2xl space-y-8">
-                {/* Header */}
                 <div className="text-center space-y-2">
                     <div className="inline-block px-3 py-1 border border-white/20 rounded-full text-xs tracking-widest uppercase text-white/60 mb-4">
                         Communication Assessment
@@ -256,7 +239,6 @@ const Interview = () => {
                     </div>
                 </div>
 
-                {/* Question Card */}
                 <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
                     <CardContent className="p-8 text-center space-y-8">
                         <div className="space-y-4">
@@ -268,7 +250,6 @@ const Interview = () => {
                             </p>
                         </div>
 
-                        {/* Timer & Visualizer Placeholder */}
                         <div className="flex justify-center items-center h-24">
                             {recording ? (
                                 <div className="space-y-2">
@@ -296,7 +277,6 @@ const Interview = () => {
                             )}
                         </div>
 
-                        {/* Controls */}
                         <div className="flex justify-center gap-4">
                             {!recording && !audioUrl && (
                                 <Button
@@ -348,6 +328,4 @@ const Interview = () => {
             </div>
         </div>
     );
-};
-
-export default Interview;
+}

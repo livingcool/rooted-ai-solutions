@@ -1,6 +1,7 @@
+'use client';
 
 import { useState } from "react";
-import { useNavigate } from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,8 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, Lock } from "lucide-react";
 
-const CandidateLogin = () => {
-    const navigate = useNavigate();
+export default function CandidateLoginPage() {
+    const router = useRouter();
     const { toast } = useToast();
     const [email, setEmail] = useState("");
     const [accessCode, setAccessCode] = useState("");
@@ -38,9 +39,9 @@ const CandidateLogin = () => {
             });
 
             if (data.status === 'Technical Round') {
-                navigate('/technical-assessment');
+                router.push('/technical-assessment');
             } else {
-                navigate('/assessment');
+                router.push('/assessment');
             }
 
         } catch (error: any) {
@@ -48,12 +49,10 @@ const CandidateLogin = () => {
 
             let message = error.message || "Invalid credentials";
 
-            // Handle specific status codes if error object exposes them (Supabase FunctionsHttpError)
             if (message.includes("Edge Function returned a non-2xx status code")) {
                 message = "Login failed. Please check your credentials.";
             }
 
-            // If the error response implies a deadline, make it clear
             if (error instanceof Error && error.message.includes("deadline")) {
                 message = error.message;
             }
@@ -120,6 +119,4 @@ const CandidateLogin = () => {
             </Card>
         </div>
     );
-};
-
-export default CandidateLogin;
+}

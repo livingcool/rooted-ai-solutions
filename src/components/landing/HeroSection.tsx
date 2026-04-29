@@ -40,13 +40,13 @@ const fadeUp = {
   visible: { 
     y: 0, 
     opacity: 1, 
-    transition: { type: "spring", stiffness: 100, damping: 20 } 
+    transition: { type: "spring", stiffness: 100, damping: 20 } as any
   },
 };
 
 const tileHover = {
   rest: { scale: 1, boxShadow: "4px 4px 0 transparent", borderColor: C.purple },
-  hover: { scale: 1.015, boxShadow: `6px 6px 0 ${C.orange}`, borderColor: C.orange, transition: { type: "spring", stiffness: 300 } },
+  hover: { scale: 1.015, boxShadow: `6px 6px 0 ${C.orange}`, borderColor: C.orange, transition: { type: "spring", stiffness: 300 } as any },
 };
 
 const tileObj = (bg: string, extra?: React.CSSProperties): React.CSSProperties => ({

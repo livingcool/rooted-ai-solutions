@@ -49,6 +49,7 @@
   ],
   "exclude": [
     "node_modules",
-    "rooted-mcp-server"
+    "rooted-mcp-server",
+    "supabase"
   ]
 }

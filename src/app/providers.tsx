@@ -15,7 +15,7 @@ import { Analytics } from "@vercel/analytics/react";
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
   const pathname = usePathname();
-  const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/blog-creation-page') || pathname?.startsWith('/login');
+  const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/blog-creation-page') || pathname?.startsWith('/blog-admin') || pathname?.startsWith('/login');
 
   return (
     <QueryClientProvider client={queryClient}>

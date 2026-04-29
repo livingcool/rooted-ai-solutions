@@ -1,3 +1,5 @@
+'use client';
+
 import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
 
@@ -42,7 +44,7 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   "Coming Soon": { bg: "#F9EFE9", text: "#240747" },
 };
 
-export default function Products() {
+export default function ProductsPage() {
   return (
     <div style={{ background: "#240747" }}>
       {/* Header */}
@@ -169,7 +171,7 @@ export default function Products() {
                 </p>
 
                 <Link
-                  to={p.href}
+                  href={p.href}
                   className="nb-btn nb-btn-primary"
                   style={{
                     textDecoration: "none",

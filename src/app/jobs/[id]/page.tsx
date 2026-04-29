@@ -1,7 +1,7 @@
-
+'use client';
 
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { Job } from "@/types/hiring";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,9 @@ import { Loader2, ArrowLeft, MapPin, Briefcase, DollarSign } from "lucide-react"
 import { JobApplicationForm } from "@/components/hiring/JobApplicationForm";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-const JobDetails = () => {
+export default function JobDetailsPage() {
     const { id } = useParams();
-    const navigate = useNavigate();
+    const router = useRouter();
     const [job, setJob] = useState<Job | null>(null);
     const [loading, setLoading] = useState(true);
     const [isApplyOpen, setIsApplyOpen] = useState(false);
@@ -50,14 +50,12 @@ const JobDetails = () => {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white space-y-4">
                 <h1 className="text-2xl font-bold">Job Not Found</h1>
-                <Button variant="outline" onClick={() => navigate("/")}>Back to Careers</Button>
+                <Button variant="outline" onClick={() => router.push("/")}>Back to Careers</Button>
             </div>
         );
     }
 
-    // Helper to parse structured content if available, otherwise fallback
     const renderContent = () => {
-        // Check if description has sections
         const sections = job.description.split(/(?=About RootedAI:|About the Role:|Key Responsibilities:|What We Offer:)/g).filter(Boolean);
 
         if (sections.length > 1) {
@@ -86,14 +84,13 @@ const JobDetails = () => {
                 <Button
                     variant="ghost"
                     className="mb-8 text-white/60 hover:text-white hover:bg-white/5 pl-0"
-                    onClick={() => navigate("/")}
+                    onClick={() => router.push("/")}
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back to Careers
                 </Button>
 
                 <div className="space-y-8">
-                    {/* Header */}
                     <div>
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">{job.title}</h1>
                         <div className="flex flex-wrap gap-4 text-sm text-white/60">
@@ -119,7 +116,6 @@ const JobDetails = () => {
                         </div>
                     </div>
 
-                    {/* Content */}
                     <div className="bg-white/5 border border-white/10 rounded-xl p-8">
                         {renderContent()}
 
@@ -156,6 +152,4 @@ const JobDetails = () => {
             </div>
         </div>
     );
-};
-
-export default JobDetails;
+}
