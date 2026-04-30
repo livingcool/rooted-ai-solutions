@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,6 +5,7 @@ import { X, Send, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { InlineWidget } from 'react-calendly';
 
 interface LeadModalProps {
   isOpen: boolean;
@@ -22,6 +22,7 @@ const C = {
 export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [userData, setUserData] = useState({ name: '', email: '' });
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = React.useRef<ReCAPTCHA>(null);
 
@@ -45,6 +46,8 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
       message: formData.get('message') as string,
     };
 
+    setUserData({ name: data.name, email: data.email });
+
     try {
       const { error } = await supabase
         .from('contact_submissions')
@@ -54,10 +57,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
 
       setSuccess(true);
       toast.success("Deployment Request Received");
-      setTimeout(() => {
-        setSuccess(false);
-        onClose();
-      }, 2500);
+      // Removed timeout auto-close to allow booking
     } catch (error: any) {
       toast.error(error.message || "Failed to submit request");
     } finally {
@@ -83,17 +83,22 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
           {/* Modal Card */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
+            animate={{ 
+              scale: 1, 
+              opacity: 1, 
+              y: 0,
+              width: success ? '900px' : '560px'
+            }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             className="nb-tile"
             style={{
               width: '100%',
-              maxWidth: '560px',
               background: C.cream,
               position: 'relative',
               zIndex: 1,
               padding: 0,
-              overflow: 'hidden'
+              overflow: 'hidden',
+              transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             {/* Header / Tab Styling */}
@@ -101,7 +106,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <ShieldCheck size={18} color={C.orange} />
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: C.cream, letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700 }}>
-                  Discovery Terminal
+                  {success ? 'Schedule Discovery Session' : 'Discovery Terminal'}
                 </span>
               </div>
               <button
@@ -112,16 +117,30 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
               </button>
             </div>
 
-            <div style={{ padding: '2.5rem' }}>
+            <div style={{ padding: success ? '1rem' : '2.5rem' }}>
               {success ? (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  style={{ textAlign: 'center', padding: '2rem 0' }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{ textAlign: 'center' }}
                 >
-                  <CheckCircle2 size={64} color={C.orange} style={{ margin: '0 auto 1.5rem' }} />
-                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: C.purple, marginBottom: '1rem' }}>Transmission Successful.</h2>
-                  <p style={{ fontFamily: 'var(--font-sans)', color: C.purple, opacity: 0.7 }}>Our engineering team will review your deployment parameters and reach out within 24 hours.</p>
+                  <div className="mb-4">
+                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: C.purple, marginBottom: '0.5rem' }}>Transmission Received.</h2>
+                    <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9rem', color: C.purple, opacity: 0.7 }}>Secure your slot on our engineering calendar below.</p>
+                  </div>
+                  
+                  <div style={{ minHeight: '600px' }}>
+                    <InlineWidget 
+                      url="https://calendly.com/rootedaiofficial"
+                      prefill={{
+                        email: userData.email,
+                        name: userData.name,
+                      }}
+                      styles={{
+                        height: '600px'
+                      }}
+                    />
+                  </div>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>

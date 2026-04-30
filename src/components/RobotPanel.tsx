@@ -155,17 +155,28 @@ export default function RobotPanel() {
       {/* 3D Canvas */}
       <div style={{ position: "absolute", inset: 0 }}>
         <Canvas camera={{ position: [0, 2, 8], fov: 40 }}>
+          <color attach="background" args={[C.parchment]} />
           <ambientLight intensity={1.5} />
-          <directionalLight position={[-5, 5, 5]} intensity={2} castShadow />
+          <pointLight position={[10, 10, 10]} intensity={1.5} color={C.purple} />
+          <spotLight position={[-10, 10, 10]} angle={0.15} penumbra={1} intensity={2} color="#F6851B" />
           <Environment preset="city" />
           <React.Suspense fallback={null}>
-            <RobotModel actionName={currentAction} expression={currentExpression} />
-            <ContactShadows opacity={0.6} scale={10} blur={2} far={4} position={[0, -2.5, 0]} />
+            <group position={[0, -0.5, 0]}>
+              <RobotModel actionName={currentAction} expression={currentExpression} />
+              <ContactShadows opacity={0.4} scale={15} blur={2.5} far={4} position={[0, -2, 0]} />
+            </group>
           </React.Suspense>
+          
+          {/* Stylized Grid Floor */}
+          <gridHelper 
+            args={[20, 20, C.purple, "rgba(36, 7, 71, 0.1)"]} 
+            position={[0, -2.51, 0]} 
+          />
+          
           <OrbitControls 
             enableZoom={false} 
             enablePan={false} 
-            maxPolarAngle={Math.PI / 2 + 0.1} 
+            maxPolarAngle={Math.PI / 2} 
             minPolarAngle={Math.PI / 4} 
           />
         </Canvas>
