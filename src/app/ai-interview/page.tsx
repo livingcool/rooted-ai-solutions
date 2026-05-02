@@ -2,8 +2,10 @@
 
 import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import Webcam from 'react-webcam';
 import { Mic, MicOff, Video, VideoOff, Send, MessageSquare, Clock, LogOut } from 'lucide-react';
+import RootedLogo from "@/components/ui/RootedLogo";
 
 function AIInterviewContent() {
     const searchParams = useSearchParams();
@@ -189,12 +191,10 @@ function AIInterviewContent() {
     return (
         <div className="h-screen bg-black text-white flex flex-col font-sans overflow-hidden">
             <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50 backdrop-blur shrink-0">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-zinc-100 rounded-full flex items-center justify-center">
-                        <div className="w-4 h-4 bg-black rounded-full" />
-                    </div>
-                    <span className="font-semibold text-lg tracking-tight">RootedAI Interview</span>
-                </div>
+                <Link href="/" className="flex items-center gap-3">
+                    <RootedLogo size={28} showText={false} />
+                    <span className="font-semibold text-lg tracking-tight">Interview Portal</span>
+                </Link>
                 <button onClick={finishEarly} className="text-zinc-400 hover:text-white flex items-center gap-2 text-sm transition-colors">
                     <LogOut size={16} /> Exit / Submit Early
                 </button>

@@ -10,7 +10,7 @@ import { C } from "@/data/constants";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-const RobotPanel = dynamic(() => import("@/components/RobotPanel"), { 
+const RobotPanel = dynamic(() => import("@/components/RobotPanel"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-[#F0DCC8] border-3 border-[#240747] rounded-[24px] p-8 flex flex-col gap-4">
@@ -37,9 +37,9 @@ const staggerContainer = {
 
 const fadeUp = {
   hidden: { y: 20, opacity: 0 },
-  visible: { 
-    y: 0, 
-    opacity: 1, 
+  visible: {
+    y: 0,
+    opacity: 1,
     transition: { type: "spring", stiffness: 100, damping: 20 } as any
   },
 };
@@ -50,10 +50,10 @@ const tileHover = {
 };
 
 const tileObj = (bg: string, extra?: React.CSSProperties): React.CSSProperties => ({
-  background:   bg,
+  background: bg,
   borderRadius: 24,
-  border:       `3px solid ${C.purple}`,
-  overflow:     "hidden",
+  border: `3px solid ${C.purple}`,
+  overflow: "hidden",
   ...extra,
 });
 
@@ -62,23 +62,23 @@ export default function HeroSection() {
 
   return (
     <section className="px-4 py-8 lg:px-6 lg:py-12">
-      <motion.div 
+      <motion.div
         className="max-w-[1320px] mx-auto"
-        initial="hidden" 
-        animate="visible" 
+        initial="hidden"
+        animate="visible"
         variants={staggerContainer}
       >
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-4 items-stretch">
-          
+
           {/* ── LEFT TILE ── */}
           <motion.div variants={fadeUp} style={tileObj(C.purple)} className="p-8 lg:p-16 flex flex-col justify-between min-h-[50vh] lg:min-h-[65vh]">
             <div>
               <span className="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[#F6851B] font-bold block mb-8 lg:mb-12">
                 Engineering Intelligence Complexity Simplified
               </span>
-              
+
               <h1 className="font-display font-bold text-[2.5rem] lg:text-[clamp(3rem,6vw,4.5rem)] leading-[1] tracking-[-0.04em] uppercase text-[#F9EFE9] mb-8 max-w-[700px]">
-                Your robot works.<br/>
+                Your robot works.<br />
                 <span className="text-[#F6851B]">Now make it see.</span>
               </h1>
 
@@ -89,16 +89,14 @@ export default function HeroSection() {
 
             <div>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <button 
-                  id="cta-primary-demo"
+                <button
                   onClick={openLeadModal}
                   className="nb-btn nb-btn-primary w-full sm:w-auto"
                 >
                   Book a Demo <ArrowRight size={16} />
                 </button>
-                <Link 
-                  id="cta-ghost-work"
-                  href="/case-studies" 
+                <Link
+                  href="/case-studies"
                   className="nb-btn nb-btn-ghost w-full sm:w-auto text-center"
                 >
                   See Our Work
@@ -121,15 +119,15 @@ export default function HeroSection() {
               <RobotPanel />
             </div>
             {/* Notification Slider */}
-            <motion.div 
-              whileHover="hover" 
-              initial="rest" 
-              animate="rest" 
-              variants={tileHover} 
-              style={tileObj(C.blush)} 
+            <motion.div
+              whileHover="hover"
+              initial="rest"
+              animate="rest"
+              variants={tileHover}
+              style={tileObj(C.blush)}
               className="p-6 lg:p-8 flex-1 flex flex-col justify-center min-h-[140px] lg:min-h-[160px] mt-8 lg:mt-0"
             >
-               <NotificationSlider />
+              <NotificationSlider />
             </motion.div>
           </motion.div>
         </div>

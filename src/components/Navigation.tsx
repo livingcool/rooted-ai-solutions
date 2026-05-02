@@ -6,22 +6,21 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown, ArrowRight, Linkedin, Twitter, Github } from "lucide-react";
-import RootedLogo from "@/components/ui/RootedLogo";
-
 import { useModal } from "@/context/ModalContext";
+import RootedLogo from "./ui/RootedLogo";
 
 const NAV_LINKS = [
-  { name: "Services",    href: "/services" },
-  { name: "How It Works",href: "/#how-it-works" },
-  { name: "Use Cases",   href: "/case-studies" },
-  { name: "About",       href: "/#about" },
-  { name: "Blog",        href: "/blog" },
-  { name: "Careers",     href: "/careers" },
+  { name: "Services", href: "/services" },
+  { name: "How It Works", href: "/#how-it-works" },
+  { name: "Use Cases", href: "/case-studies" },
+  { name: "About", href: "/#about" },
+  { name: "Blog", href: "/blog" },
+  { name: "Careers", href: "/careers" },
 ];
 
 const Navigation = () => {
-  const [scrolled,    setScrolled]    = useState(false);
-  const [mobileOpen,  setMobileOpen]  = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const { openLeadModal } = useModal();
 
@@ -47,9 +46,9 @@ const Navigation = () => {
       <nav
         style={{
           backgroundColor: "#F9EFE9",
-          borderBottom:    scrolled ? "3px solid #240747" : "3px solid transparent",
-          boxShadow:       scrolled ? "0 4px 0 #240747" : "none",
-          transition:      "border-color 0.2s ease, box-shadow 0.2s ease",
+          borderBottom: scrolled ? "3px solid #240747" : "3px solid transparent",
+          boxShadow: scrolled ? "0 4px 0 #240747" : "none",
+          transition: "border-color 0.2s ease, box-shadow 0.2s ease",
         }}
         className="fixed top-0 left-0 right-0 z-50"
       >
@@ -63,35 +62,7 @@ const Navigation = () => {
             className="flex items-center gap-3 no-underline group"
             style={{ textDecoration: "none" }}
           >
-            <div className="flex items-center justify-center w-10 h-10">
-              <RootedLogo size={36} color="#240747" strokeWidth={2.5} />
-            </div>
-            <div className="flex items-center">
-              <span
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 900,
-                  fontSize: "1.4rem",
-                  color: "#240747",
-                  letterSpacing: "-0.04em",
-                  lineHeight: 1,
-                }}
-              >
-                ROOTED
-              </span>
-              <span
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 900,
-                  fontSize: "1.4rem",
-                  color: "#F6851B",
-                  letterSpacing: "-0.04em",
-                  lineHeight: 1,
-                }}
-              >
-                AI
-              </span>
-            </div>
+            <RootedLogo size={32} />
           </Link>
 
 
@@ -104,16 +75,16 @@ const Navigation = () => {
                   key={link.name}
                   href={link.href}
                   style={{
-                    fontFamily:    "var(--font-display)",
-                    fontWeight:    700,
-                    fontSize:      "0.82rem",
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 700,
+                    fontSize: "0.82rem",
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    color:         isActive ? "#F6851B" : "#240747",
+                    color: isActive ? "#F6851B" : "#240747",
                     textDecoration: "none",
-                    paddingBottom:  "2px",
-                    borderBottom:   isActive ? "2px solid #F6851B" : "2px solid transparent",
-                    transition:     "color 0.15s ease, border-color 0.15s ease",
+                    paddingBottom: "2px",
+                    borderBottom: isActive ? "2px solid #F6851B" : "2px solid transparent",
+                    transition: "color 0.15s ease, border-color 0.15s ease",
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
@@ -169,9 +140,9 @@ const Navigation = () => {
           className="fixed inset-0 z-[60] flex flex-col"
           style={{
             backgroundColor: "#F9EFE9",
-            paddingTop:       "4.5rem",
-            borderTop:        "3px solid #240747",
-            touchAction:      "none", // Prevent scroll bleed
+            paddingTop: "4.5rem",
+            borderTop: "3px solid #240747",
+            touchAction: "none", // Prevent scroll bleed
           }}
         >
           {/* Nav Links */}
@@ -181,17 +152,17 @@ const Navigation = () => {
                 key={link.name}
                 href={link.href}
                 style={{
-                  fontFamily:    "var(--font-display)",
-                  fontWeight:    800,
-                  fontSize:      "2.2rem",
-                  color:         pathname === link.href ? "#F6851B" : "#240747",
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 800,
+                  fontSize: "2.2rem",
+                  color: pathname === link.href ? "#F6851B" : "#240747",
                   textDecoration: "none",
                   letterSpacing: "-0.03em",
-                  lineHeight:    1.1,
-                  borderBottom:  "3px solid #240747",
-                  padding:       "1.25rem 0",
-                  animation:     `nb-slide-up 0.4s cubic-bezier(0.22,1,0.36,1) ${i * 0.06}s forwards`,
-                  opacity:       0,
+                  lineHeight: 1.1,
+                  borderBottom: "3px solid #240747",
+                  padding: "1.25rem 0",
+                  animation: `nb-slide-up 0.4s cubic-bezier(0.22,1,0.36,1) ${i * 0.06}s forwards`,
+                  opacity: 0,
                 }}
               >
                 {link.name}
@@ -214,8 +185,8 @@ const Navigation = () => {
             <div className="flex justify-center gap-6">
               {[
                 { icon: Linkedin, href: "https://www.linkedin.com/company/rootdai", label: "LinkedIn" },
-                { icon: Github,   href: "https://github.com/rootedai",               label: "GitHub"   },
-                { icon: Twitter,  href: "https://x.com/rootedai2025",                label: "Twitter"  },
+                { icon: Github, href: "https://github.com/rootedai", label: "GitHub" },
+                { icon: Twitter, href: "https://x.com/rootedai2025", label: "Twitter" },
               ].map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}

@@ -60,11 +60,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         "publisher": {
             "@type": "Organization",
             "name": "RootedAI Solutions",
-            "url": "https://www.rootedai.co.in",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://www.rootedai.co.in/logo.png"
-            }
+            "url": "https://www.rootedai.co.in"
         }
     };
 

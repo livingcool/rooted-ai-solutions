@@ -90,10 +90,6 @@ const jsonLd = {
       "@id": "https://www.rootedai.co.in/#organization",
       "name": "Rooted AI Solutions",
       "url": "https://www.rootedai.co.in",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://www.rootedai.co.in/logo.png"
-      },
       "sameAs": [
         "https://www.linkedin.com/company/rootedai"
       ],
@@ -137,6 +133,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <link rel="preload" href="/models/RobotExpressive.glb" as="fetch" crossOrigin="anonymous" />
+        <link rel="ai-actions" href="/ai-actions.json" />
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="AI-Friendly Context" />
         {/* Google Tag Manager */}
         <script
           dangerouslySetInnerHTML={{

@@ -1,84 +1,62 @@
-'use client';
-
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface RootedLogoProps {
   className?: string;
   size?: number;
-  color?: string;
-  strokeWidth?: number;
-  animate?: boolean;
+  showText?: boolean;
 }
 
-/**
- * RootedLogo - A precision SVG recreation of the RootedAI geometric logo.
- * The pattern consists of 6 overlapping ellipses rotated by 60 degrees.
- */
-const RootedLogo: React.FC<RootedLogoProps> = ({
-  className = "",
-  size = 40,
-  color = "#240747",
-  strokeWidth = 1.8,
-  animate = true,
+const RootedLogo: React.FC<RootedLogoProps> = ({ 
+  className, 
+  size = 40, 
+  showText = true 
 }) => {
-  // Ellipse parameters to match the user's provided image
-  const rx = 52;  // Major radius
-  const ry = 30;  // Minor radius
-  const cx = 20;  // Offset from center to create the hexagonal void
-  
-  const angles = [0, 60, 120, 180, 240, 300];
+  const ANGLES = [0, 60, 120, 180, 240, 300];
+  const PETAL_D = "M 50 42 C 50 15, 85 15, 80 45 C 75 75, 55 65, 50 42";
 
   return (
-    <motion.svg
-      width={size}
-      height={size}
-      viewBox="-100 -100 200 200"
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-      initial="initial"
-      animate="animate"
-      whileHover="hover"
-    >
-      <g>
-        {angles.map((angle, index) => (
-          <motion.ellipse
-            key={index}
-            cx={cx}
-            cy={0}
-            rx={rx}
-            ry={ry}
-            transform={`rotate(${angle})`}
-            fill="none"
-            stroke={color}
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
-            variants={{
-              initial: { 
-                pathLength: 0, 
-                opacity: 0 
-              },
-              animate: { 
-                pathLength: 1, 
-                opacity: 1,
-                transition: {
-                  duration: 1.5,
-                  delay: index * 0.1,
-                  ease: "easeInOut"
-                }
-              },
-              hover: {
-                strokeWidth: strokeWidth * 1.5,
-                transition: { duration: 0.3 }
-              }
-            }}
+    <div className={cn("flex items-center gap-3", className)}>
+      <div 
+        style={{ width: size, height: size }}
+        className="relative flex items-center justify-center"
+      >
+        <svg
+          viewBox="0 0 100 100"
+          className="w-full h-full"
+          style={{ 
+            filter: "drop-shadow(0 0 8px rgba(197, 190, 248, 0.4))"
+          }}
+        >
+          {ANGLES.map((angle, i) => (
+            <path
+              key={i}
+              d={PETAL_D}
+              style={{
+                transform: `rotate(${angle}deg)`,
+                transformOrigin: "50px 50px",
+              }}
+              fill="none"
+              stroke="currentColor"
+              className="text-[#8b5cf6] dark:text-[#C5BEF8]"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          ))}
+          <circle
+            cx="50"
+            cy="42"
+            r="2"
+            className="fill-[#8b5cf6] dark:fill-[#C5BEF8]"
           />
-        ))}
-      </g>
-      
-      {/* Optional: Subtle center highlight if needed, 
-          but based on the pic, it's just the intersections */}
-    </motion.svg>
+        </svg>
+      </div>
+      {showText && (
+        <span className="font-display font-black text-2xl tracking-tighter text-[#240747] dark:text-[#F9EFE9]">
+          Rooted<span className="text-[#F6851B]">AI</span>
+        </span>
+      )}
+    </div>
   );
 };
 

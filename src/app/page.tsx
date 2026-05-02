@@ -18,6 +18,7 @@ const RobotPanel = dynamic(() => import("@/components/RobotPanel"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-[#F0DCC8] border-3 border-[#240747] rounded-[24px] p-8 flex flex-col gap-4">
+      <span className="sr-only">Robot Perception Interface: Visualizing real-time sensor fusion and actor-critic models for autonomous operations.</span>
       <Skeleton className="w-24 h-4 bg-[#240747]/10" />
       <div className="flex-1 flex items-center justify-center">
         <Skeleton className="w-48 h-48 rounded-full bg-[#240747]/5" />
@@ -29,9 +30,20 @@ const RobotPanel = dynamic(() => import("@/components/RobotPanel"), {
     </div>
   )
 });
-const InteractivePipeline = dynamic(() => import("@/components/InteractivePipeline"), { ssr: false });
-const ClientDossier = dynamic(() => import("@/components/ClientDossier"), { ssr: false });
-const Testimonials = dynamic(() => import("@/components/Testimonials"), { ssr: false });
+const InteractivePipeline = dynamic(() => import("@/components/InteractivePipeline"), { 
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[400px] bg-white border-3 border-[#240747] rounded-[24px] p-12 flex flex-col justify-center">
+      <h3 className="sr-only">Our Tactical Pipeline: 1. Raw Data, 2. Strategy Scoping, 3. Data Cleaning, 4. LLM Fine-Tuning, 5. Validation, 6. System Integration.</h3>
+      <Skeleton className="w-48 h-8 bg-[#240747]/10 mb-8" />
+      <div className="grid grid-cols-6 gap-4">
+        {[1,2,3,4,5,6].map(i => <Skeleton key={i} className="h-24 bg-[#240747]/5" />)}
+      </div>
+    </div>
+  )
+});
+const ClientDossier = dynamic(() => import("@/components/ClientDossier"), { ssr: true });
+const Testimonials = dynamic(() => import("@/components/Testimonials"), { ssr: true });
 const NotificationSlider = dynamic(() => import("@/components/landing/NotificationSlider"), { ssr: false });
 
 const C = {

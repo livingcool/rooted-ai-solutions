@@ -8,7 +8,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ModalProvider } from "@/context/ModalContext";
 import SmoothScroll from "@/components/SmoothScroll";
-import { HelmetProvider } from "react-helmet-async";
 import { usePathname } from "next/navigation";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -23,19 +22,17 @@ export function Providers({ children }: { children: ReactNode }) {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <HelmetProvider>
-            <ModalProvider>
-              {isAdminPage ? (
-                <div className="min-h-screen bg-[#F9EFE9]">
-                  {children}
-                </div>
-              ) : (
-                <SmoothScroll>
-                  {children}
-                </SmoothScroll>
-              )}
-            </ModalProvider>
-          </HelmetProvider>
+          <ModalProvider>
+            {isAdminPage ? (
+              <div className="min-h-screen bg-[#F9EFE9]">
+                {children}
+              </div>
+            ) : (
+              <SmoothScroll>
+                {children}
+              </SmoothScroll>
+            )}
+          </ModalProvider>
           <Analytics />
         </TooltipProvider>
       </ThemeProvider>

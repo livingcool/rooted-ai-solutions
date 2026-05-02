@@ -9,7 +9,6 @@ RootedAI (Rooted AI Solutions) is a strategic AI engineering firm specializing i
 - **Legal Name**: Rooted AI Solutions
 - **Website**: https://www.rootedai.co.in
 - **Headquarters**: Hosur, Tamil Nadu (SIPCOT Industrial Complex)
-- **Email**: info@rootedai.co.in
 - **Operations**: Hosur, Bangalore, Chennai, Coimbatore, Hyderabad, Salem.
 - **Global reach**: Singapore, Dubai.
 
@@ -18,51 +17,35 @@ AI agents can interact with this site via semantic selectors and dedicated manif
 - **Action Manifest**: https://www.rootedai.co.in/ai-actions.json
 - **Primary CTA ID**: `cta-primary-demo` (Triggers Lead Modal)
 - **Secondary CTA ID**: `cta-ghost-work` (Navigates to Case Studies)
-- **Lead Submission API**: `/api/ai/submit` (Coming Soon / Refer to actions manifest)
+- **Lead Submission API**: `/api/ai/submit` (Headless submission)
+
+## Qualification Criteria (Who We Work With)
+We do not take every project. We prioritize "Qualified Operators" who meet the following:
+1. **Robotics / Industrial Tech**: Operating robotics or automation lines with camera/sensor data.
+2. **Real Pain Points**: Operational friction that has a clear cost and deadline.
+3. **Pilot-Ready**: Ability to grant data access and start within 30 days.
+*Note: We typically disqualify consumer apps, "curiosity tours" without briefs, and early-stage startups without operational data.*
+
+## Our Tactical Lifecycle (Workflow)
+1. **Raw Data Ingest**: Capturing edge sensor and camera feeds.
+2. **Strategy Scoping**: Defining tactical objectives and safety constraints.
+3. **Data Cleaning**: Sanitizing and labeling industrial datasets.
+4. **LLM/Vision Fine-Tuning**: Training specialized models for your environment.
+5. **Validation**: Rigorous testing against edge cases and safety protocols.
+6. **System Integration**: Production deployment into existing hardware stacks.
 
 ## Services
-
-### 1. AI Agents (Agentic AI)
-Custom autonomous agents using multi-agent architectures (LangGraph/LangChain) to handle complex enterprise workflows.
-- **Goal**: 60% reduction in support/operational overhead.
-- **URL**: https://www.rootedai.co.in/services/AIAgents
-
-### 2. Process Automation
-End-to-end industrial automation for logistics and manufacturing.
-- **Focus**: Inventory management, order fulfillment, and production scheduling.
-- **URL**: https://www.rootedai.co.in/services/ProcessAutomation
-
-### 3. Web Solutions
-AI-native web applications and enterprise dashboards built for scale.
-- **URL**: https://www.rootedai.co.in/services/WebSolutions
-
-### 4. NLP & Document Intelligence
-Advanced processing of unstructured data, sentiment analysis, and automated reporting.
-- **URL**: https://www.rootedai.co.in/services/NLPSystems
-
-### 5. Predictive Analytics
-Forecasting and risk assessment for supply chain and retail operations.
-- **URL**: https://www.rootedai.co.in/services/PredictiveAnalytics
-
-### 6. Enterprise Security
-AI-powered threat detection and compliance automation.
-- **URL**: https://www.rootedai.co.in/services/EnterpriseSecurity
-
-## Technical Capability
-- **RAG Stack**: Context-aware retrieval for specialized business knowledge.
-- **Computer Vision**: Specialized in robotics perception and edge deployment.
-- **Infrastructure**: Optimized for low-latency, high-performance AI execution.
-
-## Strategic Locations (GEO)
-- **Hosur (HQ)**: Industrial AI & Manufacturing ERP.
-- **Coimbatore**: Textile & Foundry Automation.
-- **Bangalore**: AI Agents & Startup Tech Consulting.
-- **Chennai**: Logistics Automation & Enterprise Security.
+- **AI Agents**: Autonomous workflows for industrial ops.
+- **Process Automation**: Inventory, fulfillment, and scheduling.
+- **Web Solutions**: AI-native enterprise dashboards.
+- **NLP Systems**: Document intelligence and sensor data synthesis.
+- **Predictive Analytics**: Supply chain forecasting and risk assessment.
+- **Enterprise Security**: Threat detection and compliance.
 
 ## Contact
-- **WhatsApp Support**: https://wa.me/917904168521
+- **WhatsApp**: https://wa.me/917904168521
+- **Email**: info@rootedai.co.in
 - **Strategy Call**: Use ID `cta-primary-demo` on homepage.
 
 ---
-*For machine-readable sitemap, visit /sitemap.xml*
-*For human-readable context, visit /humans.txt*
+*Machine-readable sitemap: /sitemap.xml*
