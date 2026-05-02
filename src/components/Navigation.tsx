@@ -89,7 +89,7 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="!hidden md:!flex items-center gap-8 nav-desktop-links">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -131,7 +131,7 @@ const Navigation = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={openLeadModal}
-              className="hidden md:inline-flex items-center gap-2 nb-btn nb-btn-primary"
+              className="!hidden md:!inline-flex items-center gap-2 nb-btn nb-btn-primary nav-desktop-links"
               style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: 'pointer' }}
             >
               Book a Demo <ArrowRight size={14} />

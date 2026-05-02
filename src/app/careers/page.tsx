@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight, MapPin, Briefcase, Zap, Globe, Shield, Sparkles, Code, Cpu } from "lucide-react";
+import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
 
 const VALUES = [
   { icon: Zap, title: "Production First", desc: "We build systems that survive the factory floor, not just the research paper." },
@@ -14,6 +15,7 @@ const VALUES = [
 export default function CareersPage() {
   const [jobs, setJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showRoles, setShowRoles] = useState(false);
 
   useEffect(() => {
     fetchJobs();
@@ -55,7 +57,17 @@ export default function CareersPage() {
                 and high-performance software services. Join us in building the next generation of enterprise intelligence.
               </p>
               <div className="flex gap-4 pt-4">
-                <a href="#roles" className="nb-btn nb-btn-primary">View Positions <ArrowRight size={18} /></a>
+                <button 
+                  onClick={() => {
+                    setShowRoles(true);
+                    setTimeout(() => {
+                      document.getElementById('roles')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  className="nb-btn nb-btn-primary"
+                >
+                  View Positions <ArrowRight size={18} />
+                </button>
                 <div className="hidden md:flex items-center gap-2 px-6 text-[#240747]/40 font-mono text-xs font-bold uppercase tracking-widest">
                   <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                   Currently Hiring
@@ -84,15 +96,15 @@ export default function CareersPage() {
       {/* ── Values ── */}
       <section className="py-24 border-b-4 border-[#240747] bg-[#240747]">
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <CarouselWrapper desktopClass="grid-cols-1 md:grid-cols-3 gap-8">
             {VALUES.map((v, i) => (
-              <div key={i} className="bg-[#F9EFE9] border-4 border-[#240747] p-8 shadow-[8px_8px_0_#F6851B] rounded-2xl group hover:translate-x-1 hover:-translate-y-1 transition-transform">
+              <div key={i} className="bg-[#F9EFE9] border-4 border-[#240747] p-8 shadow-[8px_8px_0_#F6851B] rounded-2xl group hover:translate-x-1 hover:-translate-y-1 transition-transform h-full">
                 <v.icon size={40} className="text-[#F6851B] mb-6" />
                 <h3 className="text-2xl font-black text-[#240747] mb-4">{v.title}</h3>
                 <p className="text-[#240747]/70 font-medium leading-relaxed">{v.desc}</p>
               </div>
             ))}
-          </div>
+          </CarouselWrapper>
         </div>
       </section>
 
@@ -105,35 +117,45 @@ export default function CareersPage() {
           </div>
 
           <div className="space-y-6">
-            {loading ? (
-              [1, 2, 3].map(i => (
-                <div key={i} className="h-32 bg-[#240747]/5 border-4 border-[#240747] rounded-2xl animate-pulse" />
-              ))
+            {loading ? null : !showRoles ? (
+              <div className="flex flex-col items-center py-12 space-y-6 bg-[#240747]/5 border-4 border-dashed border-[#240747]/20 rounded-3xl">
+                <p className="font-mono text-sm font-bold uppercase tracking-widest opacity-60 text-center px-6">
+                  Deployment list is classified until authorized.
+                </p>
+                <button 
+                  onClick={() => setShowRoles(true)}
+                  className="nb-btn nb-btn-primary"
+                >
+                  View Open Positions <Briefcase size={18} />
+                </button>
+              </div>
             ) : jobs.length === 0 ? (
-              <div className="p-12 text-center border-4 border-dashed border-[#240747]/20 rounded-3xl">
+              <div className="p-12 text-center border-4 border-dashed border-[#240747]/20 rounded-3xl animate-nb-up">
                 <p className="font-mono text-sm font-bold uppercase tracking-widest opacity-40">No active operations at this time.</p>
               </div>
             ) : (
-              jobs.map((role, i) => (
-                <div key={i} className="blog-grid-card group">
-                  <div className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3">
-                        <span className="nb-tag-orange text-[0.6rem]">{role.dept}</span>
-                        <span className="text-[0.65rem] font-bold text-[#240747]/40 uppercase tracking-widest">{role.type}</span>
+              <div className="space-y-6 animate-nb-up">
+                {jobs.map((role, i) => (
+                  <div key={i} className="blog-grid-card group">
+                    <div className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <span className="nb-tag-orange text-[0.6rem]">{role.dept}</span>
+                          <span className="text-[0.65rem] font-bold text-[#240747]/40 uppercase tracking-widest">{role.type}</span>
+                        </div>
+                        <h3 className="text-2xl font-black text-[#240747] group-hover:text-[#F6851B] transition-colors">{role.title}</h3>
+                        <div className="flex items-center gap-6 text-[0.7rem] font-bold text-[#240747]/60 uppercase tracking-wider">
+                          <div className="flex items-center gap-2"><MapPin size={14} className="text-[#F6851B]" /> {role.location}</div>
+                          <div className="flex items-center gap-2"><Briefcase size={14} className="text-[#F6851B]" /> {role.dept}</div>
+                        </div>
                       </div>
-                      <h3 className="text-2xl font-black text-[#240747] group-hover:text-[#F6851B] transition-colors">{role.title}</h3>
-                      <div className="flex items-center gap-6 text-[0.7rem] font-bold text-[#240747]/60 uppercase tracking-wider">
-                        <div className="flex items-center gap-2"><MapPin size={14} className="text-[#F6851B]" /> {role.location}</div>
-                        <div className="flex items-center gap-2"><Briefcase size={14} className="text-[#F6851B]" /> {role.dept}</div>
-                      </div>
+                      <Link href={`/careers/${role.slug || role.id}`} className="nb-btn nb-btn-primary min-w-[180px]">
+                        View Mission <ArrowRight size={18} />
+                      </Link>
                     </div>
-                    <Link href={`/careers/${role.slug || role.id}`} className="nb-btn nb-btn-primary min-w-[180px]">
-                      View Mission <ArrowRight size={18} />
-                    </Link>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
         </div>

@@ -1,5 +1,8 @@
+'use client';
+
 import Link from "next/link";
 import { ArrowRight, Cpu, Zap, Globe, Brain, Shield, BarChart3, Users, Lock } from "lucide-react";
+import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
 
 const SERVICES = [
   { icon: Cpu, num: "01", title: "AI Agents", desc: "Deploy autonomous LLM agents that handle complex, multi-step operational workflows without human intervention.", href: "/services/AIAgents", bg: "#F9EFE9" },
@@ -30,25 +33,27 @@ export default function ServicesPage() {
 
       {/* Services grid */}
       <div style={{ background: "#240747", padding: "4px" }}>
-        <div style={{ maxWidth: 1320, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "4px" }} className="svc-grid">
-          {SERVICES.map((svc) => (
-            <Link
-              key={svc.href}
-              href={svc.href}
-              style={{ background: svc.bg, padding: "2.5rem 2rem", display: "flex", flexDirection: "column", gap: "1.25rem", textDecoration: "none", borderLeft: "4px solid #240747" }}
-              className="hover:outline hover:outline-3 hover:outline-[#F6851B] transition-all"
-            >
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "3rem", color: "#F6851B", lineHeight: 1, letterSpacing: "-0.05em" }}>{svc.num}</span>
-              <div style={{ width: 40, height: 40, background: "#240747", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svc.icon size={20} color="#F6851B" />
-              </div>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.2rem", color: "#240747", letterSpacing: "-0.02em", lineHeight: 1.1 }}>{svc.title}</h2>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.83rem", color: "#240747", opacity: 0.68, lineHeight: 1.6, flex: 1 }}>{svc.desc}</p>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "#F6851B", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginTop: "auto" }}>
-                Learn more <ArrowRight size={12} />
-              </div>
-            </Link>
-          ))}
+        <div style={{ maxWidth: 1320, margin: "0 auto" }}>
+          <CarouselWrapper desktopClass="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[4px]">
+            {SERVICES.map((svc) => (
+              <Link
+                key={svc.href}
+                href={svc.href}
+                style={{ background: svc.bg, padding: "2.5rem 2rem", display: "flex", flexDirection: "column", gap: "1.25rem", textDecoration: "none", borderLeft: "4px solid #240747" }}
+                className="hover:outline hover:outline-3 hover:outline-[#F6851B] transition-all h-full"
+              >
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "3rem", color: "#F6851B", lineHeight: 1, letterSpacing: "-0.05em" }}>{svc.num}</span>
+                <div style={{ width: 40, height: 40, background: "#240747", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <svc.icon size={20} color="#F6851B" />
+                </div>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.2rem", color: "#240747", letterSpacing: "-0.02em", lineHeight: 1.1 }}>{svc.title}</h2>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.83rem", color: "#240747", opacity: 0.68, lineHeight: 1.6, flex: 1 }}>{svc.desc}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "#F6851B", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginTop: "auto" }}>
+                  Learn more <ArrowRight size={12} />
+                </div>
+              </Link>
+            ))}
+          </CarouselWrapper>
         </div>
       </div>
 

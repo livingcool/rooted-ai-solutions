@@ -2,10 +2,10 @@
 
 
 
-import React, { useEffect, useId, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useEffect, useId, useRef, useState, useCallback } from 'react';
+import { AnimatePresence, motion, PanInfo } from 'framer-motion';
 import { useOutsideClick } from '../hooks/use-outside-click';
-import { X } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { FaCheckCircle, FaFileAlt, FaMapSigns, FaDatabase, FaCubes, FaCrosshairs, FaPuzzlePiece } from "react-icons/fa";
 
@@ -122,6 +122,173 @@ const ITEMS: BentoGridItem[] = [
     }
 ];
 
+function PipelineCard({ item, index, setActive, id, isLarge = false }: { item: BentoGridItem; index: number; setActive: (item: BentoGridItem | boolean | null) => void; id: string; isLarge?: boolean }) {
+    return (
+        <motion.li
+            layoutId={`card-${item.title}-${id}`}
+            key={item.id}
+            onClick={() => setActive(item)}
+            whileHover={{ y: -6, boxShadow: `8px 8px 0 ${C.orange}`, borderColor: C.orange }}
+            className={`nb-tile ${isLarge ? 'lg:col-span-2' : 'col-span-1'}`}
+            style={{
+                background: item.bg,
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: "1rem",
+                minHeight: "280px",
+                transition: "all 0.2s ease",
+            }}
+        >
+            <div className="p-6 lg:p-10 flex flex-col gap-4 flex-1">
+                <div className="flex items-center justify-between">
+                    <div className="w-12 h-12 bg-[#240747] rounded-[14px] flex items-center justify-center shrink-0">
+                        {item.icon}
+                    </div>
+                    <span className="font-mono text-[0.65rem] tracking-[0.1em] text-[#240747] opacity-50 font-bold uppercase">
+                        STEP 0{index + 1}
+                    </span>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <motion.h3 
+                        layoutId={`title-${item.title}-${id}`}
+                        className="font-display font-black text-[1.4rem] lg:text-[1.8rem] text-[#240747] leading-none tracking-[-0.03em] uppercase"
+                    >
+                        {item.title}
+                    </motion.h3>
+                    <motion.p 
+                        layoutId={`description-${item.title}-${id}`}
+                        className="font-sans text-[0.9rem] text-[#240747] opacity-75 leading-[1.4] font-medium"
+                    >
+                        {item.subtitle}
+                    </motion.p>
+                </div>
+            </div>
+        </motion.li>
+    );
+}
+
+function MobileCarousel({ setActive, id }: { setActive: (item: BentoGridItem | boolean | null) => void; id: string }) {
+    const [current, setCurrent] = useState(0);
+    const total = ITEMS.length;
+
+    const goTo = (idx: number) => setCurrent((idx + total) % total);
+
+    const onDragEnd = useCallback(
+        (_: unknown, info: PanInfo) => {
+            if (info.offset.x < -60) goTo(current + 1);
+            else if (info.offset.x > 60) goTo(current - 1);
+        },
+        [current]
+    );
+
+    return (
+        <div style={{ width: "100%", overflow: "hidden", position: "relative", display: "grid" }}>
+            <AnimatePresence initial={false}>
+                <motion.div
+                    key={current}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    onDragEnd={onDragEnd}
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -100 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    style={{ gridArea: "1 / 1", cursor: "grab", touchAction: "pan-y" }}
+                >
+                    <ul className="p-0 m-0 list-none">
+                        <PipelineCard item={ITEMS[current]} index={current} setActive={setActive} id={id} />
+                    </ul>
+                </motion.div>
+            </AnimatePresence>
+
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginTop: "1rem",
+                    paddingLeft: "0.5rem",
+                    paddingRight: "0.5rem",
+                }}
+            >
+                <button
+                    onClick={() => goTo(current - 1)}
+                    aria-label="Previous"
+                    style={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        border: `2px solid ${C.purple}`,
+                        background: C.cream,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                    }}
+                >
+                    <ChevronLeft size={18} color={C.purple} />
+                </button>
+
+                <div style={{ display: "flex", gap: "0.4rem" }}>
+                    {ITEMS.map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => goTo(i)}
+                            aria-label={`Go to slide ${i + 1}`}
+                            style={{
+                                width: i === current ? 20 : 8,
+                                height: 8,
+                                borderRadius: 4,
+                                background: i === current ? C.orange : `${C.purple}40`,
+                                border: "none",
+                                cursor: "pointer",
+                                padding: 0,
+                                transition: "width 0.25s ease, background 0.25s ease",
+                            }}
+                        />
+                    ))}
+                </div>
+
+                <button
+                    onClick={() => goTo(current + 1)}
+                    aria-label="Next"
+                    style={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        border: `2px solid ${C.purple}`,
+                        background: C.cream,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                    }}
+                >
+                    <ChevronRight size={18} color={C.purple} />
+                </button>
+            </div>
+            
+            <p
+                style={{
+                    textAlign: "center",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.6rem",
+                    letterSpacing: "0.12em",
+                    color: C.purple,
+                    opacity: 0.5,
+                    marginTop: "0.6rem",
+                    textTransform: "uppercase",
+                }}
+            >
+                {current + 1} / {total}
+            </p>
+        </div>
+    );
+}
+
 export default function InteractivePipeline() {
     const [active, setActive] = useState<BentoGridItem | boolean | null>(null);
     const ref = useRef<HTMLDivElement>(null);
@@ -198,27 +365,27 @@ export default function InteractivePipeline() {
                                     </motion.div>
 
                                     <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
-                                        <div style={{ padding: "2rem", paddingBottom: "1rem" }}>
+                                        <div className="p-6 lg:p-8 pb-4">
                                             <motion.h3
                                                 layoutId={`title-${active.title}-${id}`}
-                                                style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(1.5rem, 4vw, 2.5rem)", color: C.purple, lineHeight: 1, letterSpacing: "-0.04em", marginBottom: "1rem", textTransform: "uppercase" }}
+                                                className="font-display font-black text-[1.5rem] lg:text-[2.5rem] text-[#240747] leading-none tracking-[-0.04em] mb-4 uppercase"
                                             >
                                                 {active.title}
                                             </motion.h3>
                                             <motion.p
                                                 layoutId={`description-${active.title}-${id}`}
-                                                style={{ fontFamily: "var(--font-sans)", fontSize: "1.1rem", fontWeight: 700, color: C.orange, lineHeight: 1.3 }}
+                                                className="font-sans text-[1rem] lg:text-[1.1rem] font-bold text-[#F6851B] leading-[1.3]"
                                             >
                                                 {active.subtitle}
                                             </motion.p>
                                         </div>
-                                        <div style={{ padding: "0 2rem 2rem 2rem", overflowY: "auto" }}>
+                                        <div className="px-6 lg:px-8 pb-8 overflow-y-auto">
                                             <motion.div
                                                 layout
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                                 exit={{ opacity: 0 }}
-                                                style={{ fontFamily: "var(--font-sans)", fontSize: "1rem", color: C.purple, opacity: 0.85, lineHeight: 1.6 }}
+                                                className="font-sans text-[0.95rem] lg:text-[1rem] text-[#240747] opacity-85 leading-[1.6]"
                                             >
                                                 {active.content}
                                             </motion.div>
@@ -232,59 +399,22 @@ export default function InteractivePipeline() {
                 document.body
             )}
 
-            {/* BASE GRID (Asymmetric Bento for Z-flow) */}
-            <ul style={{ 
-                display: "grid", 
-                gridTemplateColumns: "repeat(3, 1fr)", 
-                gap: 20, 
-                padding: 0, 
-                margin: 0, 
-                listStyle: "none" 
-            }}>
-                {ITEMS.map((item, index) => {
-                    const isLarge = index === 0 || index === 3 || index === 4;
-                    return (
-                        <motion.li
-                            layoutId={`card-${item.title}-${id}`}
-                            key={item.id}
-                            onClick={() => setActive(item)}
-                            whileHover={{ y: -6, boxShadow: `8px 8px 0 ${C.orange}`, borderColor: C.orange }}
-                            className="nb-tile"
-                            style={{
-                                gridColumn: isLarge ? "span 2" : "span 1",
-                                background: item.bg,
-                                cursor: "pointer",
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                gap: "1rem",
-                                minHeight: "280px",
-                                transition: "all 0.2s ease",
-                            }}
-                        >
-                             <motion.div layoutId={`image-${item.title}-${id}`} style={{ display: "inline-block" }}>
-                                 <div style={{ width: 64, height: 64, background: C.purple, borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                     {item.icon}
-                                 </div>
-                             </motion.div>
-                             <div style={{ marginTop: "1rem" }}>
-                                 <motion.h3 
-                                     layoutId={`title-${item.title}-${id}`}
-                                     style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.6rem", color: C.purple, lineHeight: 1.1, marginBottom: "0.5rem", textTransform: "uppercase" }}
-                                 >
-                                     {item.title}
-                                 </motion.h3>
-                                 <motion.p 
-                                     layoutId={`description-${item.title}-${id}`}
-                                     style={{ fontFamily: "var(--font-sans)", fontSize: "0.95rem", color: C.purple, opacity: 0.7, fontWeight: 700 }}
-                                 >
-                                     {item.subtitle}
-                                 </motion.p>
-                             </div>
-                        </motion.li>
-                    );
-                })}
-            </ul>
+            {/* CAROUSEL (Mobile) */}
+            <div className="block md:hidden">
+                <MobileCarousel setActive={setActive} id={id} />
+            </div>
+
+            {/* BASE GRID (Desktop) */}
+            <div className="hidden md:block">
+                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 p-0 m-0 list-none">
+                    {ITEMS.map((item, index) => {
+                        const isLarge = index === 0 || index === 3 || index === 4;
+                        return (
+                            <PipelineCard key={item.id} item={item} index={index} setActive={setActive} id={id} isLarge={isLarge} />
+                        );
+                    })}
+                </ul>
+            </div>
         </div>
     );
 }

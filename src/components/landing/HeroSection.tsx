@@ -61,25 +61,25 @@ export default function HeroSection() {
   const { openLeadModal } = useModal();
 
   return (
-    <section style={{ padding: "3rem 1.5rem", paddingTop: "3rem" }}>
+    <section className="px-4 py-8 lg:px-6 lg:py-12">
       <motion.div 
-        style={{ maxWidth: 1320, margin: "0 auto" }} 
+        className="max-w-[1320px] mx-auto"
         initial="hidden" 
         animate="visible" 
         variants={staggerContainer}
       >
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: 16, alignItems: "stretch" }} className="hero-bento">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-4 items-stretch">
           
           {/* ── LEFT TILE ── */}
-          <motion.div variants={fadeUp} style={{ ...tileObj(C.purple), padding: "4rem", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "65vh" }}>
+          <motion.div variants={fadeUp} style={tileObj(C.purple)} className="p-8 lg:p-16 flex flex-col justify-between min-h-[50vh] lg:min-h-[65vh]">
             <div>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", letterSpacing: "0.15em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "3rem" }}>
+              <span className="font-mono text-[0.65rem] tracking-[0.15em] uppercase text-[#F6851B] font-bold block mb-8 lg:mb-12">
                 Engineering Intelligence Complexity Simplified
               </span>
               
-              <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(3rem, 6vw, 4.5rem)", lineHeight: 1, letterSpacing: "-0.04em", textTransform: "uppercase", color: "#F9EFE9", marginBottom: "2rem", maxWidth: 700 }}>
+              <h1 className="font-display font-bold text-[2.5rem] lg:text-[clamp(3rem,6vw,4.5rem)] leading-[1] tracking-[-0.04em] uppercase text-[#F9EFE9] mb-8 max-w-[700px]">
                 Your robot works.<br/>
-                <span style={{ color: C.orange }}>Now make it see.</span>
+                <span className="text-[#F6851B]">Now make it see.</span>
               </h1>
 
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", color: "#F9EFE9", opacity: 0.8, lineHeight: 1.6, maxWidth: 500, marginBottom: "3rem", fontWeight: 400 }}>
@@ -88,24 +88,24 @@ export default function HeroSection() {
             </div>
 
             <div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "2rem" }}>
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <button 
                   onClick={openLeadModal}
-                  className="nb-btn nb-btn-primary"
+                  className="nb-btn nb-btn-primary w-full sm:w-auto"
                 >
                   Book a Demo <ArrowRight size={16} />
                 </button>
                 <Link 
                   href="/case-studies" 
-                  className="nb-btn nb-btn-ghost"
+                  className="nb-btn nb-btn-ghost w-full sm:w-auto text-center"
                 >
                   See Our Work
                 </Link>
               </div>
 
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", paddingTop: "1.5rem", borderTop: `2px solid rgba(249, 239, 233, 0.15)` }}>
+              <div className="flex flex-wrap gap-x-6 gap-y-3 pt-6 border-t border-[#F9EFE9]/15">
                 {["No fragile prototypes", "IP fully yours", "4-week deployment"].map((t) => (
-                  <span key={t} style={{ fontFamily: "var(--font-sans)", fontSize: "0.75rem", fontWeight: 600, color: "#F9EFE9", opacity: 0.7 }}>
+                  <span key={t} className="font-sans text-[0.75rem] font-semibold text-[#F9EFE9] opacity-70">
                     ✓ {t}
                   </span>
                 ))}
@@ -114,12 +114,19 @@ export default function HeroSection() {
           </motion.div>
 
           {/* ── RIGHT COLUMN ── */}
-          <motion.div variants={fadeUp} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ flex: 3 }}>
+          <motion.div variants={fadeUp} className="flex flex-col gap-4">
+            <div className="flex-[3] min-h-[350px] lg:min-h-0">
               <RobotPanel />
             </div>
             {/* Notification Slider */}
-            <motion.div whileHover="hover" initial="rest" animate="rest" variants={tileHover} style={{ ...tileObj(C.blush), padding: "2rem", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", minHeight: 160 }}>
+            <motion.div 
+              whileHover="hover" 
+              initial="rest" 
+              animate="rest" 
+              variants={tileHover} 
+              style={tileObj(C.blush)} 
+              className="p-6 lg:p-8 flex-1 flex flex-col justify-center min-h-[140px] lg:min-h-[160px] mt-8 lg:mt-0"
+            >
                <NotificationSlider />
             </motion.div>
           </motion.div>

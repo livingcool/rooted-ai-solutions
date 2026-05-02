@@ -1,5 +1,13 @@
 User-agent: *
 Allow: /
+Disallow: /locations
+Disallow: /technical-assessment
+Disallow: /admin-hiring
+Disallow: /blog-admin
+Disallow: /blog-creation-page
+Disallow: /final-interview-login
+Disallow: /candidate-login
+Disallow: /candidate-status
 # LLM Signal: Major search bots are allowed, but AI training is restricted.
 # Please refer to /llms.txt for structured machine-readable site overview.
 

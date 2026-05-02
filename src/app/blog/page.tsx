@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ArrowRight, Calendar, Clock, User, ChevronRight, Mail, Sparkles } from "lucide-react";
 import { useModal } from "@/context/ModalContext";
 
+import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
+
 export default function BlogListing() {
     const { openLeadModal } = useModal();
     const [posts, setPosts] = useState<any[]>([]);
@@ -122,16 +124,16 @@ export default function BlogListing() {
                     </div>
 
                     {loading ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        <CarouselWrapper desktopClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                             {[1, 2, 3].map(i => (
                                 <div key={i} className="h-[500px] bg-[#F0DCC8] animate-pulse border-3 border-[#240747] rounded-2xl" />
                             ))}
-                        </div>
+                        </CarouselWrapper>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        <CarouselWrapper desktopClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                             {otherPosts.map((post) => (
-                                <Link href={`/blog/${post.slug}`} key={post.id} className="block group">
-                                    <div className="blog-grid-card">
+                                <Link href={`/blog/${post.slug}`} key={post.id} className="block group h-full">
+                                    <div className="blog-grid-card h-full">
                                         <div className="blog-image-wrapper">
                                             <img 
                                                 src={post.cover_image || "/og-image.png"} 
@@ -170,7 +172,7 @@ export default function BlogListing() {
                                     </div>
                                 </Link>
                             ))}
-                        </div>
+                        </CarouselWrapper>
                     )}
                 </div>
             </section>

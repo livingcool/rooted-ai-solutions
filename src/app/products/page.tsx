@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
+import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
 
 const PRODUCTS = [
   {
@@ -98,101 +99,96 @@ export default function ProductsPage() {
           style={{
             maxWidth: 1320,
             margin:   "0 auto",
-            display:  "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap:      "4px",
           }}
-          className="products-grid"
         >
-          {PRODUCTS.map((p) => {
-            const status = STATUS_COLORS[p.status] ?? STATUS_COLORS["Coming Soon"];
-            return (
-              <div
-                key={p.name}
-                style={{
-                  background:    p.bg,
-                  padding:       "3rem 2.5rem",
-                  display:       "flex",
-                  flexDirection: "column",
-                  gap:           "1.25rem",
-                }}
-              >
-                {/* Name + status */}
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
-                  <div>
-                    <span className="nb-label-orange" style={{ display: "block", marginBottom: "0.35rem" }}>
-                      {p.tag}
-                    </span>
-                    <h2
+          <CarouselWrapper desktopClass="grid grid-cols-1 md:grid-cols-2 gap-[4px]">
+            {PRODUCTS.map((p) => {
+              const status = STATUS_COLORS[p.status] ?? STATUS_COLORS["Coming Soon"];
+              return (
+                <div
+                  key={p.name}
+                  style={{
+                    background:    p.bg,
+                    padding:       "3rem 2.5rem",
+                    display:       "flex",
+                    flexDirection: "column",
+                    gap:           "1.25rem",
+                  }}
+                  className="h-full"
+                >
+                  {/* Name + status */}
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
+                    <div>
+                      <span className="nb-label-orange" style={{ display: "block", marginBottom: "0.35rem" }}>
+                        {p.tag}
+                      </span>
+                      <h2
+                        style={{
+                          fontFamily:    "var(--font-display)",
+                          fontWeight:    900,
+                          fontSize:      "clamp(2rem, 4vw, 3rem)",
+                          color:         "#240747",
+                          letterSpacing: "-0.04em",
+                          lineHeight:    1,
+                        }}
+                      >
+                        {p.name}
+                      </h2>
+                    </div>
+                    <span
                       style={{
-                        fontFamily:    "var(--font-display)",
-                        fontWeight:    900,
-                        fontSize:      "clamp(2rem, 4vw, 3rem)",
-                        color:         "#240747",
-                        letterSpacing: "-0.04em",
-                        lineHeight:    1,
+                        background:    status.bg,
+                        color:         status.text,
+                        border:        "2px solid #240747",
+                        padding:       "0.25rem 0.65rem",
+                        fontFamily:    "var(--font-mono)",
+                        fontSize:      "0.62rem",
+                        fontWeight:    700,
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        flexShrink:    0,
                       }}
                     >
-                      {p.name}
-                    </h2>
+                      {p.status}
+                    </span>
                   </div>
-                  <span
+
+                  <p
                     style={{
-                      background:    status.bg,
-                      color:         status.text,
-                      border:        "2px solid #240747",
-                      padding:       "0.25rem 0.65rem",
-                      fontFamily:    "var(--font-mono)",
-                      fontSize:      "0.62rem",
-                      fontWeight:    700,
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
-                      flexShrink:    0,
+                      fontFamily: "var(--font-sans)",
+                      fontSize:   "0.95rem",
+                      color:      "#240747",
+                      opacity:    0.7,
+                      lineHeight: 1.65,
+                      flex:       1,
+                      borderTop:  "2px solid #240747",
+                      paddingTop: "1.25rem",
+                      marginTop:  "0.25rem",
                     }}
                   >
-                    {p.status}
-                  </span>
+                    {p.desc}
+                  </p>
+
+                  <Link
+                    href={p.href}
+                    className="nb-btn nb-btn-primary"
+                    style={{
+                      textDecoration: "none",
+                      width:          "fit-content",
+                      display:        "inline-flex",
+                    }}
+                  >
+                    {p.status === "Live" ? "Try It Now" : "Join Waitlist"}
+                    {p.status === "Live" ? <ExternalLink size={14} /> : <ArrowRight size={14} />}
+                  </Link>
                 </div>
-
-                <p
-                  style={{
-                    fontFamily: "var(--font-sans)",
-                    fontSize:   "0.95rem",
-                    color:      "#240747",
-                    opacity:    0.7,
-                    lineHeight: 1.65,
-                    flex:       1,
-                    borderTop:  "2px solid #240747",
-                    paddingTop: "1.25rem",
-                    marginTop:  "0.25rem",
-                  }}
-                >
-                  {p.desc}
-                </p>
-
-                <Link
-                  href={p.href}
-                  className="nb-btn nb-btn-primary"
-                  style={{
-                    textDecoration: "none",
-                    width:          "fit-content",
-                    display:        "inline-flex",
-                  }}
-                >
-                  {p.status === "Live" ? "Try It Now" : "Join Waitlist"}
-                  {p.status === "Live" ? <ExternalLink size={14} /> : <ArrowRight size={14} />}
-                </Link>
-              </div>
-            );
-          })}
+              );
+            })}
+          </CarouselWrapper>
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .products-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
+      {/* No more custom style block needed as CarouselWrapper handles it */}
     </div>
   );
 }

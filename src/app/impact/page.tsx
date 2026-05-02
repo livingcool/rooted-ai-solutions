@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, TrendingUp, Clock, DollarSign, Shield, Users, Zap } from "lucide-react";
+import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
 
 const METRICS = [
   { value: "40%",   label: "Average Risk Reduction",    desc: "Across manufacturing clients in the first 90 days.", bg: "#F9EFE9", icon: Shield  },
@@ -49,20 +50,22 @@ export default function ImpactsPage() {
       </div>
 
       <div style={{ background: "#240747", padding: "4px" }}>
-        <div style={{ maxWidth: 1320, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "4px" }} className="impact-grid">
-          {METRICS.map((m) => {
-            const Icon = m.icon;
-            return (
-              <div key={m.label} style={{ background: m.bg, padding: "2.5rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <Icon size={24} color="#F6851B" />
-                <div style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(2.8rem, 5vw, 4.5rem)", color: "#240747", lineHeight: 1, letterSpacing: "-0.05em" }}>{m.value}</div>
-                <div>
-                  <p style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1rem", color: "#240747", letterSpacing: "-0.01em", marginBottom: "0.35rem" }}>{m.label}</p>
-                  <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "#240747", opacity: 0.6, lineHeight: 1.5 }}>{m.desc}</p>
+        <div style={{ maxWidth: 1320, margin: "0 auto" }}>
+          <CarouselWrapper desktopClass="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[4px]">
+            {METRICS.map((m) => {
+              const Icon = m.icon;
+              return (
+                <div key={m.label} style={{ background: m.bg, padding: "2.5rem 2rem", display: "flex", flexDirection: "column", gap: "1rem" }} className="h-full">
+                  <Icon size={24} color="#F6851B" />
+                  <div style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(2.8rem, 5vw, 4.5rem)", color: "#240747", lineHeight: 1, letterSpacing: "-0.05em" }}>{m.value}</div>
+                  <div>
+                    <p style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1rem", color: "#240747", letterSpacing: "-0.01em", marginBottom: "0.35rem" }}>{m.label}</p>
+                    <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.82rem", color: "#240747", opacity: 0.6, lineHeight: 1.5 }}>{m.desc}</p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </CarouselWrapper>
         </div>
       </div>
 
@@ -71,16 +74,16 @@ export default function ImpactsPage() {
           <div style={{ background: "#240747", padding: "2rem 3rem", borderBottom: "4px solid #F6851B", marginBottom: "4px" }}>
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(2rem, 4vw, 3.5rem)", color: "#F9EFE9", letterSpacing: "-0.04em", lineHeight: 1 }}>Real results.<br /><span style={{ color: "#F6851B" }}>Real operations.</span></h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "4px" }} className="case-grid">
+          <CarouselWrapper desktopClass="grid grid-cols-1 md:grid-cols-3 gap-[4px]">
             {CASE_HIGHLIGHTS.map((c) => (
-              <div key={c.industry} style={{ background: c.bg, padding: "2.5rem 2rem", display: "flex", flexDirection: "column", gap: "1rem", borderTop: "4px solid #F6851B" }}>
+              <div key={c.industry} style={{ background: c.bg, padding: "2.5rem 2rem", display: "flex", flexDirection: "column", gap: "1rem", borderTop: "4px solid #F6851B" }} className="h-full">
                 <span className="nb-tag nb-tag-orange">{c.industry}</span>
                 <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.15rem", color: "#240747", letterSpacing: "-0.02em", lineHeight: 1.2, flex: 1 }}>{c.headline}</h3>
                 <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.83rem", color: "#240747", opacity: 0.65, lineHeight: 1.55 }}>{c.detail}</p>
                 <div style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.5rem", color: "#F6851B", letterSpacing: "-0.03em", borderTop: "2px solid #240747", paddingTop: "1rem", marginTop: "0.5rem" }}>{c.metric}</div>
               </div>
             ))}
-          </div>
+          </CarouselWrapper>
         </div>
       </div>
 
@@ -90,11 +93,6 @@ export default function ImpactsPage() {
           <Link href="/#contact" className="nb-btn" style={{ background: "#240747", color: "#F9EFE9", border: "3px solid #240747", boxShadow: "4px 4px 0 #F9EFE9" }}>Start Your Pilot <ArrowRight size={16} /></Link>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 900px) { .impact-grid { grid-template-columns: repeat(2, 1fr) !important; } .case-grid { grid-template-columns: 1fr !important; } }
-        @media (max-width: 480px) { .impact-grid { grid-template-columns: 1fr !important; } }
-      `}</style>
     </div>
   );
 }

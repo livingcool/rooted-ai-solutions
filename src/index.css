@@ -685,4 +685,40 @@
       grid-template-columns: 1fr;
     }
   }
+
+  /* --- Mobile Responsive Overrides --- */
+  @media (max-width: 768px) {
+    .nav-desktop-links {
+      display: none !important;
+    }
+
+    .nb-tile {
+      padding: 1.5rem !important;
+      border-radius: 0 16px 16px 16px !important;
+    }
+    
+    .nb-tile::before {
+      width: 100px !important;
+      height: 12px !important;
+      top: -12px !important;
+    }
+
+    .nb-tile::after {
+      width: 94px !important;
+      height: 4px !important;
+    }
+
+    .nb-btn {
+      padding: 0.75rem 1.25rem !important;
+      font-size: 0.85rem !important;
+    }
+
+    .nb-headline-xl {
+      font-size: clamp(2.5rem, 10vw, 3.5rem) !important;
+    }
+
+    .nb-headline-lg {
+      font-size: clamp(1.75rem, 8vw, 2.5rem) !important;
+    }
+  }
 }

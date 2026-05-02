@@ -1,515 +1,350 @@
 "use client";
 
+import React, { useState, useCallback } from "react";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
+import { ChevronLeft, ChevronRight, Check, X } from "lucide-react";
 
-
-import React, { useEffect, useId, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useOutsideClick } from '../hooks/use-outside-click';
-import { X, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import { createPortal } from 'react-dom';
-import {
-  FaRobot, FaTriangleExclamation, FaSeedling,
-  FaUsersGear, FaBolt
-} from 'react-icons/fa6';
-
+/* ─── Brand tokens ────────────────────────────────────────── */
 const C = {
-  purple: '#240747',
-  orange: '#F6851B',
-  cream: '#F9EFE9',
-  blush: '#FBE6D6',
-  parchment: '#F0E4D8',
-  amber: '#FFD085',
+  purple:    "#240747",
+  orange:    "#F6851B",
+  cream:     "#F9EFE9",
+  parchment: "#F0DCC8",
+  blush:     "#EDD5C0",
+  amber:     "#F5E6C8",
 };
 
-const clampStyle: React.CSSProperties = { fontFamily: 'var(--font-display)' };
+const tileObj = (bg: string, extra?: React.CSSProperties): React.CSSProperties => ({
+  background:   bg,
+  borderRadius: 24,
+  border:       `3px solid ${C.purple}`,
+  overflow:     "hidden",
+  ...extra,
+});
 
-interface DossierItem {
-  id: string;
-  tab: string;
-  headline: string;
-  subline: string;
-  body: string;
-  icon: React.ReactNode;
-  bg: string;
-  fieldData: { label: string; value: string }[];
-  bullets: string[];
+/* ─── Qualification criteria data ────────────────────────── */
+interface Criterion {
+  id:       string;
+  label:    string;
+  desc:     string;
+  verdict:  "QUALIFIED" | "DISQUALIFIED";
+  bg:       string;
 }
 
-const SUBJECTS: DossierItem[] = [
+const CRITERIA: Criterion[] = [
   {
-    id: 's01',
-    tab: 'HARDWARE OPS',
-    headline: 'You ship hardware.',
-    subline: 'Robots, drones, machines with sensor data nobody knows what to do with.',
-    body: 'You build physical systems. Robots, drones, inspection rigs. Your sensors collect terabytes of visual, haptic, and positional data every minute — and most of it dies on a drive. We turn that raw signal into a decisive perception layer integrated directly into your existing stack.',
-    icon: <FaRobot size={26} color={C.orange} />,
-    bg: C.parchment,
-    fieldData: [
-      { label: 'SUBJECT TYPE', value: 'Hardware Manufacturer / Robotics Startup' },
-      { label: 'PAIN SIGNATURE', value: 'Sensor-data blindness' },
-      { label: 'CLEARANCE', value: 'Alpha Priority' },
-    ],
-    bullets: ['No fragile prototypes', 'IP entirely yours', '4-week active deployment', 'No academic consultants'],
+    id:      "c1",
+    label:   "Robotics / Industrial Tech",
+    desc:    "You operate robotics, automation lines, or industrial IoT systems that produce real-time sensor or camera data.",
+    verdict: "QUALIFIED",
+    bg:      C.cream,
   },
   {
-    id: 's02',
-    tab: 'PRIOR ATTEMPT',
-    headline: "You've tried before.",
-    subline: 'Last attempt cost 6 months. You don\'t have another 6 to waste on almost-working.',
-    body: 'You\'ve already been through the motions with another vendor or internal team. The model almost worked. Now you\'re sitting on a half-built system and a board that\'s asking questions. We don\'t restart from zero. We forensically assess what exists, fix the architectural debt, and ship.',
-    icon: <FaTriangleExclamation size={26} color={C.orange} />,
-    bg: C.blush,
-    fieldData: [
-      { label: 'SUBJECT TYPE', value: 'Post-Failed Deployment Operator' },
-      { label: 'PAIN SIGNATURE', value: 'Prototype graveyard' },
-      { label: 'CLEARANCE', value: 'Priority Escalation' },
-    ],
-    bullets: ['Forensic architecture audit', 'Rescue or rebuild decision in 48h', 'Fixed fee, not billable hours', 'Zero fragile handoffs'],
+    id:      "c2",
+    label:   "Pain Point Is Real & Costing You Now",
+    desc:    "Downtime, missed defects, slow QA cycles — the problem has a dollar figure and a deadline attached to it.",
+    verdict: "QUALIFIED",
+    bg:      C.parchment,
   },
   {
-    id: 's03',
-    tab: 'FUNDED FOUNDER',
-    headline: "You're post-seed.",
-    subline: 'You have budget authority and product signal. You need execution velocity.',
-    body: 'You\'ve raised. You have real customers signaling real demand. The board wants a live AI feature in the next product cycle. Your engineering team is three people and they\'re already sprinting. We are the AI team you hire instead of building one.',
-    icon: <FaSeedling size={26} color={C.orange} />,
-    bg: C.amber,
-    fieldData: [
-      { label: 'SUBJECT TYPE', value: 'Funded B2B SaaS / Industrial Startup' },
-      { label: 'PAIN SIGNATURE', value: 'Execution velocity gap' },
-      { label: 'CLEARANCE', value: 'Alpha Priority' },
-    ],
-    bullets: ['Embedded team model', 'Ships in weeks not quarters', 'Scales down when you\'re ready', 'Full knowledge transfer'],
+    id:      "c3",
+    label:   "Pilot-Ready in 30 Days",
+    desc:    "You can grant data access, assign a technical point-of-contact, and start an engagement inside a month.",
+    verdict: "QUALIFIED",
+    bg:      C.blush,
   },
   {
-    id: 's04',
-    tab: 'CORE TEAM',
-    headline: 'Your engineers are irreplaceable.',
-    subline: 'Too valuable to spend on annotation pipelines. Keep them building product.',
-    body: 'Your senior engineers are your product. Every hour they spend cleaning training data or debugging GPU configs is an hour they\'re not shipping. We absorb the entire heavy infrastructure layer — annotation, training, validation, integration — so your team stays focused on what only they can do.',
-    icon: <FaUsersGear size={26} color={C.orange} />,
-    bg: C.parchment,
-    fieldData: [
-      { label: 'SUBJECT TYPE', value: 'Engineering-Led Product Company' },
-      { label: 'PAIN SIGNATURE', value: 'Core team bandwidth drain' },
-      { label: 'CLEARANCE', value: 'Efficiency Critical' },
-    ],
-    bullets: ['We own the full ML lifecycle', 'Zero context-switch for your team', 'Async-first collaboration', 'Weekly precision reporting'],
+    id:      "c4",
+    label:   "Curiosity Tours with No Brief",
+    desc:    "No defined problem, no timeline, no decision-maker in the room. We are not a demo vendor.",
+    verdict: "DISQUALIFIED",
+    bg:      C.amber,
   },
   {
-    id: 's05',
-    tab: 'VELOCITY',
-    headline: 'Speed is your moat.',
-    subline: 'Your market window closes the moment a slower competitor catches up.',
-    body: 'You\'re in a category that rewards the first mover. You\'ve seen slower teams close the gap and you know what\'s at stake. Our entire process is engineered around removing delay — we own the infra, we have the engineers, we have the data pipeline. Time is your scarcest resource. We protect it.',
-    icon: <FaBolt size={26} color={C.orange} />,
-    bg: C.blush,
-    fieldData: [
-      { label: 'SUBJECT TYPE', value: 'Market Velocity Operator' },
-      { label: 'PAIN SIGNATURE', value: 'Competitive window compression' },
-      { label: 'CLEARANCE', value: 'Maximum Priority' },
-    ],
-    bullets: ['4-week deployment record', 'No RFP theatre', 'Decision in 48h', 'Same-week kickoff available'],
+    id:      "c5",
+    label:   "Bespoke Consumer Apps",
+    desc:    "We are built for industrial and enterprise stacks, not consumer mobile apps or SaaS dashboards.",
+    verdict: "DISQUALIFIED",
+    bg:      C.cream,
+  },
+  {
+    id:      "c6",
+    label:   "Pre-Seed with No Operational Data",
+    desc:    "Without production data to train on, we cannot deliver meaningful models. Come back when you have real logs.",
+    verdict: "DISQUALIFIED",
+    bg:      C.parchment,
   },
 ];
 
-// ─── Folder tab clip ────────────────────────────────────────────────
-const FolderCard = ({
-  item,
-  index,
-  onOpen,
-  layoutId,
-}: {
-  item: DossierItem;
-  index: number;
-  onOpen: () => void;
-  layoutId: string;
-}) => {
+/* ─── Verdict badge ──────────────────────────────────────── */
+function VerdictBadge({ verdict }: { verdict: Criterion["verdict"] }) {
+  const isOk = verdict === "QUALIFIED";
   return (
-    <motion.div
-      layoutId={layoutId}
-      onClick={onOpen}
-      whileHover={{ y: -8, boxShadow: `8px 8px 0 ${C.orange}`, borderColor: C.orange }}
-      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className="nb-tile"
+    <span
       style={{
-        background: item.bg,
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
+        display:        "inline-flex",
+        alignItems:     "center",
+        gap:            "0.3rem",
+        padding:        "0.25rem 0.7rem",
+        borderRadius:   6,
+        border:         `2px solid ${C.purple}`,
+        background:     isOk ? C.orange : C.purple,
+        color:          isOk ? C.purple : C.cream,
+        fontFamily:     "var(--font-mono)",
+        fontSize:       "0.55rem",
+        fontWeight:     700,
+        letterSpacing:  "0.12em",
+        textTransform:  "uppercase" as const,
       }}
     >
-
-      {/* Card body */}
-      <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{
-            width: 48, height: 48, background: C.purple,
-            borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            {item.icon}
-          </div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.1em', color: C.purple, opacity: 0.5, fontWeight: 700 }}>
-             SUBJECT 0{index + 1}
-          </span>
-        </div>
-
-        <div>
-          <h3 style={{
-            ...clampStyle,
-            fontWeight: 900, fontSize: '1.4rem',
-            color: C.purple, lineHeight: 1.0, letterSpacing: '-0.03em',
-            marginBottom: '0.6rem',
-          }}>
-            {item.headline}
-          </h3>
-          <p style={{
-            fontFamily: 'var(--font-sans)', fontSize: '0.9rem',
-            color: C.purple, opacity: 0.75, lineHeight: 1.4, fontWeight: 500,
-          }}>
-            {item.subline}
-          </p>
-        </div>
-
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: '0.4rem',
-          fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
-          color: C.orange, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-        }}>
-          OPEN FILE <ArrowRight size={12} />
-        </div>
-      </div>
-
-      {/* Folded corner */}
-      <div style={{
-        position: 'absolute', bottom: 0, right: 0,
-        width: 0, height: 0,
-        borderStyle: 'solid',
-        borderWidth: '0 0 28px 28px',
-        borderColor: `transparent transparent ${C.purple} transparent`,
-        opacity: 0.25,
-      }} />
-    </motion.div>
+      {isOk
+        ? <><Check size={10} strokeWidth={3} /> QUALIFIED</>
+        : <><X size={10} strokeWidth={3} /> DISQUALIFIED</>
+      }
+    </span>
   );
-};
+}
 
-// ─── Expanded Modal ──────────────────────────────────────────────────
-const DossierModal = ({
-  item,
-  layoutId,
-  onClose,
-}: {
-  item: DossierItem;
-  layoutId: string;
-  onClose: () => void;
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
-  useOutsideClick(ref, onClose);
-
+/* ─── Single criterion card ──────────────────────────────── */
+function CriterionCard({ c, index }: { c: Criterion; index: number }) {
   return (
-    <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        style={{
-          position: 'fixed', inset: 0,
-          background: 'rgba(36,7,71,0.88)',
-          backdropFilter: 'blur(8px)',
-          zIndex: 9999,
-        }}
-      />
-      <div style={{
-        position: 'fixed', inset: 0,
-        display: 'grid', placeItems: 'center',
-        zIndex: 10000, padding: '1.5rem',
-      }}>
-        <motion.div
-          layoutId={layoutId}
-          ref={ref}
+    <div style={{ ...tileObj(c.bg), padding: "2rem", height: "100%", display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem" }}>
+        <span
           style={{
-            width: '100%', maxWidth: 680, maxHeight: '90vh',
-            background: C.cream, borderRadius: 24,
-            border: `4px solid ${C.purple}`,
-            boxShadow: `16px 16px 0 ${C.orange}`,
-            overflow: 'hidden', display: 'flex', flexDirection: 'column',
+            fontFamily:    "var(--font-mono)",
+            fontSize:      "0.65rem",
+            fontWeight:    700,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase" as const,
+            color:         C.purple,
+            opacity:       0.45,
           }}
         >
-          {/* Modal folder tab */}
-          <div style={{
-            background: C.purple, padding: '0.6rem 2rem',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.2em', color: C.orange, fontWeight: 700 }}>
-                CASE FILE
-              </span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', fontWeight: 700, textTransform: 'uppercase' }}>
-                {item.tab}
-              </span>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onClose}
-              style={{
-                background: C.orange, border: `2px solid #fff`,
-                borderRadius: '50%', width: 34, height: 34,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              <X size={16} color={C.purple} strokeWidth={3} />
-            </motion.button>
-          </div>
-
-          {/* Dossier content */}
-          <div style={{ overflowY: 'auto', flex: 1 }}>
-            {/* Hero icon + headline */}
-            <div style={{
-              background: item.bg, borderBottom: `3px solid ${C.purple}`,
-              padding: '2.5rem 2.5rem 2rem',
-              display: 'flex', alignItems: 'flex-start', gap: '1.5rem',
-            }}>
-              <div style={{
-                width: 72, height: 72, background: C.purple,
-                borderRadius: 18, display: 'flex', alignItems: 'center',
-                justifyContent: 'center', flexShrink: 0,
-              }}>
-                {item.icon}
-              </div>
-              <div>
-                <h2 style={{
-                  ...clampStyle, fontWeight: 900,
-                  fontSize: 'clamp(1.8rem, 4vw, 2.4rem)',
-                  color: C.purple, lineHeight: 1.0,
-                  letterSpacing: '-0.04em', marginBottom: '0.75rem',
-                }}>
-                  {item.headline}
-                </h2>
-                <p style={{
-                  fontFamily: 'var(--font-sans)', fontSize: '1.05rem',
-                  fontWeight: 700, color: C.orange, lineHeight: 1.3,
-                }}>
-                  {item.subline}
-                </p>
-              </div>
-            </div>
-
-            {/* Field assessment block */}
-            <div style={{
-              background: C.purple, margin: '2rem 2.5rem 0',
-              borderRadius: 14, padding: '1.25rem 1.5rem',
-              border: `2px solid ${C.orange}`,
-              display: 'flex', flexDirection: 'column', gap: '0.6rem',
-            }}>
-              <span style={{
-                fontFamily: 'var(--font-mono)', fontSize: '0.6rem',
-                letterSpacing: '0.22em', color: C.orange, fontWeight: 700,
-                display: 'block', marginBottom: '0.25rem',
-              }}>
-                ██ FIELD ASSESSMENT ██
-              </span>
-              {item.fieldData.map((f) => (
-                <div key={f.label} style={{ display: 'flex', gap: '0.75rem' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: C.orange, opacity: 0.7, fontWeight: 700, minWidth: 130 }}>
-                    {f.label}:
-                  </span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: C.cream, fontWeight: 600 }}>
-                    {f.value}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Body */}
-            <div style={{ padding: '2rem 2.5rem' }}>
-              <p style={{
-                fontFamily: 'var(--font-sans)', fontSize: '1rem',
-                color: C.purple, lineHeight: 1.7, opacity: 0.85, marginBottom: '2rem',
-              }}>
-                {item.body}
-              </p>
-
-              {/* Bullet grid */}
-              <div style={{
-                background: C.purple, borderRadius: 14,
-                border: `2px solid rgba(246,133,27,0.3)`,
-                padding: '1.25rem 1.5rem',
-                display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem',
-              }}>
-                {item.bullets.map((b) => (
-                  <div key={b} style={{
-                    fontFamily: 'var(--font-mono)', fontSize: '0.75rem',
-                    color: C.cream, fontWeight: 600, display: 'flex', gap: '0.5rem', alignItems: 'center',
-                  }}>
-                    <span style={{ color: C.orange }}>✓</span> {b}
-                  </div>
-                ))}
-              </div>
-
-              {/* CTA */}
-              <div style={{ marginTop: '2rem' }}>
-                <Link
-                  href="/#contact"
-                  onClick={onClose}
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                    fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '0.85rem',
-                    letterSpacing: '0.05em', textTransform: 'uppercase',
-                    padding: '1rem 2rem',
-                    background: C.orange, color: C.purple,
-                    border: `3px solid ${C.purple}`, borderRadius: 12,
-                    boxShadow: `5px 5px 0 ${C.purple}`, textDecoration: 'none',
-                  }}
-                >
-                  Open a Case File <ArrowRight size={16} />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <VerdictBadge verdict={c.verdict} />
       </div>
-    </>
+      <h3
+        style={{
+          fontFamily:    "var(--font-display)",
+          fontWeight:    700,
+          fontSize:      "1.1rem",
+          color:         C.purple,
+          lineHeight:    1.2,
+          letterSpacing: "-0.02em",
+        }}
+      >
+        {c.label}
+      </h3>
+      <p
+        style={{
+          fontFamily: "var(--font-sans)",
+          fontSize:   "0.9rem",
+          color:      C.purple,
+          opacity:    0.7,
+          lineHeight: 1.55,
+        }}
+      >
+        {c.desc}
+      </p>
+    </div>
   );
-};
+}
 
-// ─── Main Export ─────────────────────────────────────────────────────
-export default function ClientDossier() {
-  const [active, setActive] = useState<DossierItem | null>(null);
-  const id = useId();
+/* ─── Mobile Carousel ────────────────────────────────────── */
+function MobileCarousel() {
+  const [current, setCurrent] = useState(0);
+  const total = CRITERIA.length;
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setActive(null); };
-    document.body.style.overflow = active ? 'hidden' : 'auto';
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [active]);
+  const goTo = (idx: number) => setCurrent((idx + total) % total);
+
+  const onDragEnd = useCallback(
+    (_: unknown, info: PanInfo) => {
+      if (info.offset.x < -60) goTo(current + 1);
+      else if (info.offset.x > 60) goTo(current - 1);
+    },
+    [current],
+  );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ width: "100%", overflow: "hidden", position: "relative", display: "grid" }}>
+      {/* Card */}
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={current}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          onDragEnd={onDragEnd}
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -100 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          style={{ gridArea: "1 / 1", cursor: "grab", touchAction: "pan-y" }}
+        >
+          <CriterionCard c={CRITERIA[current]} index={current} />
+        </motion.div>
+      </AnimatePresence>
 
-      {/* ── Header Tile ── */}
-      <div style={{
-        background: C.purple, borderRadius: 24,
-        border: `3px solid ${C.purple}`,
-        padding: '4rem',
-        display: 'grid', gridTemplateColumns: '1fr auto', gap: '3rem', alignItems: 'start',
-      }}>
-        {/* Left copy */}
-        <div>
-          <span style={{
-            fontFamily: 'var(--font-mono)', fontSize: '0.75rem',
-            letterSpacing: '0.25em', textTransform: 'uppercase',
-            color: C.orange, fontWeight: 700, display: 'block', marginBottom: '2.5rem',
-          }}>
-            CASE FILE: QUALIFIED OPERATORS
-          </span>
-          <h2 style={{
-            ...clampStyle, fontWeight: 900,
-            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-            lineHeight: 0.88, letterSpacing: '-0.05em',
-            marginBottom: '2rem',
-          }}>
-            <span style={{ color: C.cream, display: 'block', paddingBottom: '0.2rem' }}>We don't take</span>
-            <span style={{ color: C.cream, display: 'block', paddingBottom: '0.2rem' }}>every project.</span>
-            <span style={{ color: C.orange, display: 'block' }}>We take the right ones.</span>
-          </h2>
-          <p style={{
-            fontFamily: 'var(--font-sans)', fontSize: '1.1rem',
-            color: C.cream, opacity: 0.72, lineHeight: 1.6,
-            maxWidth: 520, fontWeight: 400,
-          }}>
-            We run field assessments. We work best with operators whose problems are real, deadlines are immediate, and vision is enough to build on.<br />
-            <strong style={{ color: C.cream, opacity: 1 }}>If you qualify, you already know.</strong>
-          </p>
-        </div>
+      {/* Controls row */}
+      <div
+        style={{
+          display:        "flex",
+          alignItems:     "center",
+          justifyContent: "space-between",
+          marginTop:      "1rem",
+          paddingLeft:    "0.5rem",
+          paddingRight:   "0.5rem",
+        }}
+      >
+        {/* Prev arrow */}
+        <button
+          onClick={() => goTo(current - 1)}
+          aria-label="Previous"
+          style={{
+            width:          36,
+            height:         36,
+            borderRadius:   "50%",
+            border:         `2px solid ${C.purple}`,
+            background:     C.cream,
+            display:        "flex",
+            alignItems:     "center",
+            justifyContent: "center",
+            cursor:         "pointer",
+          }}
+        >
+          <ChevronLeft size={18} color={C.purple} />
+        </button>
 
-        {/* Right — metadata block */}
-        <div style={{
-          border: `2px solid rgba(246,133,27,0.4)`, borderRadius: 16,
-          padding: '1.5rem', minWidth: 200,
-          display: 'flex', flexDirection: 'column', gap: '0.75rem',
-        }}>
-          {[
-            { label: 'FILED', value: 'Q3 2026' },
-            { label: 'CLEARANCE', value: '████ ALPHA' },
-            { label: 'SUBJECTS', value: '5 OPEN FILES' },
-            { label: 'STATUS', value: 'ACCEPTING OPS' },
-          ].map(row => (
-            <div key={row.label} style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.2em', color: C.orange, opacity: 0.6, fontWeight: 700 }}>{row.label}</span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', letterSpacing: '0.05em', color: C.cream, fontWeight: 700 }}>{row.value}</span>
-            </div>
+        {/* Dots */}
+        <div style={{ display: "flex", gap: "0.4rem" }}>
+          {CRITERIA.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              style={{
+                width:        i === current ? 20 : 8,
+                height:       8,
+                borderRadius: 4,
+                background:   i === current ? C.orange : `${C.purple}40`,
+                border:       "none",
+                cursor:       "pointer",
+                padding:      0,
+                transition:   "width 0.25s ease, background 0.25s ease",
+              }}
+            />
           ))}
         </div>
-      </div>
 
-      {/* ── Dossier Card Grid (Flex layout to balance cards) ── */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 16 }}>
-        {SUBJECTS.map((item, i) => (
-          <div key={item.id} style={{ flex: '1 1 calc(33.333% - 16px)', minWidth: 280, maxWidth: i > 2 ? 'calc(50% - 8px)' : 'none' }}>
-            <FolderCard
-              item={item}
-              index={i}
-              layoutId={`dossier-${item.id}-${id}`}
-              onOpen={() => setActive(item)}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* ── NOT CLEARED Strip ── */}
-      <div style={{
-        borderRadius: 20, border: `2px dashed rgba(36,7,71,0.25)`,
-        padding: '2.5rem',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        gap: '2rem', opacity: 0.65, position: 'relative', overflow: 'hidden',
-      }}>
-        <motion.div
-          animate={{ rotate: [-8, -8] }}
-          initial={{ rotate: -8 }}
+        {/* Next arrow */}
+        <button
+          onClick={() => goTo(current + 1)}
+          aria-label="Next"
           style={{
-            fontFamily: 'var(--font-display)', fontWeight: 900,
-            fontSize: 'clamp(1.2rem, 2.5vw, 1.8rem)', color: C.orange,
-            border: `4px solid ${C.orange}`, borderRadius: 8,
-            padding: '0.25rem 1rem', letterSpacing: '0.08em',
-            transform: 'rotate(-8deg)', flexShrink: 0,
+            width:          36,
+            height:         36,
+            borderRadius:   "50%",
+            border:         `2px solid ${C.purple}`,
+            background:     C.cream,
+            display:        "flex",
+            alignItems:     "center",
+            justifyContent: "center",
+            cursor:         "pointer",
           }}
         >
-          NOT CLEARED
-        </motion.div>
+          <ChevronRight size={18} color={C.purple} />
+        </button>
+      </div>
+
+      {/* Counter */}
+      <p
+        style={{
+          textAlign:     "center",
+          fontFamily:    "var(--font-mono)",
+          fontSize:      "0.6rem",
+          letterSpacing: "0.12em",
+          color:         C.purple,
+          opacity:       0.5,
+          marginTop:     "0.6rem",
+          textTransform: "uppercase",
+        }}
+      >
+        {current + 1} / {total}
+      </p>
+    </div>
+  );
+}
+
+/* ─── Desktop grid ───────────────────────────────────────── */
+function DesktopGrid() {
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      {CRITERIA.map((c, i) => (
+        <CriterionCard key={c.id} c={c} index={i} />
+      ))}
+    </div>
+  );
+}
+
+/* ─── Main export ────────────────────────────────────────── */
+export default function ClientDossier() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+
+      {/* ── Header tile ── */}
+      <div
+        style={tileObj(C.purple)}
+        className="p-8 lg:p-16 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 lg:gap-12 items-start"
+      >
         <div>
-          <p style={{
-            fontFamily: 'var(--font-display)', fontWeight: 700,
-            fontSize: '1.1rem', color: C.purple, lineHeight: 1.2, marginBottom: '0.35rem',
-          }}>
-            Still "exploring" whether AI is for you?
-          </p>
-          <p style={{
-            fontFamily: 'var(--font-sans)', fontSize: '0.9rem',
-            color: C.purple, opacity: 0.75, lineHeight: 1.5,
-          }}>
-            We're not the right fit. Come back when the operational pain is real. We'll be here.
+          <span
+            style={{
+              fontFamily:    "var(--font-mono)",
+              fontSize:      "0.75rem",
+              letterSpacing: "0.25em",
+              textTransform: "uppercase" as const,
+              color:         C.orange,
+              fontWeight:    700,
+              display:       "block",
+              marginBottom:  "2rem",
+            }}
+          >
+            CASE FILE: QUALIFIED OPERATORS
+          </span>
+
+          <h2
+            className="font-display font-black text-[2rem] md:text-[2.5rem] lg:text-[clamp(2.5rem,5vw,4rem)] text-white"
+            style={{ lineHeight: 1, letterSpacing: "-0.05em", marginBottom: "1.5rem" }}
+          >
+            <span className="text-white" style={{ display: "block", paddingBottom: "0.15rem" }}>We don&apos;t take</span>
+            <span className="text-white" style={{ display: "block", paddingBottom: "0.15rem" }}>every project.</span>
+            <span style={{ display: "block", color: C.orange }}>We take the right ones.</span>
+          </h2>
+
+          <p
+            className="text-white"
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize:   "1.05rem",
+              lineHeight: 1.6,
+              maxWidth:   520,
+            }}
+          >
+            We run field assessments. We work best with operators whose problems are real,
+            deadlines are immediate, and vision is enough to build on.{" "}
+            <strong className="text-white">If you qualify, you already know.</strong>
           </p>
         </div>
       </div>
 
-      {/* Expanded modal portal */}
-      {typeof document !== 'undefined' && createPortal(
-        <AnimatePresence>
-          {active && (
-            <DossierModal
-              key={active.id}
-              item={active}
-              layoutId={`dossier-${active.id}-${id}`}
-              onClose={() => setActive(null)}
-            />
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
+      {/* ── Cards — mobile carousel / desktop grid ── */}
+      <div className="block md:hidden">
+        <MobileCarousel />
+      </div>
+      <div className="hidden md:block">
+        <DesktopGrid />
+      </div>
     </div>
   );
 }
