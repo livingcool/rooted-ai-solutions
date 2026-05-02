@@ -42,7 +42,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
       email: formData.get('email') as string,
       phone: formData.get('phone') as string,
       company: formData.get('company') as string,
-      service_needed: formData.get('service_needed') as string,
+      project_type: formData.get('service_needed') as string,
       message: formData.get('message') as string,
     };
 
