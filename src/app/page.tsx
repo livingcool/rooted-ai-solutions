@@ -79,36 +79,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ═════════════════ WHAT WE DO (Pipeline Workflow) ═════════════════ */}
-      <section id="how-it-works" style={{ ...sectionWrap, marginTop: "-3rem" }}>
-        <div style={innerWrap}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
-            <div style={{ ...tileObj(C.purple), padding: "4rem", textAlign: "center", marginBottom: "1rem" }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", letterSpacing: "0.25em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "2rem" }}>
-                What we do
-              </span>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(3rem, 5vw, 4.5rem)", lineHeight: 0.85, letterSpacing: "-0.04em" }}>
-                <span style={{ color: C.cream, display: "block", paddingBottom: "0.3rem" }}>From inputs to</span>
-                <span style={{ color: C.orange, display: "block" }}>system integration.</span>
-              </h2>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.2rem", color: C.cream, opacity: 0.8, maxWidth: 600, margin: "2rem auto 0 auto", fontWeight: 500 }}>
-                Explore our tactical lifecycle and operational benefits.
-              </p>
-            </div>
-            <InteractivePipeline />
-          </div>
-        </div>
-      </section>
-
-      {/* ═════════════════ TESTIMONIALS ═════════════════ */}
-      <section style={sectionWrap}>
-        <div style={innerWrap}>
-          <Testimonials />
-        </div>
-      </section>
-
       {/* ═════════════════ SERVICES ═════════════════ */}
-      <section style={sectionWrap}>
+      <section style={{ ...sectionWrap, marginTop: "-3rem" }}>
         <div style={innerWrap}>
           <div style={{ ...tileObj(C.cream), padding: "3rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1.5rem", marginBottom: 16 }}>
             <div>
@@ -146,6 +118,34 @@ export default function LandingPage() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ═════════════════ WHAT WE DO (Pipeline Workflow) ═════════════════ */}
+      <section id="how-it-works" style={sectionWrap}>
+        <div style={innerWrap}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+            <div style={{ ...tileObj(C.purple), padding: "4rem", textAlign: "center", marginBottom: "1rem" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", letterSpacing: "0.25em", textTransform: "uppercase", color: C.orange, fontWeight: 700, display: "block", marginBottom: "2rem" }}>
+                What we do
+              </span>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(3rem, 5vw, 4.5rem)", lineHeight: 0.85, letterSpacing: "-0.04em" }}>
+                <span style={{ color: C.cream, display: "block", paddingBottom: "0.3rem" }}>From inputs to</span>
+                <span style={{ color: C.orange, display: "block" }}>system integration.</span>
+              </h2>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.2rem", color: C.cream, opacity: 0.8, maxWidth: 600, margin: "2rem auto 0 auto", fontWeight: 500 }}>
+                Explore our tactical lifecycle and operational benefits.
+              </p>
+            </div>
+            <InteractivePipeline />
+          </div>
+        </div>
+      </section>
+
+      {/* ═════════════════ TESTIMONIALS ═════════════════ */}
+      <section style={sectionWrap}>
+        <div style={innerWrap}>
+          <Testimonials />
         </div>
       </section>
 

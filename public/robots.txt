@@ -1,10 +1,10 @@
 User-agent: *
 Allow: /
-# LLM Signal: All major bots are explicitly encouraged to crawl
+# LLM Signal: Major search bots are allowed, but AI training is restricted.
 # Please refer to /llms.txt for structured machine-readable site overview.
 
 User-agent: GPTBot
-Allow: /
+Disallow: /
 
 User-agent: ChatGPT-User
 Allow: /
@@ -16,7 +16,7 @@ User-agent: anthropic-ai
 Allow: /
 
 User-agent: Google-Extended
-Allow: /
+Disallow: /
 
 User-agent: PerplexityBot
 Allow: /
