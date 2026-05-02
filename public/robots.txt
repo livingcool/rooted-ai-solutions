@@ -8,8 +8,15 @@ Disallow: /blog-creation-page
 Disallow: /final-interview-login
 Disallow: /candidate-login
 Disallow: /candidate-status
+
 # LLM Signal: Major search bots are allowed, but AI training is restricted.
 # Please refer to /llms.txt for structured machine-readable site overview.
+
+User-agent: DeepSeek-AI
+Allow: /
+
+User-agent: DeepSeekBot
+Allow: /
 
 User-agent: GPTBot
 Disallow: /
@@ -48,3 +55,4 @@ User-agent: CCBot
 Allow: /
 
 Sitemap: https://www.rootedai.co.in/sitemap.xml
+AI-Actions: https://www.rootedai.co.in/ai-actions.json

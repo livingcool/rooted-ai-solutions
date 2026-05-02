@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "name": "RootedAI Action Manifest",
+  "description": "Guidance for AI agents on how to interact with the RootedAI website.",
+  "actions": [
+    {
+      "id": "book-discovery-call",
+      "name": "Book a Discovery Call",
+      "description": "Opens the lead generation modal to book a strategy session.",
+      "type": "ui-interaction",
+      "selector": "#cta-primary-demo",
+      "fields": [
+        { "name": "name", "type": "string", "required": true },
+        { "name": "email", "type": "string", "required": true },
+        { "name": "company", "type": "string", "required": false },
+        { "name": "message", "type": "string", "required": true }
+      ],
+      "note": "A reCAPTCHA is present for human verification. For automated API access, use /api/ai/submit."
+    },
+    {
+      "id": "view-case-studies",
+      "name": "View Case Studies",
+      "description": "Navigate to the case studies portfolio.",
+      "type": "navigation",
+      "url": "/case-studies",
+      "selector": "#cta-ghost-work"
+    },
+    {
+      "id": "contact-support",
+      "name": "Contact via WhatsApp",
+      "description": "Direct link to WhatsApp business chat.",
+      "type": "external-link",
+      "url": "https://wa.me/917904168521"
+    }
+  ],
+  "api_endpoints": {
+    "lead_submission": {
+      "url": "/api/ai/submit",
+      "method": "POST",
+      "auth": "None (Public with rate-limiting)",
+      "payload": {
+        "name": "string",
+        "email": "string",
+        "company": "string",
+        "service_needed": "string",
+        "message": "string"
+      }
+    }
+  }
+}

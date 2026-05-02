@@ -59,8 +59,8 @@ export default function ServicesPage() {
 
       {/* CTA */}
       <div style={{ background: "#240747", padding: "4px 4px 0" }}>
-        <div style={{ maxWidth: 1320, margin: "0 auto", background: "#F6851B", padding: "3rem 3.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "2rem" }}>
-          <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(2rem, 4vw, 3.5rem)", color: "#240747", lineHeight: 1, letterSpacing: "-0.04em" }}>Not sure where<br />to start?</h2>
+        <div style={{ maxWidth: 1320, margin: "0 auto", background: "#F6851B", padding: "3rem 3.5rem" }} className="flex flex-col md:flex-row items-center md:justify-between gap-8 md:gap-12">
+          <h2 className="text-center md:text-left" style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(2rem, 4vw, 3.5rem)", color: "#240747", lineHeight: 1, letterSpacing: "-0.04em" }}>Not sure where<br />to start?</h2>
           <Link href="/#contact" className="nb-btn-inverted rounded-xl">
             Book a Free Scoping Call <ArrowRight size={16} />
           </Link>

@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { ArrowRight, Linkedin, Github, Twitter } from "lucide-react";
+import RootedLogo from "@/components/ui/RootedLogo";
 import { useModal } from "@/context/ModalContext";
+
+import LocationFooter from "./LocationFooter";
 
 const FOOTER_LINKS = {
   Services: [
@@ -54,7 +57,8 @@ export default function Footer() {
             }}
           >
             {/* Logo */}
-            <div>
+            <div className="flex items-center gap-3">
+              <RootedLogo size={48} color="#240747" strokeWidth={2.2} />
               <span
                 style={{
                   fontFamily:    "var(--font-display)",
@@ -67,23 +71,24 @@ export default function Footer() {
               >
                 Rooted<span style={{ color: "#F6851B" }}>AI</span>
               </span>
-              <p
-                style={{
-                  fontFamily:  "var(--font-mono)",
-                  fontSize:    "0.65rem",
-                  color:       "#240747",
-                  opacity:     0.55,
-                  marginTop:   "0.5rem",
-                  letterSpacing:"0.08em",
-                  textTransform:"uppercase",
-                  lineHeight:  1.5,
-                }}
-              >
-                Heavy LLM architectures
-                <br />
-                for manufacturing & logistics.
-              </p>
             </div>
+
+            <p
+              style={{
+                fontFamily:  "var(--font-mono)",
+                fontSize:    "0.65rem",
+                color:       "#240747",
+                opacity:     0.55,
+                marginTop:   "0.5rem",
+                letterSpacing:"0.08em",
+                textTransform:"uppercase",
+                lineHeight:  1.5,
+              }}
+            >
+              Heavy LLM architectures
+              <br />
+              for manufacturing & logistics.
+            </p>
 
             {/* Social links */}
             <div style={{ display: "flex", gap: "0.75rem" }}>
@@ -235,6 +240,9 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      {/* SEO & GEO Semantic Mapping */}
+      <LocationFooter />
 
       <style>{`
         @media (max-width: 900px) {

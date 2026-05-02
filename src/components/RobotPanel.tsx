@@ -67,16 +67,11 @@ export default function RobotPanel() {
   const [currentAction, setCurrentAction] = useState("Wave");
   const [currentExpression, setCurrentExpression] = useState<string | null>(null);
   const [isSurprise, setIsSurprise] = useState(false);
-
-  // Pre-extract expressions so we don't have to guess the internal IDs
-  const { scene } = useGLTF('/models/RobotExpressive.glb');
-  const face = scene?.getObjectByName('Head_4') as THREE.Mesh;
-  const expressions = face?.morphTargetDictionary ? Object.keys(face.morphTargetDictionary) : [];
+  const expressions = ["Angry", "Surprised", "Sad", "Relaxed", "MDR", "Surprised"];
 
   useEffect(() => {
     if (isSurprise) return;
 
-    // Added Running to the sequence along with explicit expression toggling
     const sequence = [
       { name: "Wave", duration: 3000, express: false },
       { name: "Running", duration: 4000, express: true },
@@ -93,12 +88,11 @@ export default function RobotPanel() {
       const step = sequence[currentStep];
       setCurrentAction(step.name);
       
-      // Randomly switch expression if the step asks for it and expressions exist
-      if (step.express && expressions.length > 0) {
+      if (step.express) {
         const randomExpr = expressions[Math.floor(Math.random() * expressions.length)];
         setCurrentExpression(randomExpr);
       } else {
-        setCurrentExpression(null); // Neutral face
+        setCurrentExpression(null);
       }
 
       timeout = setTimeout(() => {
@@ -110,24 +104,18 @@ export default function RobotPanel() {
     playNext();
 
     return () => clearTimeout(timeout);
-  }, [isSurprise, expressions.length]);
+  }, [isSurprise]);
 
   const handleSurprise = () => {
     if (isSurprise) return; 
     
     setIsSurprise(true);
     setCurrentAction("Jump"); 
-    
-    // Pick the "Surprised" expression if it exists, otherwise just a random one
-    if (expressions.includes('Surprised')) {
-      setCurrentExpression('Surprised');
-    } else if (expressions.length > 0) {
-      setCurrentExpression(expressions[Math.floor(Math.random() * expressions.length)]);
-    }
+    setCurrentExpression('Surprised');
 
     setTimeout(() => {
       setIsSurprise(false); 
-      setCurrentExpression(null); // Reset expression after landing
+      setCurrentExpression(null); 
     }, 2000);
   };
 
@@ -154,32 +142,52 @@ export default function RobotPanel() {
     >
       {/* 3D Canvas */}
       <div style={{ position: "absolute", inset: 0 }}>
-        <Canvas camera={{ position: [0, 2, 8], fov: 40 }}>
-          <color attach="background" args={[C.parchment]} />
-          <ambientLight intensity={1.5} />
-          <pointLight position={[10, 10, 10]} intensity={1.5} color={C.purple} />
-          <spotLight position={[-10, 10, 10]} angle={0.15} penumbra={1} intensity={2} color="#F6851B" />
-          <Environment preset="city" />
-          <React.Suspense fallback={null}>
+        <React.Suspense fallback={
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.parchment }}>
+            <div className="animate-pulse flex flex-col items-center gap-4">
+              <div style={{ width: 80, height: 80, border: `4px solid ${C.purple}`, borderRadius: '50%', opacity: 0.2 }} />
+              <div style={{ width: 120, height: 16, background: C.purple, opacity: 0.1, borderRadius: 4 }} />
+            </div>
+          </div>
+        }>
+          <Canvas 
+            camera={{ position: [0, 2, 8], fov: 40 }} 
+            gl={{ 
+              antialias: false, // Better performance on mobile
+              powerPreference: "high-performance",
+              preserveDrawingBuffer: true 
+            }}
+            onCreated={({ gl }) => {
+              gl.domElement.addEventListener('webglcontextlost', (e) => {
+                e.preventDefault();
+                console.warn('WebGL context lost. Attempting to recover...');
+              }, false);
+            }}
+          >
+            <color attach="background" args={[C.parchment]} />
+            <ambientLight intensity={1.5} />
+            <pointLight position={[10, 10, 10]} intensity={1.5} color={C.purple} />
+            <spotLight position={[-10, 10, 10]} angle={0.15} penumbra={1} intensity={2} color="#F6851B" />
+            <Environment preset="city" />
             <group position={[0, -0.5, 0]}>
               <RobotModel actionName={currentAction} expression={currentExpression} />
               <ContactShadows opacity={0.4} scale={15} blur={2.5} far={4} position={[0, -2, 0]} />
             </group>
-          </React.Suspense>
-          
-          {/* Stylized Grid Floor */}
-          <gridHelper 
-            args={[20, 20, C.purple, "rgba(36, 7, 71, 0.1)"]} 
-            position={[0, -2.51, 0]} 
-          />
-          
-          <OrbitControls 
-            enableZoom={false} 
-            enablePan={false} 
-            maxPolarAngle={Math.PI / 2} 
-            minPolarAngle={Math.PI / 4} 
-          />
-        </Canvas>
+            
+            {/* Stylized Grid Floor */}
+            <gridHelper 
+              args={[20, 20, C.purple, "rgba(36, 7, 71, 0.1)"]} 
+              position={[0, -2.51, 0]} 
+            />
+            
+            <OrbitControls 
+              enableZoom={false} 
+              enablePan={false} 
+              maxPolarAngle={Math.PI / 2} 
+              minPolarAngle={Math.PI / 4} 
+            />
+          </Canvas>
+        </React.Suspense>
       </div>
 
       {/* Floating Info */}

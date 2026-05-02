@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Star, Quote, ExternalLink, ShieldCheck, Award, MessageSquare } from "lucide-react";
+import Image from "next/image";
 import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
 
 /* ─────────────────────────────────────────
@@ -89,10 +90,12 @@ export default function Testimonials() {
                   Recognized as a leading <strong>AI Development Company</strong> for enterprise-grade autonomous workflows.
               </p>
           </div>
-          <img 
+          <Image 
               src="/images/goodfirms-badge.png" 
               alt="GoodFirms Badge" 
-              style={{ width: "100%", maxWidth: 140, marginTop: "auto", alignSelf: "center", filter: "grayscale(1) contrast(1.2) brightness(0.8)", opacity: 0.8 }}
+              width={140}
+              height={50}
+              style={{ width: "100%", maxWidth: 140, height: "auto", marginTop: "auto", alignSelf: "center", filter: "grayscale(1) contrast(1.2) brightness(0.8)", opacity: 0.8 }}
           />
         </motion.div>
 

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown, ArrowRight, Linkedin, Twitter, Github } from "lucide-react";
+import RootedLogo from "@/components/ui/RootedLogo";
 
 import { useModal } from "@/context/ModalContext";
 
@@ -57,36 +58,42 @@ const Navigation = () => {
           className="flex items-center justify-between px-8 h-[72px]"
         >
           {/* Logo */}
-            <Link
-              href="/"
-              className="flex items-center gap-1 no-underline"
-              style={{ textDecoration: "none" }}
-            >
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 900,
-                fontSize: "1.5rem",
-                color: "#240747",
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
-              }}
-            >
-              ROOTED
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 900,
-                fontSize: "1.5rem",
-                color: "#F6851B",
-                letterSpacing: "-0.04em",
-                lineHeight: 1,
-              }}
-            >
-              AI
-            </span>
+          <Link
+            href="/"
+            className="flex items-center gap-3 no-underline group"
+            style={{ textDecoration: "none" }}
+          >
+            <div className="flex items-center justify-center w-10 h-10">
+              <RootedLogo size={36} color="#240747" strokeWidth={2.5} />
+            </div>
+            <div className="flex items-center">
+              <span
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "1.4rem",
+                  color: "#240747",
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1,
+                }}
+              >
+                ROOTED
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "1.4rem",
+                  color: "#F6851B",
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1,
+                }}
+              >
+                AI
+              </span>
+            </div>
           </Link>
+
 
           {/* Desktop Nav Links */}
           <div className="!hidden md:!flex items-center gap-8 nav-desktop-links">
@@ -138,7 +145,7 @@ const Navigation = () => {
             </button>
 
             <button
-              className="md:hidden flex items-center justify-center w-10 h-10"
+              className="md:hidden flex items-center justify-center w-10 h-10 relative z-[70]"
               style={{
                 border: "3px solid #240747",
                 background: "#F9EFE9",
@@ -159,11 +166,12 @@ const Navigation = () => {
       {/* ── Mobile Full-Screen Overlay ── */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 flex flex-col"
+          className="fixed inset-0 z-[60] flex flex-col"
           style={{
             backgroundColor: "#F9EFE9",
             paddingTop:       "4.5rem",
             borderTop:        "3px solid #240747",
+            touchAction:      "none", // Prevent scroll bleed
           }}
         >
           {/* Nav Links */}

@@ -39,7 +39,7 @@ export function CarouselWrapper({
   return (
     <>
       {/* Mobile view */}
-      <div className={`block md:hidden w-full overflow-hidden relative col-span-full ${className}`} style={{ display: "grid" }}>
+      <div className={`grid md:hidden w-full overflow-hidden relative col-span-full ${className}`}>
         <AnimatePresence initial={false}>
           <motion.div
             key={current}

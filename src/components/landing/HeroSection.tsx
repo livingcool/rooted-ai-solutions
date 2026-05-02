@@ -90,12 +90,14 @@ export default function HeroSection() {
             <div>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <button 
+                  id="cta-primary-demo"
                   onClick={openLeadModal}
                   className="nb-btn nb-btn-primary w-full sm:w-auto"
                 >
                   Book a Demo <ArrowRight size={16} />
                 </button>
                 <Link 
+                  id="cta-ghost-work"
                   href="/case-studies" 
                   className="nb-btn nb-btn-ghost w-full sm:w-auto text-center"
                 >

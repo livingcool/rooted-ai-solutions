@@ -23,7 +23,10 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.rootedai.co.in"),
-  title: "Rooted AI Solutions | Strategic AI Engineering for Robotics",
+  title: {
+    default: "Rooted AI Solutions | Strategic AI Engineering for Robotics",
+    template: "%s | Rooted AI Solutions"
+  },
   description: "Accelerate your robotics deployment with our expert perception systems and tactical engineering services. Helping startups scale intelligence with precision.",
   keywords: [
     "Robotics AI",
@@ -33,7 +36,11 @@ export const metadata: Metadata = {
     "Tactical Software",
     "Rooted AI",
     "Robotics Outsourcing",
-    "AI Agents"
+    "AI Agents",
+    "Agentic AI",
+    "Process Automation",
+    "Manufacturing AI",
+    "Industrial Automation Hosur"
   ],
   manifest: "/manifest.json",
   alternates: {
@@ -44,22 +51,76 @@ export const metadata: Metadata = {
     description: "Scale your robotics startup with precision perception and engineering.",
     url: "https://www.rootedai.co.in",
     siteName: "Rooted AI",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-      },
-    ],
+    images: [],
     locale: "en_US",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rooted AI Solutions | Strategic AI Engineering",
+    description: "Scale your robotics startup with precision perception and engineering.",
+    images: [],
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icons/icon-192x192.png" },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.rootedai.co.in/#organization",
+      "name": "Rooted AI Solutions",
+      "url": "https://www.rootedai.co.in",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.rootedai.co.in/logo.png"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/company/rootedai"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-7904168521",
+        "contactType": "sales",
+        "email": "info@rootedai.co.in",
+        "areaServed": ["IN", "AE", "SG"],
+        "availableLanguage": "en"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.rootedai.co.in/#website",
+      "url": "https://www.rootedai.co.in",
+      "name": "Rooted AI Solutions",
+      "publisher": { "@id": "https://www.rootedai.co.in/#organization" },
+      "description": "Strategic AI Engineering for Robotics and Industrial Automation"
+    }
+  ]
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
   themeColor: "#240747",
 };
 
@@ -71,6 +132,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <link rel="preload" href="/models/RobotExpressive.glb" as="fetch" crossOrigin="anonymous" />
         {/* Google Tag Manager */}
         <script

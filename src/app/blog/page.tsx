@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock, User, ChevronRight, Mail, Sparkles } from "lucide-react";
+import Image from "next/image";
 import { useModal } from "@/context/ModalContext";
 
 import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
@@ -70,10 +71,11 @@ export default function BlogListing() {
                         <Link href={`/blog/${featuredPost.slug}`} className="block group">
                             <div className="blog-featured-card bg-[#F9EFE9]">
                                 <div className="relative aspect-[16/10] md:aspect-auto h-full overflow-hidden border-b-4 md:border-b-0 md:border-r-4 border-[#240747]">
-                                    <img 
+                                    <Image 
                                         src={featuredPost.cover_image || "/og-image.png"} 
                                         alt={featuredPost.title}
-                                        className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                                        fill
+                                        className="object-cover grayscale-[0.5] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                                     />
                                     <div className="blog-category-tag">{featuredPost.category}</div>
                                 </div>
@@ -135,10 +137,11 @@ export default function BlogListing() {
                                 <Link href={`/blog/${post.slug}`} key={post.id} className="block group h-full">
                                     <div className="blog-grid-card h-full">
                                         <div className="blog-image-wrapper">
-                                            <img 
+                                            <Image 
                                                 src={post.cover_image || "/og-image.png"} 
                                                 alt={post.title}
-                                                className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+                                                fill
+                                                className="object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
                                             />
                                             <div className="blog-category-tag">{post.category}</div>
                                         </div>
@@ -157,7 +160,7 @@ export default function BlogListing() {
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-8 h-8 rounded-full border-2 border-[#240747] overflow-hidden bg-[#F0DCC8]">
                                                         {post.author_image ? (
-                                                            <img src={post.author_image} alt={post.author} className="w-full h-full object-cover" />
+                                                            <Image src={post.author_image} alt={post.author} width={32} height={32} className="w-full h-full object-cover" />
                                                         ) : (
                                                             <div className="w-full h-full flex items-center justify-center bg-[#240747] text-[#F9EFE9] text-[0.6rem]">
                                                                 {post.author?.charAt(0)}
