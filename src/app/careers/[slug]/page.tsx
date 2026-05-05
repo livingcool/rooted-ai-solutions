@@ -131,12 +131,12 @@ export default function JobDetailPage() {
                                                 Initialize Application
                                             </Button>
                                         </DialogTrigger>
-                                        <DialogContent className="bg-[#F9EFE9] border-4 border-[#240747] p-0 overflow-hidden max-w-2xl max-h-[90vh]">
-                                            <div className="bg-[#240747] p-6 border-b-4 border-[#240747]">
+                                        <DialogContent className="bg-[#F9EFE9] border-4 border-[#240747] p-0 overflow-y-auto max-w-2xl max-h-[90vh]">
+                                            <div className="bg-[#240747] p-6 border-b-4 border-[#240747] sticky top-0 z-10">
                                                 <h2 className="text-2xl font-black text-[#F9EFE9]">Application Portal</h2>
                                                 <p className="text-[#F6851B] text-[0.6rem] font-bold uppercase tracking-widest mt-1">Target Role: {job.title}</p>
                                             </div>
-                                            <div className="p-8 overflow-y-auto">
+                                            <div className="p-8">
                                                 <JobApplicationForm
                                                     jobId={job.id}
                                                     jobTitle={job.title}
