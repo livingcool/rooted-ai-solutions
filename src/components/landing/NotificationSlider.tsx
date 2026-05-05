@@ -5,12 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { updates } from "@/data/updates";
-
-const C = {
-  purple: "#240747",
-  orange: "#F6851B",
-  blush:  "#EDD5C0",
-};
+import { C } from "@/data/constants";
 
 export default function NotificationSlider() {
   const [index, setIndex] = useState(0);

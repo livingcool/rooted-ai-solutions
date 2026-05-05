@@ -38,11 +38,8 @@ export default function Footer() {
           style={{
             maxWidth: 1320,
             margin:   "0 auto",
-            display:  "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr",
-            gap:      "4px",
           }}
-          className="footer-grid"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[4px]"
         >
           {/* Brand tile */}
           <div
@@ -229,15 +226,6 @@ export default function Footer() {
 
       {/* SEO & GEO Semantic Mapping */}
       <LocationFooter />
-
-      <style>{`
-        @media (max-width: 900px) {
-          .footer-grid { grid-template-columns: 1fr 1fr !important; }
-        }
-        @media (max-width: 500px) {
-          .footer-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </footer>
   );
 }

@@ -8,12 +8,10 @@ import { useOutsideClick } from '../hooks/use-outside-click';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { FaCheckCircle, FaFileAlt, FaMapSigns, FaDatabase, FaCubes, FaCrosshairs, FaPuzzlePiece } from "react-icons/fa";
+import { C } from "@/data/constants";
 
 // Constants for Brutalist Theme
-const C = {
-  purple: "#240747",
-  orange: "#F6851B",
-  cream: "#F9EFE9",
+const PIPE_COLORS = {
   blush: "#FBE6D6",
   parchment: "#F0E4D8",
   amber: "#FFD085"
@@ -64,7 +62,7 @@ const ITEMS: BentoGridItem[] = [
         id: "step-3",
         title: "DATA CLEANING",
         subtitle: "Sanitize Complex Datasets. Automate the Tedium.",
-        bg: C.blush,
+        bg: PIPE_COLORS.blush,
         icon: <FaDatabase size={28} color={C.orange} />,
         content: (
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -79,7 +77,7 @@ const ITEMS: BentoGridItem[] = [
         id: "step-4",
         title: "LLM FINE-TUNING",
         subtitle: "Managed Infrastructure. Zero Operational Risks.",
-        bg: C.amber,
+        bg: PIPE_COLORS.amber,
         icon: <FaCubes size={28} color={C.orange} />,
         content: (
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>

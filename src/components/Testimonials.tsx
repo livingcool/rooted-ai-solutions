@@ -5,18 +5,7 @@ import { motion } from "framer-motion";
 import { Star, Quote, ExternalLink, ShieldCheck, Award, MessageSquare } from "lucide-react";
 import Image from "next/image";
 import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
-
-/* ─────────────────────────────────────────
-   COLOURS (Matching Index.tsx)
-───────────────────────────────────────── */
-const C = {
-  cream:     "#F9EFE9",
-  parchment: "#F0DCC8",
-  blush:     "#EDD5C0",
-  amber:     "#F5E6C8",
-  purple:    "#240747",
-  orange:    "#F6851B",
-};
+import { C } from "@/data/constants";
 
 const fadeUp = {
   hidden: { y: 20, opacity: 0 },

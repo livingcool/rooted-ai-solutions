@@ -34,7 +34,7 @@ export default function CaseStudies() {
             {CASE_STUDIES.map((cs, i) => {
               const isEven = i % 2 === 0;
               return (
-                <div key={cs.id} style={{ display: "grid", gridTemplateColumns: isEven ? "1fr 320px" : "320px 1fr", gap: "4px", minHeight: 280 }} className="cs-row h-full">
+                <div key={cs.id} className="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-[4px] min-h-[280px] h-full">
                   <div style={{ background: cs.bg, padding: "2.5rem 3rem", display: "flex", flexDirection: "column", gap: "1.25rem", order: isEven ? 0 : 1, borderLeft: "4px solid #F6851B" }}>
                     <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
                       <span className="nb-tag nb-tag-orange">{cs.tag}</span>
@@ -67,12 +67,6 @@ export default function CaseStudies() {
           </Link>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .cs-row { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </div>
   );
 }

@@ -3,16 +3,9 @@
 import React, { useState, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight, Check, X } from "lucide-react";
+import { C } from "@/data/constants";
 
 /* ─── Brand tokens ────────────────────────────────────────── */
-const C = {
-  purple:    "#240747",
-  orange:    "#F6851B",
-  cream:     "#F9EFE9",
-  parchment: "#F0DCC8",
-  blush:     "#EDD5C0",
-  amber:     "#F5E6C8",
-};
 
 const tileObj = (bg: string, extra?: React.CSSProperties): React.CSSProperties => ({
   background:   bg,

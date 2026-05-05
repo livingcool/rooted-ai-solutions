@@ -90,6 +90,7 @@
 
   html {
     scroll-behavior: auto !important;
+    scroll-padding-top: 80px;
   }
 
   body {

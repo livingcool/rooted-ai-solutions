@@ -3,12 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const C = {
-  purple: "#240747",
-  orange: "#F6851B",
-  cream:  "#F9EFE9",
-};
+import { C } from "@/data/constants";
 
 interface CarouselWrapperProps {
   children: React.ReactNode[];

@@ -146,7 +146,7 @@ const Navigation = () => {
           }}
         >
           {/* Nav Links */}
-          <div className="flex flex-col flex-1 px-6 pt-8" style={{ gap: 0 }}>
+          <div className="flex flex-col flex-1 px-6 pt-8 overflow-y-auto" style={{ gap: 0 }}>
             {NAV_LINKS.map((link, i) => (
               <Link
                 key={link.name}
@@ -210,7 +210,7 @@ const Navigation = () => {
       )}
 
       {/* Spacer to offset fixed nav */}
-      <div style={{ height: 64 }} />
+      <div style={{ height: 72 }} />
     </>
   );
 };

@@ -13,6 +13,9 @@ const SmoothScroll = ({ children }: SmoothScrollProps) => {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    // Disable Lenis on mobile to prevent carousel swipe conflicts
+    if (window.innerWidth < 768) return;
+
     // Initialize Lenis
     const lenis = new Lenis({
       lerp: 0.05, // Lower = smoother glide

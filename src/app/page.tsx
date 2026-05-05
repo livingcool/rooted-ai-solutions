@@ -3,10 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import {
-  ArrowRight, Cpu, Zap, Globe, Brain, Shield, BarChart3, ChevronRight
+  ArrowRight, ChevronRight
 } from "lucide-react";
 import dynamic from "next/dynamic";
-import { METRICS, SERVICES } from "@/data/constants";
+import { C, METRICS, SERVICES } from "@/data/constants";
 import { useModal } from "@/context/ModalContext";
 
 // Dynamic imports for heavy client components
@@ -46,15 +46,6 @@ const ClientDossier = dynamic(() => import("@/components/ClientDossier"), { ssr:
 const Testimonials = dynamic(() => import("@/components/Testimonials"), { ssr: true });
 const NotificationSlider = dynamic(() => import("@/components/landing/NotificationSlider"), { ssr: false });
 
-const C = {
-  cream:     "#F9EFE9",
-  parchment: "#F0DCC8",
-  blush:     "#EDD5C0",
-  amber:     "#F5E6C8",
-  purple:    "#240747",
-  orange:    "#F6851B",
-};
-
 const tileObj = (bg: string, extra?: React.CSSProperties): React.CSSProperties => ({
   background:   bg,
   borderRadius: 24,
@@ -93,7 +84,7 @@ export default function LandingPage() {
       </section>
 
       {/* ═════════════════ SERVICES ═════════════════ */}
-      <section style={sectionWrap} className="!mt-[-1.5rem] lg:!mt-[-3rem]">
+      <section style={sectionWrap}>
         <div style={innerWrap}>
           <div style={tileObj(C.cream)} className="p-8 lg:p-12 flex flex-col md:flex-row md:items-center justify-between gap-6 mb-4">
             <div>
