@@ -70,7 +70,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflow: 'auto' }}>
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -97,7 +97,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
               position: 'relative',
               zIndex: 1,
               padding: 0,
-              overflow: 'hidden',
+              maxHeight: 'calc(100vh - 2rem)',
               transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
@@ -144,7 +144,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                       <label style={labelStyle}>Full Name*</label>
                       <input name="name" required style={inputStyle} placeholder="Operational Lead" />
@@ -155,7 +155,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                       <label style={labelStyle}>Contact Phone</label>
                       <input name="phone" style={inputStyle} placeholder="+1 (555) 000-0000" />
