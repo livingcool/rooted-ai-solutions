@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RootedAI | Company Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --nb-cream: #F9EFE9;
+      --nb-midnight: #240747;
+      --nb-orange: #F6851B;
+      --nb-parchment: #F0DCC8;
+      --nb-blush: #EDD5C0;
+      --nb-amber: #F5E6C8;
+      --nb-black: #0B0116; /* Deepest purple/black for shadows */
+
+      --nb-shadow: 6px 6px 0px var(--nb-black);
+      --nb-shadow-hover: 8px 8px 0px var(--nb-orange);
+      
+      --nb-shadow-light: 6px 6px 0px var(--nb-orange);
+      --nb-shadow-light-hover: 8px 8px 0px var(--nb-midnight);
+
+      --nb-border-light: 3px solid var(--nb-cream);
+      --nb-border-dark: 3px solid var(--nb-midnight);
+      
+      --spacing-section: 4rem;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--nb-midnight);
+      color: var(--nb-cream);
+      font-family: 'Space Grotesk', sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Textural Noise Overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      z-index: 9999;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    h1 { font-size: 4rem; letter-spacing: -0.02em; }
+    h2 { font-size: 2.75rem; margin-bottom: 2rem; border-bottom: var(--nb-border-light); padding-bottom: 0.5rem; display: inline-block; }
+    h3 { font-size: 1.75rem; color: var(--nb-orange); }
+    h4 { font-size: 1.25rem; }
+
+    p { margin-bottom: 1.5rem; font-size: 1.15rem; font-weight: 500; }
+
+    .nb-label, code, .tag {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--nb-orange);
+      color: var(--nb-midnight);
+      border: var(--nb-border-dark);
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-section);
+    }
+
+    /* Bento Grid Structure */
+    .nb-grid {
+      display: grid;
+      gap: 2rem;
+    }
+    .nb-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .nb-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .nb-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    /* Folder-Tab Architecture */
+    .nb-tile {
+      background-color: var(--nb-midnight);
+      border: var(--nb-border-light);
+      box-shadow: var(--nb-shadow);
+      padding: 2.5rem;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      color: var(--nb-cream);
+    }
+    
+    .nb-tile:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--nb-shadow-hover);
+    }
+
+    /* Internal Data Label (formerly external tab) */
+    .nb-tile::before {
+      content: attr(data-tab);
+      display: inline-block;
+      align-self: flex-start;
+      background: var(--nb-midnight);
+      color: var(--nb-cream);
+      padding: 0.15rem 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .nb-tile:not([data-tab])::before {
+      display: none;
+    }
+
+    /* Light Theme Tiles */
+    .nb-tile.light::before {
+      background: var(--nb-midnight);
+      color: var(--nb-cream);
+    }
+
+    /* Light Theme Tiles for Contrast */
+    .nb-tile.light {
+      background-color: var(--nb-cream);
+      border: var(--nb-border-dark);
+      color: var(--nb-midnight);
+      box-shadow: var(--nb-shadow-light);
+    }
+    .nb-tile.light:hover {
+      box-shadow: var(--nb-shadow-light-hover);
+    }
+    .nb-tile.light h2 { border-bottom: var(--nb-border-dark); }
+    .nb-tile.light h3 { color: var(--nb-midnight); text-decoration: underline; text-decoration-color: var(--nb-orange); text-underline-offset: 4px; }
+    .nb-tile.light .tag { background: var(--nb-midnight); color: var(--nb-cream); border: var(--nb-border-dark); }
+
+    .nb-tile.orange {
+      background-color: var(--nb-orange);
+      border: var(--nb-border-dark);
+      color: var(--nb-midnight);
+      box-shadow: var(--nb-shadow-light);
+    }
+    .nb-tile.orange:hover {
+      box-shadow: var(--nb-shadow-light-hover);
+    }
+    .nb-tile.orange h2 { border-bottom: var(--nb-border-dark); color: var(--nb-midnight); }
+    .nb-tile.orange h3 { color: var(--nb-midnight); }
+
+    .nb-tile.blush {
+      background-color: var(--nb-blush);
+      border: var(--nb-border-dark);
+      color: var(--nb-midnight);
+      box-shadow: var(--nb-shadow-light);
+    }
+    .nb-tile.blush h2 { border-bottom: var(--nb-border-dark); color: var(--nb-midnight); }
+    .nb-tile.blush h3 { color: var(--nb-midnight); }
+
+    /* Lists */
+    ul { list-style: none; margin-bottom: 1.5rem; }
+    ul li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+    ul li::before {
+      content: "►";
+      position: absolute;
+      left: 0;
+      color: var(--nb-orange);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
+      top: 0.2em;
+    }
+
+    .nb-tile.light ul li::before { color: var(--nb-midnight); }
+    .nb-tile.orange ul li::before { color: var(--nb-midnight); }
+
+    /* Custom check/cross for target client */
+    ul.fit-list li::before { content: none; }
+    ul.fit-list li { display: flex; gap: 0.75rem; align-items: flex-start; }
+    .good-fit-icon, .bad-fit-icon {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .good-fit-icon { color: var(--nb-orange); }
+    .bad-fit-icon { color: var(--nb-orange); }
+    
+    .nb-tile.light .good-fit-icon { color: var(--nb-midnight); }
+    .nb-tile.light .bad-fit-icon { color: var(--nb-midnight); }
+
+    /* Button / CTA */
+    .nb-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--nb-cream);
+      color: var(--nb-midnight);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 1.25rem 2.5rem;
+      border: var(--nb-border-dark);
+      box-shadow: var(--nb-shadow-light);
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      font-size: 1.15rem;
+      margin-top: 1rem;
+    }
+    .nb-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--nb-shadow-light-hover);
+    }
+    
+    .nb-btn.dark {
+      background-color: var(--nb-midnight);
+      color: var(--nb-cream);
+      border: var(--nb-border-light);
+      box-shadow: var(--nb-shadow);
+    }
+    .nb-btn.dark:hover {
+      box-shadow: var(--nb-shadow-hover);
+    }
+
+    /* Specific elements */
+    .hero-logo {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      border-bottom: var(--nb-border-dark);
+      padding-bottom: 1.5rem;
+    }
+    .hero-logo img {
+      width: 80px;
+      height: 80px;
+      border: var(--nb-border-dark);
+      box-shadow: 4px 4px 0px var(--nb-midnight);
+      background: var(--nb-cream);
+      padding: 0.5rem;
+    }
+    .hero-logo h1 {
+      margin-bottom: 0;
+      font-size: 5rem;
+      color: var(--nb-midnight);
+      letter-spacing: -0.01em;
+    }
+    
+    .proof-metric {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--nb-orange);
+      margin-bottom: 0.5rem;
+    }
+    .nb-tile.light .proof-metric { color: var(--nb-midnight); }
+
+    .proof-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .process-step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 4rem;
+      font-weight: 800;
+      color: var(--nb-orange);
+      line-height: 1;
+      border-bottom: 2px solid var(--nb-cream);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .nb-tile.light .process-step-num {
+      color: var(--nb-midnight);
+      border-bottom-color: var(--nb-midnight);
+    }
+
+    .tech-pill {
+      background: var(--nb-midnight);
+      color: var(--nb-cream);
+      border: 2px solid var(--nb-cream);
+      box-shadow: 3px 3px 0px var(--nb-black);
+      padding: 0.35rem 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: inline-block;
+      margin: 0.35rem;
+      text-transform: uppercase;
+    }
+    
+    .nb-tile.light .tech-pill {
+      background: var(--nb-cream);
+      color: var(--nb-midnight);
+      border: 2px solid var(--nb-midnight);
+      box-shadow: 3px 3px 0px var(--nb-orange);
+    }
+
+    @media (max-width: 1024px) {
+      .nb-grid-3, .nb-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nb-grid-2, .nb-grid-3, .nb-grid-4 { grid-template-columns: 1fr; }
+      h1 { font-size: 2.5rem; }
+      .hero-logo h1 { font-size: 2.5rem; }
+    }
+    
+    @media print {
+      @page {
+        margin: 0;
+        size: auto;
+      }
+      body { 
+        background-color: var(--nb-midnight) !important; 
+        color: var(--nb-cream) !important; 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact;
+        margin: 0;
+        padding: 0;
+      }
+      .container { 
+        padding: 2rem; 
+        max-width: 100%; 
+        gap: 2rem;
+      }
+      body::before { display: none; }
+      
+      /* Maintain Neo-Brutalism Shadows & Borders in Print */
+      .nb-tile { 
+        break-inside: avoid; 
+        border: 3px solid var(--nb-cream) !important; 
+        background-color: var(--nb-midnight) !important;
+        color: var(--nb-cream) !important;
+        box-shadow: 6px 6px 0px var(--nb-black) !important;
+        -webkit-print-color-adjust: exact;
+        margin-bottom: 2rem;
+      }
+      .nb-tile.light { 
+        background-color: var(--nb-cream) !important; 
+        color: var(--nb-midnight) !important;
+        border: 3px solid var(--nb-midnight) !important;
+        box-shadow: 6px 6px 0px var(--nb-orange) !important;
+      }
+      .nb-tile.orange { 
+        background-color: var(--nb-orange) !important; 
+        color: var(--nb-midnight) !important;
+        border: 3px solid var(--nb-midnight) !important;
+      }
+      .nb-tile.blush { 
+        background-color: var(--nb-blush) !important; 
+        color: var(--nb-midnight) !important;
+        border: 3px solid var(--nb-midnight) !important;
+      }
+
+      .nb-btn { display: none !important; } /* Hide interactive buttons in PDF */
+      
+      .nb-tile::before { 
+        background-color: var(--nb-orange) !important; 
+        color: var(--nb-midnight) !important;
+        margin-bottom: 1rem;
+        -webkit-print-color-adjust: exact;
+      }
+      .nb-tile.light::before {
+        background-color: var(--nb-midnight) !important;
+        color: var(--nb-cream) !important;
+      }
+      
+      h1, h2, h3, h4, h5, h6 { color: inherit !important; -webkit-print-color-adjust: exact; }
+      .process-step-num, .proof-metric { color: var(--nb-orange) !important; -webkit-print-color-adjust: exact; }
+      .nb-tile.light .process-step-num { color: var(--nb-midnight) !important; }
+      
+      .tech-pill { 
+        border: 2px solid currentColor !important; 
+        background: transparent !important; 
+        color: inherit !important; 
+        box-shadow: none !important; 
+      }
+
+      /* Forced Page Breaks for Perfect PDF Layout */
+      .nb-tile[data-tab="SYS_OVERVIEW"],
+      .nb-tile[data-tab="SERVICES_MANIFESTO"],
+      .nb-tile[data-tab="ENGINEERING_PORTFOLIO"],
+      .nb-tile[data-tab="METHODOLOGY"],
+      .nb-tile[data-tab="TECH_STACK"],
+      .nb-tile[data-tab="DIFFERENTIATORS"] {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- COVER — HERO BENTO -->
+    <div class="nb-tile light" data-tab="PROFILE_ROOT">
+      <div class="hero-logo">
+        <img src="../images/Lightmode logo.png" alt="RootedAI Logo">
+        <h1>RootedAI</h1>
+      </div>
+      <span class="tag">Company Profile</span>
+      <h2 style="font-size: 3.5rem; border: none; margin-bottom: 1.5rem; text-transform: none; line-height: 1.1;">Building the robust architecture for <span style="color: var(--nb-orange); text-decoration: underline;">intelligent automation</span>, <span style="color: var(--nb-orange); text-decoration: underline;">enterprise software</span>, and <span style="color: var(--nb-orange); text-decoration: underline;">robotics ML systems</span>.</h2>
+      <p style="font-size: 1.6rem; max-width: 1000px; font-weight: 600;">RootedAI architects, engineers, and scales production-ready software systems, custom applications, and machine learning infrastructure. We exist at the intersection of deep technical rigor and business pragmatism.</p>
+      <p style="font-size: 1.25rem; max-width: 1000px; font-weight: 500;">From high-performance, globally distributed web applications to edge-deployed robotics and LLM-powered enterprise workflows, we bridge the gap between ambitious vision and reliable, scalable reality. Our team is dedicated to solving the most complex engineering challenges of the modern digital era, delivering resilient digital ecosystems that drive tangible business outcomes.</p>
+      <p style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--nb-midnight); border-top: var(--nb-border-dark); padding-top: 1rem; margin-top: 2rem;">ENGINEERING THE FUTURE OF SCALABLE SOFTWARE, DATA SYSTEMS, AND EMBODIED AI.</p>
+    </div>
+
+    <div class="nb-grid nb-grid-4">
+      <div class="nb-tile" data-tab="METRIC_01">
+        <div class="proof-metric">Full-Stack</div>
+        <div class="proof-label">Enterprise Web, Mobile & Cloud Systems Architecture</div>
+      </div>
+      <div class="nb-tile light" data-tab="METRIC_02">
+        <div class="proof-metric">Intelligence</div>
+        <div class="proof-label">LLMs, GenAI, RAG & Advanced Data Pipelines</div>
+      </div>
+      <div class="nb-tile" data-tab="METRIC_03">
+        <div class="proof-metric">Edge AI</div>
+        <div class="proof-label">Hardware-Native Machine Learning & Robotics</div>
+      </div>
+      <div class="nb-tile orange" data-tab="METRIC_04">
+        <div class="proof-metric" style="color: var(--nb-midnight);">Velocity</div>
+        <div class="proof-label" style="color: var(--nb-midnight);">Rapid Prototyping to Secure Production Deployment</div>
+      </div>
+    </div>
+
+    <!-- 1. COMPANY OVERVIEW -->
+    <div class="nb-tile" data-tab="SYS_OVERVIEW">
+      <h2>Who We Are</h2>
+      <p style="font-size: 1.5rem; font-weight: 700; max-width: 1000px; color: var(--nb-orange);">RootedAI is an elite software engineering and artificial intelligence consultancy. We eliminate the friction between complex technical research, bleeding-edge innovation, and real-world application deployment.</p>
+
+      <div class="nb-grid nb-grid-2" style="margin-top: 2rem;">
+        <div>
+          <h4 style="color: var(--nb-orange);">The Problem</h4>
+          <p>The modern digital landscape is increasingly complex, fragmented, and fast-moving. Enterprises and growth-stage startups alike struggle to build robust, scalable software while simultaneously attempting to integrate cutting-edge AI, machine learning, and automation capabilities. Too often, traditional software agencies lack deep, mathematical AI expertise, while dedicated AI researchers struggle to build the secure, scalable, and highly available backend architectures necessary to serve millions of users.</p>
+          
+          <h4 style="color: var(--nb-orange); margin-top: 1.5rem;">The Solution</h4>
+          <p>RootedAI was founded specifically to unify these disciplines under one roof. We operate natively across full-stack software development, resilient cloud infrastructure, and advanced machine learning (including Generative AI, Natural Language Processing, and sophisticated Computer Vision). Whether you need a highly scalable SaaS platform engineered from scratch, a custom internal enterprise tool to streamline operations, or a highly optimized neural network for constrained robotic hardware operating on the edge, we possess the engineering rigor to deliver.</p>
+          <p>We don’t just write code; we build resilient digital ecosystems. We prioritize operational stability, maintainability, comprehensive security, and aggressive execution. Our engineers view technology not as an end in itself, but as a powerful lever to drive tangible business outcomes, automate inefficiencies, and unlock new operational capabilities.</p>
+        </div>
+        <div class="nb-tile light" style="margin-top: 0;" data-tab="CORE_OFFERINGS">
+          <h3>Tangible Deliverables</h3>
+          <p style="margin-bottom: 1rem; font-size: 1rem;">Our team delivers production-ready artifacts across the entire software development lifecycle, ensuring every line of code adds measurable value to your organization:</p>
+          <ul>
+            <li><strong>Custom Web & Mobile Applications:</strong> Highly performant, SEO-optimized, and accessible interfaces built with React, Next.js, and Flutter.</li>
+            <li><strong>Enterprise Backend APIs:</strong> Scalable, secure, and well-documented microservices using Node.js, Python, and Go.</li>
+            <li><strong>LLM Integrations & Agents:</strong> Advanced RAG pipelines, autonomous multi-step reasoning agents, and custom AI tooling.</li>
+            <li><strong>Edge ML Inference Engines:</strong> Highly optimized TensorRT/ONNX models designed for real-time processing on constrained hardware.</li>
+            <li><strong>Scalable Cloud Infrastructure:</strong> Resilient, cost-optimized architectures deployed on AWS, GCP, and Azure using Kubernetes and Terraform.</li>
+            <li><strong>Robotics & Hardware Bridging:</strong> Custom ROS/ROS2 nodes and sensor fusion algorithms facilitating seamless physical integration.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. VISION & MISSION -->
+    <div class="nb-grid nb-grid-2">
+      <div class="nb-tile blush" data-tab="VISION">
+        <h2>The Foundational Layer</h2>
+        <p style="font-size: 1.25rem;">Our vision is to become the premier architectural partner for forward-thinking organizations building the next generation of intelligent software and autonomous systems. We aim to accelerate the global transition toward reliable, data-driven, and highly automated technology by providing the foundational engineering capabilities that turn theoretical possibilities into tangible, market-ready products.</p>
+      </div>
+      <div class="nb-tile orange" data-tab="MISSION">
+        <h2>Execution over Theory</h2>
+        <p style="font-size: 1.25rem;">Our mission is deeply rooted in delivery and pragmatic execution. We engineer, optimize, and deploy high-performance software and AI architectures that directly empower businesses. We reject "research for research's sake" in favor of building solutions that execute flawlessly in chaotic, real-world environments, driving measurable ROI and operational superiority for our clients.</p>
+      </div>
+    </div>
+
+    <!-- 3. COMPREHENSIVE SERVICES -->
+    <div class="nb-tile light" data-tab="SERVICES_MANIFESTO">
+      <h2>Comprehensive Service Verticals</h2>
+      <p style="font-size: 1.3rem; max-width: 900px; margin-bottom: 3rem;">We provide end-to-end engineering solutions that encompass the full lifecycle of a product. From the web browser to the cloud, and all the way down to the silicon on edge devices, our deep expertise spans the entirety of the modern technology stack.</p>
+
+      <div class="nb-grid nb-grid-2">
+        
+        <!-- Software Engineering -->
+        <div class="nb-tile" data-tab="SVC_SOFTWARE">
+          <h3>Custom Software & Web Engineering</h3>
+          <p style="font-weight: 700; color: var(--nb-orange);">Building the digital backbone of modern businesses.</p>
+          <p>We architect and develop high-performance, infinitely scalable web and cross-platform mobile applications tailored precisely to your unique business logic. We focus heavily on delivering exceptional, friction-free user experiences that are backed by robust, secure, and incredibly fast backend infrastructures designed to handle massive concurrency without breaking a sweat.</p>
+          <h4>Scope & Deliverables</h4>
+          <ul>
+            <li><strong>Full-stack Web Applications:</strong> Dynamic, SEO-optimized SPAs and SSR platforms (React, Vue, Next.js).</li>
+            <li><strong>Cross-platform Mobile Apps:</strong> Native-feeling iOS and Android experiences (React Native, Flutter).</li>
+            <li><strong>Complex API Architecture:</strong> RESTful and GraphQL APIs built on microservices or robust monoliths.</li>
+            <li><strong>Legacy Modernization:</strong> Safely migrating aging systems to modern, maintainable cloud stacks.</li>
+            <li><strong>Database Design:</strong> Highly normalized SQL schemas, flexible NoSQL, and advanced Vector databases.</li>
+          </ul>
+        </div>
+
+        <!-- AI & LLMs -->
+        <div class="nb-tile" data-tab="SVC_AI_DATA">
+          <h3>Applied AI & Generative Intelligence</h3>
+          <p style="font-weight: 700; color: var(--nb-orange);">Turning unstructured data into automated, intelligent workflows.</p>
+          <p>We seamlessly integrate Large Language Models (LLMs) and custom machine learning pipelines into enterprise applications. By securely harnessing your proprietary data, we enable intelligent semantic search, automated reasoning capabilities, dynamic content generation, and sophisticated conversational interfaces that dramatically multiply human productivity.</p>
+          <h4>Scope & Deliverables</h4>
+          <ul>
+            <li><strong>RAG Systems:</strong> Retrieval-Augmented Generation ensuring AI responses are grounded in your proprietary knowledge base.</li>
+            <li><strong>Autonomous AI Agents:</strong> Multi-step, reasoning workflows capable of executing complex business tasks autonomously.</li>
+            <li><strong>Predictive Analytics:</strong> Leveraging historical data for precise time-series forecasting and anomaly detection.</li>
+            <li><strong>Advanced NLP:</strong> Sentiment analysis, entity extraction, and automated document summarization.</li>
+            <li><strong>Model Fine-Tuning:</strong> Adapting open-source LLMs to your highly specific industry domain and terminology.</li>
+          </ul>
+        </div>
+
+        <!-- Edge ML & Robotics -->
+        <div class="nb-tile" data-tab="SVC_EDGE_ROBOTICS">
+          <h3>Edge ML & Robotics Integration</h3>
+          <p style="font-weight: 700; color: var(--nb-orange);">Bridging software intelligence with physical actuation.</p>
+          <p>We translate high-level mathematical models into low-level, high-efficiency silicon execution. We specialize in building robust perception systems, advanced sensor fusion algorithms, and ROS/ROS2 integrations that allow embodied AI and robotic systems to navigate and understand the complex physical world in real-time.</p>
+          <h4>Scope & Deliverables</h4>
+          <ul>
+            <li><strong>Model Optimization:</strong> Quantization and pruning for TensorRT/ONNX deployment on constrained hardware.</li>
+            <li><strong>Computer Vision Pipelines:</strong> High-FPS object detection, tracking, semantic segmentation, and pose estimation.</li>
+            <li><strong>Sensor Fusion:</strong> Integrating Lidar, Radar, and multiple camera feeds into a cohesive worldview.</li>
+            <li><strong>Custom ROS Nodes:</strong> High-performance C++ and Python nodes for hardware control interfaces and navigation.</li>
+            <li><strong>Synthetic Data & Simulation:</strong> Training robust models using Gazebo, Isaac Sim, and procedurally generated environments.</li>
+          </ul>
+        </div>
+
+        <!-- Cloud & MLOps -->
+        <div class="nb-tile" data-tab="SVC_CLOUD_MLOPS">
+          <h3>Cloud Architecture & MLOps</h3>
+          <p style="font-weight: 700; color: var(--nb-orange);">Automating the lifecycle of code, infrastructure, and data.</p>
+          <p>We build the highly available, fault-tolerant cloud infrastructure required to serve millions of global users, ingest massive high-velocity IoT data streams, and fully automate the continuous integration, deployment, and retraining of both software and complex machine learning models.</p>
+          <h4>Scope & Deliverables</h4>
+          <ul>
+            <li><strong>Cloud-Native Architecture:</strong> Designing secure, cost-optimized topologies on AWS, GCP, and Azure.</li>
+            <li><strong>Container Orchestration:</strong> Deploying self-healing, auto-scaling microservices using Docker and Kubernetes.</li>
+            <li><strong>Infrastructure-as-Code:</strong> Fully reproducible, version-controlled cloud environments utilizing Terraform.</li>
+            <li><strong>Data Engineering:</strong> Building robust Data Lakes, Warehouses, and high-throughput streaming pipelines.</li>
+            <li><strong>Automated MLOps:</strong> CI/CD for machine learning, enabling seamless model monitoring, evaluation, and retraining.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 4. PRODUCTS -->
+    <div class="nb-tile light" data-tab="PRODUCTS">
+      <h2>Our Products</h2>
+      <p style="margin-bottom: 2rem; font-size: 1.15rem; max-width: 900px;">Our proprietary product suite provides the building blocks for rapid, secure, and scalable AI deployment across the modern enterprise.</p>
+      <div class="nb-grid nb-grid-2">
+        <div class="nb-tile" data-tab="PROD_CONNECT">
+          <h3>RootedAI Connect</h3>
+          <p style="font-weight: 600; color: var(--nb-orange);">Universal Data Orchestration & Bridging.</p>
+          <p>A high-throughput data orchestration layer designed for heterogeneous environment integration. RootedAI Connect facilitates seamless bridging between industrial IoT protocols, legacy database systems, and real-time event streams, ensuring high-bandwidth data availability across globally distributed architectures.</p>
+        </div>
+        <div class="nb-tile" data-tab="PROD_SENSE">
+          <h3>RootedAI Sense</h3>
+          <p style="font-weight: 600; color: var(--nb-orange);">Multi-Modal Perception & Intelligence.</p>
+          <p>An advanced perception engine utilizing state-of-the-art transformer architectures. Capable of sub-millisecond object detection, complex semantic analysis of unstructured telemetry data, and high-fidelity parsing of technical documentation to extract actionable intelligence from raw inputs.</p>
+        </div>
+        <div class="nb-tile" data-tab="PROD_COMPUTE">
+          <h3>RootedAI Compute</h3>
+          <p style="font-weight: 600; color: var(--nb-orange);">GPU-Optimized Infrastructure Orchestration.</p>
+          <p>High-performance, elastic infrastructure tailored for heavy machine learning workloads. Features automated model quantization, specialized kernels for low-latency inference at the edge, and intelligent resource management to optimize compute costs across hybrid cloud environments.</p>
+        </div>
+        <div class="nb-tile" data-tab="PROD_INSIGHTS">
+          <h3>RootedAI Insights</h3>
+          <p style="font-weight: 600; color: var(--nb-orange);">Predictive Analytics & Visualization.</p>
+          <p>A powerful intelligence platform that translates billions of raw telemetry points into intuitive, actionable business insights. Featuring predictive churn modeling, automated anomaly detection, and interactive 3D data visualization to empower data-driven executive decision-making.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4.5 ENGINEERING PORTFOLIO -->
+    <div class="nb-tile" data-tab="ENGINEERING_PORTFOLIO">
+      <h2>Engineering Portfolio</h2>
+      <p style="margin-bottom: 2rem; font-size: 1.15rem;">A showcase of our recent deployments across enterprise software, AI, and robotics.</p>
+      
+      <div class="nb-grid nb-grid-3">
+        <div class="nb-tile light" data-tab="PROJECT_01" style="padding: 1rem;">
+          <img src="Product Images/02-hero-instant-deflection.png" alt="Instant Deflection Project" style="width: 100%; border: var(--nb-border-dark); margin-bottom: 1rem; height: 180px; object-fit: cover;">
+          <h4 style="font-size: 1rem;">Instant Deflection AI</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">Automated customer support deflection system utilizing LLMs and RAG for high-volume enterprises.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PROJECT_02" style="padding: 1rem;">
+          <img src="Product Images/07-cover image .png" alt="Enterprise Dashboard" style="width: 100%; border: var(--nb-border-dark); margin-bottom: 1rem; height: 180px; object-fit: cover;">
+          <h4 style="font-size: 1rem;">Enterprise Intelligence</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">Comprehensive data visualization and analytics platform for logistics and supply chain management.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PROJECT_03" style="padding: 1rem;">
+          <img src="Product Images/Screenshot 2026-04-30 184526.png" alt="Robotics Interface" style="width: 100%; border: var(--nb-border-dark); margin-bottom: 1rem; height: 180px; object-fit: cover;">
+          <h4 style="font-size: 1rem;">Edge Robotics Control</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">Custom ROS2 interface for real-time hardware monitoring, diagnostics, and fleet management.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PROJECT_04" style="padding: 1rem;">
+          <img src="Product Images/Screenshot 2026-04-30 184542.png" alt="SaaS Platform" style="width: 100%; border: var(--nb-border-dark); margin-bottom: 1rem; height: 180px; object-fit: cover;">
+          <h4 style="font-size: 1rem;">Scalable SaaS Architecture</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">High-concurrency backend systems and multi-tenant architectures for global fintech applications.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PROJECT_05" style="padding: 1rem;">
+          <img src="Product Images/Screenshot 2026-04-30 184624.png" alt="AI Agent Workflow" style="width: 100%; border: var(--nb-border-dark); margin-bottom: 1rem; height: 180px; object-fit: cover;">
+          <h4 style="font-size: 1rem;">Autonomous AI Agents</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">Multi-step reasoning agents capable of executing complex business processes and decision-making.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PROJECT_06" style="padding: 1rem;">
+          <img src="Product Images/Screenshot 2026-04-30 184713.png" alt="Vision Pipeline" style="width: 100%; border: var(--nb-border-dark); margin-bottom: 1rem; height: 180px; object-fit: cover;">
+          <h4 style="font-size: 1rem;">Computer Vision Pipeline</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">Real-time object detection, tracking, and pose estimation for industrial automation and safety.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PROJECT_07" style="padding: 1rem;">
+          <img src="Product Images/Screenshot 2026-04-30 184748.png" alt="Cloud Infrastructure" style="width: 100%; border: var(--nb-border-dark); margin-bottom: 1rem; height: 180px; object-fit: cover;">
+          <h4 style="font-size: 1rem;">Cloud-Native Infrastructure</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">Fault-tolerant Kubernetes deployments and infrastructure-as-code for mission-critical services.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PROJECT_08" style="padding: 1rem;">
+          <img src="Product Images/Screenshot 2026-04-30 184919.png" alt="NLP Engine" style="width: 100%; border: var(--nb-border-dark); margin-bottom: 1rem; height: 180px; object-fit: cover;">
+          <h4 style="font-size: 1rem;">NLP Document Intelligence</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">Semantic parsing and automated summarization of complex technical and legal documentation.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PROJECT_09" style="padding: 1rem;">
+          <img src="Product Images/Screenshot 2026-04-30 184935.png" alt="IoT Telemetry" style="width: 100%; border: var(--nb-border-dark); margin-bottom: 1rem; height: 180px; object-fit: cover;">
+          <h4 style="font-size: 1rem;">Industrial IoT Telemetry</h4>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">High-velocity data ingestion and monitoring systems for large-scale industrial sensor networks.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4.7 TRUST & RECOGNITION -->
+    <div class="nb-tile light" data-tab="TRUST_VERIFICATION">
+      <h2>Global Recognition & Trust</h2>
+      <p style="margin-bottom: 2rem; font-size: 1.15rem;">Validated by industry leaders and our global partners.</p>
+      <div class="nb-grid nb-grid-3">
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;">
+          <img src="../images/goodfirms-badge.png" alt="GoodFirms Badge" style="height: 100px; border: none; box-shadow: none; background: transparent; padding: 0;">
+          <div>
+            <h4 style="margin-bottom: 0.5rem; text-decoration: underline; text-decoration-color: var(--nb-orange);">Top AI Developers</h4>
+            <p style="font-size: 0.95rem; font-weight: 600;">Recognized by GoodFirms for excellence in delivering high-impact machine learning and software engineering solutions.</p>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;">
+          <div style="font-size: 3rem; font-weight: 800; color: var(--nb-midnight); border: 4px solid var(--nb-midnight); padding: 0.5rem 1.5rem; background: var(--nb-orange); box-shadow: 6px 6px 0px var(--nb-midnight); margin-bottom: 0.5rem;">5.0</div>
+          <div>
+            <h4 style="margin-bottom: 0.5rem; text-decoration: underline; text-decoration-color: var(--nb-orange);">Clutch Top Rated</h4>
+            <p style="font-size: 0.95rem; font-weight: 600;">Ranked as a top-tier development partner on Clutch, with consistent 5-star reviews for technical rigor and professional project management.</p>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;">
+          <div style="font-size: 3rem; font-weight: 800; color: var(--nb-orange); background: var(--nb-midnight); padding: 0.5rem 1.5rem; border: 4px solid var(--nb-orange); box-shadow: 6px 6px 0px var(--nb-orange); margin-bottom: 0.5rem;">GB</div>
+          <div>
+            <h4 style="margin-bottom: 0.5rem; text-decoration: underline; text-decoration-color: var(--nb-orange);">Google Business</h4>
+            <p style="font-size: 0.95rem; font-weight: 600;">Highly rated by our enterprise clients on Google Business for our reliable delivery, 24/7 technical support, and innovative problem-solving.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. CLIENT REVIEWS -->
+    <div class="nb-tile" data-tab="REVIEWS">
+      <h2>Global Recognition & Verified Reviews</h2>
+      <p style="margin-bottom: 2rem; font-size: 1.15rem;">Verified engineering excellence across global platforms.</p>
+      <div class="nb-grid nb-grid-2">
+        <!-- GoodFirms Review 1 -->
+        <div class="nb-tile blush" data-tab="GOODFIRMS_01">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: #FFD700; font-size: 1.2rem;">★★★★★</span>
+            <span class="tag" style="margin-bottom: 0; font-size: 0.7rem; padding: 0.1rem 0.4rem;">Verified</span>
+          </div>
+          <p style="font-style: italic; font-weight: 700; font-size: 1.25rem; margin-bottom: 1rem;">"Extremely satisfied"</p>
+          <p style="font-size: 1rem; line-height: 1.5;">"We had a smooth process flow and good rapport between the meetings. The team is brilliant with tech and also they have always listened to our convenience. Overall the work was finished before the expected date with very good results. We are extremely satisfied with their service."</p>
+          <div style="margin-top: 1.5rem; font-weight: bold; border-top: 1px solid var(--nb-midnight); padding-top: 0.75rem;">
+            — Mohammed Sufiyaan L
+            <div style="font-size: 0.8rem; font-weight: 500;">GoodFirms Verified Review</div>
+          </div>
+        </div>
+
+        <!-- GoodFirms Review 2 -->
+        <div class="nb-tile blush" data-tab="GOODFIRMS_02">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: #FFD700; font-size: 1.2rem;">★★★★★</span>
+            <span class="tag" style="margin-bottom: 0; font-size: 0.7rem; padding: 0.1rem 0.4rem;">Verified</span>
+          </div>
+          <p style="font-style: italic; font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem;">"User-friendly, reliable platform that simplified invoicing and internal ticketing."</p>
+          <p style="font-size: 1rem; line-height: 1.5;">"Our overall experience with this system has been extremely positive. The implementation of the Invoicing, Arrival Notice, and Internal Ticketing System has brought a high level of efficiency and clarity to our day-to-day logistics operations. The workflows are well designed, easy to understand, and aligned with real-time operational requirements."</p>
+          <div style="margin-top: 1.5rem; font-weight: bold; border-top: 1px solid var(--nb-midnight); padding-top: 0.75rem;">
+            — Nethaji, ERP Development
+            <div style="font-size: 0.8rem; font-weight: 500;">Draft Cargoways India Pvt Ltd | GoodFirms</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 6. ENGAGEMENT METHODOLOGY -->
+    <div class="nb-tile" data-tab="METHODOLOGY">
+      <h2>The Engagement Process</h2>
+      <p style="font-size: 1.25rem;">We operate with absolute transparency and meticulous communication. Our engagement framework is engineered from the ground up to derisk complex engineering projects—whether we are building a global SaaS platform or the intelligence layer of an autonomous drone—from day one. We eliminate surprises and ensure continuous alignment with your strategic business goals.</p>
+
+      <div class="nb-grid nb-grid-3" style="margin-top: 3rem;">
+        <div class="nb-tile light" data-tab="PHASE_01">
+          <div class="process-step-num">01</div>
+          <h3>Discovery & Architecture</h3>
+          <p>We conduct a rigorous deep dive into your business requirements, analyzing existing legacy systems, hardware constraints, and end-user needs. We produce comprehensive technical spec documents that define the exact scope, technology stack, and an unambiguous definition of 'done'.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PHASE_02">
+          <div class="process-step-num">02</div>
+          <h3>Prototyping & Infrastructure</h3>
+          <p>Before writing application logic, we establish the bedrock. We provision the foundational cloud infrastructure, configure CI/CD pipelines, design resilient database schemas, and deliver interactive UI/UX wireframes or baseline machine learning proofs-of-concept to validate the approach.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PHASE_03">
+          <div class="process-step-num">03</div>
+          <h3>Agile Engineering</h3>
+          <p>We execute iterative, sprint-based development of the core application, backend services, or machine learning models. We prioritize delivering functional, testable increments frequently, enabling regular demonstrations that ensure our engineering remains perfectly aligned with your business objectives.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PHASE_04">
+          <div class="process-step-num">04</div>
+          <h3>Integration & Testing</h3>
+          <p>We meticulously connect frontend interfaces to backend services, integrate AI models seamlessly into applications, or port and optimize models to run on edge hardware. This phase involves rigorous automated QA, comprehensive security penetration testing, and extreme load testing under simulated stress.</p>
+        </div>
+        <div class="nb-tile light" data-tab="PHASE_05">
+          <div class="process-step-num">05</div>
+          <h3>Deployment & Launch</h3>
+          <p>We orchestrate a smooth, zero-downtime transition to production environments. Whether it involves deploying scalable services to Kubernetes clusters, launching flawlessly on iOS and Android App Stores, or securely flashing firmware to fleets of edge devices in the field.</p>
+        </div>
+        <div class="nb-tile orange" data-tab="PHASE_06">
+          <div class="process-step-num" style="color: var(--nb-midnight); border-color: var(--nb-midnight);">06</div>
+          <h3>Scale & Maintain</h3>
+          <p>Our commitment doesn't end at launch. We provide ongoing SLAs for rigorous 24/7 system monitoring, rapid bug resolution, automated model retraining to combat data-drift, and continuous feature expansion as your user base, data volume, and business requirements inevitably scale.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. TECHNOLOGY STACK -->
+    <div class="nb-tile light" data-tab="TECH_STACK">
+      <h2>The Technology Ecosystem</h2>
+      <p style="margin-bottom: 2rem;">We utilize modern, industry-standard tools to ensure performance, security, and long-term maintainability.</p>
+      
+      <div class="nb-grid nb-grid-3">
+        <div class="nb-tile" data-tab="SOFTWARE_FRONTEND">
+          <h3 style="color: var(--nb-orange);">Frontend & Mobile</h3>
+          <span class="tech-pill">React</span>
+          <span class="tech-pill">Next.js</span>
+          <span class="tech-pill">Vue.js</span>
+          <span class="tech-pill">TypeScript</span>
+          <span class="tech-pill">Tailwind CSS</span>
+          <span class="tech-pill">React Native</span>
+          <span class="tech-pill">Flutter</span>
+          <span class="tech-pill">Three.js / WebGL</span>
+        </div>
+        <div class="nb-tile" data-tab="SOFTWARE_BACKEND">
+          <h3 style="color: var(--nb-orange);">Backend & APIs</h3>
+          <span class="tech-pill">Node.js</span>
+          <span class="tech-pill">Python</span>
+          <span class="tech-pill">Django / FastAPI</span>
+          <span class="tech-pill">Go (Golang)</span>
+          <span class="tech-pill">GraphQL</span>
+          <span class="tech-pill">gRPC</span>
+          <span class="tech-pill">PostgreSQL</span>
+          <span class="tech-pill">MongoDB</span>
+          <span class="tech-pill">Redis</span>
+        </div>
+        <div class="nb-tile" data-tab="CLOUD_DEVOPS">
+          <h3 style="color: var(--nb-orange);">Cloud & DevOps</h3>
+          <span class="tech-pill">AWS</span>
+          <span class="tech-pill">GCP</span>
+          <span class="tech-pill">Azure</span>
+          <span class="tech-pill">Docker</span>
+          <span class="tech-pill">Kubernetes</span>
+          <span class="tech-pill">Terraform</span>
+          <span class="tech-pill">GitHub Actions</span>
+          <span class="tech-pill">Datadog</span>
+          <span class="tech-pill">Sentry</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. DIFFERENTIATORS -->
+    <div class="nb-tile" data-tab="DIFFERENTIATORS">
+      <h2>The RootedAI Edge</h2>
+      <p style="font-size: 1.3rem; max-width: 900px; color: var(--nb-orange); font-weight: 700;">Why global enterprises and elite startups choose RootedAI over traditional agencies.</p>
+      
+      <div class="nb-grid nb-grid-2" style="margin-top: 2rem;">
+        <div class="nb-tile light" data-tab="DIFF_01">
+          <h3>Architectural Rigor</h3>
+          <p>We don't just build features; we engineer systems. We prioritize long-term maintainability, rigorous security protocols, and operational stability. Our codebases are designed to be assets, not liabilities.</p>
+        </div>
+        <div class="nb-tile light" data-tab="DIFF_02">
+          <h3>Pragmatic AI</h3>
+          <p>We bridge the gap between AI research and real-world utility. We focus on deploying AI that works—securely, cost-effectively, and reliably—to solve actual business bottlenecks.</p>
+        </div>
+        <div class="nb-tile light" data-tab="DIFF_03">
+          <h3>Extreme Transparency</h3>
+          <p>You have full visibility into our engineering process. From shared Slack channels and direct access to developers to real-time progress tracking in our project management systems.</p>
+        </div>
+        <div class="nb-tile light" data-tab="DIFF_04">
+          <h3>Full-Cycle Support</h3>
+          <p>We are your long-term technical partner. From the initial napkin sketch to global production scaling and 24/7 operational maintenance, we are in the trenches with you.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. CONTACT -->
+    <div class="nb-tile orange" data-tab="CONTACT_CORE">
+      <h2>Ready to Build?</h2>
+      <p style="font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem;">Let's discuss how our engineering expertise can accelerate your business objectives.</p>
+      
+      <div class="nb-grid nb-grid-2">
+        <div class="nb-tile light" data-tab="COMM_CHANNELS">
+          <p style="font-weight: 700;">Direct Engineering Consultation:</p>
+          <p style="font-size: 1.75rem; font-family: 'JetBrains Mono', monospace; font-weight: 800; margin-bottom: 0.5rem;">info@rootedai.co.in</p>
+          <p style="font-size: 1.25rem; font-family: 'JetBrains Mono', monospace; font-weight: 700;">rootedai.co.in</p>
+        </div>
+        <div class="nb-tile light" data-tab="OFFICE_LOC">
+          <p style="font-weight: 700;">Operational Headquarters:</p>
+          <p style="font-size: 1.15rem; font-weight: 600;">RootedAI Solutions Pvt. Ltd.</p>
+          <p style="font-size: 1rem;">Engineering Hub | Remote-First | Global Delivery</p>
+        </div>
+      </div>
+      
+      <p style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--nb-midnight); border-top: 2px solid var(--nb-midnight); padding-top: 1.5rem; margin-top: 2rem; text-align: center; font-size: 0.9rem;">© 2026 ROOTEDAI SOLUTIONS | ALL SYSTEMS OPERATIONAL | [END_OF_DOCUMENT]</p>
+    </div>
+
+  </div>
+
+</body>
+</html>

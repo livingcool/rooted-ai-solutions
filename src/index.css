@@ -89,16 +89,71 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto !important;
+    scroll-padding-top: 80px;
   }
 
   body {
-    background-color: var(--nb-purple);  /* Purple grout shows between sections */
+    background: linear-gradient(to bottom, #F9EFE9 0%, #F0DCC8 40%, #FBE6D6 70%, #F9EFE9 100%);
+    background-attachment: fixed;
     color: var(--nb-purple);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: contain;
+    height: auto;
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
   }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0.04;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    z-index: 99999;
+  }
+
+  /* ---- Seamless Folder Tile ---- */
+  .nb-tile {
+    position: relative;
+    border: 3px solid var(--nb-purple);
+    border-radius: 0 24px 24px 24px;
+    box-shadow: 8px 8px 0 var(--nb-purple);
+    padding: 3rem;
+    overflow: visible;
+  }
+
+  /* The Hardware Tab */
+  .nb-tile::before {
+    content: "";
+    position: absolute;
+    top: -15px; left: -3px;
+    height: 15px; width: 140px;
+    background: inherit;
+    border: 3px solid var(--nb-purple);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    z-index: 1;
+  }
+
+  /* White-out line to hide the top-left double border */
+  .nb-tile::after {
+    content: "";
+    position: absolute;
+    top: -3px; left: 0;
+    width: 134px; height: 6px;
+    background: inherit;
+    z-index: 2;
+  }
+
+  /* Scrollbar — minimal */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--nb-cream); }
+  ::-webkit-scrollbar-thumb { background: var(--nb-purple); border-radius: 0; }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
@@ -111,11 +166,6 @@
   p, span, li, a {
     color: var(--nb-purple);
   }
-
-  /* Scrollbar — minimal */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--nb-cream); }
-  ::-webkit-scrollbar-thumb { background: var(--nb-purple); border-radius: 0; }
 }
 
 /* ============================================================
@@ -137,13 +187,25 @@
     background-color: var(--nb-cream);
   }
 
-  /* ---- Tile Base ---- */
+  /* ---- Tile Base with Folder Tab ---- */
   .nb-tile {
     padding: 3rem;
     position: relative;
-    overflow: hidden;
-    border-radius: 16px;
-    border: none;
+    overflow: visible; /* Show the tab */
+    border-radius: 0 24px 24px 24px;
+    border: 3px solid var(--nb-purple);
+    box-shadow: var(--nb-shadow-md);
+  }
+
+  .nb-tile::before {
+    content: "";
+    position: absolute;
+    top: -12px; left: -3px;
+    height: 12px; width: 120px;
+    background: inherit;
+    border: 3px solid var(--nb-purple);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
   }
 
   .nb-tile-cream    { background-color: var(--nb-cream); }
@@ -158,6 +220,7 @@
   .nb-tile-inverted h2,
   .nb-tile-inverted h3,
   .nb-tile-inverted h4,
+  .nb-tile-inverted th,
   .nb-tile-inverted p,
   .nb-tile-inverted span {
     color: var(--nb-cream) !important;
@@ -217,18 +280,22 @@
   .nb-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    gap: 0.75rem;
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.9rem;
+    font-weight: 800;
+    font-size: 0.95rem;
+    line-height: 1;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    padding: 0.75rem 1.75rem;
+    padding: 1rem 2rem;
     border: var(--nb-border-thick);
     cursor: pointer;
-    transition: box-shadow 0.12s ease, transform 0.12s ease;
+    transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
     white-space: nowrap;
     text-decoration: none;
+    position: relative;
+    border-radius: 12px;
   }
 
   .nb-btn:active {
@@ -245,6 +312,8 @@
   }
 
   .nb-btn-primary:hover {
+    background-color: var(--nb-purple);
+    color: var(--nb-orange);
     box-shadow: var(--nb-shadow-lg);
     transform: translate(-2px, -2px);
   }
@@ -335,14 +404,15 @@
   .nb-tag {
     display: inline-block;
     font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    padding: 0.25rem 0.6rem;
+    padding: 0.35rem 0.8rem;
     border: 2px solid var(--nb-purple);
     background-color: var(--nb-cream);
     color: var(--nb-purple);
+    border-radius: 6px;
   }
 
   .nb-tag-orange {
@@ -541,5 +611,115 @@
 
   .nb-accordion-content[data-open="true"] {
     display: block;
+  }
+
+  /* ---- Blog Redesign Utilities ---- */
+  .blog-hero {
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(36, 7, 71, 0.02) 10px,
+      rgba(36, 7, 71, 0.02) 20px
+    );
+  }
+
+  .blog-featured-card {
+    position: relative;
+    background: var(--nb-cream);
+    border: var(--nb-border-thick);
+    box-shadow: 12px 12px 0 var(--nb-purple);
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    border-radius: 24px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .blog-featured-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 16px 16px 0 var(--nb-orange);
+  }
+
+  .blog-grid-card {
+    background: var(--nb-cream);
+    border: var(--nb-border-thick);
+    box-shadow: var(--nb-shadow-md);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all 0.2s ease;
+    overflow: hidden;
+  }
+
+  .blog-grid-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--nb-shadow-lg);
+    border-color: var(--nb-orange);
+  }
+
+  .blog-image-wrapper {
+    position: relative;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    border-bottom: 3px solid var(--nb-purple);
+  }
+
+  .blog-category-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: var(--nb-purple);
+    color: var(--nb-cream);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.4rem 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    z-index: 10;
+  }
+
+  @media (max-width: 1024px) {
+    .blog-featured-card {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* --- Mobile Responsive Overrides --- */
+  @media (max-width: 768px) {
+    .nav-desktop-links {
+      display: none !important;
+    }
+
+    .nb-tile {
+      padding: 1.5rem !important;
+      border-radius: 0 16px 16px 16px !important;
+    }
+    
+    .nb-tile::before {
+      width: 100px !important;
+      height: 12px !important;
+      top: -12px !important;
+    }
+
+    .nb-tile::after {
+      width: 94px !important;
+      height: 4px !important;
+    }
+
+    .nb-btn {
+      padding: 0.75rem 1.25rem !important;
+      font-size: 0.85rem !important;
+    }
+
+    .nb-headline-xl {
+      font-size: clamp(2.5rem, 10vw, 3.5rem) !important;
+    }
+
+    .nb-headline-lg {
+      font-size: clamp(1.75rem, 8vw, 2.5rem) !important;
+    }
   }
 }

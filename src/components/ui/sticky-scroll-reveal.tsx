@@ -97,7 +97,7 @@ const Card = ({ title, description, icon, color, i, progress, range, targetScale
                         <p className="text-base lg:text-lg text-white/80 font-sans">{description}</p>
                         <div className="mt-6 lg:mt-8">
                             <div className="p-3 bg-white/10 w-fit rounded-xl border border-white/10 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-                                {React.cloneElement(icon as React.ReactElement, { className: "w-8 h-8 lg:w-12 lg:h-12 text-white drop-shadow-lg" })}
+                                {React.cloneElement(icon as React.ReactElement, { className: "w-8 h-8 lg:w-12 lg:h-12 text-white drop-shadow-lg" } as any)}
                             </div>
                         </div>
                     </div>

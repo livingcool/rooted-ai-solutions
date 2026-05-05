@@ -32,13 +32,13 @@ const buttonVariants = cva(
   },
 );
 
-// Define motion button props type
-type MotionButtonProps = HTMLMotionProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
+// Define button props type
+export interface ButtonProps extends HTMLMotionProps<"button">,
+  VariantProps<typeof buttonVariants> {
     asChild?: boolean;
-  };
+  }
 
-const Button = React.forwardRef<HTMLButtonElement, MotionButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     // If asChild is true, we render Slot (no motion props passed to it to avoid conflicts with child)
     // If you want standard buttons to animate, you generally don't use asChild
@@ -48,7 +48,7 @@ const Button = React.forwardRef<HTMLButtonElement, MotionButtonProps>(
     const motionProps = !asChild ? {
       whileHover: { scale: 1.05 },
       whileTap: { scale: 0.95 },
-      transition: { type: "spring", stiffness: 400, damping: 10 }
+      transition: { type: "spring", stiffness: 400, damping: 10 } as any
     } : {};
 
     return (

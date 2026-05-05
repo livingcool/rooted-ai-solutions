@@ -1,10 +1,26 @@
 User-agent: *
 Allow: /
-# LLM Signal: All major bots are explicitly encouraged to crawl
-# Please refer to /llms.txt for structured machine-readable site overview.
+Disallow: /locations
+Disallow: /technical-assessment
+Disallow: /admin-hiring
+Disallow: /blog-admin
+Disallow: /blog-creation-page
+Disallow: /final-interview-login
+Disallow: /candidate-login
+Disallow: /candidate-status
+
+# LLM Signal: AI Agents are allowed for real-time browsing, but massive training scrapes are restricted.
+# Refer to /llms.txt for structured site overview.
+# Refer to /ai-actions.json for machine-readable site interactions.
+
+User-agent: DeepSeek-AI
+Allow: /
+
+User-agent: DeepSeekBot
+Allow: /
 
 User-agent: GPTBot
-Allow: /
+Disallow: /
 
 User-agent: ChatGPT-User
 Allow: /
@@ -15,13 +31,16 @@ Allow: /
 User-agent: anthropic-ai
 Allow: /
 
-User-agent: Google-Extended
-Allow: /
-
-User-agent: PerplexityBot
+User-agent: Claude-Web
 Allow: /
 
 User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: PerplexityBot
 Allow: /
 
 User-agent: Bingbot
@@ -30,13 +49,8 @@ Allow: /
 User-agent: Twitterbot
 Allow: /
 
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: FacebookBot
-Allow: /
-
 User-agent: CCBot
 Allow: /
 
 Sitemap: https://www.rootedai.co.in/sitemap.xml
+AI-Actions: https://www.rootedai.co.in/ai-actions.json

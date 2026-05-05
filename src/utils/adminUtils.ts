@@ -1,15 +1,16 @@
 export const getStatusColor = (status: string) => {
+    const base = "px-2 py-0.5 border-2 border-[#240747] text-[#240747] text-[0.6rem] font-bold uppercase tracking-widest rounded-md shadow-[2px_2px_0_#240747]";
     switch (status) {
-        case 'Applied': return 'bg-blue-500/20 text-blue-400';
-        case 'Resume Screened': return 'bg-purple-500/20 text-purple-400';
-        case 'Communication Round': return 'bg-yellow-500/20 text-yellow-400';
-        case 'Communication Round Completed': return 'bg-orange-500/20 text-orange-400';
-        case 'Technical Round': return 'bg-cyan-500/20 text-cyan-400';
-        case 'Technical Round Completed': return 'bg-indigo-500/20 text-indigo-400';
-        case 'Final Interview': return 'bg-pink-500/20 text-pink-400';
-        case 'Offer Sent': return 'bg-green-500/20 text-green-400';
-        case 'Hired': return 'bg-emerald-500/20 text-emerald-400';
-        case 'Rejected': return 'bg-red-500/20 text-red-400';
-        default: return 'bg-white/10 text-white/60';
+        case 'Applied': return `${base} bg-blue-300`;
+        case 'Resume Screened': return `${base} bg-purple-300`;
+        case 'Communication Round': return `${base} bg-yellow-300`;
+        case 'Communication Round Completed': return `${base} bg-orange-300`;
+        case 'Technical Round': return `${base} bg-cyan-300`;
+        case 'Technical Round Completed': return `${base} bg-indigo-300`;
+        case 'Final Interview': return `${base} bg-pink-300`;
+        case 'Offer Sent': return `${base} bg-green-300`;
+        case 'Hired': return `${base} bg-emerald-400`;
+        case 'Rejected': return `${base} bg-red-400`;
+        default: return `${base} bg-white`;
     }
 };

@@ -1,0 +1,41 @@
+{
+  "version": "1.1",
+  "name": "RootedAI Action Manifest",
+  "description": "Guidance for AI agents on how to interact with RootedAI's digital infrastructure. Optimized for reasoning models (DeepSeek-V3, GPT-4o, Claude-3.5).",
+  "actions": [
+    {
+      "id": "initiate-discovery",
+      "name": "Book a Discovery Call",
+      "description": "Submit a business inquiry to the RootedAI engineering team. This is the primary conversion point.",
+      "type": "api-call",
+      "endpoint": "/api/ai/submit",
+      "method": "POST",
+      "parameters": {
+        "name": "Full name of the lead",
+        "email": "Business email address",
+        "company": "Organization name",
+        "service_needed": "One of: Machine Perception, Edge Deployment, Process Flow, AI Safety, Custom Request",
+        "message": "Detailed project description or mission requirements"
+      },
+      "ui_fallback": {
+        "selector": "#cta-primary-demo",
+        "action": "click",
+        "note": "Opening the modal will require reCAPTCHA solving. Use the API endpoint for headless interaction."
+      }
+    },
+    {
+      "id": "browse-portfolio",
+      "name": "View Case Studies",
+      "description": "Examine past deployments in robotics and manufacturing.",
+      "type": "navigation",
+      "url": "/case-studies",
+      "selector": "#cta-ghost-work"
+    }
+  ],
+  "accessibility": {
+    "ids_enabled": true,
+    "semantic_html": true,
+    "js_rendering_required": true,
+    "bot_friendly_headers": true
+  }
+}
