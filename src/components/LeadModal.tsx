@@ -104,7 +104,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
             }}
           >
             {/* Header / Tab Styling */}
-            <div style={{ background: C.purple, padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <div style={{ background: C.purple, padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, borderRadius: '0 21px 0 0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <ShieldCheck size={18} color={C.orange} />
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: C.cream, letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700 }}>
@@ -119,7 +119,29 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
               </button>
             </div>
 
-            <div style={{ padding: success ? '1rem' : '2.5rem', overflowY: 'auto', flex: 1 }}>
+            <div 
+              className="custom-modal-scroll"
+              style={{ 
+                padding: success ? '1rem' : '1.5rem 2rem', 
+                overflowY: 'auto', 
+                flex: 1, 
+                borderRadius: '0 0 21px 21px',
+                marginRight: '4px'
+              }}
+            >
+              <style dangerouslySetInnerHTML={{__html: `
+                .custom-modal-scroll::-webkit-scrollbar {
+                  width: 6px;
+                }
+                .custom-modal-scroll::-webkit-scrollbar-track {
+                  background: transparent;
+                  margin: 15px 0;
+                }
+                .custom-modal-scroll::-webkit-scrollbar-thumb {
+                  background: #240747;
+                  border-radius: 3px;
+                }
+              `}} />
               {success ? (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -145,24 +167,31 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                   </div>
                 </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.8rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                       <label style={labelStyle}>Full Name*</label>
                       <input name="name" required style={inputStyle} placeholder="Operational Lead" />
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                       <label style={labelStyle}>Work Email*</label>
                       <input name="email" type="email" required style={inputStyle} placeholder="lead@company.ai" />
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.8rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                       <label style={labelStyle}>Contact Phone</label>
                       <input name="phone" style={inputStyle} placeholder="+1 (555) 000-0000" />
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                      <label style={labelStyle}>Company Name</label>
+                      <input name="company" style={inputStyle} placeholder="Organization ID" />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.8rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                       <label style={labelStyle}>Service Required</label>
                       <select name="service_needed" style={selectStyle}>
                         <option value="Machine Perception">Machine Perception</option>
@@ -174,61 +203,59 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                    <label style={labelStyle}>Company Name</label>
-                    <input name="company" style={inputStyle} placeholder="Organization ID" />
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                     <label style={labelStyle}>Mission Description*</label>
                     <textarea
                       name="message"
                       required
-                      rows={4}
+                      rows={2}
                       style={{ ...inputStyle, resize: 'none' }}
+                      placeholder="Describe your operational bottleneck..."
                     />
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}>
-                    <ReCAPTCHA
-                      ref={recaptchaRef}
-                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                      onChange={(token) => setCaptchaToken(token)}
-                      theme="light"
-                    />
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+                    <div style={{ flexShrink: 0 }}>
+                      <ReCAPTCHA
+                        ref={recaptchaRef}
+                        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                        onChange={(token) => setCaptchaToken(token)}
+                        theme="light"
+                      />
+                    </div>
+                    <motion.button
+                      whileHover={{ y: -4, boxShadow: `6px 6px 0 ${C.purple}` }}
+                      whileTap={{ scale: 0.98 }}
+                      disabled={loading}
+                      type="submit"
+                      style={{
+                        background: C.orange,
+                        color: C.purple,
+                        border: `3px solid ${C.purple}`,
+                        borderRadius: '12px',
+                        padding: '0.8rem 1.2rem',
+                        fontFamily: 'var(--font-display)',
+                        fontWeight: 900,
+                        fontSize: '0.95rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem',
+                        cursor: loading ? 'wait' : 'pointer',
+                        transition: 'box-shadow 0.2s ease',
+                        boxShadow: `4px 4px 0 ${C.purple}`,
+                        width: '100%',
+                        height: '78px',
+                      }}
+                    >
+                      {loading ? "Transmitting..." : "Initiate Discovery"}
+                      <Send size={16} />
+                    </motion.button>
                   </div>
 
-                  <motion.button
-                    whileHover={{ y: -4, boxShadow: `8px 8px 0 ${C.purple}` }}
-                    whileTap={{ scale: 0.98 }}
-                    disabled={loading}
-                    type="submit"
-                    style={{
-                      background: C.orange,
-                      color: C.purple,
-                      border: `3px solid ${C.purple}`,
-                      borderRadius: '12px',
-                      padding: '1.2rem',
-                      fontFamily: 'var(--font-display)',
-                      fontWeight: 900,
-                      fontSize: '1rem',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.75rem',
-                      marginTop: '1rem',
-                      cursor: loading ? 'wait' : 'pointer',
-                      transition: 'box-shadow 0.2s ease',
-                      boxShadow: `4px 4px 0 ${C.purple}`
-                    }}
-                  >
-                    {loading ? "Transmitting..." : "Initiate Discovery"}
-                    <Send size={18} />
-                  </motion.button>
-
-                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: C.purple, opacity: 0.4, textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: C.purple, opacity: 0.4, textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '0.2rem' }}>
                     Secure Connection Established — Data encrypted
                   </p>
                 </form>
@@ -256,7 +283,7 @@ const inputStyle: React.CSSProperties = {
   background: 'rgba(255,255,255,0.5)',
   border: `2px solid ${C.purple}`,
   borderRadius: '8px',
-  padding: '0.75rem 1rem',
+  padding: '0.6rem 0.8rem',
   fontFamily: 'var(--font-sans)',
   fontSize: '0.9rem',
   color: C.purple,
