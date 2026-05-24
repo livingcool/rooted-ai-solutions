@@ -3,65 +3,72 @@
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
+import { useModal } from "@/context/ModalContext";
 
 const PLANS = [
   {
     name:  "Pilot",
-    price: "₹2.5L",
+    subName: "Proof of Concept",
+    price: "₹2.5L - ₹4.0L",
     unit:  "/ project",
-    desc:  "One workflow automated end-to-end. Proven results. Low risk.",
+    desc:  "Baseline model training on static, historical data.",
     features: [
-      "1 AI agent / workflow",
-      "Up to 2 system integrations",
-      "4-week delivery",
-      "Full IP transfer",
-      "30-day post-launch support",
+      "Data Scope: Up to 10GB / Single Dataset",
+      "Model Type: Standard ML or Basic Fine-Tuning",
+      "Compute: Included up to ₹30K",
+      "1 Trained Model",
+      "Evaluation & Accuracy Report",
+      "API Endpoint setup",
+      "2-week iteration window",
     ],
     cta:     "Start a Pilot",
-    href:    "/#contact",
     bg:      "#F0DCC8",
     invert:  false,
   },
   {
     name:  "Growth",
-    price: "₹80K",
+    subName: "Continuous Learning",
+    price: "Starts at ₹1.5L",
     unit:  "/ month",
-    desc:  "Embedded AI engineering team. Ongoing automation & optimization.",
+    desc:  "Active models requiring continuous retraining.",
     features: [
-      "Up to 5 active AI agents",
-      "Unlimited system integrations",
-      "Weekly sprint delivery",
+      "Data Scope: Continuous data pipelines",
+      "Model Type: Deep Learning / NLP / Ongoing Fine-Tuning",
+      "Compute: Pass-through (Client pays AWS/GCP)",
+      "Weekly model retraining",
+      "Model drift monitoring",
+      "Feature engineering updates",
       "Monthly performance review",
-      "Priority support (4hr SLA)",
-      "Predictive analytics dashboard",
     ],
     cta:     "Book a Call",
-    href:    "/#contact",
     bg:      "#240747",
     invert:  true,
     badge:   "MOST POPULAR",
   },
   {
     name:  "Enterprise",
+    subName: "Custom LLM",
     price: "Custom",
     unit:  "",
-    desc:  "Full AI transformation. Dedicated team. Multi-site deployment.",
+    desc:  "High-security, on-premise, or massive scale models.",
     features: [
-      "Unlimited AI agents",
-      "Multi-site & multi-system rollout",
+      "Data Scope: Multi-source, unstructured data lakes",
+      "Model Type: Custom Foundational Models / RAG",
+      "Compute: Pass-through / On-Premise",
       "Dedicated ML engineer on-site",
       "Custom LLM fine-tuning",
-      "24/7 ops monitoring",
-      "Quarterly strategic reviews",
+      "Data security/compliance layer",
+      "Full IP transfer of weights",
     ],
     cta:     "Talk to Sales",
-    href:    "/#contact",
     bg:      "#F9EFE9",
     invert:  false,
   },
 ];
 
 export default function PricingPage() {
+  const { openLeadModal } = useModal();
+
   return (
     <div style={{ background: "#240747" }}>
       {/* Header */}
@@ -155,19 +162,32 @@ export default function PricingPage() {
                   </div>
                 )}
 
-                {/* Name */}
-                <span
-                  style={{
-                    fontFamily:    "var(--font-mono)",
-                    fontSize:      "0.65rem",
-                    fontWeight:    700,
-                    letterSpacing: "0.2em",
-                    textTransform: "uppercase",
-                    color:         "#F6851B",
-                  }}
-                >
-                  {plan.name}
-                </span>
+                {/* Name & SubName */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                  <span
+                    style={{
+                      fontFamily:    "var(--font-mono)",
+                      fontSize:      "0.65rem",
+                      fontWeight:    700,
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                      color:         "#F6851B",
+                    }}
+                  >
+                    {plan.name}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily:    "var(--font-sans)",
+                      fontSize:      "0.85rem",
+                      fontWeight:    600,
+                      color:         plan.invert ? "#F9EFE9" : "#240747",
+                      opacity:       0.8,
+                    }}
+                  >
+                    {plan.subName}
+                  </span>
+                </div>
 
                 {/* Price */}
                 <div>
@@ -175,7 +195,7 @@ export default function PricingPage() {
                     style={{
                       fontFamily:    "var(--font-display)",
                       fontWeight:    900,
-                      fontSize:      "clamp(2.5rem, 4vw, 3.5rem)",
+                      fontSize:      plan.price.length > 6 ? "clamp(2rem, 3.5vw, 2.8rem)" : "clamp(2.5rem, 4vw, 3.5rem)",
                       color:         plan.invert ? "#F9EFE9" : "#240747",
                       letterSpacing: "-0.04em",
                       lineHeight:    1,
@@ -247,9 +267,9 @@ export default function PricingPage() {
                 </ul>
 
                 {/* CTA */}
-                <Link
-                  href={plan.href}
-                  className="nb-btn"
+                <button
+                  onClick={openLeadModal}
+                  className="nb-btn cursor-pointer border-none"
                   style={{
                     background:  plan.invert ? "#F6851B" : "#240747",
                     color:       plan.invert ? "#240747" : "#F9EFE9",
@@ -257,11 +277,10 @@ export default function PricingPage() {
                     boxShadow:   plan.invert ? "4px 4px 0 #F9EFE9" : "4px 4px 0 #F6851B",
                     justifyContent: "center",
                     marginTop:   "auto",
-                    textDecoration: "none",
                   }}
                 >
                   {plan.cta} <ArrowRight size={15} />
-                </Link>
+                </button>
               </div>
             ))}
           </CarouselWrapper>
