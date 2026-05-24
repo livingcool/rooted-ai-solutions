@@ -98,11 +98,13 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
               zIndex: 1,
               padding: 0,
               maxHeight: 'calc(100vh - 2rem)',
+              display: 'flex',
+              flexDirection: 'column',
               transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             {/* Header / Tab Styling */}
-            <div style={{ background: C.purple, padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ background: C.purple, padding: '1rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <ShieldCheck size={18} color={C.orange} />
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: C.cream, letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700 }}>
@@ -117,7 +119,7 @@ export default function LeadModal({ isOpen, onClose }: LeadModalProps) {
               </button>
             </div>
 
-            <div style={{ padding: success ? '1rem' : '2.5rem' }}>
+            <div style={{ padding: success ? '1rem' : '2.5rem', overflowY: 'auto', flex: 1 }}>
               {success ? (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}

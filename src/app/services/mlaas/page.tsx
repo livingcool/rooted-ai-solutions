@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { ArrowRight, Cpu, Activity, CheckCircle2, XCircle, Terminal, ArrowUpRight } from "lucide-react";
+import { useModal } from "@/context/ModalContext";
 
 export default function MLaaSPage() {
+  const { openLeadModal } = useModal();
   return (
     <div style={{ background: "#240747", color: "#F9EFE9" }} className="min-h-screen">
       
@@ -38,13 +40,13 @@ export default function MLaaSPage() {
             
             {/* Call to Action */}
             <div className="flex flex-col sm:flex-row gap-4 mb-16">
-              <Link 
-                href="/#contact" 
+              <button 
+                onClick={openLeadModal}
                 style={{ backgroundColor: "#F6851B", color: "#240747" }}
-                className="nb-btn px-8 py-4 font-bold text-center flex items-center justify-center gap-2 hover:bg-[#ff9736] transition-colors rounded-xl"
+                className="nb-btn px-8 py-4 font-bold text-center flex items-center justify-center gap-2 hover:bg-[#ff9736] transition-colors rounded-xl cursor-pointer border-none"
               >
                 Book Free ML Audit <ArrowRight size={18} />
-              </Link>
+              </button>
               <Link 
                 href="/case-studies" 
                 style={{ color: "#F9EFE9", borderColor: "rgba(249, 239, 233, 0.3)" }}
@@ -432,13 +434,13 @@ export default function MLaaSPage() {
               </p>
             </div>
             <div className="shrink-0 relative z-10 w-full lg:w-auto">
-              <Link 
-                href="/#contact" 
+              <button 
+                onClick={openLeadModal}
                 style={{ backgroundColor: "#240747", color: "#F9EFE9" }}
-                className="inline-block w-full lg:w-auto text-center px-8 py-5 font-black rounded-xl hover:bg-[#1a0435] transition-colors shadow-2xl"
+                className="inline-block w-full lg:w-auto text-center px-8 py-5 font-black rounded-xl hover:bg-[#1a0435] transition-colors shadow-2xl cursor-pointer border-none"
               >
                 Book Free ML Audit
-              </Link>
+              </button>
             </div>
           </div>
         </div>

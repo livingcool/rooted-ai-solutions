@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, Cpu, Zap, Globe, Brain, Shield, BarChart3, Users, Lock } from "lucide-react";
 import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
+import { useModal } from "@/context/ModalContext";
 
 const SERVICES = [
   { icon: Cpu, num: "01", title: "MLaaS for Robotics", desc: "Object detection fine-tuning, continuous model monitoring, and automated labeling pipelines for ROS/WMS stacks.", href: "/services/mlaas", bg: "#F9EFE9" },
@@ -17,6 +18,8 @@ const SERVICES = [
 ];
 
 export default function ServicesPage() {
+  const { openLeadModal } = useModal();
+
   return (
     <div style={{ background: "#240747" }}>
       {/* Page header */}
@@ -62,9 +65,9 @@ export default function ServicesPage() {
       <div style={{ background: "#240747", padding: "4px 4px 0" }}>
         <div style={{ maxWidth: 1320, margin: "0 auto", background: "#F6851B", padding: "3rem 3.5rem" }} className="flex flex-col md:flex-row items-center md:justify-between gap-8 md:gap-12">
           <h2 className="text-center md:text-left" style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(2rem, 4vw, 3.5rem)", color: "#240747", lineHeight: 1, letterSpacing: "-0.04em" }}>Not sure where<br />to start?</h2>
-          <Link href="/#contact" className="nb-btn-inverted rounded-xl">
+          <button onClick={openLeadModal} className="nb-btn-inverted rounded-xl cursor-pointer border-none">
             Book a Free Scoping Call <ArrowRight size={16} />
-          </Link>
+          </button>
         </div>
       </div>
     </div>
