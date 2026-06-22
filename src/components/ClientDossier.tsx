@@ -371,14 +371,14 @@ export default function ClientDossier() {
             display:       "block",
           }}
         >
-          Software. Automation. Intelligence.
+          Who We Are
         </span>
 
         <h2
           className="font-display font-black text-[2.5rem] md:text-[3.5rem] lg:text-[clamp(3rem,6vw,5rem)] text-white leading-none tracking-tighter"
           style={{ marginBottom: "1rem" }}
         >
-          AI-Native Systems<br />Built for Growth
+          This is RootedAI
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-4">
