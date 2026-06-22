@@ -375,10 +375,10 @@ export default function ClientDossier() {
         </span>
 
         <h2
-          className="font-display font-black text-[2.5rem] md:text-[3.5rem] lg:text-[clamp(3rem,6vw,5rem)] text-white leading-none tracking-tighter"
+          className="font-display font-bold text-[2.5rem] md:text-[3.5rem] lg:text-[clamp(3rem,6vw,5rem)] leading-[1] tracking-[-0.04em] uppercase text-white"
           style={{ marginBottom: "1rem" }}
         >
-          This is RootedAI
+          This is <span style={{ color: C.orange }}>RootedAI</span>
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-4">
