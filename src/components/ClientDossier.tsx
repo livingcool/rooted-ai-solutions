@@ -2,10 +2,9 @@
 
 import React, { useState, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
-import { ChevronLeft, ChevronRight, Check, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Check, ArrowRight } from "lucide-react";
 import { C } from "@/data/constants";
-
-/* ─── Brand tokens ────────────────────────────────────────── */
+import { useModal } from "@/context/ModalContext";
 
 const tileObj = (bg: string, extra?: React.CSSProperties): React.CSSProperties => ({
   background:   bg,
@@ -15,132 +14,207 @@ const tileObj = (bg: string, extra?: React.CSSProperties): React.CSSProperties =
   ...extra,
 });
 
-/* ─── Qualification criteria data ────────────────────────── */
-interface Criterion {
-  id:       string;
-  label:    string;
-  desc:     string;
-  verdict:  "QUALIFIED" | "DISQUALIFIED";
-  bg:       string;
+interface ServiceCapability {
+  id:           string;
+  num:          string;
+  title:        string;
+  subHeadline:  string;
+  desc:         string;
+  points:       string[];
+  bg:           string;
 }
 
-const CRITERIA: Criterion[] = [
+const SERVICES: ServiceCapability[] = [
   {
-    id:      "c1",
-    label:   "Robotics / Industrial Tech",
-    desc:    "You operate robotics, automation lines, or industrial IoT systems that produce real-time sensor or camera data.",
-    verdict: "QUALIFIED",
-    bg:      C.cream,
+    id:          "s1",
+    num:         "01",
+    title:       "AI Applications",
+    subHeadline: "Custom AI-powered web and mobile applications designed around your unique business processes.",
+    desc:        "We build intelligent applications that understand, analyze, and automate real-world workflows. From AI assistants and recommendation engines to operational dashboards and decision-support systems, our solutions are designed to create tangible business value rather than experimental prototypes.",
+    points: [
+      "AI Assistants & Copilots",
+      "Generative AI Applications",
+      "Intelligent Search Systems",
+      "Customer Support AI",
+      "Internal Knowledge Platforms"
+    ],
+    bg:          C.cream,
   },
   {
-    id:      "c2",
-    label:   "Pain Point Is Real & Costing You Now",
-    desc:    "Downtime, missed defects, slow QA cycles — the problem has a dollar figure and a deadline attached to it.",
-    verdict: "QUALIFIED",
-    bg:      C.parchment,
+    id:          "s2",
+    num:         "02",
+    title:       "Intelligent Automation",
+    subHeadline: "Transform repetitive operations into autonomous workflows.",
+    desc:        "Manual processes consume valuable time and resources. We design automation systems that connect your software, teams, and data into seamless workflows, reducing operational overhead and allowing your team to focus on higher-value work.",
+    points: [
+      "Workflow Automation",
+      "Business Process Automation",
+      "Document Processing",
+      "Lead & CRM Automation",
+      "AI-Powered Operations"
+    ],
+    bg:          C.parchment,
   },
   {
-    id:      "c3",
-    label:   "Pilot-Ready in 30 Days",
-    desc:    "You can grant data access, assign a technical point-of-contact, and start an engagement inside a month.",
-    verdict: "QUALIFIED",
-    bg:      C.blush,
+    id:          "s3",
+    num:         "03",
+    title:       "Custom Software Development",
+    subHeadline: "Enterprise-grade software engineered for performance, security, and scale.",
+    desc:        "Every business operates differently. That's why we build software tailored to your requirements, whether it's a customer-facing platform, internal operations system, analytics dashboard, or enterprise portal.",
+    points: [
+      "Web Applications",
+      "Mobile Applications",
+      "Enterprise Platforms",
+      "SaaS Products",
+      "API & Systems Integration"
+    ],
+    bg:          C.blush,
   },
   {
-    id:      "c4",
-    label:   "Curiosity Tours with No Brief",
-    desc:    "No defined problem, no timeline, no decision-maker in the room. We are not a demo vendor.",
-    verdict: "DISQUALIFIED",
-    bg:      C.amber,
+    id:          "s4",
+    num:         "04",
+    title:       "Healthcare AI Solutions",
+    subHeadline: "Intelligent healthcare technology built to improve efficiency, accuracy, and patient outcomes.",
+    desc:        "We develop AI-powered healthcare systems that streamline clinical workflows, enhance operational visibility, and support better decision-making across healthcare organizations.",
+    points: [
+      "Clinical Workflow Automation",
+      "Patient Engagement Systems",
+      "Healthcare Analytics",
+      "Medical AI Solutions",
+      "Revenue Cycle Intelligence"
+    ],
+    bg:          C.amber,
   },
   {
-    id:      "c5",
-    label:   "Bespoke Consumer Apps",
-    desc:    "We are built for industrial and enterprise stacks, not consumer mobile apps or SaaS dashboards.",
-    verdict: "DISQUALIFIED",
-    bg:      C.cream,
+    id:          "s5",
+    num:         "05",
+    title:       "EdTech Platforms",
+    subHeadline: "Next-generation learning experiences powered by AI.",
+    desc:        "We help educational institutions and learning companies create intelligent digital ecosystems that improve engagement, personalization, and learning outcomes.",
+    points: [
+      "Learning Management Systems",
+      "AI Tutors & Learning Assistants",
+      "Assessment Platforms",
+      "Student Analytics",
+      "Personalized Learning Experiences"
+    ],
+    bg:          C.cream,
   },
   {
-    id:      "c6",
-    label:   "Pre-Seed with No Operational Data",
-    desc:    "Without production data to train on, we cannot deliver meaningful models. Come back when you have real logs.",
-    verdict: "DISQUALIFIED",
-    bg:      C.parchment,
+    id:          "s6",
+    num:         "06",
+    title:       "Data & Predictive Analytics",
+    subHeadline: "Turn business data into strategic advantage.",
+    desc:        "Data is valuable only when it drives action. We build analytics platforms and predictive models that help organizations identify trends, forecast outcomes, optimize operations, and make confident decisions.",
+    points: [
+      "Business Intelligence Dashboards",
+      "Predictive Modeling",
+      "Operational Analytics",
+      "Performance Monitoring",
+      "Executive Reporting"
+    ],
+    bg:          C.parchment,
   },
 ];
 
-/* ─── Verdict badge ──────────────────────────────────────── */
-function VerdictBadge({ verdict }: { verdict: Criterion["verdict"] }) {
-  const isOk = verdict === "QUALIFIED";
-  return (
-    <span
-      style={{
-        display:        "inline-flex",
-        alignItems:     "center",
-        gap:            "0.3rem",
-        padding:        "0.25rem 0.7rem",
-        borderRadius:   6,
-        border:         `2px solid ${C.purple}`,
-        background:     isOk ? C.orange : C.purple,
-        color:          isOk ? C.purple : C.cream,
-        fontFamily:     "var(--font-mono)",
-        fontSize:       "0.55rem",
-        fontWeight:     700,
-        letterSpacing:  "0.12em",
-        textTransform:  "uppercase" as const,
-      }}
-    >
-      {isOk
-        ? <><Check size={10} strokeWidth={3} /> QUALIFIED</>
-        : <><X size={10} strokeWidth={3} /> DISQUALIFIED</>
-      }
-    </span>
-  );
-}
+const WHY_POINTS = [
+  "AI-Native Engineering",
+  "Industry-Specific Expertise",
+  "Scalable Software Architecture",
+  "Enterprise-Grade Security",
+  "Rapid Development Cycles",
+  "Measurable Business Outcomes",
+];
 
-/* ─── Single criterion card ──────────────────────────────── */
-function CriterionCard({ c, index }: { c: Criterion; index: number }) {
+/* ─── Single service card ────────────────────────────────── */
+function ServiceCard({ s }: { s: ServiceCapability }) {
   return (
-    <div style={{ ...tileObj(c.bg), padding: "2rem", height: "100%", display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem" }}>
-        <span
+    <div style={{ ...tileObj(s.bg), padding: "2.25rem 2rem", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem", flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span
+            style={{
+              fontFamily:    "var(--font-mono)",
+              fontSize:      "0.8rem",
+              fontWeight:    700,
+              letterSpacing: "0.15em",
+              color:         C.orange,
+            }}
+          >
+            {s.num}
+          </span>
+        </div>
+        <h3
+          style={{
+            fontFamily:    "var(--font-display)",
+            fontWeight:    800,
+            fontSize:      "1.5rem",
+            color:         C.purple,
+            lineHeight:    1.1,
+            letterSpacing: "-0.03em",
+          }}
+        >
+          {s.title}
+        </h3>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize:   "0.9rem",
+            fontWeight: 600,
+            color:      C.purple,
+            opacity:    0.9,
+            lineHeight: 1.4,
+          }}
+        >
+          {s.subHeadline}
+        </p>
+        <p
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize:   "0.85rem",
+            color:      C.purple,
+            opacity:    0.7,
+            lineHeight: 1.55,
+          }}
+        >
+          {s.desc}
+        </p>
+      </div>
+
+      <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: `2px dashed ${C.purple}30` }}>
+        <span 
           style={{
             fontFamily:    "var(--font-mono)",
             fontSize:      "0.65rem",
             fontWeight:    700,
             letterSpacing: "0.1em",
-            textTransform: "uppercase" as const,
+            textTransform: "uppercase",
             color:         C.purple,
-            opacity:       0.45,
+            opacity:       0.5,
+            display:       "block",
+            marginBottom:  "0.75rem",
           }}
         >
-          {String(index + 1).padStart(2, "0")}
+          Capabilities
         </span>
-        <VerdictBadge verdict={c.verdict} />
+        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          {s.points.map((pt, idx) => (
+            <li key={idx} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <div style={{ width: 6, height: 6, background: C.orange, borderRadius: "50%" }}></div>
+              <span 
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize:   "0.8rem",
+                  color:      C.purple,
+                  fontWeight: 500,
+                }}
+              >
+                {pt}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
-      <h3
-        style={{
-          fontFamily:    "var(--font-display)",
-          fontWeight:    700,
-          fontSize:      "1.1rem",
-          color:         C.purple,
-          lineHeight:    1.2,
-          letterSpacing: "-0.02em",
-        }}
-      >
-        {c.label}
-      </h3>
-      <p
-        style={{
-          fontFamily: "var(--font-sans)",
-          fontSize:   "0.9rem",
-          color:      C.purple,
-          opacity:    0.7,
-          lineHeight: 1.55,
-        }}
-      >
-        {c.desc}
-      </p>
     </div>
   );
 }
@@ -148,7 +222,7 @@ function CriterionCard({ c, index }: { c: Criterion; index: number }) {
 /* ─── Mobile Carousel ────────────────────────────────────── */
 function MobileCarousel() {
   const [current, setCurrent] = useState(0);
-  const total = CRITERIA.length;
+  const total = SERVICES.length;
 
   const goTo = (idx: number) => setCurrent((idx + total) % total);
 
@@ -162,7 +236,6 @@ function MobileCarousel() {
 
   return (
     <div style={{ width: "100%", overflow: "hidden", position: "relative", display: "grid" }}>
-      {/* Card */}
       <AnimatePresence initial={false}>
         <motion.div
           key={current}
@@ -175,22 +248,20 @@ function MobileCarousel() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           style={{ gridArea: "1 / 1", cursor: "grab", touchAction: "pan-y" }}
         >
-          <CriterionCard c={CRITERIA[current]} index={current} />
+          <ServiceCard s={SERVICES[current]} />
         </motion.div>
       </AnimatePresence>
 
-      {/* Controls row */}
       <div
         style={{
           display:        "flex",
           alignItems:     "center",
           justifyContent: "space-between",
-          marginTop:      "1rem",
+          marginTop:      "1.5rem",
           paddingLeft:    "0.5rem",
           paddingRight:   "0.5rem",
         }}
       >
-        {/* Prev arrow */}
         <button
           onClick={() => goTo(current - 1)}
           aria-label="Previous"
@@ -209,13 +280,12 @@ function MobileCarousel() {
           <ChevronLeft size={18} color={C.purple} />
         </button>
 
-        {/* Dots */}
         <div style={{ display: "flex", gap: "0.4rem" }}>
-          {CRITERIA.map((_, i) => (
+          {SERVICES.map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
-              aria-label={`Go to slide ${i + 1}`}
+              aria-label={`Go to capability ${i + 1}`}
               style={{
                 width:        i === current ? 20 : 8,
                 height:       8,
@@ -230,7 +300,6 @@ function MobileCarousel() {
           ))}
         </div>
 
-        {/* Next arrow */}
         <button
           onClick={() => goTo(current + 1)}
           aria-label="Next"
@@ -250,16 +319,15 @@ function MobileCarousel() {
         </button>
       </div>
 
-      {/* Counter */}
       <p
         style={{
           textAlign:     "center",
           fontFamily:    "var(--font-mono)",
-          fontSize:      "0.6rem",
+          fontSize:      "0.65rem",
           letterSpacing: "0.12em",
           color:         C.purple,
           opacity:       0.5,
-          marginTop:     "0.6rem",
+          marginTop:     "0.8rem",
           textTransform: "uppercase",
         }}
       >
@@ -272,9 +340,9 @@ function MobileCarousel() {
 /* ─── Desktop grid ───────────────────────────────────────── */
 function DesktopGrid() {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-      {CRITERIA.map((c, i) => (
-        <CriterionCard key={c.id} c={c} index={i} />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {SERVICES.map((s) => (
+        <ServiceCard key={s.id} s={s} />
       ))}
     </div>
   );
@@ -282,62 +350,149 @@ function DesktopGrid() {
 
 /* ─── Main export ────────────────────────────────────────── */
 export default function ClientDossier() {
+  const { openLeadModal } = useModal();
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
 
       {/* ── Header tile ── */}
       <div
         style={tileObj(C.purple)}
-        className="p-8 lg:p-16 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 lg:gap-12 items-start"
+        className="p-8 lg:p-16 flex flex-col gap-6"
       >
-        <div>
-          <span
-            style={{
-              fontFamily:    "var(--font-mono)",
-              fontSize:      "0.75rem",
-              letterSpacing: "0.25em",
-              textTransform: "uppercase" as const,
-              color:         C.orange,
-              fontWeight:    700,
-              display:       "block",
-              marginBottom:  "2rem",
-            }}
-          >
-            CASE FILE: QUALIFIED OPERATORS
-          </span>
+        <span
+          style={{
+            fontFamily:    "var(--font-mono)",
+            fontSize:      "0.75rem",
+            letterSpacing: "0.25em",
+            textTransform: "uppercase" as const,
+            color:         C.orange,
+            fontWeight:    700,
+            display:       "block",
+          }}
+        >
+          Software. Automation. Intelligence.
+        </span>
 
-          <h2
-            className="font-display font-black text-[2rem] md:text-[2.5rem] lg:text-[clamp(2.5rem,5vw,4rem)] text-white"
-            style={{ lineHeight: 1, letterSpacing: "-0.05em", marginBottom: "1.5rem" }}
-          >
-            <span className="text-white" style={{ display: "block", paddingBottom: "0.15rem" }}>We don&apos;t take</span>
-            <span className="text-white" style={{ display: "block", paddingBottom: "0.15rem" }}>every project.</span>
-            <span style={{ display: "block", color: C.orange }}>We take the right ones.</span>
-          </h2>
+        <h2
+          className="font-display font-black text-[2.5rem] md:text-[3.5rem] lg:text-[clamp(3rem,6vw,5rem)] text-white leading-none tracking-tighter"
+          style={{ marginBottom: "1rem" }}
+        >
+          AI-Native Systems<br />Built for Growth
+        </h2>
 
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mt-4">
           <p
-            className="text-white"
+            className="text-white/85"
             style={{
               fontFamily: "var(--font-sans)",
-              fontSize:   "1.05rem",
+              fontSize:   "1.1rem",
               lineHeight: 1.6,
-              maxWidth:   520,
             }}
           >
-            We run field assessments. We work best with operators whose problems are real,
-            deadlines are immediate, and vision is enough to build on.{" "}
-            <strong className="text-white">If you qualify, you already know.</strong>
+            RootedAI helps organizations transform complex operations into intelligent, scalable systems. We combine advanced AI, custom software engineering, and automation to help healthcare providers, educational institutions, and modern enterprises operate more efficiently, make better decisions, and unlock new growth opportunities.
+          </p>
+          <p
+            className="text-white/85"
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize:   "1.1rem",
+              lineHeight: 1.6,
+            }}
+          >
+            Whether you're building a new digital product, automating internal workflows, or deploying AI across your organization, we deliver solutions engineered for measurable business impact.
           </p>
         </div>
       </div>
 
       {/* ── Cards — mobile carousel / desktop grid ── */}
-      <div className="block md:hidden">
+      <div className="block lg:hidden">
         <MobileCarousel />
       </div>
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <DesktopGrid />
       </div>
+
+      {/* ── Bottom Section: Why RootedAI & Call to Action ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        {/* Why RootedAI Box */}
+        <div style={tileObj(C.cream)} className="p-8 lg:p-12 flex flex-col justify-between">
+          <div>
+            <h3 
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                fontSize: "1.8rem",
+                color: C.purple,
+                marginBottom: "1.5rem",
+                letterSpacing: "-0.02em"
+              }}
+            >
+              Why RootedAI
+            </h3>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0 }} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {WHY_POINTS.map((pt, idx) => (
+                <li key={idx} style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                  <div style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    background: C.orange,
+                    border: `2px solid ${C.purple}`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0
+                  }}>
+                    <span style={{ color: C.purple, fontSize: "0.75rem", fontWeight: 900 }}>✓</span>
+                  </div>
+                  <span 
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "0.9rem",
+                      color: C.purple,
+                      fontWeight: 600
+                    }}
+                  >
+                    {pt}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Action / Tagline Box */}
+        <div style={tileObj(C.orange)} className="p-8 lg:p-12 flex flex-col justify-between gap-8">
+          <div>
+            <h3
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                fontSize: "2rem",
+                color: C.purple,
+                lineHeight: 1.1,
+                letterSpacing: "-0.03em"
+              }}
+            >
+              Build Smarter.<br />Operate Faster.<br />Scale Confidently.
+            </h3>
+          </div>
+          <button 
+            onClick={openLeadModal}
+            style={{
+              background: C.purple,
+              color: C.cream,
+              border: `3px solid ${C.purple}`,
+              boxShadow: `4px 4px 0 ${C.cream}`,
+            }}
+            className="nb-btn self-start"
+          >
+            Start a Pilot <ArrowRight size={16} />
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 }
