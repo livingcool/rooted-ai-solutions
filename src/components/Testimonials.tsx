@@ -108,7 +108,7 @@ export default function Testimonials() {
                   {[...Array(5)].map((_, i) => <Star key={i} size={16} fill={C.orange} color={C.orange} />)}
               </div>
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.9rem", color: C.purple, opacity: 0.8, lineHeight: 1.5 }}>
-                  Top-rated for <strong>Robotics ML</strong> and industrial automation consulting. Verified excellence in B2B delivery.
+                  Top-rated for <strong>Custom ML</strong>, software, and application development. Verified excellence in B2B delivery.
               </p>
           </div>
           <div style={{ marginTop: "auto", paddingTop: "2rem", borderTop: `2px solid ${C.purple}20` }}>

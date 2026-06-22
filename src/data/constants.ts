@@ -1,5 +1,5 @@
 import { 
-  Cpu, Zap, Globe, Brain, Shield, BarChart3 
+  Cpu, Zap, Brain, Shield, BarChart3, Code, Smartphone 
 } from "lucide-react";
 
 export const C = {
@@ -21,8 +21,8 @@ export const METRICS = [
 export const SERVICES = [
   { icon: Cpu,       title: "AI Agents",            href: "/services/AIAgents",            bg: C.cream     },
   { icon: Zap,       title: "Process Automation",   href: "/services/ProcessAutomation",   bg: C.parchment },
-  { icon: Globe,     title: "Web Solutions",         href: "/services/WebSolutions",        bg: C.blush     },
-  { icon: Brain,     title: "NLP Systems",           href: "/services/NLPSystems",          bg: C.amber     },
-  { icon: BarChart3, title: "Predict Analytics",  href: "/services/PredictiveAnalytics", bg: C.cream     },
-  { icon: Shield,    title: "Enterprise Sec",   href: "/services/EnterpriseSecurity",  bg: C.parchment },
+  { icon: Code,      title: "Custom Software",      href: "/services/CustomSoftware",      bg: C.blush     },
+  { icon: Brain,     title: "NLP Systems",          href: "/services/NLPSystems",          bg: C.amber     },
+  { icon: BarChart3, title: "Predict Analytics",    href: "/services/PredictiveAnalytics", bg: C.cream     },
+  { icon: Shield,    title: "Enterprise Sec",       href: "/services/EnterpriseSecurity",  bg: C.parchment },
 ];

@@ -1,9 +1,9 @@
 # RootedAI | Engineering Intelligence
 
 > COMPLEXITY. SIMPLIFIED.
-> Accelerating robotics and industrial operations through Agentic AI and Perception Systems.
+> Accelerating healthcare, robotics, and educational operations through custom ML model development, custom software, and app development.
 
-RootedAI (Rooted AI Solutions) is a strategic AI engineering firm specializing in perception systems, autonomous agents, and industrial automation. We help robotics startups and manufacturing enterprises deploy production-grade AI in weeks, not months.
+RootedAI (Rooted AI Solutions) is a strategic AI engineering firm specializing in custom ML model development, custom software engineering, and app development. We help healthcare providers, robotics platforms, educational institutions, and modern enterprises deploy production-grade AI in weeks, not months.
 
 ## Core Identity
 - **Legal Name**: Rooted AI Solutions
@@ -21,26 +21,26 @@ AI agents can interact with this site via semantic selectors and dedicated manif
 
 ## Qualification Criteria (Who We Work With)
 We do not take every project. We prioritize "Qualified Operators" who meet the following:
-1. **Robotics / Industrial Tech**: Operating robotics or automation lines with camera/sensor data.
+1. **ML & Software Needs**: Operating in healthcare, robotics, education, or modern enterprise sectors requiring custom ML models or software.
 2. **Real Pain Points**: Operational friction that has a clear cost and deadline.
 3. **Pilot-Ready**: Ability to grant data access and start within 30 days.
 *Note: We typically disqualify consumer apps, "curiosity tours" without briefs, and early-stage startups without operational data.*
 
 ## Our Tactical Lifecycle (Workflow)
-1. **Raw Data Ingest**: Capturing edge sensor and camera feeds.
+1. **Raw Data Ingest**: Capturing clinical, sensor, camera, or platform logs.
 2. **Strategy Scoping**: Defining tactical objectives and safety constraints.
-3. **Data Cleaning**: Sanitizing and labeling industrial datasets.
+3. **Data Cleaning**: Sanitizing and labeling multi-source datasets.
 4. **LLM/Vision Fine-Tuning**: Training specialized models for your environment.
 5. **Validation**: Rigorous testing against edge cases and safety protocols.
-6. **System Integration**: Production deployment into existing hardware stacks.
+6. **System Integration**: Production deployment into clinical, LMS, or hardware stacks.
 
 ## Services
-- **AI Agents**: Autonomous workflows for industrial ops.
-- **Process Automation**: Inventory, fulfillment, and scheduling.
-- **Web Solutions**: AI-native enterprise dashboards.
-- **NLP Systems**: Document intelligence and sensor data synthesis.
-- **Predictive Analytics**: Supply chain forecasting and risk assessment.
-- **Enterprise Security**: Threat detection and compliance.
+- **Custom ML Development**: Healthcare, robotics, and education ML models.
+- **AI-Native Custom Software**: Tailored enterprise platforms built with native AI.
+- **App Development**: High-performance web and mobile applications.
+- **AI Agents**: Autonomous workflows for business and operations.
+- **Process Automation**: Workflow connection and scheduling.
+- **NLP Systems**: Document intelligence and semantic search.
 
 ## Contact
 - **WhatsApp**: https://wa.me/917904168521
