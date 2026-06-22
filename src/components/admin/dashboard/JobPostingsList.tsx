@@ -20,25 +20,23 @@ export const JobPostingsList = ({
     handleDeleteJob
 }: JobPostingsListProps) => {
     return (
-        <div className="grid gap-4">
+        <div className="grid gap-6">
             {jobs.map((job) => (
-                <div key={job.id} className="flex flex-col md:flex-row md:items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10 gap-4 md:gap-0">
-                    <div>
-                        <h4 className="font-bold text-lg">{job.title}</h4>
-                        <div className="flex gap-2 mt-1">
-                            <Badge variant="outline" className="border-white/20 text-white/60">{job.type}</Badge>
-                            <Badge variant="outline" className="border-white/20 text-white/60">{job.location}</Badge>
+                <div key={job.id} className="flex flex-col md:flex-row md:items-center justify-between p-6 rounded-2xl bg-[#F9EFE9] border-4 border-[#240747] shadow-[4px_4px_0_#240747] gap-4">
+                    <div className="space-y-3">
+                        <h4 className="text-2xl font-black text-[#240747]">{job.title}</h4>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                            <span className="nb-tag-orange text-[0.6rem]">{job.type}</span>
                             {job.is_active ? (
-                                <Badge className="bg-green-500/20 text-green-400 border-0">Active</Badge>
+                                <span className="px-2 py-0.5 bg-green-500 border-2 border-[#240747] text-[#240747] text-[0.6rem] font-bold uppercase tracking-widest rounded-md shadow-[2px_2px_0_#240747]">Active</span>
                             ) : (
-                                <Badge className="bg-gray-500/20 text-gray-400 border-0">Closed</Badge>
+                                <span className="px-2 py-0.5 bg-gray-400 border-2 border-[#240747] text-[#240747] text-[0.6rem] font-bold uppercase tracking-widest rounded-md shadow-[2px_2px_0_#240747]">Closed</span>
                             )}
                         </div>
                     </div>
-                    <div className="flex gap-2 w-full md:w-auto mt-2 md:mt-0">
-                        <Button
-                            variant="outline"
-                            className="border-white/10 hover:bg-white/10 h-11 md:h-9 flex-1 md:flex-none"
+                    <div className="flex flex-wrap gap-3 w-full md:w-auto mt-2 md:mt-0">
+                        <button
+                            className="nb-btn nb-btn-primary py-2 px-6 text-xs h-auto"
                             onClick={() => {
                                 setEditingJob(job);
                                 setNewJob({
@@ -54,28 +52,26 @@ export const JobPostingsList = ({
                             }}
                         >
                             Edit
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            className="text-red-400 hover:bg-red-500/10 hover:text-red-300 h-11 md:h-9 flex-1 md:flex-none"
+                        </button>
+                        <button
+                            className="nb-btn nb-btn-ghost py-2 px-6 text-xs h-auto border-red-500/40 text-red-600"
                             onClick={() => handleCloseJob(job.id)}
                             disabled={!job.is_active}
                         >
                             Close
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            className="text-red-400 hover:bg-red-500/10 hover:text-red-300 h-11 md:h-9 flex-1 md:flex-none"
+                        </button>
+                        <button
+                            className="nb-btn nb-btn-ghost py-2 px-6 text-xs h-auto border-red-500/40 text-red-600"
                             onClick={() => handleDeleteJob(job.id)}
                         >
                             Delete
-                        </Button>
+                        </button>
                     </div>
                 </div>
             ))}
             {jobs.length === 0 && (
-                <div className="text-center py-8 text-white/40">
-                    No jobs posted yet.
+                <div className="text-center py-12 border-4 border-dashed border-[#240747]/10 rounded-3xl">
+                    <p className="font-mono text-xs font-bold uppercase tracking-widest opacity-40 text-[#240747]">No active operations found.</p>
                 </div>
             )}
         </div>

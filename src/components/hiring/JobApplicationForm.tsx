@@ -114,106 +114,104 @@ export const JobApplicationForm = ({ jobId, jobTitle, onSuccess }: JobApplicatio
 
     if (applicationId) {
         return (
-            <div className="flex flex-col items-center justify-center space-y-6 py-12 text-center">
-                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
-                    <Upload className="w-8 h-8 text-green-500" />
+            <div className="flex flex-col items-center justify-center space-y-8 py-12 text-center">
+                <div className="w-20 h-20 bg-green-500 border-4 border-[#240747] rounded-3xl flex items-center justify-center text-[#240747] shadow-[6px_6px_0_#240747]">
+                    <Upload className="w-10 h-10" />
                 </div>
-                <div className="space-y-2">
-                    <h3 className="text-2xl font-bold text-white">Application Received!</h3>
-                    <p className="text-white/60 max-w-md mx-auto">
-                        Thank you for applying. Your application has been successfully submitted.
+                <div className="space-y-3">
+                    <h3 className="text-3xl font-black text-[#240747]">Mission Initialized!</h3>
+                    <p className="text-[#240747]/60 max-w-md mx-auto font-medium">
+                        Your application has been logged in our tactical database. 
                     </p>
                 </div>
-                <div className="bg-white/5 border border-white/10 p-6 rounded-lg w-full max-w-md">
-                    <p className="text-sm text-white/40 uppercase tracking-widest mb-2">Application ID</p>
-                    <div className="flex items-center justify-center gap-2">
-                        <span className="text-xl font-medium text-white select-all">
+                <div className="bg-white border-4 border-[#240747] p-8 rounded-3xl w-full max-w-md shadow-[10px_10px_0_#240747]">
+                    <p className="text-[0.6rem] font-black text-[#F6851B] uppercase tracking-widest mb-3">Application Identifier</p>
+                    <div className="bg-[#F9EFE9] p-4 border-2 border-[#240747] rounded-xl">
+                        <span className="text-xl font-black text-[#240747] select-all break-all">
                             {applicationId}
                         </span>
                     </div>
-                    <p className="text-xs text-white/40 mt-4">
-                        Please save this ID for future reference.
+                    <p className="text-xs font-bold text-[#240747]/40 mt-6 uppercase tracking-widest">
+                        Reference this ID in all secure comms.
                     </p>
                 </div>
-                <Button
-                    variant="outline"
-                    className="border-white/10 text-white hover:bg-white/5"
+                <button
+                    className="nb-btn nb-btn-ghost py-3 px-8"
                     onClick={() => setApplicationId(null)}
                 >
-                    Submit Another Application
-                </Button>
+                    Submit New Brief
+                </button>
             </div>
         );
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">Apply for {jobTitle}</h3>
-                <p className="text-sm text-white/60">Please fill out the form below to submit your application.</p>
+                <h3 className="text-2xl font-black text-[#240747] uppercase tracking-tight">Deploy Application</h3>
+                <p className="text-sm font-medium text-[#240747]/60">Target Role: <span className="text-[#F6851B] font-bold">{jobTitle}</span></p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="fullName" className="text-white">Full Name *</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                    <Label htmlFor="fullName" className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Full Name *</Label>
                     <Input
                         id="fullName"
                         required
-                        className="bg-white/5 border-white/10 text-white"
+                        className="bg-white border-2 border-[#240747] p-4 h-auto rounded-xl font-bold focus-visible:ring-4 focus-visible:ring-[#F6851B]/20 shadow-[4px_4px_0_#240747]"
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     />
                 </div>
-                <div className="space-y-2">
-                    <Label htmlFor="email" className="text-white">Email *</Label>
+                <div className="space-y-3">
+                    <Label htmlFor="email" className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Email *</Label>
                     <Input
                         id="email"
                         type="email"
                         required
-                        className="bg-white/5 border-white/10 text-white"
+                        className="bg-white border-2 border-[#240747] p-4 h-auto rounded-xl font-bold focus-visible:ring-4 focus-visible:ring-[#F6851B]/20 shadow-[4px_4px_0_#240747]"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     />
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-white">Phone</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                    <Label htmlFor="phone" className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Phone</Label>
                     <Input
                         id="phone"
                         type="tel"
-                        className="bg-white/5 border-white/10 text-white"
+                        className="bg-white border-2 border-[#240747] p-4 h-auto rounded-xl font-bold focus-visible:ring-4 focus-visible:ring-[#F6851B]/20 shadow-[4px_4px_0_#240747]"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     />
                 </div>
-                <div className="space-y-2">
-                    <Label htmlFor="portfolio" className="text-white">Portfolio URL</Label>
+                <div className="space-y-3">
+                    <Label htmlFor="portfolio" className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Portfolio URL</Label>
                     <Input
                         id="portfolio"
                         type="url"
-                        className="bg-white/5 border-white/10 text-white"
+                        className="bg-white border-2 border-[#240747] p-4 h-auto rounded-xl font-bold focus-visible:ring-4 focus-visible:ring-[#F6851B]/20 shadow-[4px_4px_0_#240747]"
                         value={formData.portfolioUrl}
                         onChange={(e) => setFormData({ ...formData, portfolioUrl: e.target.value })}
                     />
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <Label htmlFor="resume" className="text-white">Resume (PDF/DOCX) *</Label>
-                <div className="flex items-center gap-4">
-                    <Button
+            <div className="space-y-3">
+                <Label htmlFor="resume" className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Resume (PDF/DOCX) *</Label>
+                <div className="flex items-center gap-6">
+                    <button
                         type="button"
-                        variant="outline"
-                        className="bg-white/5 border-white/10 text-white hover:bg-white/10"
+                        className="nb-btn nb-btn-ghost py-3 px-6 h-auto text-xs"
                         onClick={() => document.getElementById('resume-upload')?.click()}
                     >
                         <Upload className="w-4 h-4 mr-2" />
                         {file ? "Change File" : "Upload Resume"}
-                    </Button>
-                    <span className="text-sm text-white/60 truncate max-w-[200px]">
-                        {file ? file.name : "No file chosen"}
+                    </button>
+                    <span className="text-[0.7rem] font-mono font-bold text-[#240747]/40 truncate max-w-[200px]">
+                        {file ? file.name : "NO FILE ATTACHED"}
                     </span>
                     <Input
                         id="resume-upload"
@@ -225,30 +223,31 @@ export const JobApplicationForm = ({ jobId, jobTitle, onSuccess }: JobApplicatio
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <Label htmlFor="coverLetter" className="text-white">Cover Letter</Label>
+            <div className="space-y-3">
+                <Label htmlFor="coverLetter" className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Mission Cover Letter</Label>
                 <Textarea
                     id="coverLetter"
-                    className="bg-white/5 border-white/10 text-white min-h-[100px]"
+                    className="bg-white border-2 border-[#240747] p-4 min-h-[140px] rounded-xl font-bold focus-visible:ring-4 focus-visible:ring-[#F6851B]/20 shadow-[4px_4px_0_#240747]"
                     value={formData.coverLetter}
                     onChange={(e) => setFormData({ ...formData, coverLetter: e.target.value })}
+                    placeholder="Describe your tactical advantage..."
                 />
             </div>
 
-            <Button
+            <button
                 type="submit"
-                className="w-full bg-white text-black hover:bg-white/90"
+                className="w-full nb-btn nb-btn-primary h-16 text-xl"
                 disabled={loading}
             >
                 {loading ? (
                     <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Submitting...
+                        <Loader2 className="w-6 h-6 mr-2 animate-spin" />
+                        BROADCASTING...
                     </>
                 ) : (
-                    "Submit Application"
+                    "SUBMIT APPLICATION"
                 )}
-            </Button>
+            </button>
         </form>
     );
 };

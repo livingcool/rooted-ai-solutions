@@ -24,6 +24,8 @@ dist-ssr
 *.sw?
 
 .vercel
+.next
+.env
 .env*.local
 service_account.json
 rootedai-indexing-*.json

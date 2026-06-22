@@ -47,7 +47,7 @@ const MirrorLoader = ({ size = 100, className = "" }: MirrorLoaderProps) => {
         ease: "easeInOut",
         repeat: Infinity,
         repeatDelay: 0.5
-      }
+      } as any
     }),
   };
 
@@ -61,7 +61,7 @@ const MirrorLoader = ({ size = 100, className = "" }: MirrorLoaderProps) => {
         repeat: Infinity,
         ease: "easeInOut",
         times: [0, 0.6, 1]
-      }
+      } as any
     }
   };
 
@@ -82,7 +82,7 @@ const MirrorLoader = ({ size = 100, className = "" }: MirrorLoaderProps) => {
           duration: 3,
           repeat: Infinity,
           ease: "easeInOut",
-        }}
+        } as any}
       />
 
       <svg

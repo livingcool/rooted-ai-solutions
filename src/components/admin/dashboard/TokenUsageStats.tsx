@@ -59,7 +59,7 @@ export const TokenUsageStats = () => {
         setErrorMsg(null);
         try {
             const { data, error } = await supabase
-                .from('ai_usage_logs')
+                .from('ai_usage_logs' as any)
                 .select('*')
                 .order('created_at', { ascending: false })
                 .limit(100);
@@ -67,8 +67,8 @@ export const TokenUsageStats = () => {
             if (error) throw error;
 
             console.log("Fetched Token Usage Logs:", data);
-            setLogs(data || []);
-            calculateCost(data || []);
+            setLogs((data as any) || []);
+            calculateCost((data as any) || []);
         } catch (error: any) {
             console.error("Error fetching logs:", error);
             setErrorMsg(error.message || "Failed to fetch logs");

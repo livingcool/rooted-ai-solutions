@@ -1,13 +1,18 @@
-import { Link } from "react-router-dom";
+'use client';
+
+import Link from "next/link";
 import { ArrowRight, Linkedin, Github, Twitter } from "lucide-react";
+import { useModal } from "@/context/ModalContext";
+import LocationFooter from "./LocationFooter";
+import RootedLogo from "../ui/RootedLogo";
 
 const FOOTER_LINKS = {
   Services: [
-    { name: "AI Agents",            href: "/services/ai-agents" },
-    { name: "Process Automation",   href: "/services/process-automation" },
-    { name: "Web Solutions",        href: "/services/web-solutions" },
-    { name: "NLP Systems",          href: "/services/nlp-systems" },
-    { name: "Predictive Analytics", href: "/services/predictive-analytics" },
+    { name: "AI Agents",            href: "/services/AIAgents" },
+    { name: "Process Automation",   href: "/services/ProcessAutomation" },
+    { name: "Web Solutions",        href: "/services/WebSolutions" },
+    { name: "NLP Systems",          href: "/services/NLPSystems" },
+    { name: "Predictive Analytics", href: "/services/PredictiveAnalytics" },
   ],
   Company: [
     { name: "About",        href: "/#about" },
@@ -16,15 +21,10 @@ const FOOTER_LINKS = {
     { name: "Careers",      href: "/careers" },
     { name: "Pricing",      href: "/pricing" },
   ],
-  Locations: [
-    { name: "Hosur",      href: "/locations/hosur" },
-    { name: "Coimbatore", href: "/locations/coimbatore" },
-    { name: "Bangalore",  href: "/locations/bangalore" },
-    { name: "Chennai",    href: "/locations/chennai" },
-  ],
 };
 
 export default function Footer() {
+  const { openLeadModal } = useModal();
   return (
     <footer style={{ background: "#240747" }}>
       {/* Main footer content */}
@@ -38,11 +38,8 @@ export default function Footer() {
           style={{
             maxWidth: 1320,
             margin:   "0 auto",
-            display:  "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr",
-            gap:      "4px",
           }}
-          className="footer-grid"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[4px]"
         >
           {/* Brand tile */}
           <div
@@ -57,18 +54,7 @@ export default function Footer() {
           >
             {/* Logo */}
             <div>
-              <span
-                style={{
-                  fontFamily:    "var(--font-display)",
-                  fontWeight:    900,
-                  fontSize:      "1.8rem",
-                  color:         "#240747",
-                  letterSpacing: "-0.04em",
-                  lineHeight:    1,
-                }}
-              >
-                Rooted<span style={{ color: "#F6851B" }}>AI</span>
-              </span>
+              <RootedLogo size={40} />
               <p
                 style={{
                   fontFamily:  "var(--font-mono)",
@@ -90,13 +76,15 @@ export default function Footer() {
             {/* Social links */}
             <div style={{ display: "flex", gap: "0.75rem" }}>
               {[
-                { icon: Linkedin, href: "#", label: "LinkedIn" },
-                { icon: Github,   href: "#", label: "GitHub"   },
-                { icon: Twitter,  href: "#", label: "Twitter"  },
+                { icon: Linkedin, href: "https://www.linkedin.com/company/rootdai", label: "LinkedIn" },
+                { icon: Github,   href: "https://github.com/rootedai",               label: "GitHub"   },
+                { icon: Twitter,  href: "https://x.com/rootedai2025",                label: "Twitter"  },
               ].map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   style={{
                     width:      36,
@@ -124,13 +112,13 @@ export default function Footer() {
             </div>
 
             {/* CTA */}
-            <Link
-              to="/#contact"
+            <button
+              onClick={openLeadModal}
               className="nb-btn nb-btn-primary"
               style={{ fontSize: "0.75rem", padding: "0.65rem 1.2rem", marginTop: "auto" }}
             >
               Book a Demo <ArrowRight size={13} />
-            </Link>
+            </button>
           </div>
 
           {/* Link columns */}
@@ -164,7 +152,7 @@ export default function Footer() {
                 {links.map((link) => (
                   <Link
                     key={link.name}
-                    to={link.href}
+                    href={link.href}
                     style={{
                       fontFamily:    "var(--font-display)",
                       fontWeight:    600,
@@ -209,13 +197,13 @@ export default function Footer() {
               textTransform: "uppercase",
             }}
           >
-            © {new Date().getFullYear()} RootedAI. Chennai, India → Serving Global Enterprises.
+            © {new Date().getFullYear()} RootedAI. Serving Global Enterprises.
           </p>
           <div style={{ display: "flex", gap: "1.5rem" }}>
             {["Privacy", "Terms", "FAQ"].map((item) => (
               <Link
                 key={item}
-                to={`/${item.toLowerCase()}`}
+                href={`/${item.toLowerCase()}`}
                 style={{
                   fontFamily:    "var(--font-mono)",
                   fontSize:      "0.62rem",
@@ -236,14 +224,8 @@ export default function Footer() {
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 900px) {
-          .footer-grid { grid-template-columns: 1fr 1fr !important; }
-        }
-        @media (max-width: 500px) {
-          .footer-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
+      {/* SEO & GEO Semantic Mapping */}
+      <LocationFooter />
     </footer>
   );
 }

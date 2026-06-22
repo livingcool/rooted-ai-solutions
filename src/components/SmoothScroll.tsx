@@ -1,3 +1,6 @@
+
+'use client';
+
 import { ReactNode, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
@@ -10,33 +13,51 @@ const SmoothScroll = ({ children }: SmoothScrollProps) => {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    // Disable Lenis on mobile to prevent carousel swipe conflicts
+    if (window.innerWidth < 768) return;
+
     // Initialize Lenis
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4ba6
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
+      lerp: 0.05, // Lower = smoother glide
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
       smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
+      syncTouch: true,
     });
 
     lenisRef.current = lenis;
 
-    // raf loop
+    // Handle clicks on anchor links
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a');
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href');
+      if (href && href.startsWith('/#')) {
+        const id = href.split('#')[1];
+        const element = document.getElementById(id);
+        if (element) {
+          e.preventDefault();
+          lenis.scrollTo(element, { offset: -80 });
+        }
+      }
+    };
+
+    window.addEventListener('click', handleAnchorClick);
+
+    let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
-
-    // Sync with ScrollTrigger if using GSAP (optional but good practice)
-    // import { ScrollTrigger } from 'gsap/ScrollTrigger';
-    // lenis.on('scroll', ScrollTrigger.update);
+    rafId = requestAnimationFrame(raf);
 
     return () => {
       lenis.destroy();
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('click', handleAnchorClick);
     };
   }, []);
 

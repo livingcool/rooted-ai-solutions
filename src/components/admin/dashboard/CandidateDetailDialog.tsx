@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { JobApplication } from "@/types/hiring";
-import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send, Sparkles, CheckCircle, XCircle, MoreVertical, MoveRight, Check, X, RefreshCcw } from "lucide-react";
+import { Loader2, Github, Video, Code, Brain, Globe, FileText, Mic, Send, Sparkles, CheckCircle, XCircle, MoreVertical, MoveRight, Check, X, RefreshCcw, Briefcase } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getStatusColor } from "@/utils/adminUtils";
 import { InterviewInviteDialog } from "./InterviewInviteDialog";
@@ -268,9 +268,9 @@ export const CandidateDetailDialog = ({
         try {
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
-            const frontendUrl = import.meta.env.VITE_FRONTEND_URL || window.location.origin;
+            const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || window.location.origin;
 
-            await supabase.from('applications').update({ status: 'Technical Round' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Technical Round' }).eq('id', selectedApp.id);
 
             const emailSubject = `🎉 Technical Round Invitation - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.button{display:inline-block;padding:15px 30px;background:#667eea;color:white;text-decoration:none;border-radius:5px;margin:20px 0;font-weight:bold}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎉 Congratulations!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Great news! After carefully reviewing your communication assessment, we're impressed with your responses and would like to invite you to the <strong>Technical Round</strong> for the <strong>${jobTitle}</strong> position.</p><p>Your communication skills and personal growth mindset stood out, and we're excited to see your technical capabilities!</p><p style="text-align:center;"><a href="${frontendUrl}/candidate-status" class="button">Access Your Dashboard</a></p><p><strong>Next Steps:</strong></p><ul><li>Click the button above to access your candidate dashboard</li><li>Review the technical problem statement</li><li>Submit your solution via GitHub</li></ul><p>Best of luck with your technical assessment!</p><p>Warm regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -294,7 +294,7 @@ export const CandidateDetailDialog = ({
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
 
-            await supabase.from('applications').update({ status: 'Rejected' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Rejected' }).eq('id', selectedApp.id);
 
             const emailSubject = `Update on Your Application - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:#4a5568;color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>Application Update</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Thank you for taking the time to complete the communication assessment for the <strong>${jobTitle}</strong> position at RootedAI.</p><p>After careful consideration of all candidates, we have decided to move forward with other applicants whose qualifications more closely match our current needs.</p><p>We genuinely appreciate your interest in RootedAI and the effort you put into your application. We encourage you to apply for future opportunities that match your skills and experience.</p><p>We wish you all the best in your job search and future endeavors.</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -318,9 +318,9 @@ export const CandidateDetailDialog = ({
         try {
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
-            const frontendUrl = import.meta.env.VITE_FRONTEND_URL || window.location.origin;
+            const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || window.location.origin;
 
-            await supabase.from('applications').update({ status: 'Final Interview' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Final Interview' }).eq('id', selectedApp.id);
 
             const emailSubject = `🎉 Final Interview Invitation - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.button{display:inline-block;padding:15px 30px;background:#667eea;color:white;text-decoration:none;border-radius:5px;margin:20px 0;font-weight:bold}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎉 Excellent Work!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Congratulations! Your technical assessment was impressive, and we would love to invite you to the <strong>Final Interview</strong> for the <strong>${jobTitle}</strong> position.</p><p>This is the last step in our hiring process. We're excited to meet you!</p><p style="text-align:center;"><a href="${frontendUrl}/final-interview-login" class="button">Schedule Your Interview</a></p><p><strong>Next Steps:</strong></p><ul><li>Click the button above to access the scheduling portal</li><li>Choose a convenient time slot</li><li>Complete the final interview</li></ul><p>Looking forward to speaking with you!</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -344,7 +344,7 @@ export const CandidateDetailDialog = ({
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
 
-            await supabase.from('applications').update({ status: 'Rejected' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Rejected' }).eq('id', selectedApp.id);
 
             const emailSubject = `Update on Your Application - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:#4a5568;color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>Application Update</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Thank you for completing the technical assessment for the <strong>${jobTitle}</strong> position at RootedAI.</p><p>After careful review of your submission, we have decided to move forward with other candidates whose experience more closely aligns with our current needs.</p><p>We appreciate the time and effort you invested in this process and encourage you to apply for future opportunities that match your skills.</p><p>We wish you the very best in your career.</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -369,7 +369,7 @@ export const CandidateDetailDialog = ({
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
 
-            await supabase.from('applications').update({ status: 'Offered' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Offered' }).eq('id', selectedApp.id);
 
             const emailSubject = `🎊 Job Offer - ${jobTitle} at RootedAI`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.highlight{background:#d1fae5;padding:20px;border-left:4px solid #10b981;margin:20px 0}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>🎊 Congratulations!</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>We are thrilled to extend an offer for the <strong>${jobTitle}</strong> position at RootedAI Solutions!</p><div class="highlight"><p><strong>What's Next:</strong></p><ul><li>Our HR team will contact you within 24 hours with offer details</li><li>You'll receive the formal offer letter via email</li><li>We'll discuss compensation, benefits, and start date</li></ul></div><p>Your performance throughout the hiring process has been outstanding, and we're excited to have you join our team!</p><p>Welcome to RootedAI! 🚀</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -393,7 +393,7 @@ export const CandidateDetailDialog = ({
             const candidateName = selectedApp.full_name || "Candidate";
             const jobTitle = (selectedApp as any).jobs?.title || "[Job Title]";
 
-            await supabase.from('applications').update({ status: 'Rejected' }).eq('id', selectedApp.id);
+            await supabase.from('applications' as any).update({ status: 'Rejected' }).eq('id', selectedApp.id);
 
             const emailSubject = `Update on Your Application - ${jobTitle}`;
             const emailBody = `<!DOCTYPE html><html><head><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333}.container{max-width:600px;margin:0 auto;padding:20px}.header{background:#4a5568;color:white;padding:30px;text-align:center;border-radius:10px 10px 0 0}.content{background:#f9f9f9;padding:30px;border-radius:0 0 10px 10px}.footer{text-align:center;margin-top:30px;color:#666;font-size:12px}</style></head><body><div class="container"><div class="header"><h1>Application Update</h1></div><div class="content"><p>Dear <strong>${candidateName}</strong>,</p><p>Thank you for taking the time to complete the final interview for the <strong>${jobTitle}</strong> position at RootedAI.</p><p>After thorough consideration, we have decided to proceed with another candidate for this role.</p><p>We were impressed by your skills and experience, and we encourage you to apply for future positions that align with your background.</p><p>Thank you again for your interest in RootedAI, and we wish you continued success.</p><p>Best regards,<br><strong>RootedAI Recruiting Team</strong></p></div><div class="footer"><p>This is an automated message from RootedAI Solutions.</p></div></div></body></html>`;
@@ -437,28 +437,30 @@ export const CandidateDetailDialog = ({
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="bg-black border-white/10 text-white max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-                    <DialogHeader>
-                        <DialogTitle>Candidate Performance Dashboard</DialogTitle>
-                        <DialogDescription className="text-white/60">
-                            Comprehensive analysis of candidate profile and assessment.
-                        </DialogDescription>
-                    </DialogHeader>
+                <DialogContent className="bg-[#F9EFE9] border-4 border-[#240747] p-0 overflow-hidden max-w-5xl max-h-[90vh] flex flex-col shadow-[16px_16px_0_#240747] rounded-3xl">
+                    <div className="nb-tile-inverted p-8 border-b-4 border-[#240747] rounded-none">
+                        <DialogHeader>
+                            <DialogTitle className="text-3xl font-black text-[#F9EFE9] uppercase tracking-tight">Candidate Profile: {selectedApp.full_name}</DialogTitle>
+                            <DialogDescription className="text-[#F9EFE9]/40 text-xs font-bold uppercase tracking-widest mt-1">
+                                Tactical performance analysis and operational assessment.
+                            </DialogDescription>
+                        </DialogHeader>
+                    </div>
                     <div className="flex-1 overflow-y-auto pr-4 min-h-0">
                         <div className="space-y-8 p-1">
                             {/* Header Section */}
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h3 className="text-2xl font-bold">{selectedApp.full_name}</h3>
-                                    <div className="flex items-center gap-4 mt-1 text-white/60">
-                                        <span>{selectedApp.email}</span>
+                                    <h3 className="text-4xl font-black text-[#240747]">{selectedApp.full_name}</h3>
+                                    <div className="flex items-center gap-4 mt-2 text-[#240747]/60 font-bold">
+                                        <span className="flex items-center gap-2"><Globe size={14} className="text-[#F6851B]" /> {selectedApp.email}</span>
                                         <span>•</span>
-                                        <span>{selectedApp.phone}</span>
+                                        <span className="flex items-center gap-2"><Briefcase size={14} className="text-[#F6851B]" /> {selectedApp.phone}</span>
                                     </div>
-                                    <div className="flex flex-col items-start gap-3 mt-2">
-                                        <Badge className={`${getStatusColor(selectedApp.status)} border-0 px-3 py-1 text-sm`}>
+                                    <div className="flex flex-col items-start gap-3 mt-4">
+                                        <span className={`nb-tag-orange text-sm px-4 py-1`}>
                                             {selectedApp.status}
-                                        </Badge>
+                                        </span>
                                     </div>
                                 </div>
 
@@ -554,55 +556,56 @@ export const CandidateDetailDialog = ({
                             </div>
 
                             {/* Metrics Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <Card className="bg-white/5 border-white/10">
-                                    <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-white/60">Resume Match</CardTitle></CardHeader>
-                                    <CardContent>
-                                        <div className="flex items-end justify-between">
-                                            <div className="text-3xl font-bold">{selectedApp.ai_score || 0}%</div>
-                                            <div className={`text-sm mb-1 ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>
-                                                {selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'Excellent' : 'Good'}
-                                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="bg-white border-4 border-[#240747] p-6 shadow-[8px_8px_0_#240747] rounded-2xl">
+                                    <h4 className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B] mb-4">Resume Integrity</h4>
+                                    <div className="flex items-end justify-between">
+                                        <div className="text-4xl font-black text-[#240747]">{selectedApp.ai_score || 0}%</div>
+                                        <div className={`text-xs font-black uppercase tracking-widest ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'text-green-600' : 'text-orange-500'}`}>
+                                            {selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'Optimal' : 'Standard'}
                                         </div>
-                                        <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
-                                            <div className={`h-full rounded-full ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'bg-green-500' : 'bg-yellow-500'}`} style={{ width: `${selectedApp.ai_score || 0}%` }} />
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                                <Card className="bg-white/5 border-white/10">
-                                    <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-white/60">Communication</CardTitle></CardHeader>
-                                    <CardContent>
-                                        {(() => {
-                                            const interviews = (selectedApp as any).interviews || [];
-                                            const score = interviews.length > 0 ? interviews[0].ai_score : 0;
-                                            return (
-                                                <>
-                                                    <div className="flex items-end justify-between">
-                                                        <div className="text-3xl font-bold">{score > 0 ? `${score}%` : 'N/A'}</div>
-                                                        {score > 0 && <div className={`text-sm mb-1 ${score >= 80 ? 'text-green-400' : 'text-yellow-400'}`}>{score >= 80 ? 'Excellent' : 'Average'}</div>}
-                                                    </div>
-                                                    <div className="h-2 bg-white/10 rounded-full mt-2 overflow-hidden">
-                                                        <div className={`h-full rounded-full ${score >= 80 ? 'bg-white' : 'bg-white/40'}`} style={{ width: `${score}%` }} />
-                                                    </div>
-                                                </>
-                                            );
-                                        })()}
-                                    </CardContent>
-                                </Card>
-                                <Card className="bg-white/5 border-white/10">
-                                    <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-white/60">Timeline</CardTitle></CardHeader>
-                                    <CardContent>
-                                        <div className="space-y-2 text-sm">
-                                            <div className="flex justify-between"><span className="text-white/60">Applied</span><span>{new Date(selectedApp.created_at).toLocaleDateString()}</span></div>
-                                            {(selectedApp as any).communication_deadline && (
-                                                <div className="flex justify-between">
-                                                    <span className="text-white/60">Deadline</span>
-                                                    <span className={new Date((selectedApp as any).communication_deadline) < new Date() ? 'text-red-400' : ''}>{new Date((selectedApp as any).communication_deadline).toLocaleDateString()}</span>
+                                    </div>
+                                    <div className="h-4 bg-[#240747]/5 border-2 border-[#240747] rounded-full mt-4 overflow-hidden">
+                                        <div className={`h-full ${selectedApp.ai_score && selectedApp.ai_score >= 80 ? 'bg-[#F6851B]' : 'bg-[#240747]'}`} style={{ width: `${selectedApp.ai_score || 0}%` }} />
+                                    </div>
+                                </div>
+
+                                <div className="bg-white border-4 border-[#240747] p-6 shadow-[8px_8px_0_#240747] rounded-2xl">
+                                    <h4 className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B] mb-4">Communication Clarity</h4>
+                                    {(() => {
+                                        const interviews = (selectedApp as any).interviews || [];
+                                        const score = interviews.length > 0 ? interviews[0].ai_score : 0;
+                                        return (
+                                            <>
+                                                <div className="flex items-end justify-between">
+                                                    <div className="text-4xl font-black text-[#240747]">{score > 0 ? `${score}%` : 'N/A'}</div>
+                                                    {score > 0 && <div className={`text-xs font-black uppercase tracking-widest ${score >= 80 ? 'text-green-600' : 'text-orange-500'}`}>{score >= 80 ? 'Optimal' : 'Standard'}</div>}
                                                 </div>
-                                            )}
+                                                <div className="h-4 bg-[#240747]/5 border-2 border-[#240747] rounded-full mt-4 overflow-hidden">
+                                                    <div className={`h-full ${score >= 80 ? 'bg-[#F6851B]' : 'bg-[#240747]/40'}`} style={{ width: `${score}%` }} />
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
+                                </div>
+
+                                <div className="bg-white border-4 border-[#240747] p-6 shadow-[8px_8px_0_#240747] rounded-2xl">
+                                    <h4 className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B] mb-4">Deployment Log</h4>
+                                    <div className="space-y-3 text-xs font-bold text-[#240747]">
+                                        <div className="flex justify-between border-b border-[#240747]/10 pb-2">
+                                            <span className="opacity-50 uppercase tracking-widest">Applied</span>
+                                            <span>{new Date(selectedApp.created_at).toLocaleDateString()}</span>
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                        {(selectedApp as any).communication_deadline && (
+                                            <div className="flex justify-between">
+                                                <span className="opacity-50 uppercase tracking-widest">Deadline</span>
+                                                <span className={new Date((selectedApp as any).communication_deadline) < new Date() ? 'text-red-600' : ''}>
+                                                    {new Date((selectedApp as any).communication_deadline).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Stepper */}
@@ -649,7 +652,7 @@ export const CandidateDetailDialog = ({
                                             <div className="flex justify-between items-center">
                                                 <h4 className="font-semibold text-white">AI Resume Analysis</h4>
                                                 <Button
-                                                    size="xs"
+                                                    size="sm"
                                                     variant="outline"
                                                     className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
                                                     disabled={loading}
@@ -755,7 +758,7 @@ export const CandidateDetailDialog = ({
                                                         </Badge>
                                                     )}
                                                     <Button
-                                                        size="xs"
+                                                        size="sm"
                                                         variant="outline"
                                                         className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
                                                         disabled={loading}
@@ -831,7 +834,7 @@ export const CandidateDetailDialog = ({
                                                 <CardTitle>Submission {i + 1}</CardTitle>
                                                 <div className="flex items-center gap-2">
                                                     <Button
-                                                        size="xs"
+                                                        size="sm"
                                                         variant="outline"
                                                         className="h-6 text-xs border-white/10 text-white/60 hover:text-white bg-transparent"
                                                         disabled={loading}
@@ -983,7 +986,7 @@ export const CandidateDetailDialog = ({
                                                     <CardTitle>Interview Session</CardTitle>
                                                     <div className="flex gap-2 items-center">
                                                         <Button
-                                                            size="xs"
+                                                            size="sm"
                                                             variant="outline"
                                                             className="text-white/60 hover:text-white border-white/10 bg-transparent text-xs h-7"
                                                             disabled={loading}
