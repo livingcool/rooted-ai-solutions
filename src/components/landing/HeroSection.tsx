@@ -115,7 +115,7 @@ export default function HeroSection() {
 
           {/* ── RIGHT COLUMN ── */}
           <motion.div variants={fadeUp} className="flex flex-col gap-4">
-            <div className="flex-[3] min-h-[350px] lg:min-h-0">
+            <div className="flex-[3] min-h-[280px] lg:min-h-0">
               <RobotPanel />
             </div>
             {/* Notification Slider */}

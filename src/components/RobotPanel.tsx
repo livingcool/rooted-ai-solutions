@@ -131,7 +131,7 @@ export default function RobotPanel() {
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        minHeight: "450px",
+        minHeight: "360px",
         background: C.parchment,
         borderRadius: 24,
         border: `3px solid ${C.purple}`,
@@ -173,12 +173,7 @@ export default function RobotPanel() {
               <RobotModel actionName={currentAction} expression={currentExpression} />
               <ContactShadows opacity={0.4} scale={15} blur={2.5} far={4} position={[0, -2, 0]} />
             </group>
-            
-            {/* Stylized Grid Floor */}
-            <gridHelper 
-              args={[20, 20, C.purple, "rgba(36, 7, 71, 0.1)"]} 
-              position={[0, -2.51, 0]} 
-            />
+
             
             <OrbitControls 
               enableZoom={false} 
