@@ -1,5 +1,5 @@
 import { 
-  Cpu, Zap, Globe, Brain, BarChart3, Shield, Users, Lock, LucideIcon 
+  Cpu, Zap, Globe, Brain, BarChart3, Shield, Users, Lock, Code, Smartphone, LucideIcon 
 } from "lucide-react";
 
 export interface ServiceDetail {
@@ -45,20 +45,20 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
     ],
     useCases: ["Goods receipt & dispatch automation", "Invoice matching & approval routing", "Production schedule optimization", "Compliance document generation", "Customer order status updates", "Shift report automation"]
   },
-  WebSolutions: {
-    slug: "WebSolutions",
-    icon: Globe,
-    tag: "Web Solutions",
+  CustomSoftware: {
+    slug: "CustomSoftware",
+    icon: Code,
+    tag: "Custom Software",
     heroBg: "#EDD5C0",
-    headline: "Industrial-Grade Web Platforms",
-    subline: "Internal tools, dashboards, and customer portals built for serious operations.",
-    body: "We build web platforms that industrial teams actually use — not demos that look good in a pitch. Operations dashboards, internal tooling, customer-facing portals with real-time data from your manufacturing or logistics systems.",
+    headline: "AI-Native Custom Software Engineering",
+    subline: "Custom software and intelligent systems engineered from the ground up for operational scale.",
+    body: "We design and build bespoke software systems that combine secure architecture, resilient databases, and native AI integration. We replace fragmented legacy processes with robust custom solutions that your teams will actually adopt.",
     features: [
-      { title: "Operations Dashboards", desc: "Real-time views of production, inventory, and logistics data — designed for the ops floor, not just management." },
-      { title: "Internal Tooling",      desc: "Replace your Excel-based processes with purpose-built web tools that your team will actually adopt." },
-      { title: "Customer Portals",      desc: "Order tracking, delivery status, and document access portals for your B2B customers." },
+      { title: "AI-Native Architecture", desc: "We integrate large language models, agentic workflows, and semantic search directly into the core database layer." },
+      { title: "Enterprise Integrations", desc: "Native API bridges connecting your ERPs, databases, clinical systems, or LMS platforms into a unified interface." },
+      { title: "Scalable Databases",      desc: "Engineered for security, high-throughput, and complex operations with strict compliance layers." },
     ],
-    useCases: ["Manufacturing operations dashboard", "Logistics tracking portal", "Supplier & vendor management system", "Quality inspection interface", "Hiring & HR internal tools", "Inventory management web app"]
+    useCases: ["Operational dashboard development", "Clinical workflow management software", "Enterprise resource orchestration", "B2B client & partner portals", "Internal operations automation tools", "Legacy database modernization"]
   },
   NLPSystems: {
     slug: "NLPSystems",
@@ -105,20 +105,20 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
     ],
     useCases: ["Operational data access monitoring", "IP protection for AI models", "Compliance evidence automation", "Vendor access risk assessment", "Fraud detection in procurement", "GDPR / data residency compliance"]
   },
-  Outsourcing: {
-    slug: "Outsourcing",
-    icon: Users,
-    tag: "Outsourcing",
+  AppDevelopment: {
+    slug: "AppDevelopment",
+    icon: Smartphone,
+    tag: "App Development",
     heroBg: "#F5E6C8",
-    headline: "Your Embedded AI Engineering Team",
-    subline: "We plug into your org. You get a functioning AI capability without the hiring pain.",
-    body: "The AI engineers you need take 3–6 months to hire and cost ₹20–40L/yr per person. We embed a team of engineers directly into your product and operations team — delivering as a managed capability, not as a vendor.",
+    headline: "Premium Web & Mobile Applications",
+    subline: "High-performance mobile and web apps built natively with modern frameworks and pixel-perfect design.",
+    body: "We deliver custom iOS, Android, and web applications that are responsive, lightning-fast, and designed around user workflows. From customer-facing products to specialized internal mobile tools, we handle everything from design to App Store submission.",
     features: [
-      { title: "Embedded Engineering", desc: "Our team attends your standups, works in your tools, and ships with your cadence. You won't feel the outsourcing boundary." },
-      { title: "Managed Delivery",     desc: "Sprint-based delivery with weekly demos and monthly performance reviews. You see progress every week." },
-      { title: "IP Transfer",          desc: "Everything we build is yours. Full code ownership, model weights, documentation transferred at the end of each sprint." },
+      { title: "Cross-Platform Delivery", desc: "Build once and deploy everywhere using React Native, Flutter, and Next.js, cutting time-to-market in half." },
+      { title: "Pixel-Perfect UX",        desc: "Polished interfaces with smooth animations, high responsiveness, and premium neobrutalist styling." },
+      { title: "Offline-First Sync",      desc: "Apps that function seamlessly in low-connectivity environments, syncing data securely when back online." },
     ],
-    useCases: ["AI team for a startup with no ML resources", "R&D projects requiring specialized LLM expertise", "Augmenting an existing data team", "Building internal AI tooling quickly", "Running AI pilots before committing to full hiring", "Managing ongoing model performance"]
+    useCases: ["Patient monitoring mobile apps", "On-the-go student learning apps", "Robotics telemetry & control mobile portals", "Custom field service applications", "Subscription-based B2C apps", "Operational inspection mobile tools"]
   },
   AISafety: {
     slug: "AISafety",

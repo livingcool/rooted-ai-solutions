@@ -1,19 +1,19 @@
 'use client';
 
 import Link from "next/link";
-import { ArrowRight, Cpu, Zap, Globe, Brain, Shield, BarChart3, Users, Lock } from "lucide-react";
+import { ArrowRight, Cpu, Zap, Globe, Brain, Shield, BarChart3, Users, Lock, Code, Smartphone } from "lucide-react";
 import { CarouselWrapper } from "@/components/ui/CarouselWrapper";
 import { useModal } from "@/context/ModalContext";
 
 const SERVICES = [
-  { icon: Cpu, num: "01", title: "MLaaS for Robotics", desc: "Object detection fine-tuning, continuous model monitoring, and automated labeling pipelines for ROS/WMS stacks.", href: "/services/mlaas", bg: "#F9EFE9" },
+  { icon: Cpu, num: "01", title: "Custom ML Development", desc: "Tailored machine learning models built for healthcare, robotics, and education, with active retraining pipelines.", href: "/services/mlaas", bg: "#F9EFE9" },
   { icon: Cpu, num: "02", title: "AI Agents", desc: "Deploy autonomous LLM agents that handle complex, multi-step operational workflows without human intervention.", href: "/services/AIAgents", bg: "#F0DCC8" },
   { icon: Zap, num: "03", title: "Process Automation", desc: "End-to-end workflow automation connecting your existing tools, databases, and ERPs through intelligent orchestration.", href: "/services/ProcessAutomation", bg: "#EDD5C0" },
-  { icon: Globe, num: "04", title: "Web Solutions", desc: "High-performance web platforms and internal tools built for industrial-grade reliability and scale.", href: "/services/WebSolutions", bg: "#F5E6C8" },
+  { icon: Code, num: "04", title: "Custom Software", desc: "AI-native custom software engineering to transform complex operations into intelligent, scalable enterprise systems.", href: "/services/CustomSoftware", bg: "#F5E6C8" },
   { icon: Brain, num: "05", title: "NLP Systems", desc: "Custom language models fine-tuned on your operational data for document intelligence and knowledge extraction.", href: "/services/NLPSystems", bg: "#F9EFE9" },
   { icon: BarChart3, num: "06", title: "Predictive Analytics", desc: "ML pipelines that forecast failures, demand spikes, and bottlenecks before they cost you downtime.", href: "/services/PredictiveAnalytics", bg: "#F0DCC8" },
   { icon: Shield, num: "07", title: "Enterprise Security", desc: "AI-native security monitoring, anomaly detection, and compliance automation for regulated industries.", href: "/services/EnterpriseSecurity", bg: "#EDD5C0" },
-  { icon: Users, num: "08", title: "Outsourcing", desc: "Embedded AI engineering teams that plug into your org chart and deliver as a managed capability.", href: "/services/Outsourcing", bg: "#F5E6C8" },
+  { icon: Smartphone, num: "08", title: "App Development", desc: "High-performance iOS, Android, and web applications designed natively around modern frameworks and user experience.", href: "/services/AppDevelopment", bg: "#F5E6C8" },
   { icon: Lock, num: "09", title: "AI Safety", desc: "Guardrails, evaluation frameworks, and red-teaming protocols to ensure your AI systems behave reliably.", href: "/services/AISafety", bg: "#F9EFE9" },
 ];
 

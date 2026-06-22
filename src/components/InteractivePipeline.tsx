@@ -111,7 +111,7 @@ const ITEMS: BentoGridItem[] = [
         icon: <FaPuzzlePiece size={28} color={C.orange} />,
         content: (
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <p>We don't leave you with a Jupyter Notebook. We wrap the model in secure APIs and deeply integrate it directly into your existing ERP, logistics software, or robotics stack. Weeks to deployment instead of quarters.</p>
+                <p>We don't leave you with a Jupyter Notebook. We wrap the model in secure APIs and deeply integrate it directly into your clinical systems, robotics platforms, or modern app stacks. Weeks to deployment instead of quarters.</p>
                  <div style={{ padding: "1rem", background: C.purple, color: C.cream, borderRadius: 12, border: `2px solid ${C.orange}`, fontWeight: 700, fontFamily: "var(--font-mono)", fontSize: "0.85rem" }}>
                     ✓ Enterprise networking & API bridge
                 </div>

@@ -24,31 +24,33 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.rootedai.co.in"),
   title: {
-    default: "Rooted AI Solutions | Strategic AI Engineering for Robotics",
+    default: "Rooted AI Solutions | Custom ML, Software & App Development",
     template: "%s | Rooted AI Solutions"
   },
-  description: "Accelerate your robotics deployment with our expert perception systems and tactical engineering services. Helping startups scale intelligence with precision.",
+  description: "Deploy custom ML models for healthcare, robotics, and education. AI-native custom software engineering and mobile/web app development delivered in weeks.",
   keywords: [
-    "Robotics AI",
-    "Computer Vision",
-    "Perception Systems",
+    "Custom ML Models",
+    "Healthcare AI",
+    "Robotics ML",
+    "EdTech AI",
+    "Custom Software Development",
+    "App Development",
+    "AI-Native Software",
+    "Mobile App Development",
+    "Web App Development",
     "AI Engineering",
     "Tactical Software",
     "Rooted AI",
-    "Robotics Outsourcing",
     "AI Agents",
-    "Agentic AI",
-    "Process Automation",
-    "Manufacturing AI",
-    "Industrial Automation Hosur"
+    "Process Automation"
   ],
   manifest: "/manifest.json",
   alternates: {
     canonical: "https://www.rootedai.co.in",
   },
   openGraph: {
-    title: "Rooted AI Solutions | Strategic AI Engineering",
-    description: "Scale your robotics startup with precision perception and engineering.",
+    title: "Rooted AI Solutions | Custom ML, Software & App Development",
+    description: "Tailored ML models for healthcare, robotics, and education. AI-native custom software and mobile/web app development.",
     url: "https://www.rootedai.co.in",
     siteName: "Rooted AI",
     images: [],
@@ -57,8 +59,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rooted AI Solutions | Strategic AI Engineering",
-    description: "Scale your robotics startup with precision perception and engineering.",
+    title: "Rooted AI Solutions | Custom ML, Software & App Development",
+    description: "Tailored ML models for healthcare, robotics, and education. AI-native custom software and mobile/web app development.",
     images: [],
   },
   icons: {
@@ -112,7 +114,7 @@ const jsonLd = {
       "url": "https://www.rootedai.co.in",
       "name": "Rooted AI Solutions",
       "publisher": { "@id": "https://www.rootedai.co.in/#organization" },
-      "description": "Strategic AI Engineering for Robotics and Industrial Automation"
+      "description": "Strategic AI Engineering, Custom ML Model Development (Healthcare, Robotics, EdTech) & App Development"
     }
   ]
 };

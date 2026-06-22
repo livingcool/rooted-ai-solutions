@@ -78,12 +78,12 @@ export default function HeroSection() {
               </span>
 
               <h1 className="font-display font-bold text-[2.5rem] lg:text-[clamp(3rem,6vw,4.5rem)] leading-[1] tracking-[-0.04em] uppercase text-[#F9EFE9] mb-8 max-w-[700px]">
-                Your robot works.<br />
-                <span className="text-[#F6851B]">Now make it see.</span>
+                AI-Native Systems.<br />
+                <span className="text-[#F6851B]">Built for Growth.</span>
               </h1>
 
               <p style={{ fontFamily: "var(--font-sans)", fontSize: "1.05rem", color: "#F9EFE9", opacity: 0.8, lineHeight: 1.6, maxWidth: 500, marginBottom: "3rem", fontWeight: 400 }}>
-                We help robotics startups deploy perception systems in weeks — not months.
+                Custom ML models (Healthcare, Robotics, Education), AI-native custom software, and high-performance apps deployed in weeks.
               </p>
             </div>
 

@@ -8,11 +8,11 @@ import RootedLogo from "../ui/RootedLogo";
 
 const FOOTER_LINKS = {
   Services: [
+    { name: "Custom ML Models",     href: "/services/mlaas" },
+    { name: "AI-Native Software",   href: "/services/CustomSoftware" },
+    { name: "App Development",      href: "/services/AppDevelopment" },
     { name: "AI Agents",            href: "/services/AIAgents" },
     { name: "Process Automation",   href: "/services/ProcessAutomation" },
-    { name: "Web Solutions",        href: "/services/WebSolutions" },
-    { name: "NLP Systems",          href: "/services/NLPSystems" },
-    { name: "Predictive Analytics", href: "/services/PredictiveAnalytics" },
   ],
   Company: [
     { name: "About",        href: "/#about" },

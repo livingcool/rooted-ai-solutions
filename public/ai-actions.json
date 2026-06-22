@@ -14,7 +14,7 @@
         "name": "Full name of the lead",
         "email": "Business email address",
         "company": "Organization name",
-        "service_needed": "One of: Machine Perception, Edge Deployment, Process Flow, AI Safety, Custom Request",
+        "service_needed": "One of: Custom ML Models, Custom Software, App Development, AI Safety, Custom Request",
         "message": "Detailed project description or mission requirements"
       },
       "ui_fallback": {
@@ -26,7 +26,7 @@
     {
       "id": "browse-portfolio",
       "name": "View Case Studies",
-      "description": "Examine past deployments in robotics and manufacturing.",
+      "description": "Examine past deployments in custom ML models, custom software, and app development.",
       "type": "navigation",
       "url": "/case-studies",
       "selector": "#cta-ghost-work"

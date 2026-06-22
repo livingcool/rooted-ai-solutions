@@ -1,7 +1,7 @@
 import React from 'react';
 
 const LOCATIONS = ["Hosur", "Bangalore", "Chennai", "Coimbatore", "Hyderabad", "Salem"];
-const SERVICES = ["AI Vision", "Robotics Perception", "Agentic AI", "Process Automation", "Document Intelligence"];
+const SERVICES = ["Custom ML Models", "AI-Native Software", "App Development", "Agentic AI", "Process Automation"];
 
 export default function LocationFooter() {
   return (
