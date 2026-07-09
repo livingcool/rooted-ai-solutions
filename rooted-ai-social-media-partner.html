@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RootedAI – Social Media & Digital Growth Partner</title>
+    
+    <!-- Premium Google Fonts: Syne (Headings), Plus Jakarta Sans (Body), JetBrains Mono (Labels/Monospace) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- html2pdf.js for landscape PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* =========================================== 
+           CSS CUSTOM PROPERTIES — ROOTEDAI THEME
+           Cream · Brownish-Orange · Black · Yellow · White
+           =========================================== */
+        :root {
+            /* Core Brand Colors */
+            --cream:         #F7F3E9;
+            --cream-light:   #FAF8F4;
+            --cream-dark:    #EBE4D5;
+            --orange-brown:  #C2632A;
+            --orange-mid:    #D97032;
+            --orange-light:  #F49F64;
+            --yellow:        #ECC13C;
+            --yellow-light:  #F7D974;
+            --black:         #0A0908;
+            --black-soft:    #141210;
+            --charcoal:      #211E1B;
+            --white:         #FFFFFF;
+            --text-on-dark:  #F7F3E9;
+            --text-muted:    #8F8375;
+            --border-warm:   rgba(194, 99, 42, 0.18);
+            --border-light:  rgba(255, 255, 255, 0.08);
+
+            /* Typography */
+            --font-display: 'Syne', sans-serif;
+            --font-body:    'Plus Jakarta Sans', sans-serif;
+            --font-mono:    'JetBrains Mono', monospace;
+
+            /* Sizes — clamp() for viewport-safe scaling */
+            --title-size:    clamp(2rem, 5.2vw, 4.8rem);
+            --h2-size:       clamp(1.4rem, 3.4vw, 2.6rem);
+            --h3-size:       clamp(1rem, 2.2vw, 1.6rem);
+            --body-size:     clamp(0.75rem, 1.3vw, 1.05rem);
+            --small-size:    clamp(0.65rem, 0.95vw, 0.85rem);
+            --label-size:    clamp(0.6rem, 0.8vw, 0.72rem);
+
+            /* Spacing */
+            --slide-padding: clamp(1.5rem, 4vw, 4.5rem);
+            --content-gap:   clamp(0.75rem, 1.6vw, 1.6rem);
+            --element-gap:   clamp(0.4rem, 0.9vw, 0.8rem);
+
+            /* Animations */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration:      0.75s;
+        }
+
+        /* =========================================== 
+           RESET & BASE
+           =========================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* =========================================== 
+           VIEWPORT BASE — MANDATORY
+           =========================================== */
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+            background: var(--black);
+            color: var(--cream);
+            font-family: var(--font-body);
+        }
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: var(--black);
+        }
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden;
+            padding: var(--slide-padding);
+            z-index: 2;
+        }
+
+        /* Responsive scaling */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 3vw, 2rem);
+                --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+                --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+                --h2-size: clamp(1rem, 3vw, 1.75rem);
+            }
+        }
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+                --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+                --title-size: clamp(1.1rem, 4vw, 2rem);
+                --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+            .nav-dots, .download-btn, .decorative { display: none; }
+        }
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.4rem, 2vw, 1rem);
+                --title-size: clamp(1rem, 3.5vw, 1.5rem);
+                --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+        @media (max-width: 600px) {
+            :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+            .grid-3col { grid-template-columns: 1fr !important; }
+        }
+
+        /* =========================================== 
+           ANIMATION SYSTEM
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity var(--duration) var(--ease-out-expo),
+                        transform var(--duration) var(--ease-out-expo);
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity var(--duration) var(--ease-out-expo),
+                        transform var(--duration) var(--ease-out-expo);
+        }
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity var(--duration) var(--ease-out-expo),
+                        transform var(--duration) var(--ease-out-expo);
+        }
+        .slide.visible .reveal,
+        .slide.visible .reveal-left,
+        .slide.visible .reveal-scale { opacity: 1; transform: none; }
+
+        /* Stagger delays */
+        .d1 { transition-delay: 0.05s; }
+        .d2 { transition-delay: 0.12s; }
+        .d3 { transition-delay: 0.18s; }
+        .d4 { transition-delay: 0.25s; }
+        .d5 { transition-delay: 0.32s; }
+        .d6 { transition-delay: 0.40s; }
+
+        /* =========================================== 
+           PROGRESS BAR & NAV DOTS
+           =========================================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange-brown), var(--yellow));
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.75rem, 2vw, 1.5rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 999;
+        }
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(245, 237, 216, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0;
+        }
+        .nav-dot.active {
+            background: var(--yellow);
+            transform: scale(1.3);
+            border-color: var(--yellow);
+        }
+        .nav-dot:hover { background: var(--orange-light); }
+
+        /* Slide counter */
+        .slide-num {
+            position: absolute;
+            bottom: clamp(0.75rem, 2vh, 1.5rem);
+            right: var(--slide-padding);
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            z-index: 10;
+        }
+
+        /* =========================================== 
+           DOWNLOAD PDF BUTTON (PREMIUM FAB)
+           =========================================== */
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: clamp(1rem, 4vw, 2.5rem);
+            z-index: 1001;
+            background: rgba(10, 9, 8, 0.7);
+            border: 1px solid var(--orange-brown);
+            color: var(--cream);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+        }
+        .download-btn:hover {
+            background: var(--orange-brown);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(194, 99, 42, 0.3);
+        }
+        .download-btn svg {
+            transition: transform 0.3s ease;
+        }
+        .download-btn:hover svg {
+            transform: translateY(1px);
+        }
+
+        /* =========================================== 
+           PREMIUM DESIGN COMPONENTS
+           =========================================== */
+        h1 { font-family: var(--font-display); font-size: var(--title-size); line-weight: 1.05; letter-spacing: -0.02em; }
+        h2 { font-family: var(--font-display); font-size: var(--h2-size); line-weight: 1.1; letter-spacing: -0.01em; }
+        h3 { font-family: var(--font-display); font-size: var(--h3-size); line-weight: 1.2; }
+        
+        .accent-text {
+            background: linear-gradient(135deg, var(--orange-light), var(--yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Modern Outline Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-warm);
+            color: var(--orange-light);
+            background: rgba(194, 99, 42, 0.05);
+        }
+        .badge-dark {
+            border-color: rgba(255, 255, 255, 0.15);
+            color: var(--cream);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange-brown), var(--yellow));
+            border: none;
+            margin: var(--element-gap) 0;
+            border-radius: 2px;
+        }
+
+        /* Glassmorphic Panel Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(194,99,42,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(194, 99, 42, 0.3);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+        .glass-card:hover::before { opacity: 1; }
+
+        /* Premium icons */
+        .icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: clamp(35px, 3.5vw, 50px);
+            height: clamp(35px, 3.5vw, 50px);
+            border-radius: 6px;
+            background: rgba(194, 99, 42, 0.1);
+            border: 1px solid var(--border-warm);
+            color: var(--yellow);
+            margin-bottom: 0.6em;
+        }
+
+        /* Lists */
+        ul.premium-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--element-gap);
+        }
+        ul.premium-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: var(--body-size);
+            line-height: 1.5;
+            color: var(--cream-dark);
+        }
+        ul.premium-list li svg {
+            color: var(--orange-mid);
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+
+        /* Funnel Layout */
+        .funnel-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: clamp(0.5rem, 1.2vw, 1.2rem);
+        }
+        .funnel-item {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: clamp(0.75rem, 1.8vw, 1.4rem);
+        }
+        .funnel-item .step-badge {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--yellow);
+            background: rgba(236, 193, 60, 0.1);
+            border: 1px solid rgba(236, 193, 60, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.6em;
+        }
+
+        /* Swatches */
+        .swatch-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-light);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .swatch-color {
+            height: clamp(50px, 8vh, 80px);
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        /* Grid Layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2.5vw, 3rem); }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.6rem, 1.5vw, 1.8rem); }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.5rem, 1.2vw, 1.5rem); }
+
+        @media (max-width: 768px) {
+            .grid-3, .grid-4, .funnel-container { grid-template-columns: 1fr 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* =========================================== 
+           DECORATIVE VECTOR DETAILS
+           =========================================== */
+        .glow-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .grid-lines {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(194, 99, 42, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(194, 99, 42, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* =========================================== 
+           SLIDE SPECIFIC BACKGROUND OVERRIDES
+           =========================================== */
+        .dark-slide { background: var(--black); color: var(--cream); }
+        .light-slide { background: var(--cream); color: var(--black); }
+        .light-slide .glass-card { background: rgba(0, 0, 0, 0.02); border-color: rgba(194, 99, 42, 0.15); }
+        .light-slide .glass-card:hover { border-color: var(--orange-brown); box-shadow: 0 8px 30px rgba(194, 99, 42, 0.08); }
+        .light-slide .icon-box { background: rgba(194, 99, 42, 0.08); border-color: var(--border-warm); color: var(--orange-brown); }
+        .light-slide ul.premium-list li { color: var(--charcoal); }
+
+        /* =========================================== 
+           PRINT STYLING (FOR PERFECT PDF EXPORT)
+           =========================================== */
+        @media print {
+            body, html {
+                height: auto !important;
+                overflow: visible !important;
+                background: #0A0908 !important;
+                color: #F7F3E9 !important;
+            }
+            .slide {
+                height: 100vh !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                position: relative !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                background: #0A0908 !important;
+            }
+            /* Force light slides to look high contrast dark in print for cohesive PDF */
+            .light-slide {
+                background: #0A0908 !important;
+                color: #F7F3E9 !important;
+            }
+            .light-slide h2, .light-slide h3, .light-slide p, .light-slide ul li {
+                color: #F7F3E9 !important;
+            }
+            .light-slide .glass-card {
+                background: rgba(255, 255, 255, 0.02) !important;
+                border-color: rgba(255, 255, 255, 0.08) !important;
+            }
+            .no-print, .download-btn, .nav-dots, .progress-bar {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- DOWNLOAD PDF BUTTON -->
+<button onclick="downloadPDF()" class="download-btn no-print" aria-label="Download PDF">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+    EXPORT PDF
+</button>
+
+<!-- NAV DOTS -->
+<nav class="nav-dots no-print" id="navDots" aria-label="Slide navigation"></nav>
+
+<!-- =========================================== 
+     SLIDE 1 — COVER
+     =========================================== -->
+<section class="slide dark-slide" id="slide-1" aria-label="Cover slide">
+    <div class="glow-circle" style="width: 50vw; height: 50vw; top: -10%; right: -10%; background: var(--orange-brown);"></div>
+    <div class="glow-circle" style="width: 40vw; height: 40vw; bottom: -10; left: -10%; background: var(--yellow);"></div>
+    <div class="grid-lines"></div>
+
+    <div class="slide-content" style="max-width:min(90vw,1000px); margin:0 auto;">
+        <div class="reveal d1" style="display:flex; align-items:center; gap:12px; margin-bottom:1.5rem;">
+            <img src="public/logo-darkmode.png" alt="RootedAI Logo" style="height: clamp(30px, 5vh, 48px); width: auto; object-fit: contain;">
+            <span style="font-family:var(--font-display); font-size:clamp(1.1rem, 2.5vw, 1.6rem); letter-spacing:0.05em; text-transform:uppercase; color:var(--cream-light); font-weight:800;">RootedAI</span>
+        </div>
+
+        <p class="reveal d2" style="font-family:var(--font-mono); font-size:var(--label-size); letter-spacing:0.2em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.8em;">Partnership Proposal · 2025</p>
+
+        <h1 class="reveal d3" style="margin-bottom:0.25em;">
+            Social Media &<br>
+            <span class="accent-text">Digital Growth</span><br>
+            Partner
+        </h1>
+
+        <p class="reveal d4" style="font-family:var(--font-display); font-size:clamp(1.1rem, 2.2vw, 1.8rem); color:var(--yellow); font-weight:400; margin-bottom:1.5rem;">
+            Engineering Intelligence, Complexity Simplified.
+        </p>
+
+        <hr class="divider reveal d5">
+
+        <p class="reveal d6" style="font-size:var(--body-size); color:var(--text-muted); font-style:italic;">
+            A strategic opportunity to co-build a premium B2B AI Brand from the ground up
+        </p>
+    </div>
+    <span class="slide-num">01 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 2 — ABOUT ROOTEDAI
+     =========================================== -->
+<section class="slide light-slide" id="slide-2" aria-label="About RootedAI">
+    <div class="slide-content">
+        <span class="badge reveal d1">Identity & Vision</span>
+        <h2 class="reveal d2" style="color:var(--black); margin:0.3em 0 0.1em;">Who is <span style="color:var(--orange-brown);">RootedAI?</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-2" style="align-items: center; margin-top: 0.5rem;">
+            <div class="reveal d4">
+                <p style="color:var(--charcoal); margin-bottom:1em; font-size:var(--body-size);">
+                    RootedAI is an <strong>AI Engineering firm</strong> focused on building intelligent software systems, automated pipelines, and specialized AI products. We believe AI should resolve real business challenges—not just automate tasks for the sake of it.
+                </p>
+
+                <div style="background: rgba(194,99,42,0.06); border-left:3px solid var(--orange-brown); padding: 1rem; border-radius:0 6px 6px 0;">
+                    <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.6;">
+                        <strong style="color:var(--orange-brown);">Our Core Premise:</strong> We simplify complex workflows through engineering intelligence.
+                    </p>
+                </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div class="glass-card reveal d5">
+                    <span class="badge badge-dark" style="margin-bottom:0.4em;">Current State</span>
+                    <h3 style="color:var(--black); font-size:clamp(0.95rem, 1.8vw, 1.25rem); margin-bottom:0.2em;">B2B AI Services</h3>
+                    <p style="color:var(--charcoal); font-size:var(--small-size);">Acquiring B2B clients who need bespoke AI engineering, custom automation, and intelligent digital transformation.</p>
+                </div>
+                <div class="glass-card reveal d6" style="border-top: 3px solid var(--yellow);">
+                    <span class="badge" style="color:var(--orange-brown); border-color:var(--border-warm); background:rgba(194,99,42,0.05); margin-bottom:0.4em;">Long-Term Vision</span>
+                    <h3 style="color:var(--black); font-size:clamp(0.95rem, 1.8vw, 1.25rem); margin-bottom:0.2em;">Healthcare AI Company</h3>
+                    <p style="color:var(--charcoal); font-size:var(--small-size);">Revolutionizing healthcare operations, clinical decision support, and revenue optimization via ML models.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num" style="color:var(--charcoal);">02 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 3 — THE OPPORTUNITY
+     =========================================== -->
+<section class="slide dark-slide" id="slide-3" aria-label="The Opportunity">
+    <div class="grid-lines"></div>
+    <div class="slide-content">
+        <span class="badge badge-dark reveal d1">Growth Partnership</span>
+        <h2 class="reveal d2" style="margin:0.3em 0 0.1em;">Why this is a <span class="accent-text">Rare Role</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-3 reveal d4" style="margin-top: 0.5rem;">
+            <div class="glass-card" style="border-top: 3px solid var(--orange-brown);">
+                <div class="icon-box"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+                <h3 style="margin-bottom:0.4em; font-size:clamp(0.9rem, 1.6vw, 1.15rem); color:var(--cream);">Direct Founder Collab</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.55;">No middle management layers. Work directly with the founder to co-build and experience the scaling of an AI startup from day zero.</p>
+            </div>
+            <div class="glass-card" style="border-top: 3px solid var(--yellow);">
+                <div class="icon-box" style="color:var(--yellow);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></div>
+                <h3 style="margin-bottom:0.4em; font-size:clamp(0.9rem, 1.6vw, 1.15rem); color:var(--cream);">Complete Autonomy</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.55;">You possess creative freedom. Build our digital marketing engine, establish content channels, and direct the aesthetic styling.</p>
+            </div>
+            <div class="glass-card" style="border-top: 3px solid var(--white);">
+                <div class="icon-box" style="color:var(--white);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                <h3 style="margin-bottom:0.4em; font-size:clamp(0.9rem, 1.6vw, 1.15rem); color:var(--cream);">Tangible Portfolio</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.55;">Create a case study of your own work: showcase how you built RootedAI's marketing playbook, voice, and generated B2B leads.</p>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">03 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 4 — PRIMARY OBJECTIVES
+     =========================================== -->
+<section class="slide dark-slide" id="slide-4" aria-label="Primary Objectives">
+    <div class="slide-content">
+        <span class="badge badge-dark reveal d1">Objectives Matrix</span>
+        <h2 class="reveal d2" style="margin:0.3em 0 0.1em;">Focus Areas <span style="color:var(--yellow);">(Next 3-6 Months)</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-4 reveal d4" style="margin-top: 0.4rem;">
+            <div class="glass-card" style="padding: 1rem;">
+                <span style="color:var(--orange-light); font-weight:700; font-family:var(--font-mono); font-size:var(--small-size);">01. CREDIBILITY</span>
+                <p style="color:var(--cream-dark); font-size:var(--small-size); margin-top:0.4em; line-height:1.45;">Position RootedAI as a high-ticket AI Engineering & Healthcare brand.</p>
+            </div>
+            <div class="glass-card" style="padding: 1rem;">
+                <span style="color:var(--yellow); font-weight:700; font-family:var(--font-mono); font-size:var(--small-size);">02. AWARENESS</span>
+                <p style="color:var(--cream-dark); font-size:var(--small-size); margin-top:0.4em; line-height:1.45;">Reach target startup founders, hospital execs, and business leaders.</p>
+            </div>
+            <div class="glass-card" style="padding: 1rem;">
+                <span style="color:var(--orange-light); font-weight:700; font-family:var(--font-mono); font-size:var(--small-size);">03. AUTHORITY</span>
+                <p style="color:var(--cream-dark); font-size:var(--small-size); margin-top:0.4em; line-height:1.45;">Establish founders as trusted voices in AI automation and systems.</p>
+            </div>
+            <div class="glass-card" style="padding: 1rem;">
+                <span style="color:var(--yellow); font-weight:700; font-family:var(--font-mono); font-size:var(--small-size);">04. AESTHETICS</span>
+                <p style="color:var(--cream-dark); font-size:var(--small-size); margin-top:0.4em; line-height:1.45;">Create a cohesive, ultra-premium visual presence across the web.</p>
+            </div>
+            <div class="glass-card" style="padding: 1rem;">
+                <span style="color:var(--yellow); font-weight:700; font-family:var(--font-mono); font-size:var(--small-size);">05. ENGAGEMENT</span>
+                <p style="color:var(--cream-dark); font-size:var(--small-size); margin-top:0.4em; line-height:1.45;">Drive high-value interactions on active social platforms.</p>
+            </div>
+            <div class="glass-card" style="padding: 1rem;">
+                <span style="color:var(--orange-light); font-weight:700; font-family:var(--font-mono); font-size:var(--small-size);">06. LEAD GEN</span>
+                <p style="color:var(--cream-dark); font-size:var(--small-size); margin-top:0.4em; line-height:1.45;">Generate organic pipeline inbound leads for our service offerings.</p>
+            </div>
+            <div class="glass-card" style="padding: 1rem;">
+                <span style="color:var(--yellow); font-weight:700; font-family:var(--font-mono); font-size:var(--small-size);">07. EDUCATION</span>
+                <p style="color:var(--cream-dark); font-size:var(--small-size); margin-top:0.4em; line-height:1.45;">Write deep-dives on complex engineering and automation systems.</p>
+            </div>
+            <div class="glass-card" style="padding: 1rem;">
+                <span style="color:var(--orange-light); font-weight:700; font-family:var(--font-mono); font-size:var(--small-size);">08. FOUNDATION</span>
+                <p style="color:var(--cream-dark); font-size:var(--small-size); margin-top:0.4em; line-height:1.45;">Acquire core audiences to lay the groundwork for future paid campaigns.</p>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">04 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 5 — SOCIAL MEDIA STRATEGY
+     =========================================== -->
+<section class="slide light-slide" id="slide-5" aria-label="Social Media Strategy">
+    <div class="slide-content">
+        <span class="badge reveal d1">Core Pillar 1</span>
+        <h2 class="reveal d2" style="color:var(--black); margin:0.3em 0 0.1em;">Social Media <span style="color:var(--orange-brown);">Strategy</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-2 reveal d4" style="margin-top: 0.5rem;">
+            <div class="glass-card">
+                <h3 style="color:var(--black); margin-bottom:0.4em; display:flex; align-items:center; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange-brown)" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    Content Pillars
+                </h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.55;">Establish 3–5 core pillars (Healthcare AI architecture, B2B Automation, Founder learnings) to ensure target message clarity.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:var(--black); margin-bottom:0.4em; display:flex; align-items:center; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange-brown)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Platform Cadence
+                </h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.55;">Build platform-native scheduling designed to match algorithms across LinkedIn (Primary for B2B), X/Twitter, and Instagram.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:var(--black); margin-bottom:0.4em; display:flex; align-items:center; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange-brown)" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                    Competitor Audits
+                </h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.55;">Systematically dissect competitors to identify message gaps, content voids, and positioning opportunities.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:var(--black); margin-bottom:0.4em; display:flex; align-items:center; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange-brown)" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    A/B Strategy Testing
+                </h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.55;">Run structured format tests (graphics vs threads vs carousels) and optimal timing experiments to build organic reach rules.</p>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num" style="color:var(--charcoal);">05 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 6 — CONTENT CREATION
+     =========================================== -->
+<section class="slide dark-slide" id="slide-6" aria-label="Content Creation">
+    <div class="grid-lines"></div>
+    <div class="slide-content">
+        <span class="badge badge-dark reveal d1">Core Pillar 2</span>
+        <h2 class="reveal d2" style="margin:0.3em 0 0.1em;">Visual Storytelling & <span class="accent-text">Repurposing</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-2 reveal d4" style="margin-top: 0.5rem; align-items: start;">
+            <div>
+                <ul class="premium-list">
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        <div>
+                            <strong>Repurposing Framework:</strong> Slice single pillar concepts into 5-10 micro-assets (Reels, carousels, text summaries).
+                        </div>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <div>
+                            <strong>Hook Engineering:</strong> Capture decision-makers in the first 3 seconds visually and copy-wise.
+                        </div>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        <div>
+                            <strong>Case Study Frameworks:</strong> Utilize PAS (Problem-Agitate-Solve) and Hero's Journey to highlight tech successes.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="glass-card">
+                <span style="font-family:var(--font-mono); font-size:var(--label-size); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; display:block; margin-bottom:0.8em;">Target Assets & Layout formats</span>
+                
+                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                    <span class="badge badge-dark">Short-Form Reels</span>
+                    <span class="badge badge-dark">Deep-dive Carousels</span>
+                    <span class="badge badge-dark">Snappy Infographics</span>
+                    <span class="badge badge-dark">Behind-the-Scenes Video</span>
+                    <span class="badge badge-dark">Technical Diagrams</span>
+                    <span class="badge badge-dark">Project Spotlights</span>
+                </div>
+
+                <div style="margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 0.8rem;">
+                    <p style="font-size:var(--small-size); color:var(--text-muted); line-height:1.5;">
+                        <strong style="color:var(--yellow);">Trend Adaptation:</strong> Monitor audio/visual trends, and convert them to fit a luxury B2B engineering brand.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">06 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 7 — CONTENT WRITING & BRAND VOICE
+     =========================================== -->
+<section class="slide light-slide" id="slide-7" aria-label="Content Writing and Brand Voice">
+    <div class="slide-content">
+        <span class="badge reveal d1">Core Pillar 3</span>
+        <h2 class="reveal d2" style="color:var(--black); margin:0.3em 0 0.1em;">Premium <span style="color:var(--orange-brown);">Content Copywriting</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-3 reveal d4" style="margin-top: 0.5rem;">
+            <div class="glass-card">
+                <div class="icon-box"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></div>
+                <h3 style="color:var(--black); font-size:clamp(0.9rem, 1.8vw, 1.2rem); margin-bottom:0.3em;">Brand Voice</h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.55;">Authoritative, visionary, yet deeply accessible. We avoid standard AI-jargon in favor of clear, human explanations.</p>
+            </div>
+            <div class="glass-card">
+                <div class="icon-box" style="color:var(--orange-brown);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
+                <h3 style="color:var(--black); font-size:clamp(0.9rem, 1.8vw, 1.2rem); margin-bottom:0.3em;">SEO Searchability</h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.55;">Weave industry keywords naturally into long-form social pieces and LinkedIn articles to enhance reach.</p>
+            </div>
+            <div class="glass-card">
+                <div class="icon-box" style="color:var(--yellow);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+                <h3 style="color:var(--black); font-size:clamp(0.9rem, 1.8vw, 1.2rem); margin-bottom:0.3em;">Soft Conversions</h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.55;">Integrate non-invasive Calls-To-Action (CTAs) that lead prospects into direct message warm chats.</p>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num" style="color:var(--charcoal);">07 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 8 — FOUNDER PERSONAL BRANDING
+     =========================================== -->
+<section class="slide dark-slide" id="slide-8" aria-label="Founder Personal Branding">
+    <div class="grid-lines"></div>
+    <div class="slide-content">
+        <span class="badge badge-dark reveal d1">Core Pillar 4</span>
+        <h2 class="reveal d2" style="margin:0.3em 0 0.1em;">Founder <span class="accent-text">Personal Brand</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-2 reveal d4" style="margin-top: 0.5rem; align-items: center;">
+            <div>
+                <ul class="premium-list">
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        <div>
+                            <strong>Insight Extraction:</strong> Run weekly 15-30 minute interview sessions to capture core engineering lessons.
+                        </div>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        <div>
+                            <strong>Ghostwriting:</strong> Turn raw voice notes into high-performing, authentic text structures.
+                        </div>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                        <div>
+                            <strong>Industry Commentary:</strong> Curate trending AI news and prepare hot takes for founder channels.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="glass-card" style="border-left: 4px solid var(--orange-brown);">
+                <p style="font-family:var(--font-display); font-size:clamp(1.1rem, 2.5vh, 1.45rem); font-style:italic; line-height:1.6; color:var(--cream-light); margin-bottom: 1rem;">
+                    "People buy from people. A strong founder presence acts as a massive inbound lead magnet."
+                </p>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="width:24px; height:2px; background:var(--yellow);"></div>
+                    <span style="font-family:var(--font-mono); font-size:var(--small-size); color:var(--yellow);">RootedAI Philosophy</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">08 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 9 — COMMUNITY & LEAD GEN
+     =========================================== -->
+<section class="slide dark-slide" id="slide-9" aria-label="Community Management and Lead Generation">
+    <div class="slide-content">
+        <span class="badge badge-dark reveal d1">Core Pillars 5 & 7</span>
+        <h2 class="reveal d2" style="margin:0.3em 0 0.1em;">B2B Lead <span class="accent-text">Funnel & Networking</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="funnel-container reveal d4" style="margin-top: 0.5rem;">
+            <div class="funnel-item">
+                <span class="step-badge">Phase 01</span>
+                <h3 style="font-size:clamp(0.85rem, 1.5vw, 1.05rem); margin-bottom:0.2em; color:var(--orange-light);">Value-Add Comments</h3>
+                <p style="font-size:var(--small-size); color:var(--text-muted); line-height:1.45;">Engaging deeply with decision-makers under target posts.</p>
+            </div>
+            <div class="funnel-item">
+                <span class="step-badge">Phase 02</span>
+                <h3 style="font-size:clamp(0.85rem, 1.5vw, 1.05rem); margin-bottom:0.2em; color:var(--yellow);">Profile Funnels</h3>
+                <p style="font-size:var(--small-size); color:var(--text-muted); line-height:1.45;">Optimizing bio links, banners, and featured sections for action.</p>
+            </div>
+            <div class="funnel-item">
+                <span class="step-badge">Phase 03</span>
+                <h3 style="font-size:clamp(0.85rem, 1.5vw, 1.05rem); margin-bottom:0.2em; color:var(--orange-light);">Warm List Tracking</h3>
+                <p style="font-size:var(--small-size); color:var(--text-muted); line-height:1.45;">Creating a roster of high-frequency engagers for reachout.</p>
+            </div>
+            <div class="funnel-item">
+                <span class="step-badge">Phase 04</span>
+                <h3 style="font-size:clamp(0.85rem, 1.5vw, 1.05rem); margin-bottom:0.2em; color:var(--yellow);">Sales Handoff</h3>
+                <p style="font-size:var(--small-size); color:var(--text-muted); line-height:1.45;">Documenting clean handoff processes to pass hot leads to sales.</p>
+            </div>
+        </div>
+
+        <div class="reveal d5" style="margin-top: clamp(0.75rem, 2vh, 1.5rem);">
+            <div class="glass-card" style="padding: 0.8rem 1.2rem; display: flex; align-items: center; justify-content: space-between; gap: 15px; border-left: 3px solid var(--yellow);">
+                <p style="font-size:var(--small-size); color:var(--cream-dark);">
+                    <strong style="color:var(--yellow);">Active Lead Magnet:</strong> Promote assets like the "AI Readiness Checklist for Hospitals" to generate warm B2B conversions.
+                </p>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">09 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 10 — BRAND & VISUAL IDENTITY
+     =========================================== -->
+<section class="slide light-slide" id="slide-10" aria-label="Brand Identity and Visual Standards">
+    <div class="slide-content">
+        <span class="badge reveal d1">Core Pillar 6</span>
+        <h2 class="reveal d2" style="color:var(--black); margin:0.3em 0 0.1em;">Visual Identity <span style="color:var(--orange-brown);">& Standards</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-2 reveal d4" style="margin-top: 0.5rem; align-items: center;">
+            <div>
+                <ul class="premium-list">
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <div style="color:var(--charcoal);">
+                            <strong>Template libraries:</strong> Canva and Figma blueprints for fast graphic turnaround.
+                        </div>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <div style="color:var(--charcoal);">
+                            <strong>Visual Hierarchy:</strong> Directing reader eyes to focal metric callouts.
+                        </div>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <div style="color:var(--charcoal);">
+                            <strong>Mobile compliance:</strong> Ensuring readability through color contrast checks.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="grid-3" style="gap: 8px;">
+                    <div class="swatch-card">
+                        <div class="swatch-color" style="background:#0A0908;"></div>
+                        <span class="swatch-label" style="font-family:var(--font-mono); font-size:10px; color:var(--charcoal);">#0A0908</span>
+                    </div>
+                    <div class="swatch-card">
+                        <div class="swatch-color" style="background:#C2632A;"></div>
+                        <span class="swatch-label" style="font-family:var(--font-mono); font-size:10px; color:var(--charcoal);">#C2632A</span>
+                    </div>
+                    <div class="swatch-card">
+                        <div class="swatch-color" style="background:#ECC13C;"></div>
+                        <span class="swatch-label" style="font-family:var(--font-mono); font-size:10px; color:var(--charcoal);">#ECC13C</span>
+                    </div>
+                    <div class="swatch-card">
+                        <div class="swatch-color" style="background:#F7F3E9; border: 1px solid rgba(0,0,0,0.1);"></div>
+                        <span class="swatch-label" style="font-family:var(--font-mono); font-size:10px; color:var(--charcoal);">#F7F3E9</span>
+                    </div>
+                    <div class="swatch-card">
+                        <div class="swatch-color" style="background:#FFFFFF; border: 1px solid rgba(0,0,0,0.1);"></div>
+                        <span class="swatch-label" style="font-family:var(--font-mono); font-size:10px; color:var(--charcoal);">#FFFFFF</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num" style="color:var(--charcoal);">10 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 11 — ANALYTICS & REPORTING
+     =========================================== -->
+<section class="slide dark-slide" id="slide-11" aria-label="Analytics and Reporting">
+    <div class="grid-lines"></div>
+    <div class="slide-content">
+        <span class="badge badge-dark reveal d1">Core Pillars 8 & 9</span>
+        <h2 class="reveal d2" style="margin:0.3em 0 0.1em;">Analytics & <span class="accent-text">Growth Consulting</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-4 reveal d4" style="margin-top: 0.5rem;">
+            <div class="glass-card">
+                <h3 style="font-size:var(--body-size); color:var(--orange-light); margin-bottom:0.4em;">KPI Dashboards</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.45;">Track conversions, lead clicks, profiles visited, and active platform growth.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="font-size:var(--body-size); color:var(--yellow); margin-bottom:0.4em;">Lead Attribution</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.45;">Pinpoint which specific threads or content formats generate discovery calls.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="font-size:var(--body-size); color:var(--orange-light); margin-bottom:0.4em;">UTM Parameters</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.45;">Implement detailed tracking tags to monitor inbound website clicks.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="font-size:var(--body-size); color:var(--yellow); margin-bottom:0.4em;">UX Feedback</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.45;">Provide design/copy critiques to optimize user landing pages.</p>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">11 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 12 — DELIVERABLES
+     =========================================== -->
+<section class="slide light-slide" id="slide-12" aria-label="Monthly Deliverables">
+    <div class="slide-content">
+        <span class="badge reveal d1">Deliverables</span>
+        <h2 class="reveal d2" style="color:var(--black); margin:0.3em 0 0.1em;">Tactical <span style="color:var(--orange-brown);">Deliverables</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-3 reveal d4" style="margin-top: 0.5rem;">
+            <div class="glass-card">
+                <h3 style="color:var(--black); font-size:var(--body-size); margin-bottom:0.3em;">Content Calendar</h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.5;">Rolling 30-day plans showing content pillars, copywriting drafts, and visual assets ready for review.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:var(--black); font-size:var(--body-size); margin-bottom:0.3em;">Social Copywriting</h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.5;">Tailored captions, educational threads, infographics, and carousel outlines optimized per platform.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:var(--black); font-size:var(--body-size); margin-bottom:0.3em;">Active Community Ops</h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.5;">Proactive daily commenting on target B2B buyer profiles and responsive DM management.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:var(--black); font-size:var(--body-size); margin-bottom:0.3em;">Analytics Audits</h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.5;">Comprehensive monthly reports focusing on pipeline leads, attribution, and optimization shifts.</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:var(--black); font-size:var(--body-size); margin-bottom:0.3em;">Marketing Playbook</h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.5;">Documenting voice blueprints, asset libraries, and scalable SOPs to future-proof marketing.</p>
+            </div>
+            <div class="glass-card" style="border-top:3px solid var(--orange-brown);">
+                <h3 style="color:var(--black); font-size:var(--body-size); margin-bottom:0.3em;">Asset Repurposing</h3>
+                <p style="color:var(--charcoal); font-size:var(--small-size); line-height:1.5;">Re-formatting long-form materials into short video scripts, outlines, and multi-image sliders.</p>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num" style="color:var(--charcoal);">12 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 13 — SUCCESS METRICS / KPIs
+     =========================================== -->
+<section class="slide dark-slide" id="slide-13" aria-label="Success Metrics">
+    <div class="slide-content">
+        <span class="badge badge-dark reveal d1">Accountability</span>
+        <h2 class="reveal d2" style="margin:0.3em 0 0.1em;">KPIs & <span class="accent-text">Success Metrics</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-4 reveal d4" style="margin-top: 0.5rem;">
+            <div class="glass-card">
+                <div style="font-family:var(--font-mono); font-size:var(--label-size); color:var(--orange-light); margin-bottom:0.4em;">01 / VISUALS</div>
+                <h3 style="font-size:var(--body-size); color:var(--cream); margin-bottom:0.29em;">Premium Branding</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.45;">Strict style adherence, high contrast layouts, and clear aesthetic execution.</p>
+            </div>
+            <div class="glass-card">
+                <div style="font-family:var(--font-mono); font-size:var(--label-size); color:var(--yellow); margin-bottom:0.4em;">02 / AUDIENCE</div>
+                <h3 style="font-size:var(--body-size); color:var(--cream); margin-bottom:0.29em;">High-Value Reach</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.45;">Follower growth targeting tech founders, business heads, and hospital decision-makers.</p>
+            </div>
+            <div class="glass-card">
+                <div style="font-family:var(--font-mono); font-size:var(--label-size); color:var(--orange-light); margin-bottom:0.4em;">03 / PERFORMANCE</div>
+                <h3 style="font-size:var(--body-size); color:var(--cream); margin-bottom:0.29em;">High Engagement</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.45;">Focusing on metrics that matter: content saves, link clicks, and post shares.</p>
+            </div>
+            <div class="glass-card" style="border-color: rgba(236,193,60,0.35);">
+                <div style="font-family:var(--font-mono); font-size:var(--label-size); color:var(--yellow); margin-bottom:0.4em;">04 / BOTTOM LINE</div>
+                <h3 style="font-size:var(--body-size); color:var(--cream); margin-bottom:0.29em;">Qualified Leads</h3>
+                <p style="color:var(--text-muted); font-size:var(--small-size); line-height:1.45;">The ultimate metric: inbound DMs, lead captures, and booked discovery calls.</p>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">13 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 14 — IDEAL PARTNER + ENGAGEMENT TERMS
+     =========================================== -->
+<section class="slide dark-slide" id="slide-14" aria-label="Ideal Partner and Engagement Terms">
+    <div class="slide-content">
+        <span class="badge badge-dark reveal d1">Ideal Profile</span>
+        <h2 class="reveal d2" style="margin:0.3em 0 0.1em;">Partnership <span style="color:var(--yellow);">Terms & Alignment</span></h2>
+        <div class="divider reveal d3"></div>
+
+        <div class="grid-2 reveal d4" style="margin-top: 0.5rem; align-items: start;">
+            <div>
+                <ul class="premium-list">
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <div>
+                            <strong>B2B Strategy Focus:</strong> You know <em>why</em> you post, not just what to upload.
+                        </div>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <div>
+                            <strong>Technical translator:</strong> Easily translate high-end AI ideas to accessible copy.
+                        </div>
+                    </li>
+                    <li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <div>
+                            <strong>Autonomous:</strong> Highly proactive execution without constant hand-holding.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="glass-card" style="background:linear-gradient(135deg, rgba(194,99,42,0.1) 0%, transparent 100%);">
+                <h3 style="color:var(--yellow); font-size:var(--body-size); margin-bottom:0.6em;">Trial Structure</h3>
+                
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+                        <span style="font-size:var(--small-size); color:var(--text-muted);">Duration</span>
+                        <span style="font-size:var(--small-size); font-weight:600;">2 Months</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:4px;">
+                        <span style="font-size:var(--small-size); color:var(--text-muted);">Budget</span>
+                        <span style="font-size:var(--small-size); font-weight:600; color:var(--orange-light);">₹10,000 / Month</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="font-size:var(--small-size); color:var(--text-muted);">Growth Upside</span>
+                        <span style="font-size:var(--small-size); font-weight:600; color:var(--yellow);">Scales directly with client wins 🚀</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span class="slide-num">14 / 15</span>
+</section>
+
+
+<!-- =========================================== 
+     SLIDE 15 — CLOSING / CTA
+     =========================================== -->
+<section class="slide dark-slide" id="slide-15" aria-label="Closing">
+    <div class="glow-circle" style="width: 60vw; height: 60vw; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--orange-brown);"></div>
+    <div class="grid-lines"></div>
+    <div class="slide-content" style="text-align:center; justify-content:center; align-items:center; max-width:min(90vw,800px); margin:0 auto; width:100%;">
+        <div class="reveal d1" style="margin-bottom: 1.5rem;">
+            <img src="public/logo-darkmode.png" alt="RootedAI Logo" style="height: clamp(50px, 8vw, 80px); width: auto; object-fit: contain;">
+        </div>
+        
+        <h2 class="reveal d2" style="font-size:clamp(2rem, 5.5vw, 4.5rem); line-height:1.05; margin-bottom:0.4em;">
+            Simplify<br>
+            <span class="accent-text">Complexity.</span>
+        </h2>
+
+
+        <hr class="divider reveal d4" style="margin:0 auto 1.5rem;">
+
+        <div class="reveal d5">
+            <a href="mailto:hello@rootedai.com" style="display:inline-flex; align-items:center; gap:8px; background:var(--orange-brown); color:var(--white); padding:10px 24px; border-radius:6px; font-family:var(--font-mono); font-size:var(--small-size); text-decoration:none; font-weight:700; transition:all 0.3s ease; box-shadow:0 4px 15px rgba(194,99,42,0.25);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                START THE CONVERSATION
+            </a>
+        </div>
+    </div>
+    <span class="slide-num">15 / 15</span>
+</section>
+
+<!-- =========================================== 
+     JAVASCRIPT PRESENTATION ENGINE & PDF EXPORT
+     =========================================== -->
+<script>
+class SlidePresentation {
+    constructor() {
+        this.slides      = document.querySelectorAll('.slide');
+        this.navDotsEl   = document.getElementById('navDots');
+        this.progressEl  = document.getElementById('progressBar');
+        this.currentIdx  = 0;
+        this.totalSlides = this.slides.length;
+        this.isScrolling = false;
+
+        this.init();
+    }
+
+    init() {
+        this.buildNavDots();
+        this.setupIntersectionObserver();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupMouseWheel();
+        this.updateProgress(0);
+    }
+
+    buildNavDots() {
+        this.slides.forEach((_, i) => {
+            const btn = document.createElement('button');
+            btn.className  = 'nav-dot' + (i === 0 ? ' active' : '');
+            btn.title      = `Slide ${i + 1}`;
+            btn.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            btn.addEventListener('click', () => this.goToSlide(i));
+            this.navDotsEl.appendChild(btn);
+        });
+    }
+
+    setupIntersectionObserver() {
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const idx = Array.from(this.slides).indexOf(entry.target);
+                    if (idx !== -1) {
+                        this.currentIdx = idx;
+                        this.updateNavDots(idx);
+                        this.updateProgress(idx);
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        this.slides.forEach(slide => obs.observe(slide));
+    }
+
+    setupKeyboardNav() {
+        document.addEventListener('keydown', e => {
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) {
+                e.preventDefault();
+                this.goToSlide(Math.min(this.currentIdx + 1, this.totalSlides - 1));
+            }
+            if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) {
+                e.preventDefault();
+                this.goToSlide(Math.max(this.currentIdx - 1, 0));
+            }
+            if (e.key === 'Home') { e.preventDefault(); this.goToSlide(0); }
+            if (e.key === 'End')  { e.preventDefault(); this.goToSlide(this.totalSlides - 1); }
+        });
+    }
+
+    setupTouchNav() {
+        let startY = 0;
+        document.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', e => {
+            const delta = startY - e.changedTouches[0].clientY;
+            if (Math.abs(delta) > 50) {
+                if (delta > 0) this.goToSlide(Math.min(this.currentIdx + 1, this.totalSlides - 1));
+                else           this.goToSlide(Math.max(this.currentIdx - 1, 0));
+            }
+        }, { passive: true });
+    }
+
+    setupMouseWheel() {
+        let lastWheel = 0;
+        document.addEventListener('wheel', e => {
+            const now = Date.now();
+            if (now - lastWheel < 800) return;
+            lastWheel = now;
+            if (e.deltaY > 0) this.goToSlide(Math.min(this.currentIdx + 1, this.totalSlides - 1));
+            else               this.goToSlide(Math.max(this.currentIdx - 1, 0));
+        }, { passive: true });
+    }
+
+    goToSlide(idx) {
+        if (idx < 0 || idx >= this.totalSlides) return;
+        this.slides[idx].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    updateNavDots(idx) {
+        document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === idx);
+        });
+    }
+
+    updateProgress(idx) {
+        const pct = this.totalSlides > 1 ? (idx / (this.totalSlides - 1)) * 100 : 100;
+        this.progressEl.style.width = pct + '%';
+    }
+}
+
+// PDF Export Handler
+function downloadPDF() {
+    // Select element to print
+    const element = document.body;
+    
+    // Config options
+    const opt = {
+        margin:       0,
+        filename:     'rooted-ai-social-media-partner.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' },
+        pagebreak:    { mode: ['avoid-all', 'css'] }
+    };
+    
+    // Add print mode styling class to hide UI
+    document.body.classList.add('printing-pdf');
+    
+    // Run PDF generation
+    html2pdf().set(opt).from(element).save().then(() => {
+        document.body.classList.remove('printing-pdf');
+    });
+}
+
+// Initialize Presentation
+window.addEventListener('DOMContentLoaded', () => {
+    new SlidePresentation();
+});
+</script>
+
+</body>
+</html>

@@ -29,3 +29,11 @@ dist-ssr
 .env*.local
 service_account.json
 rootedai-indexing-*.json
+
+# Agent Scratch Directory
+scratch/
+
+# Ignore all markdown files
+*.md
+
+

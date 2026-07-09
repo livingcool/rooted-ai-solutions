@@ -7,14 +7,14 @@ import { useModal } from "@/context/ModalContext";
 
 const SERVICES = [
   { icon: Cpu, num: "01", title: "Custom ML Development", desc: "Tailored machine learning models built for healthcare, robotics, and education, with active retraining pipelines.", href: "/services/mlaas", bg: "#F9EFE9" },
-  { icon: Cpu, num: "02", title: "AI Agents", desc: "Deploy autonomous LLM agents that handle complex, multi-step operational workflows without human intervention.", href: "/services/AIAgents", bg: "#F0DCC8" },
-  { icon: Zap, num: "03", title: "Process Automation", desc: "End-to-end workflow automation connecting your existing tools, databases, and ERPs through intelligent orchestration.", href: "/services/ProcessAutomation", bg: "#EDD5C0" },
-  { icon: Code, num: "04", title: "Custom Software", desc: "AI-native custom software engineering to transform complex operations into intelligent, scalable enterprise systems.", href: "/services/CustomSoftware", bg: "#F5E6C8" },
-  { icon: Brain, num: "05", title: "NLP Systems", desc: "Custom language models fine-tuned on your operational data for document intelligence and knowledge extraction.", href: "/services/NLPSystems", bg: "#F9EFE9" },
-  { icon: BarChart3, num: "06", title: "Predictive Analytics", desc: "ML pipelines that forecast failures, demand spikes, and bottlenecks before they cost you downtime.", href: "/services/PredictiveAnalytics", bg: "#F0DCC8" },
-  { icon: Shield, num: "07", title: "Enterprise Security", desc: "AI-native security monitoring, anomaly detection, and compliance automation for regulated industries.", href: "/services/EnterpriseSecurity", bg: "#EDD5C0" },
-  { icon: Smartphone, num: "08", title: "App Development", desc: "High-performance iOS, Android, and web applications designed natively around modern frameworks and user experience.", href: "/services/AppDevelopment", bg: "#F5E6C8" },
-  { icon: Lock, num: "09", title: "AI Safety", desc: "Guardrails, evaluation frameworks, and red-teaming protocols to ensure your AI systems behave reliably.", href: "/services/AISafety", bg: "#F9EFE9" },
+  { icon: Cpu, num: "02", title: "AI Agents", desc: "Deploy autonomous LLM agents that handle complex, multi-step operational workflows without human intervention.", href: "/services/ai-agents", bg: "#F0DCC8" },
+  { icon: Zap, num: "03", title: "Process Automation", desc: "End-to-end workflow automation connecting your existing tools, databases, and ERPs through intelligent orchestration.", href: "/services/process-automation", bg: "#EDD5C0" },
+  { icon: Code, num: "04", title: "Custom Software", desc: "AI-native custom software engineering to transform complex operations into intelligent, scalable enterprise systems.", href: "/services/web-solutions", bg: "#F5E6C8" },
+  { icon: Brain, num: "05", title: "NLP Systems", desc: "Custom language models fine-tuned on your operational data for document intelligence and knowledge extraction.", href: "/services/nlp-systems", bg: "#F9EFE9" },
+  { icon: BarChart3, num: "06", title: "Predictive Analytics", desc: "ML pipelines that forecast failures, demand spikes, and bottlenecks before they cost you downtime.", href: "/services/predictive-analytics", bg: "#F0DCC8" },
+  { icon: Shield, num: "07", title: "Enterprise Security", desc: "AI-native security monitoring, anomaly detection, and compliance automation for regulated industries.", href: "/services/enterprise-security", bg: "#EDD5C0" },
+  { icon: Smartphone, num: "08", title: "App Development", desc: "High-performance iOS, Android, and web applications designed natively around modern frameworks and user experience.", href: "/services/outsourcing", bg: "#F5E6C8" },
+  { icon: Lock, num: "09", title: "AI Safety", desc: "Guardrails, evaluation frameworks, and red-teaming protocols to ensure your AI systems behave reliably.", href: "/services/ai-safety", bg: "#F9EFE9" },
 ];
 
 export default function ServicesPage() {

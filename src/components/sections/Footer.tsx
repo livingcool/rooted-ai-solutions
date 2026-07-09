@@ -9,10 +9,10 @@ import RootedLogo from "../ui/RootedLogo";
 const FOOTER_LINKS = {
   Services: [
     { name: "Custom ML Models",     href: "/services/mlaas" },
-    { name: "AI-Native Software",   href: "/services/CustomSoftware" },
-    { name: "App Development",      href: "/services/AppDevelopment" },
-    { name: "AI Agents",            href: "/services/AIAgents" },
-    { name: "Process Automation",   href: "/services/ProcessAutomation" },
+    { name: "AI-Native Software",   href: "/services/web-solutions" },
+    { name: "App Development",      href: "/services/outsourcing" },
+    { name: "AI Agents",            href: "/services/ai-agents" },
+    { name: "Process Automation",   href: "/services/process-automation" },
   ],
   Company: [
     { name: "About",        href: "/#about" },

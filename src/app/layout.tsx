@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   ],
   manifest: "/manifest.json",
   alternates: {
-    canonical: "https://www.rootedai.co.in",
+    canonical: "/",
   },
   openGraph: {
     title: "Rooted AI Solutions | Custom ML, Software & App Development",

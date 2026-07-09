@@ -1,7 +1,3 @@
-import { 
-  Cpu, Zap, Globe, Brain, BarChart3, Shield, Users, Lock, Code, Smartphone, LucideIcon 
-} from "lucide-react";
-
 export interface ServiceDetail {
   slug:      string;
   tag:       string;
@@ -10,14 +6,12 @@ export interface ServiceDetail {
   body:      string;
   features:  { title: string; desc: string }[];
   useCases:  string[];
-  icon:      LucideIcon;
   heroBg:    string;
 }
 
 export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
   AIAgents: {
     slug: "AIAgents",
-    icon: Cpu,
     tag: "AI Agents",
     heroBg: "#F9EFE9",
     headline: "Autonomous AI Agents for Complex Operations",
@@ -32,7 +26,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
   },
   ProcessAutomation: {
     slug: "ProcessAutomation",
-    icon: Zap,
     tag: "Process Automation",
     heroBg: "#F0DCC8",
     headline: "End-to-End Workflow Automation",
@@ -47,7 +40,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
   },
   CustomSoftware: {
     slug: "CustomSoftware",
-    icon: Code,
     tag: "Custom Software",
     heroBg: "#EDD5C0",
     headline: "AI-Native Custom Software Engineering",
@@ -62,7 +54,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
   },
   NLPSystems: {
     slug: "NLPSystems",
-    icon: Brain,
     tag: "NLP Systems",
     heroBg: "#F5E6C8",
     headline: "Language AI for Industrial Data",
@@ -77,7 +68,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
   },
   PredictiveAnalytics: {
     slug: "PredictiveAnalytics",
-    icon: BarChart3,
     tag: "Predictive Analytics",
     heroBg: "#F0DCC8",
     headline: "Forecast Failures Before They Happen",
@@ -92,7 +82,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
   },
   EnterpriseSecurity: {
     slug: "EnterpriseSecurity",
-    icon: Shield,
     tag: "Enterprise Security",
     heroBg: "#EDD5C0",
     headline: "AI-Native Security for Industrial Systems",
@@ -107,7 +96,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
   },
   AppDevelopment: {
     slug: "AppDevelopment",
-    icon: Smartphone,
     tag: "App Development",
     heroBg: "#F5E6C8",
     headline: "Premium Web & Mobile Applications",
@@ -122,7 +110,6 @@ export const SERVICE_DETAILS: Record<string, ServiceDetail> = {
   },
   AISafety: {
     slug: "AISafety",
-    icon: Lock,
     tag: "AI Safety",
     heroBg: "#F9EFE9",
     headline: "Guardrails for Production AI Systems",

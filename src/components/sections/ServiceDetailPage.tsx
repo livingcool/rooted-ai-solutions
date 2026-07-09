@@ -1,6 +1,7 @@
-// Shared service detail page template
+'use client';
+
 import Link from "next/link";
-import { ArrowRight, LucideIcon } from "lucide-react";
+import { Cpu, Zap, Brain, Shield, BarChart3, Lock, Code, Smartphone, ArrowRight, LucideIcon } from "lucide-react";
 import { useModal } from "@/context/ModalContext";
 
 interface ServicePageProps {
@@ -10,13 +11,26 @@ interface ServicePageProps {
   body:       string;
   features:   { title: string; desc: string }[];
   useCases:   string[];
-  icon:       LucideIcon;
+  icon?:      LucideIcon;
   heroBg:     string;
 }
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  "AI Agents": Cpu,
+  "Process Automation": Zap,
+  "Custom Software": Code,
+  "NLP Systems": Brain,
+  "Predictive Analytics": BarChart3,
+  "Enterprise Security": Shield,
+  "App Development": Smartphone,
+  "AI Safety": Lock,
+};
 
 export function ServiceDetailPage({ tag, headline, subline, body, features, useCases, icon: Icon, heroBg }: ServicePageProps) {
   const { openLeadModal } = useModal();
   const tileBgs = ["#F9EFE9", "#F0DCC8", "#EDD5C0", "#F5E6C8"];
+  const IconComponent = Icon || ICON_MAP[tag] || Cpu;
+
   return (
     <div style={{ background: "#240747" }}>
       {/* Hero */}
@@ -31,7 +45,7 @@ export function ServiceDetailPage({ tag, headline, subline, body, features, useC
             <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.92rem", color: "#240747", opacity: 0.7, lineHeight: 1.7, maxWidth: 540 }}>{body}</p>
           </div>
           <div style={{ background: "#240747", padding: "2.5rem 2rem", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "2rem" }}>
-            <Icon size={48} color="#F6851B" />
+            <IconComponent size={48} color="#F6851B" />
             <div>
               <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "#F9EFE9", opacity: 0.45, letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, marginBottom: "1.5rem" }}>
                 Factory-floor-ready. Deployed in weeks. IP fully yours.
