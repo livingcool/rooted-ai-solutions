@@ -175,7 +175,7 @@ export default function CareersPage() {
               </p>
               <div className="pt-4">
                 <a 
-                  href="mailto:careers@rootedai.co.in" 
+                  href="mailto:info@rootedai.co.in" 
                   className="nb-btn nb-btn-primary text-xl px-12 py-6 rounded-2xl"
                 >
                   Send tactical CV <ArrowRight size={24} className="ml-2" />

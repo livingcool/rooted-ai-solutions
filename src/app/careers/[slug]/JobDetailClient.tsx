@@ -54,8 +54,8 @@ export default function JobDetailClient({ job }: { job: any }) {
                         <aside className="lg:col-span-4 lg:order-last">
                             <div className="sticky top-32 space-y-8">
                                 <div className="bg-[#240747] p-8 border-4 border-[#240747] shadow-[12px_12px_0_#F6851B] rounded-3xl text-[#F9EFE9] space-y-6">
-                                    <h3 className="text-2xl font-black">Ready to Deploy?</h3>
-                                    <p className="opacity-70 text-sm leading-relaxed">
+                                    <h3 className="text-2xl font-black text-[#F9EFE9]">Ready to Deploy?</h3>
+                                    <p className="text-[#F9EFE9]/70 text-sm leading-relaxed">
                                         Join a tactical team building high-stakes AI architectures for global industries.
                                     </p>
                                     
@@ -81,12 +81,12 @@ export default function JobDetailClient({ job }: { job: any }) {
                                             </div>
                                         </DialogContent>
                                     </Dialog>
-
+ 
                                     <div className="pt-6 border-t border-[#F9EFE9]/10 space-y-4">
-                                        <div className="flex items-center gap-3 text-xs font-bold">
+                                        <div className="flex items-center gap-3 text-xs font-bold text-[#F9EFE9]">
                                             <CheckCircle2 size={16} className="text-[#F6851B]" /> Verified Opportunity
                                         </div>
-                                        <div className="flex items-center gap-3 text-xs font-bold">
+                                        <div className="flex items-center gap-3 text-xs font-bold text-[#F9EFE9]">
                                             <Shield size={16} className="text-[#F6851B]" /> IP Protected Workflow
                                         </div>
                                     </div>
@@ -95,7 +95,7 @@ export default function JobDetailClient({ job }: { job: any }) {
                                 <div className="p-8 border-4 border-[#240747] rounded-3xl space-y-4">
                                     <h4 className="text-[0.6rem] font-black uppercase tracking-widest text-[#F6851B]">Operation Support</h4>
                                     <p className="text-xs font-bold opacity-60">Questions about the mission?</p>
-                                    <a href="mailto:careers@rootedai.co.in" className="block text-sm font-black hover:text-[#F6851B] underline">careers@rootedai.co.in</a>
+                                    <a href="mailto:info@rootedai.co.in" className="block text-sm font-black hover:text-[#F6851B] underline">info@rootedai.co.in</a>
                                 </div>
                             </div>
                         </aside>
